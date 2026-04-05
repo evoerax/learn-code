@@ -1,0 +1,113 @@
+---
+title: Elixir
+description: 基于 Erlang VM 的现代函数式语言，支持元编程和分布式计算
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Elixir
+
+> _"Elixir 是一门动态的函数式语言，专为构建可扩展且可维护的应用程序而设计。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2011 |
+| **Creator** | José Valim |
+| **Paradigm** | 函数式、并发、分布式 |
+| **Type System** | 动态类型、强类型 |
+| **Platform** | 跨平台（BEAM 虚拟机） |
+| **Current Version** | 1.17 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Elixir 由 José Valim 于 2011 年创建，他是 Rails 核心团队成员，当时在 Plataformatec 工作。Valim 对 Rails 的单体架构感到沮丧，并渴望获得更好的现代 Web 应用并发性能，于是着手创建一种将 Erlang 久经考验的虚拟机与现代工具和语法相结合的语言。
+
+Valim 设计 Elixir 运行在 BEAM 上（与驱动 Erlang 的虚拟机相同），继承了其大规模并发能力、容错性和热代码加载。但与 Erlang 受 Prolog 影响的语法不同，Elixir 借鉴了 Ruby 和 Python，使主流开发者能够立即上手。
+
+该语言从一开始就为元编程而构建，允许开发者通过宏和协议扩展语言。这使得围绕 Web 开发、测试和数据处理构建丰富的 DSL（领域特定语言）生态系统成为可能。
+
+## Design Philosophy
+
+Elixir 沿用了 Erlang/OTP 的"让它崩溃"哲学，但更加强调开发者效率和人体工程学。管道操作符（`|>`）体现了这一点——允许数据以从左到右可读的方式通过一系列转换流动。
+
+面向协议编程（受 Elixir 的祖先 Clojure 启发）允许行为独立于数据类型定义。这使得扩展现有类型的新功能变得容易，而无需修改其源代码。
+
+该语言优先考虑不可变性和递归，而不是可变状态和循环，但提供了方便的语法，使这些函数式概念感觉自然而非陌生。
+
+## Code Example
+
+```elixir filename="Elixir 示例"
+defmodule Blog do
+  use Ecto.Schema
+
+  schema "posts" do
+    field :title, :string
+    field :content, :string
+    field :published_at, :utc_datetime
+    has_many :comments, Comment
+  end
+end
+
+# 基于管道的数据转换
+posts
+|> Enum.filter(fn p -> p.published end)
+|> Enum.sort_by(& &1.published_at, {:desc, DateTime})
+|> Enum.take(10)
+|> Enum.map(&"#{&1.title}: #{&1.content}")
+
+# 并发任务处理
+tasks = Enum.map(urls, fn url -> Task.async(fn -> fetch(url) end) end)
+results = Enum.map(tasks, &Task.await/1)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web 框架 | Phoenix, Nx |
+| 分布式系统 | Ranch, Cluster |
+| DevOps | Mix, ExUnit |
+| 数据处理 | Broadway, Flow |
+
+## Influence & Legacy
+
+**Inspired by:** Ruby, Python, Clojure, Erlang
+
+**Influenced:** Gleam（另一种 BEAM 语言）, Wisp（Clojure 风格）
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | Hex |
+| Web 框架 | Phoenix |
+| 数据处理 | Nx, Explorer |
+| 测试 | ExUnit, doctest |
+
+## When to Use
+
+**Good fit:**
+- 实时 Web 应用（Phoenix LiveView）
+- 分布式系统和微服务
+- 处理数百万事件的数据管道
+- 来自 Ruby/Python 但想要函数式并发的团队
+
+**Not a good fit:**
+- CPU 密集型数值计算（更好的选择：Julia, Rust）
+- Android/iOS 移动开发（更好的选择：Kotlin, Swift, Dart）
+- 简单自动化脚本（更好的选择：Python, Bash）
+
+## Controversies
+
+<Callout type="warning">
+  Elixir 的元编程能力虽然强大，但当被滥用时，可能导致代码难以理解。宏可以以令人惊讶的方式转换代码，使调试更加困难。社区通常不鼓励过度使用宏，但"构建完美 DSL"的诱惑导致一些项目陷入维护噩梦。
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Discord 使用 Elixir 处理数十亿条消息和数百万并发连接。当他们从 Ruby on Rails 单体应用迁移到 Elixir 微服务时，每台服务器从处理 100,000 个并发连接提升到使用相同硬件处理超过 100 万个并发连接。
+</Callout>

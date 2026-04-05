@@ -1,0 +1,117 @@
+---
+title: Solidity
+description: 以太坊智能合约语言，用于去中心化应用和 DeFi
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Solidity
+
+> _"Solidity 是一门面向对象的高级语言，用于实现智能合约。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2014 |
+| **Creator** | Gavin Wood (Ethereum) |
+| **Paradigm** | 面向对象、合约导向 |
+| **Type System** | 静态类型、强类型 |
+| **Platform** | 以太坊虚拟机 (EVM) |
+| **Current Version** | 0.8.x |
+| **License** | Apache 2.0, MIT |
+
+## Origin Story
+
+Solidity 由 Gavin Wood 于 2014 年创建，作为他与 Vitalik Buterin 共同创立的以太坊项目的一部分。比特币向世界展示了去中心化货币，而以太坊的目标是成为一台"世界计算机"——一个运行在数千个节点全球网络上的去中心化应用（DApps）平台。
+
+Wood 设计 Solidity 是专门用于编写在以太坊虚拟机（EVM）上运行的智能合约。与通用语言不同，Solidity 是为非常特定的执行环境而构建的：代码在数千个节点上确定性执行，一旦部署就无法修改。
+
+该语言受 C++、Python 和 JavaScript 影响，从每种语言中汲取最佳语法元素，同时添加了区块链特定概念的创新特性，如地址、交易和事件。这使得来自主流语言的开发者能够立即熟悉 Solidity，同时迫使他们仔细思考区块链的独特约束。
+
+## Design Philosophy
+
+Solidity 的核心哲学围绕"去信任计算"——部署到区块链的代码按编写的方式精确执行，永远不变，没有任何修改或停机的可能性。这种永久性需要一种根本不同的思维方式：bug 无法修补，每个函数都必须假设敌对参与者可能与之交互。
+
+该语言实现了安全优先的方法，内置保护：溢出检查、require/assert 语句用于不变量，以及形式化验证能力。gas 优化是首要考虑，因为在 EVM 中每个计算步骤都需要花费金钱（Ether）。
+
+继承、库和用户定义类型是一等公民，使开发者能够构建复杂、可重用的智能合约系统，同时维护不同组件之间的安全边界。
+
+## Code Example
+
+```solidity filename="Solidity 示例"
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Token {
+    mapping(address => uint256) public balances;
+    address public owner;
+    
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    
+    constructor(uint256 initialSupply) {
+        owner = msg.sender;
+        balances[owner] = initialSupply;
+    }
+    
+    function transfer(address to, uint256 amount) public {
+        require(balances[msg.sender] >= amount, "余额不足");
+        balances[msg.sender] -= amount;
+        balances[to] += amount;
+        emit Transfer(msg.sender, to, amount);
+    }
+    
+    receive() external payable {
+        balances[msg.sender] += msg.value;
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| DeFi | Uniswap, Aave, Compound |
+| NFTs | OpenSea, CryptoPunks |
+| DAOs | MakerDAO, ENS |
+| 基础设施 | OpenZeppelin, Chainlink |
+
+## Influence & Legacy
+
+**Inspired by:** C++, Python, JavaScript
+
+**Influenced:** Vyper（Python 风格替代品）, Move（Facebook 的区块链语言）, Cairo（StarkNet）
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | npm (solc-js), Hardhat |
+| 框架 | Truffle, Hardhat, Foundry |
+| 测试 | Waffle, Foundry |
+| 安全 | Slither, Mythril |
+
+## When to Use
+
+**Good fit:**
+- 去中心化金融（DeFi）应用
+- 非同质化代币（NFT）和数字收藏品
+- 去中心化自治组织（DAO）
+- 链上治理系统
+
+**Not a good fit:**
+- 需要隐私的应用（所有链上数据都是公开的）
+- 高频交易（gas 成本太高）
+- 需要链外数据的应用（改用预言机）
+
+## Controversies
+
+<Callout type="warning">
+  Solidity 的合约可升级模式虽然对于修复已部署代码中的 bug 必要，但创造了一个悖论："不可变的"区块链实际上包含可变合约。这导致了众多安全事件，代理模式实现不正确，从看似安全的合约中抽走资金。
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  2016 年的 DAO 黑客事件利用了 Solidity 合约中的递归调用漏洞，抽走了 360 万以太坊（当时价值 5000 万美元）。这一单一事件导致了以太坊有争议的硬分叉，创造了以太坊经典和今天的以太坊。这次攻击从根本上塑造了 Solidity 社区对智能合约安全的思考方式。
+</Callout>

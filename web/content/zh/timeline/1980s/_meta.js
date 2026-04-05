@@ -6,4 +6,5 @@ export default {
   perl: { title: 'Perl' },
   vhdl: { title: 'VHDL' },
   'objective-c': { title: 'Objective-C' },
+  erlang: { title: 'Erlang' },
 }

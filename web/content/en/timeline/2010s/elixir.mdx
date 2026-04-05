@@ -1,0 +1,113 @@
+---
+title: Elixir
+description: Modern functional language on the Erlang VM with metaprogramming and distributed computing
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Elixir
+
+> _"Elixir is a dynamic, functional language designed for building scalable and maintainable applications."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2011 |
+| **Creator** | José Valim |
+| **Paradigm** | Functional, Concurrent, Distributed |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform (BEAM VM) |
+| **Current Version** | 1.17 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Elixir was created in 2011 by José Valim, a Rails core team member, while working at Plataformatec. Frustrated by Rails' monolithic nature and seeking better concurrency for modern web applications, Valim set out to create a language that combined Erlang's battle-tested VM with modern tooling and syntax.
+
+Valim designed Elixir to run on the BEAM (the same virtual machine that powers Erlang), inheriting its massive concurrency capabilities, fault tolerance, and hot code loading. But unlike Erlang's Prolog-influenced syntax, Elixir draws from Ruby and Python, making it immediately approachable for mainstream developers.
+
+The language was built from the ground up for metaprogramming, allowing developers to extend the language through macros and protocols. This has enabled a rich ecosystem of DSLs (Domain Specific Languages) for web development, testing, and data processing.
+
+## Design Philosophy
+
+Elixir embraces the "let it crash" philosophy from Erlang/OTP, but adds a focus on developer productivity and ergonomics. The pipe operator (`|>`) embodies this—allowing data to flow through a series of transformations in a readable left-to-right fashion.
+
+Protocol-oriented programming (inspired by Elixir's ancestor Clojure) allows behavior to be defined independently of data types. This makes it easy to extend existing types with new functionality without modifying their source code.
+
+The language prioritizes immutability and recursion over mutable state and loops, but provides convenient syntax that makes these functional concepts feel natural rather than foreign.
+
+## Code Example
+
+```elixir filename="Elixir Example"
+defmodule Blog do
+  use Ecto.Schema
+
+  schema "posts" do
+    field :title, :string
+    field :content, :string
+    field :published_at, :utc_datetime
+    has_many :comments, Comment
+  end
+end
+
+# Pipe-based data transformation
+posts
+|> Enum.filter(fn p -> p.published end)
+|> Enum.sort_by(& &1.published_at, {:desc, DateTime})
+|> Enum.take(10)
+|> Enum.map(&"#{&1.title}: #{&1.content}")
+
+# Concurrent task processing
+tasks = Enum.map(urls, fn url -> Task.async(fn -> fetch(url) end) end)
+results = Enum.map(tasks, &Task.await/1)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web Frameworks | Phoenix, Nx |
+| Distributed Systems | Ranch, Cluster |
+| DevOps | Mix, ExUnit |
+| Data Processing | Broadway, Flow |
+
+## Influence & Legacy
+
+**Inspired by:** Ruby, Python, Clojure, Erlang
+
+**Influenced:** Gleam (another BEAM language), Wisp (Clojure-inspired)
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | Hex |
+| Web Framework | Phoenix |
+| Data Processing | Nx, Explorer |
+| Testing | ExUnit, doctest |
+
+## When to Use
+
+**Good fit:**
+- Real-time web applications (Phoenix LiveView)
+- Distributed systems and microservices
+- Data pipelines handling millions of events
+- Teams coming from Ruby/Python wanting functional concurrency
+
+**Not a good fit:**
+- CPU-intensive numerical computing (better: Julia, Rust)
+- Android/iOS mobile development (better: Kotlin, Swift, Dart)
+- Simple automation scripts (better: Python, Bash)
+
+## Controversies
+
+<Callout type="warning">
+  Elixir's metaprogramming capabilities, while powerful, can lead to code that's difficult to understand when abused. Macros can transform code in surprising ways, making debugging harder. The community generally discourages excessive macro usage, but the temptation to "build the perfect DSL" has led some projects into maintenance nightmares.
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Discord processes billions of messages and millions of concurrent connections using Elixir. When they migrated from a Ruby on Rails monolith to Elixir microservices, they went from struggling with 100,000 concurrent connections per server to handling over 1 million connections per node with the same hardware.
+</Callout>

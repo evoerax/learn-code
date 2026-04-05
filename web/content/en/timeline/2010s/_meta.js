@@ -5,4 +5,6 @@ export default {
   swift: { title: 'Swift' },
   dart: { title: 'Dart' },
   julia: { title: 'Julia' },
+  elixir: { title: 'Elixir' },
+  solidity: { title: 'Solidity' },
 }

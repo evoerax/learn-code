@@ -1,0 +1,117 @@
+---
+title: Solidity
+description: Ethereum's smart contract language for decentralized applications and DeFi
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Solidity
+
+> _"Solidity is an object-oriented, high-level language for implementing smart contracts."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2014 |
+| **Creator** | Gavin Wood (Ethereum) |
+| **Paradigm** | Object-oriented, Contract-oriented |
+| **Type System** | Static, Strong |
+| **Platform** | Ethereum Virtual Machine (EVM) |
+| **Current Version** | 0.8.x |
+| **License** | Apache 2.0, MIT |
+
+## Origin Story
+
+Solidity was created by Gavin Wood in 2014 as part of the Ethereum project he co-founded with Vitalik Buterin. While Bitcoin had shown the world decentralized money, Ethereum aimed to be a "world computer"—a platform for decentralized applications (DApps) running on a global network of nodes.
+
+Wood designed Solidity specifically for writing smart contracts that run on the Ethereum Virtual Machine (EVM). Unlike general-purpose languages, Solidity is purpose-built for a very specific execution environment where code runs deterministically across thousands of nodes and cannot be modified once deployed.
+
+The language was influenced by C++, Python, and JavaScript, taking the best syntactic elements from each while adding novel features for blockchain-specific concepts like addresses, transactions, and events. This makes Solidity immediately familiar to developers coming from mainstream languages while forcing them to think carefully about blockchain's unique constraints.
+
+## Design Philosophy
+
+Solidity's core philosophy centers on "trustless computation"—code deployed to the blockchain executes exactly as written, forever, without any possibility of modification or downtime. This permanence requires a fundamentally different mindset: bugs cannot be patched, and every function must be designed with the assumption that hostile actors may interact with it.
+
+The language implements a safety-first approach with built-in protections: overflow checks, require/assert statements for invariants, and formal verification capabilities.gas optimization is a first-class concern since every computational step costs money (Ether) in the EVM.
+
+Inheritance, libraries, and user-defined types are first-class citizens, enabling developers to build complex, reusable smart contract systems while maintaining security boundaries between different components.
+
+## Code Example
+
+```solidity filename="Solidity Example"
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Token {
+    mapping(address => uint256) public balances;
+    address public owner;
+    
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    
+    constructor(uint256 initialSupply) {
+        owner = msg.sender;
+        balances[owner] = initialSupply;
+    }
+    
+    function transfer(address to, uint256 amount) public {
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        balances[msg.sender] -= amount;
+        balances[to] += amount;
+        emit Transfer(msg.sender, to, amount);
+    }
+    
+    receive() external payable {
+        balances[msg.sender] += msg.value;
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| DeFi | Uniswap, Aave, Compound |
+| NFTs | OpenSea, CryptoPunks |
+| DAOs | MakerDAO, ENS |
+| Infrastructure | OpenZeppelin, Chainlink |
+
+## Influence & Legacy
+
+**Inspired by:** C++, Python, JavaScript
+
+**Influenced:** Vyper (Pythonic alternative), Move (Facebook's blockchain language), Cairo (StarkNet)
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | npm (solc-js), Hardhat |
+| Frameworks | Truffle, Hardhat, Foundry |
+| Testing | Waffle, Foundry |
+| Security | Slither, Mythril |
+
+## When to Use
+
+**Good fit:**
+- Decentralized finance (DeFi) applications
+- Non-fungible tokens (NFTs) and digital collectibles
+- Decentralized autonomous organizations (DAOs)
+- On-chain governance systems
+
+**Not a good fit:**
+- Applications requiring privacy (all data is public on-chain)
+- High-frequency trading (gas costs too high)
+- Applications needing off-chain data (use oracles instead)
+
+## Controversies
+
+<Callout type="warning">
+  Solidity's contract-upgradability patterns, while necessary for fixing bugs in deployed code, create a paradox: the "immutable" blockchain actually contains mutable contracts. This has led to numerous security incidents where proxy patterns were implemented incorrectly, draining funds from supposedly secure contracts.
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  The DAO hack of 2016 exploited a recursive call vulnerability in a Solidity contract, draining 3.6 million Ether (worth $50 million at the time). This single event led to Ethereum's controversial hard fork, creating Ethereum Classic and Ethereum as we know them today. The attack fundamentally shaped how the Solidity community thinks about smart contract security.
+</Callout>

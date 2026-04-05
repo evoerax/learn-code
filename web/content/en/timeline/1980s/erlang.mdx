@@ -1,0 +1,116 @@
+---
+title: Erlang
+description: Telecom-grade concurrent language with actor model and hot code loading
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Erlang
+
+> _"Erlang is a programming language used to build massively scalable soft real-time systems with requirements on high availability."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1986 |
+| **Creator** | Joe Armstrong (Ericsson) |
+| **Paradigm** | Functional, Concurrent, Distributed |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform (BEAM VM) |
+| **Current Version** | OTP 26 |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Erlang was created at Ericsson in 1986 by Joe Armstrong to solve a critical problem: telephone switches required near-perfect uptime (99.999% availability, or less than 5 minutes downtime per year). Traditional languages couldn't handle the demands of massive concurrency while allowing hot code updates without system restart.
+
+Armstrong designed Erlang specifically for telecommunications infrastructure, where systems must run continuously for decades. The language's name originally stood for "Ericsson Language" but was later redefined as a tribute to the mathematician Agner Krarup Erlang, who pioneered traffic engineering.
+
+The BEAM virtual machine (Bogdan/Björn's Erlang Abstract Machine) that runs Erlang was designed for extreme concurrency from day one, supporting millions of lightweight processes on a single machine.
+
+## Design Philosophy
+
+Erlang's core philosophy centers on "let it crash"—rather than trying to handle every possible error, the system is designed to quickly detect failures and restart failed components. This approach, called OTP (Open Telecom Platform), revolutionized how fault-tolerant systems are built.
+
+The Actor model is fundamental: each Erlang process is a lightweight isolated actor that communicates exclusively through message passing. Processes share no memory, eliminating entire categories of bugs common in threaded systems.
+
+Hot code loading allows Erlang systems to update their own code while running, without stopping or interrupting service. This was revolutionary for systems that cannot be taken offline.
+
+## Code Example
+
+```erlang filename="Erlang Example"
+%% Concurrent factorial server
+-module(factorial).
+-export([start/0, calc/2]).
+
+start() ->
+    spawn(fun() -> server_loop(1) end).
+
+calc(Pid, N) ->
+    Pid ! {self(), N},
+    receive
+        {Pid, Result} -> Result
+    end.
+
+server_loop(N) ->
+    receive
+        {From, 0} -> From ! {self(), N}, server_loop(N);
+        {From, N} when N > 0 -> server_loop(N * (N - 1))
+    end.
+
+%% Spawning 1 million lightweight processes
+spawn_processes(0) -> done;
+spawn_processes(N) ->
+    spawn(fun() -> receive after infinity -> ok end end),
+    spawn_processes(N - 1).
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Telecommunications | Ericsson AXD 301, WhatsApp backend |
+| Messaging | WhatsApp, WeChat, RabbitMQ |
+| Streaming | Discord, Ericsson |
+| IoT | Bosch, Siemens |
+
+## Influence & Legacy
+
+**Inspired by:** Lisp, Prolog, Smalltalk, ACTOR model
+
+**Influenced:** Elixir, Akka (Scala/JVM), Pony, Beam languages (LFE, Gleam)
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Build Tool | rebar3 |
+| Web Frameworks | Phoenix, Cowboy |
+| Database | Mnesia, PostgreSQL |
+| Testing | Common Test, EUnit |
+
+## When to Use
+
+**Good fit:**
+- Telecommunications infrastructure
+- Messaging systems requiring 99.999% uptime
+- Systems needing hot code updates
+- Massive concurrent connections (millions of WebSocket connections)
+
+**Not a good fit:**
+- CPU-intensive computation (better: C, Rust)
+- Simple scripts (better: Python, Ruby)
+- Object-oriented business logic (better: Java, C#)
+
+## Controversies
+
+<Callout type="warning">
+  Erlang's syntax, heavily influenced by Prolog, uses single assignment variables and pattern matching extensively. Developers accustomed to imperative languages often find the syntax alien. Variables are assigned once and never changed—a foreign concept that becomes natural but initially confusing.
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  WhatsApp handled 2 million concurrent connections per Erlang node, running on commodity hardware. When Facebook acquired WhatsApp in 2014, the Erlang-based messaging system was reportedly handling 42 billion messages per day with a tiny engineering team.
+</Callout>

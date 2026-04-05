@@ -1,0 +1,116 @@
+---
+title: Erlang
+description: 电信级并发语言，Actor模型，热代码加载
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Erlang
+
+> _"Erlang 是一门用于构建大规模软实时系统的编程语言，要求高可用性。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1986 |
+| **Creator** | Joe Armstrong (Ericsson) |
+| **Paradigm** | 函数式、并发、分布式 |
+| **Type System** | 动态类型、强类型 |
+| **Platform** | 跨平台（BEAM 虚拟机） |
+| **Current Version** | OTP 26 |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Erlang 由 Joe Armstrong 于 1986 年在爱立信创建，旨在解决一个关键问题：电话交换机需要近乎完美的正常运行时间（99.999% 可用性，即每年停机时间少于 5 分钟）。传统语言无法应对大规模并发需求，同时还要允许热更新而无需系统重启。
+
+Armstrong 设计 Erlang 是专门为电信基础设施服务的，在这些系统中，系统必须连续运行数十年。该语言的名字原本代表"Ericsson Language"，后来被重新定义为对数学家 Agner Krarup Erlang 的致敬，他开创了流量工程学。
+
+运行 Erlang 的 BEAM 虚拟机（ Bogdan/Björn 的 Erlang 抽象机）从一开始就被设计为支持极端并发，在单台机器上支持数百万个轻量级进程。
+
+## Design Philosophy
+
+Erlang 的核心哲学围绕"让它崩溃"——与其试图处理每一个可能的错误，不如设计系统快速检测故障并重启失败的组件。这种方法称为 OTP（Open Telecom Platform），彻底改变了容错系统的构建方式。
+
+Actor 模型是根本：每个 Erlang 进程都是一个轻量级的隔离 Actor，只能通过消息传递进行通信。进程之间不共享内存，消除了线程系统中常见的整类 bug。
+
+热代码加载允许 Erlang 系统在运行时不停止服务更新自己的代码。对于不能离线的系统来说，这是革命性的功能。
+
+## Code Example
+
+```erlang filename="Erlang 示例"
+%% 并发阶乘服务器
+-module(factorial).
+-export([start/0, calc/2]).
+
+start() ->
+    spawn(fun() -> server_loop(1) end).
+
+calc(Pid, N) ->
+    Pid ! {self(), N},
+    receive
+        {Pid, Result} -> Result
+    end.
+
+server_loop(N) ->
+    receive
+        {From, 0} -> From ! {self(), N}, server_loop(N);
+        {From, N} when N > 0 -> server_loop(N * (N - 1))
+    end.
+
+%% 产生100万个轻量级进程
+spawn_processes(0) -> done;
+spawn_processes(N) ->
+    spawn(fun() -> receive after infinity -> ok end end),
+    spawn_processes(N - 1).
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| 电信 | Ericsson AXD 301, WhatsApp 后端 |
+| 即时通讯 | WhatsApp, WeChat, RabbitMQ |
+| 流媒体 | Discord, Ericsson |
+| 物联网 | Bosch, Siemens |
+
+## Influence & Legacy
+
+**Inspired by:** Lisp, Prolog, Smalltalk, ACTOR 模型
+
+**Influenced:** Elixir, Akka (Scala/JVM), Pony, Beam 语言 (LFE, Gleam)
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 构建工具 | rebar3 |
+| Web 框架 | Phoenix, Cowboy |
+| 数据库 | Mnesia, PostgreSQL |
+| 测试 | Common Test, EUnit |
+
+## When to Use
+
+**Good fit:**
+- 电信基础设施
+- 需要 99.999%正常运行时间的消息系统
+- 需要热代码更新的系统
+- 大规模并发连接（数百万 WebSocket 连接）
+
+**Not a good fit:**
+- CPU 密集型计算（更好的选择：C, Rust）
+- 简单脚本（更好的选择：Python, Ruby）
+- 面向对象业务逻辑（更好的选择：Java, C#）
+
+## Controversies
+
+<Callout type="warning">
+  Erlang 的语法深受 Prolog 影响，大量使用单赋值变量和模式匹配。习惯命令式语言的开发者往往觉得语法很陌生。变量只能赋值一次，永不改变——这是一个初始令人困惑但会变得自然的概念。
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  WhatsApp 的每个 Erlang 节点处理 200 万并发连接，运行在普通硬件上。2014 年 Facebook 收购 WhatsApp 时，据报道 Erlang 消息系统每天处理 420 亿条消息，而工程团队规模很小。
+</Callout>
