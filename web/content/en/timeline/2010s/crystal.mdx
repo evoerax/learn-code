@@ -1,0 +1,116 @@
+---
+title: Crystal
+description: Ruby syntax meets C performance—a statically typed language that feels dynamic but runs native-fast
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Crystal
+
+> _Fast as C, beautiful as Ruby._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2014 (1.0 released in 2021) |
+| **Creator** | Ary Borenswzweig |
+| **Paradigm** | Multi-paradigm (OOP, Functional) |
+| **Type System** | Static, Strong, Type inference |
+| **Platform** | Cross-platform (compiles to native) |
+| **Current Version** | 1.11.2 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Ary Borenswzweig loved Ruby's elegant syntax but was frustrated by its runtime performance. In 2014, he started Crystal as an experiment: what if a language could have Ruby's readability and developer experience while compiling to efficient native code? The key was leveraging a type system to enable compile-time optimization without requiring verbose type annotations everywhere.
+
+Crystal's development was community-driven from the start. The language attracted developers who wanted the productivity of Ruby without accepting Ruby's performance limitations. After years of development, Crystal 1.0 shipped in 2021, signaling production readiness and API stability.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Crystal is a language with Ruby-like syntax that compiles to native code." — Official documentation
+</Callout>
+
+Core principles:
+- **Ruby-inspired syntax**: Crystal code often looks like idiomatic Ruby
+- **Static typing with inference**: No need to annotate every variable
+- **Macros**: Code generation at compile time through reflection
+- **C binding**: Call any C library directly without wrappers
+
+Crystal's type system is unique—it can often infer types through control flow analysis, giving you static safety without the verbosity of languages like Java or C#.
+
+## Code Example
+
+```crystal filename="web_server.cr"
+require "http/server"
+
+struct User
+  getter name : String
+  getter age : Int32
+  getter email : String
+
+  def initialize(@name, @age, @email)
+  end
+
+  def adult? : Bool
+    @age >= 18
+  end
+end
+
+def filter_adults(users : Array(User)) : Array(String)
+  users
+    .select(&.adult?)
+    .map { |user| "#{user.name} <#{user.email}>" }
+end
+
+server = HTTP::Server.new do |context|
+  users = [
+    User.new("Alice", 28, "alice@example.com"),
+    User.new("Bob", 15, "bob@example.com"),
+    User.new("Carol", 35, "carol@example.com"),
+  ]
+
+  html = filter_adults(users).join("\n") do |contact|
+    "<p>#{contact}</p>"
+  end
+
+  context.response.content_type = "text/html"
+  context.response.print <<-HTML
+    <!DOCTYPE html>
+    <html>
+    <body>
+      <h1>Adult Users</h1>
+      #{html}
+    </body>
+    </html>
+  HTML
+end
+
+puts "Starting server on http://localhost:8080"
+server.listen(8080)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web Frameworks | Amber, Lucky, Kemal |
+| CLI Tools | Cri, Sam |
+| DevOps | Ansible Crystal, Habitat |
+| Games | Myrtle (game framework) |
+
+## Influence & Legacy
+
+**Inspired by:** Ruby, C, Go, Python
+
+**Influenced:** Conjure (game language), Lispy (prototype)
+
+Crystal represents the "what if" of language design: what if we could take a beloved syntax and pair it with native performance? While Crystal hasn't achieved mainstream adoption, it demonstrated that high-level language concepts (operator overloading, method_missing, dynamic-looking DSLs) can work within a statically typed compiled framework. Its influence appears in discussions about language design and in experiments combining developer experience with systems programming.
+
+<Cards num={3}>
+  <Cards.Card title="Ruby" href="/timeline/1990s/ruby" arrow />
+  <Cards.Card title="Go" href="/timeline/2000s/go" arrow />
+  <Cards.Card title="Rust" href="/timeline/2010s/rust" arrow />
+</Cards>

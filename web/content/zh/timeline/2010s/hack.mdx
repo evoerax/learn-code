@@ -1,0 +1,98 @@
+---
+title: Hack
+description: Facebook打造的静态类型PHP方言，为全球最广泛使用的服务端语言带来类型安全
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Hack
+
+> _PHP，涅槃重生。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 2014 |
+| **创造者** | Facebook（Julien Verlaguet, Joel Marcey） |
+| **范式** | 多范式（面向对象、函数式） |
+| **类型系统** | 静态、渐进式（带类型注解） |
+| **平台** | 跨平台（HHVM） |
+| **当前版本** | 2024.05 (2024) |
+| **许可证** | MIT（开源） |
+
+## 起源故事
+
+到2014年，Facebook已经构建了世界上最大的PHP代码库之一。PHP开发速度快，但随着代码库增长，缺乏静态类型检查导致了大量运行时才显现的微妙bug。工程师们花费大量时间追踪类型相关的崩溃——这些问题本可以被编译器立即捕获。
+
+Facebook的Julien Verlaguet和Joel Marcey开发了Hack，作为PHP的渐进类型层。核心洞察是：允许类型化和非类型化代码共存，这样现有的PHP代码库可以逐步采用Hack，而不需要同时重写所有代码。Facebook最终将其整个PHP代码库迁移到了Hack，证明了渐进类型在大规模场景下的可行性。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "Hack结合了PHP快速开发周期与静态类型语言的严谨性。" — Facebook工程博客
+</Callout>
+
+核心原则：
+- **渐进类型**：在你想要的地方添加类型注解；其他位置使用普通PHP
+- **Hack类型注解**：`function foo(int $x): string` — 显式且易读
+- **HHVM运行时**：Facebook的HipHop虚拟机执行Hack/PHP代码
+- **无缝PHP互操作**：任何PHP库都可以在Hack中使用
+
+Hack引入 `<?hh` 开始标签来区分Hack文件和普通PHP文件，尽管文件可以配置为默认使用Hack模式。
+
+## 代码示例
+
+```hack filename="user.php"
+<?hh
+
+// 类型注解使代码自文档化
+function get_adult_users(vec<User> $users): vec<User> {
+    return vec.filter($users, $user ==> $user->age >= 18);
+}
+
+function format_user_display(User $user): string {
+    return $user->name . " (" . (string)$user->age . ")";
+}
+
+// Shapes提供结构化类型数据，无需类
+function create_user(
+    string $name,
+    int $age,
+    string $email,
+): shape('name' => string, 'age' => int, 'email' => string) {
+    return shape(
+        'name' => $name,
+        'age' => $age,
+        'email' => $email,
+    );
+}
+
+// 异步函数实现非阻塞I/O
+async function fetch_user_data(string $id): Awaitable<User> {
+    $result = await HTTPClient::get("/api/users/{$id}");
+    return User::fromJson($result);
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|----------|
+| 社交网络 | Facebook（内部）, Instagram（部分） |
+| 基础设施 | Wikipedia（HHVM）, Slack（部分） |
+| 工具 | HHVM, Hack工具链, LSP支持 |
+
+## 影响与遗产
+
+**受启发于：** PHP、Java、C#、ML
+
+**影响：** PHP 7+类型提示、JetBrains MPS
+
+Hack证明了渐进类型可以在超大规模下工作——Facebook整个代码库迁移无需同时重写。这门语言还通过 `HH\Async` 命名空间为PHP开创了async/await的先河，这些特性最终被PHP原生采用。HHVM本身也推动了PHP的JIT编译边界，尽管它最终转向专注于Hack。
+
+<Cards num={3}>
+  <Cards.Card title="PHP" href="/zh/timeline/1990s/php" arrow />
+  <Cards.Card title="TypeScript" href="/zh/timeline/2010s/typescript" arrow />
+  <Cards.Card title="Kotlin" href="/zh/timeline/2010s/kotlin" arrow />
+</Cards>

@@ -1,0 +1,98 @@
+---
+title: Hack
+description: Facebook's statically typed PHP dialect, bringing type safety to the world's most widely used server-side language
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Hack
+
+> _PHP, reborn with types._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2014 |
+| **Creator** | Facebook (Julien Verlaguet, Joel Marcey) |
+| **Paradigm** | Multi-paradigm (OOP, Functional) |
+| **Type System** | Static, Gradual (with type annotations) |
+| **Platform** | Cross-platform (HHVM) |
+| **Current Version** | 2024.05 (2024) |
+| **License** | MIT (open source) |
+
+## Origin Story
+
+By 2014, Facebook had built one of the largest PHP codebases in the world. PHP was fast to develop in, but as the codebase grew, the lack of static type checking led to subtle bugs that only appeared at runtime. Engineers spent significant time tracking down type-related crashes that a compiler could have caught instantly.
+
+Julien Verlaguet and Joel Marcey at Facebook developed Hack as a gradual typing layer on top of PHP. The key insight: allow both typed and untyped code to coexist, so existing PHP codebases could adopt Hack incrementally without rewriting everything at once. Facebook migrated its entire PHP codebase to Hack, demonstrating that gradual typing could work at scale.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Hack combines the fast development cycle of PHP with the rigor of statically typed languages." — Facebook Engineering Blog
+</Callout>
+
+Core principles:
+- **Gradual typing**: Add type annotations where you want them; plain PHP elsewhere
+- **Hack type annotations**: `function foo(int $x): string` — explicit and readable
+- **HHVM runtime**: Facebook's HipHop Virtual Machine executes Hack/PHP code
+- **Seamless PHP interoperability**: Any PHP library works in Hack
+
+Hack introduces the `<?hh` opening tag to distinguish Hack files from regular PHP, though files can be configured to default to Hack mode.
+
+## Code Example
+
+```hack filename="user.php"
+<?hh
+
+// Type annotations make code self-documenting
+function get_adult_users(vec<User> $users): vec<User> {
+    return vec.filter($users, $user ==> $user->age >= 18);
+}
+
+function format_user_display(User $user): string {
+    return $user->name . " (" . (string)$user->age . ")";
+}
+
+// Shapes provide structured typed data without classes
+function create_user(
+    string $name,
+    int $age,
+    string $email,
+): shape('name' => string, 'age' => int, 'email' => string) {
+    return shape(
+        'name' => $name,
+        'age' => $age,
+        'email' => $email,
+    );
+}
+
+// Async functions for non-blocking I/O
+async function fetch_user_data(string $id): Awaitable<User> {
+    $result = await HTTPClient::get("/api/users/{$id}");
+    return User::fromJson($result);
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Social Networks | Facebook (internal), Instagram (partial) |
+| Infrastructure | Wikipedia (HHVM), Slack (partial) |
+| Tools | HHVM, Hack tooling, LSP support |
+
+## Influence & Legacy
+
+**Inspired by:** PHP, Java, C#, ML
+
+**Influenced:** PHP 7+ type hints, JetBrains MPS
+
+Hack proved that gradual typing could work at massive scale—Facebook's entire codebase was migrated without requiring simultaneous rewrites. The language also pioneered async/await for PHP through the `HH\Async` namespace, features that PHP eventually adopted natively. HHVM itself pushed the boundaries of JIT compilation for PHP, though it eventually pivoted to focus on Hack specifically.
+
+<Cards num={3}>
+  <Cards.Card title="PHP" href="/timeline/1990s/php" arrow />
+  <Cards.Card title="TypeScript" href="/timeline/2010s/typescript" arrow />
+  <Cards.Card title="Kotlin" href="/timeline/2010s/kotlin" arrow />
+</Cards>

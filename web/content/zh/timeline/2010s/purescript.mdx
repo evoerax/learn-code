@@ -1,0 +1,98 @@
+---
+title: PureScript
+description: 强类型的纯函数式语言，编译为JavaScript，将Haskell的纯粹性带入Web世界
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# PureScript
+
+> _Haskell的灵魂，JavaScript的躯壳。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 2013 |
+| **创造者** | Phil Freeman |
+| **范式** | 纯函数式 |
+| **类型系统** | 静态、强类型、Hindley-Milner |
+| **平台** | 跨平台（编译为JavaScript） |
+| **当前版本** | 0.15.14 (2023) |
+| **许可证** | MIT |
+
+## 起源故事
+
+2013年，Phil Freeman想要将Haskell强大的类型系统带到JavaScript开发中，同时又不想被JVM或其他运行时的限制所束缚。他创造了PureScript——一门从Haskell的语法和类型系统中汲取大量灵感、以JavaScript为主要编译目标的语言。
+
+PureScript的设计初衷是填补一个空白：Haskell很强大，但无法编译成干净、可读的Web用JavaScript。而PureScript产生的JavaScript简洁易读，可以在任何JavaScript运行的地方执行。这门语言吸引了许多开发者——他们想要纯函数式类型系统的安全性，又不想离开JavaScript生态。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "PureScript是一门强类型的纯函数式语言，编译目标是JavaScript。" — Phil Freeman
+</Callout>
+
+核心原则：
+- **默认纯函数**：副作用必须通过类型系统显式追踪
+- **行类型多态**：无需传统OOP继承即可扩展记录和效果
+- **类型类**：Haskell风格类型类实现 ad-hoc 多态
+- **零运行时开销**：编译为最小化、可读的JavaScript
+
+PureScript的类型系统在某些方面比Haskell更严格——它不支持模块级别的类型推断——但这种显式性使代码更容易理解和重构。
+
+## 代码示例
+
+```purescript filename="data.purs"
+module Data where
+
+import Data.Array (filter, map)
+import Data.Tuple (Tuple(..))
+import Effect (Effect)
+import Effect.Console (logShow)
+
+type User = { name :: String, age :: Int, email :: String }
+
+isAdult :: User -> Boolean
+isAdult user = user.age >= 18
+
+getContact :: User -> String
+getContact user = user.email <> " (" <> user.name <> ")"
+
+adultsWithContacts :: Array User -> Array String
+adultsWithContacts users = map getContact (filter isAdult users)
+
+main :: Effect Unit
+main = do
+  let users = [ 
+      { name: "Alice", age: 28, email: "alice@example.com" },
+      { name: "Bob", age: 15, email: "bob@example.com" },
+      { name: "Carol", age: 35, email: "carol@example.com" }
+    ]
+  logShow (adultsWithContacts users)
+```
+
+外部函数接口（FFI）使得调用JavaScript库变得简单，同时类型系统确保你不会滥用它们。
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|----------|
+| Web应用 | 萧湘书院, PureScript UI框架 |
+| 构建工具 | Pulp（包管理器）, PSkatchewan |
+| 工具库 | Floppy（解析）, Argonaut（JSON） |
+| 教学 | 函数式编程课程 |
+
+## 影响与遗产
+
+**受启发于：** Haskell、ML、JavaScript
+
+**影响：** Kotlin（多平台努力）、Scala.js、ReasonML
+
+PureScript证明了强静态类型和纯函数式编程可以在JavaScript生态中工作。其影响体现在TypeScript类型系统设计的改进中，也体现在其他编译为JS的函数式语言的发展中。这门语言还推动了关于行类型和可扩展效果在实际编程中的讨论。
+
+<Cards num={3}>
+  <Cards.Card title="Haskell" href="/zh/timeline/1990s/haskell" arrow />
+  <Cards.Card title="JavaScript" href="/zh/timeline/1990s/javascript" arrow />
+  <Cards.Card title="Elm" href="/zh/timeline/2010s/elm" arrow />
+</Cards>

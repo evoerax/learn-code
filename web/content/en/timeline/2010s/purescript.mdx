@@ -1,0 +1,98 @@
+---
+title: PureScript
+description: A strongly typed functional language that compiles to JavaScript, bringing Haskell's purity to the web
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# PureScript
+
+> _Haskell for the browser, without the妥协._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2013 |
+| **Creator** | Phil Freeman |
+| **Paradigm** | Pure Functional |
+| **Type System** | Static, Strong, Hindley-Milner |
+| **Platform** | Cross-platform (compiles to JavaScript) |
+| **Current Version** | 0.15.14 (2023) |
+| **License** | MIT |
+
+## Origin Story
+
+In 2013, Phil Freeman wanted to bring Haskell's powerful type system to JavaScript development without the constraints imposed by having to run on the JVM or other runtimes. The result was PureScript—a language that draws heavily from Haskell's syntax and type system while targeting JavaScript as its primary compilation target.
+
+PureScript was designed to fill a gap: Haskell is powerful but doesn't compile to clean, readable JavaScript for the web. PureScript produces concise, readable JavaScript that can run anywhere JavaScript runs. The language has attracted developers who want the safety of a pure functional type system without leaving the JavaScript ecosystem.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "PureScript is a strongly typed, purely functional language that targets JavaScript." — Phil Freeman
+</Callout>
+
+Core principles:
+- **Pure by default**: Side effects must be explicitly tracked through the type system
+- **Row-polymorphism**: Extensible records and effects without traditional OOP inheritance
+- **Type classes**: Haskell-style type classes for ad-hoc polymorphism
+- **No runtime overhead**: Compiles to minimal, readable JavaScript
+
+PureScript's type system is more restrictive than Haskell's in some ways—it doesn't support type inference at the module level—but this explicitness makes code easier to reason about and refactor.
+
+## Code Example
+
+```purescript filename="data.purs"
+module Data where
+
+import Data.Array (filter, map)
+import Data.Tuple (Tuple(..))
+import Effect (Effect)
+import Effect.Console (logShow)
+
+type User = { name :: String, age :: Int, email :: String }
+
+isAdult :: User -> Boolean
+isAdult user = user.age >= 18
+
+getContact :: User -> String
+getContact user = user.email <> " (" <> user.name <> ")"
+
+adultsWithContacts :: Array User -> Array String
+adultsWithContacts users = map getContact (filter isAdult users)
+
+main :: Effect Unit
+main = do
+  let users = [ 
+      { name: "Alice", age: 28, email: "alice@example.com" },
+      { name: "Bob", age: 15, email: "bob@example.com" },
+      { name: "Carol", age: 35, email: "carol@example.com" }
+    ]
+  logShow (adultsWithContacts users)
+```
+
+The foreign function interface (FFI) makes it trivial to call JavaScript libraries, while the type system ensures you can't misuse them.
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web Apps |萧湘书院, PureScript UI frameworks |
+| Build Tools | Pulp (package manager), PSkatchewan |
+| Utilities | Floppy (parsing), Argonaut (JSON) |
+| Education | Functional programming courses |
+
+## Influence & Legacy
+
+**Inspired by:** Haskell, ML, JavaScript
+
+**Influenced:** Kotlin (multiplatform efforts), Scala.js, ReasonML
+
+PureScript demonstrated that strong static typing and pure functional programming could work in the JavaScript ecosystem. Its influence can be seen in the design of TypeScript's type system improvements and the development of other compile-to-JS functional languages. The language also pushed the conversation aboutrow types and extensible effects in practical programming.
+
+<Cards num={3}>
+  <Cards.Card title="Haskell" href="/timeline/1990s/haskell" arrow />
+  <Cards.Card title="JavaScript" href="/timeline/1990s/javascript" arrow />
+  <Cards.Card title="Elm" href="/timeline/2010s/elm" arrow />
+</Cards>

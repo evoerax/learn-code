@@ -1,0 +1,116 @@
+---
+title: Crystal
+description: Ruby的语法，C的性能——一门感觉动态但运行原生快速静态类型语言
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Crystal
+
+> _C的速度，Ruby的美。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 2014（1.0版本于2021年发布） |
+| **创造者** | Ary Borenswzweig |
+| **范式** | 多范式（面向对象、函数式） |
+| **类型系统** | 静态、强类型、类型推断 |
+| **平台** | 跨平台（编译为原生码） |
+| **当前版本** | 1.11.2 (2024) |
+| **许可证** | Apache 2.0 |
+
+## 起源故事
+
+Ary Borenswzweig热爱Ruby优雅的语法，但对其运行时性能感到沮丧。2014年，他开始Crystal作为一个实验：如果一门语言能拥有Ruby的开发体验，同时又能编译成高效的原生码，会怎样？关键是利用类型系统实现编译时优化，而不需要求到处都是冗长的类型注解。
+
+Crystal从一开始就是社区驱动的。这门语言吸引了许多开发者——他们想要Ruby的开发效率，而不愿接受Ruby的性能局限。经过多年开发，Crystal 1.0于2021年发布，标志着生产就绪和API稳定。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "Crystal是一门具有Ruby风格语法的语言，编译为原生代码。" — 官方文档
+</Callout>
+
+核心原则：
+- **Ruby启发的语法**：Crystal代码通常看起来像地道的Ruby
+- **带推断的静态类型**：无需为每个变量添加类型注解
+- **宏**：通过反射在编译时生成代码
+- **C绑定**：直接调用任何C库，无需包装器
+
+Crystal的类型系统很独特——它通常可以通过控制流分析推断类型，给你静态安全性的同时无需Java或C#那样冗长的类型注解。
+
+## 代码示例
+
+```crystal filename="web_server.cr"
+require "http/server"
+
+struct User
+  getter name : String
+  getter age : Int32
+  getter email : String
+
+  def initialize(@name, @age, @email)
+  end
+
+  def adult? : Bool
+    @age >= 18
+  end
+end
+
+def filter_adults(users : Array(User)) : Array(String)
+  users
+    .select(&.adult?)
+    .map { |user| "#{user.name} <#{user.email}>" }
+end
+
+server = HTTP::Server.new do |context|
+  users = [
+    User.new("Alice", 28, "alice@example.com"),
+    User.new("Bob", 15, "bob@example.com"),
+    User.new("Carol", 35, "carol@example.com"),
+  ]
+
+  html = filter_adults(users).join("\n") do |contact|
+    "<p>#{contact}</p>"
+  end
+
+  context.response.content_type = "text/html"
+  context.response.print <<-HTML
+    <!DOCTYPE html>
+    <html>
+    <body>
+      <h1>成年用户</h1>
+      #{html}
+    </body>
+    </html>
+  HTML
+end
+
+puts "服务器启动于 http://localhost:8080"
+server.listen(8080)
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|----------|
+| Web框架 | Amber, Lucky, Kemal |
+| CLI工具 | Cri, Sam |
+| DevOps | Ansible Crystal, Habitat |
+| 游戏 | Myrtle（游戏框架） |
+
+## 影响与遗产
+
+**受启发于：** Ruby、C、Go、Python
+
+**影响：** Conjure（游戏语言）, Lispy（原型）
+
+Crystal代表了语言设计的"如果"：如果我们能采用深受喜爱的语法，同时又能配上原生性能呢？虽然Crystal尚未成为主流，但它证明了高层语言概念（运算符重载、method_missing、看起来很动态的DSL）可以在静态类型的编译框架中工作。其影响出现在语言设计的讨论中，以及结合开发者体验和系统编程的实验中。
+
+<Cards num={3}>
+  <Cards.Card title="Ruby" href="/zh/timeline/1990s/ruby" arrow />
+  <Cards.Card title="Go" href="/zh/timeline/2000s/go" arrow />
+  <Cards.Card title="Rust" href="/zh/timeline/2010s/rust" arrow />
+</Cards>
