@@ -1,0 +1,91 @@
+---
+title: ActionScript
+description: Flash动画和RIA应用的编程语言
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# ActionScript
+
+> _在JavaScript统治浏览器之前，赋予网页交互性的语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2000 |
+| **Creator** | Macromedia（后被Adobe收购） |
+| **Paradigm** | 面向对象、事件驱动 |
+| **Type System** | 动态类型、强类型 |
+| **Platform** | Flash Player、AIR |
+| **Current Version** | 3.0 (2007) |
+| **License** | 专有软件（Apache 2.0 for Tamarin） |
+
+## Origin Story
+
+1996年，Macromedia收购了矢量图形软件FutureSplash的开发商FutureWave。为了给动画添加交互性，他们开发了ActionScript——最初只是一门简单的命令式脚本语言。
+
+2000年，ActionScript 1.0带来了更结构化的编程语法，设计灵感来自JavaScript。2003年Macromedia发布ActionScript 2.0，引入了真正的面向对象能力，支持类和类型检查。
+
+关键转折发生在2006年——Adobe收购Macromedia后发布了ActionScript 3.0，这是一个完全重写的版本，使用新虚拟机AVM2，性能提升高达10倍。Flash应用终于能在复杂度上与桌面软件比肩。
+
+## Design Philosophy
+
+ActionScript的设计理念是让设计师能上手、开发者能深入。它遵循ECMAScript标准，与JavaScript保持兼容的同时，添加了Flash特有的图形、动画和媒体库。
+
+语言范式从纯过程式演进为完全面向对象。ActionScript 3.0引入了包、接口和编译时类型检查，使其适用于大规模应用开发。
+
+## Code Example
+
+```actionscript filename="Flash游戏示例"
+// ActionScript 3.0 基于类的写法
+package {
+    import flash.display.Sprite;
+    import flash.events.Event;
+
+    public class Ball extends Sprite {
+        private var vx:Number = 5;
+        private var vy:Number = 5;
+
+        public function Ball() {
+            graphics.beginFill(0xFF0000);
+            graphics.drawCircle(0, 0, 20);
+            graphics.endFill();
+            addEventListener(Event.ENTER_FRAME, update);
+        }
+
+        private function update(e:Event):void {
+            x += vx;
+            y += vy;
+            if (x > stage.stageWidth || x < 0) vx *= -1;
+            if (y > stage.stageHeight || y < 0) vy *= -1;
+        }
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 游戏 | FarmVille、愤怒的小鸟（早期）、Happy Wheels |
+| 应用 | YouTube早期播放器、Nike ID配置器 |
+| 动画 | Homestar Runner、Newgrounds内容 |
+| 富媒体 | 嵌入式小游戏、在线课件 |
+
+## Influence & Legacy
+
+**Inspired by:** ECMAScript、JavaScript、Java
+
+**Influenced:** Adobe AIR、Apache Flex、JavaScript (ES6 classes)、Haxe
+
+<Cards num={3}>
+  <Cards.Card title="JavaScript" href="/timeline/1990s/javascript" arrow />
+  <Cards.Card title="Haxe" href="/timeline/2000s/haxe" arrow />
+</Cards>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  ActionScript早期版本使用类似JavaScript的原型继承，ActionScript 3.0才切换到类式面向对象——这是一个有争议的变更，打破了向后兼容性，但带来了更好的工具支持和性能。
+</Callout>

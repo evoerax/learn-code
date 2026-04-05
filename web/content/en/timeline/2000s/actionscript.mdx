@@ -1,0 +1,91 @@
+---
+title: ActionScript
+description: The programming language behind Flash animations and RIA applications
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# ActionScript
+
+> _The language that brought interactivity to the web before JavaScript conquered it._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2000 |
+| **Creator** | Macromedia (originally Adobe) |
+| **Paradigm** | Object-oriented, Event-driven |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Flash Player, AIR |
+| **Current Version** | 3.0 (2007) |
+| **License** | Proprietary (Apache 2.0 for Tamarin) |
+
+## Origin Story
+
+In 1996, Macromedia acquired FutureWave and its vector graphics software Future Splash. To add interactivity to animations, they developed ActionScript as a scripting language. Initially a simple command language, it evolved rapidly.
+
+By 2000, ActionScript 1.0 brought more structured programming with syntax inspired by JavaScript. When Macromedia released Flash MX in 2002 and later ActionScript 2.0 in 2003, the language gained true object-oriented capabilities with class syntax and type checking.
+
+The pivotal moment came in 2006 when Adobe (which had acquired Macromedia) released ActionScript 3.0—a complete rewrite with a virtual machine (AVM2) that brought performance gains of up to 10x. Flash applications could finally rival desktop software in complexity.
+
+## Design Philosophy
+
+ActionScript was designed to be accessible to designers while powerful enough for developers. It embraced the ECMAScript standard, maintaining compatibility with JavaScript while adding Flash-specific libraries for graphics, animation, and media.
+
+The language evolved from a purely procedural model to a fully object-oriented one. ActionScript 3.0 introduced packages, interfaces, and compile-time type checking, making it suitable for large-scale application development.
+
+## Code Example
+
+```actionscript filename="Flash Game Sample"
+// ActionScript 3.0 class-based approach
+package {
+    import flash.display.Sprite;
+    import flash.events.Event;
+
+    public class Ball extends Sprite {
+        private var vx:Number = 5;
+        private var vy:Number = 5;
+
+        public function Ball() {
+            graphics.beginFill(0xFF0000);
+            graphics.drawCircle(0, 0, 20);
+            graphics.endFill();
+            addEventListener(Event.ENTER_FRAME, update);
+        }
+
+        private function update(e:Event):void {
+            x += vx;
+            y += vy;
+            if (x > stage.stageWidth || x < 0) vx *= -1;
+            if (y > stage.stageHeight || y < 0) vy *= -1;
+        }
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Games | FarmVille, Angry Birds (early), Happy Wheels |
+| Applications | YouTube early player, Nike ID configurator |
+| Animation | Homestar Runner, Newgrounds content |
+| Rich Media | Advergames, e-learning courses |
+
+## Influence & Legacy
+
+**Inspired by:** ECMAScript, JavaScript, Java
+
+**Influenced:** Adobe AIR, Apache Flex, JavaScript (ES6 classes), Haxe
+
+<Cards num={3}>
+  <Cards.Card title="JavaScript" href="/timeline/1990s/javascript" arrow />
+  <Cards.Card title="Haxe" href="/timeline/2000s/haxe" arrow />
+</Cards>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  ActionScript's early versions used prototype-based inheritance similar to JavaScript, before ActionScript 3.0 switched to class-based OOP—a controversial change that broke backward compatibility but enabled better tooling and performance.
+</Callout>

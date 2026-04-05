@@ -1,0 +1,107 @@
+---
+title: Processing
+description: Visual programming language for artists and designers, Java-based
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Processing
+
+> _Code should paint._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2001 |
+| **Creator** | Casey Reas, Ben Fry (MIT Media Lab) |
+| **Paradigm** | Object-oriented, Visual |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform (Java) |
+| **Current Version** | 4.3 (2023) |
+| **License** | GPL v2 |
+
+## Origin Story
+
+In 2001, Casey Reas and Ben Fry—students at the MIT Media Lab—released Processing as a tool to help visual artists learn programming without getting bogged down in syntax complexity. The project was born from frustration with existing programming tools that treated graphics as an afterthought.
+
+Processing simplified Java into a syntax optimized for creating graphics, animations, and interactive experiences. The famous `setup()` and `draw()` loop became iconic patterns that thousands of beginners used to create their first visual programs.
+
+The language quickly spread through art schools worldwide. Galleries began exhibiting Processing-created works, and the language became the de facto tool for generative art. In 2012, the Processing Foundation was established to ensure the project's long-term sustainability.
+
+## Design Philosophy
+
+Processing prioritizes immediacy—seeing results quickly matters more than architectural elegance. The `draw()` loop with its implicit `frameRate` creates an animation canvas with minimal boilerplate. The language embraces "p5.js" philosophy: make the first program feel like magic.
+
+The motto "visual feedback is the best feedback" guides every design decision. Variables can be drawn directly to the screen, eliminating the compile-run-navigate mental gap that frustrates beginners.
+
+## Code Example
+
+```processing filename="Generative Art"
+// Famous Processing example - recursive tree
+float angle;
+float length;
+
+void setup() {
+  size(800, 600);
+  length = 200;
+  angle = PI / 6;
+}
+
+void draw() {
+  background(255);
+  stroke(0);
+  drawBranch(length);
+  noLoop();
+}
+
+void drawBranch(float len) {
+  line(0, 0, 0, -len);
+  translate(0, -len);
+  if (len > 4) {
+    pushMatrix();
+    rotate(angle);
+    drawBranch(len * 0.67);
+    popMatrix();
+    pushMatrix();
+    rotate(-angle);
+    drawBranch(len * 0.67);
+    popMatrix();
+  }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Digital Art | Processing exhibition at MoMA, Ars Electronica |
+| Education | Creative coding courses worldwide |
+| Data Viz | Many data visualization libraries |
+| Prototyping | Rapid UI/UX visualization |
+
+## Influence & Legacy
+
+**Inspired by:** Logo, Design, Visual Arts
+
+**Influenced:** p5.js, Arduino, openFrameworks, Cinder, Three.js
+
+<Cards num={3}>
+  <Cards.Card title="p5.js" href="/timeline/2010s/javascript" arrow />
+  <Cards.Card title="Arduino" href="/timeline/2000s/arduino" arrow />
+</Cards>
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | Contribute Libraries |
+| Major Libraries | p5.js, toxiclibs, ControlP5 |
+| Related Platforms | Processing.py, p5.js web editor |
+| Hardware | Arduino, Raspberry Pi |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Processing's development environment is called the PDE (Processing Development Environment). When you click Run, your code is compiled as a Java class and executed in a Java VM—Processing is fundamentally Java with a simplified syntax and graphics-focused standard library.
+</Callout>

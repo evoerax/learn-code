@@ -1,0 +1,107 @@
+---
+title: Processing
+description: 为艺术家和设计师打造的可视化编程语言，基于Java
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Processing
+
+> _代码应当作画。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2001 |
+| **Creator** | Casey Reas, Ben Fry（MIT媒体实验室） |
+| **Paradigm** | 面向对象、可视化 |
+| **Type System** | 静态类型、强类型 |
+| **Platform** | 跨平台（Java） |
+| **Current Version** | 4.3 (2023) |
+| **License** | GPL v2 |
+
+## Origin Story
+
+2001年，Casey Reas和Ben Fry——MIT媒体实验室的学生——发布了Processing，一款帮助视觉艺术家学习编程的工具。项目的诞生源于对现有编程工具的失望：那些工具把图形视为附属品。
+
+Processing将Java简化成专为创建图形、动画和交互体验而优化的语法。著名的`setup()`和`draw()`循环成为标志性模式，成千上万的初学者用它创造了第一个视觉程序。
+
+这门语言迅速在世界各地的艺术院校传播。美术馆开始展出用Processing创作的作品，Processing成为生成式艺术的事实标准工具。2012年，Processing基金会成立，确保了项目的长期可持续发展。
+
+## Design Philosophy
+
+Processing的核心原则是即时性——快速看到结果比架构优雅更重要。带有隐式`frameRate`的`draw()`循环用最少的样板代码创建动画画布。语言拥抱"p5.js"哲学：让第一个程序感觉像魔法。
+
+"视觉反馈是最好的反馈"这一理念指导着每个设计决策。变量可以直接画到屏幕上，消除了初学者在编译-运行-导航之间切换的思维断层。
+
+## Code Example
+
+```processing filename="生成艺术"
+// 著名Processing示例 - 递归树
+float angle;
+float length;
+
+void setup() {
+  size(800, 600);
+  length = 200;
+  angle = PI / 6;
+}
+
+void draw() {
+  background(255);
+  stroke(0);
+  drawBranch(length);
+  noLoop();
+}
+
+void drawBranch(float len) {
+  line(0, 0, 0, -len);
+  translate(0, -len);
+  if (len > 4) {
+    pushMatrix();
+    rotate(angle);
+    drawBranch(len * 0.67);
+    popMatrix();
+    pushMatrix();
+    rotate(-angle);
+    drawBranch(len * 0.67);
+    popMatrix();
+  }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 数字艺术 | MoMA收藏的Processing作品、Ars Electronica |
+| 教育 | 全球创意编程课程 |
+| 数据可视化 | 众多数据可视化库 |
+| 原型设计 | 快速UI/UX可视化 |
+
+## Influence & Legacy
+
+**Inspired by:** Logo、设计、视觉艺术
+
+**Influenced:** p5.js、Arduino、openFrameworks、Cinder、Three.js
+
+<Cards num={3}>
+  <Cards.Card title="p5.js" href="/timeline/2010s/javascript" arrow />
+  <Cards.Card title="Arduino" href="/timeline/2000s/arduino" arrow />
+</Cards>
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | 贡献库 |
+| 主要库 | p5.js、toxiclibs、ControlP5 |
+| 相关平台 | Processing.py、p5.js网页编辑器 |
+| 硬件 | Arduino、Raspberry Pi |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Processing的开发环境叫PDE（Processing Development Environment）。当你点击运行时，你的代码被编译成一个Java类并在Java虚拟机上执行——Processing本质上是Java，只是语法简化了，并且标准库专注于图形处理。
+</Callout>
