@@ -1,0 +1,100 @@
+---
+title: Smalltalk
+description: 施乐帕洛阿尔托研究中心的纯面向对象语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Smalltalk
+
+> _一切皆对象，对象通过消息交流。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1972 |
+| **创造者** | Alan Kay、Adele Goldberg、Dan Ingalls（施乐 PARC） |
+| **范式** | 面向对象、动态类型 |
+| **类型系统** | 动态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | Squeak 6.0 |
+| **许可证** | Apache 2.0 |
+
+## 起源故事
+
+Smalltalk 于 1972 年诞生于施乐帕洛阿尔托研究中心（PARC）的"学习研究组"，由 Alan Kay 领导。Kay 从生物细胞及其通过化学信号交流的方式获得灵感——他设想软件为由相互通信的对象组成的"生物系统"。
+
+"Smalltalk"这个名字反映了 Kay 的目标：创造一门足够强大以模拟复杂系统、却又足够简单让儿童学习的语言。这种将计算视为探索和创造力媒介的愿景，塑造了个人计算革命。
+
+PARC 团队创建了多个版本（Smalltalk-72、-76、-80），每个版本实现不同。Smalltalk-80 成为后来商业实现的基础，并影响了无数后续语言。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "计算机是我们见过的最非凡的工具，但它实际上应该成为人类表达的一种媒介。" — Alan Kay
+</Callout>
+
+Smalltalk 的革命性理念：
+
+- **一切皆对象**：数字、字符串、类——所有都是能响应消息的对象
+- **消息传递**：对象通过发送消息来通信，而非调用方法
+- **动态类型**：类型在运行时确定
+- **反射**：对象可以检查和修改自身
+- **活码编程**：环境是交互式的；修改即时生效
+
+这种设计优先考虑概念优雅而非实现效率。Kay 称其为计算的"人文性"——为人类思维方式设计，而非机器运作方式。
+
+## 代码示例
+
+```smalltalk
+"定义一个类并使用它"
+Object subclass: #BankAccount
+    instanceVariableNames: 'balance owner'
+    classVariableNames: ''
+    poolDictionaries: ''
+    category: 'Banking'
+
+"实例方法"
+BankAccount>>deposit: amount
+    balance := balance + amount.
+    ^ self
+
+BankAccount>>withdraw: amount
+    balance >= amount ifTrue: [
+        balance := balance - amount.
+        ^ self
+    ] ifFalse: [
+        ^ self error: 'Insufficient funds'
+    ]
+
+"使用"
+account := BankAccount new.
+account deposit: 1000.
+account withdraw: 500.
+account balance "返回 500"
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| GUI 开发 | Macintosh 概念、控件、窗口系统 |
+| IDE 设计 | 重构浏览器、活体调试器 |
+| 教育 | Squeak Etoys、Scratch 前身 |
+| 企业 | VisualWorks、GemStone/S |
+
+## 影响与遗产
+
+**启发自：** LISP、Simula、生物细胞
+
+**影响：** Objective-C、Java、Python、Ruby、JavaScript、Dart、Swift
+
+Smalltalk 的影响无法估量。它首创了：
+- 纯面向对象编程
+- 模型-视图-控制器（MVC）架构
+- 活体/迭代开发环境
+- 主流语言中的垃圾回收
+- "对象到底"的概念
+
+Alan Kay 对移动计算（"Dynabook"）的愿景，在平板电脑和智能手机出现前几十年就影响了它们的发展。Objective-C 直接借鉴了 Smalltalk 的消息语法，Java 则吸收了其对象模型。

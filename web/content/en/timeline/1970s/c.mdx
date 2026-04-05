@@ -1,0 +1,98 @@
+---
+title: C
+description: The foundational systems programming language born in Bell Labs
+---
+
+import { Callout } from 'nextra/components'
+
+# C
+
+> _The mother tongue of systems programming._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1972 |
+| **Creator** | Dennis Ritchie (Bell Labs) |
+| **Paradigm** | Imperative, Procedural |
+| **Type System** | Static, Weak |
+| **Platform** | Cross-platform |
+| **Current Version** | C23 (2024) |
+| **License** | BSD |
+
+## Origin Story
+
+C was created by Dennis Ritchie at Bell Labs in 1972, initially to implement the UNIX operating system. It evolved from Ken Thompson's B language, which itself was derived from BCPL.
+
+The story of C is inseparable from UNIX. Before C, operating systems were written in assembly language, making them hardware-specific and difficult to port. When Ritchie rewrote UNIX in C in 1973, it proved that a high-level language could be used for systems programming, revolutionizing how operating systems were developed.
+
+The book "The C Programming Language" by Ritchie and Brian Kernighan (1978) became one of the most influential programming books ever written, and its famously terse style shaped C culture.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "C is a razor-sharp tool: powerful enough to cut deep, but dangerous in untrained hands."
+</Callout>
+
+C was designed with the philosophy of trusting the programmer:
+
+- Minimal runtime, no garbage collection
+- Direct memory access through pointers
+- Low-level hardware access when needed
+- Simple, composable constructs
+- "You don't pay for what you don't use"
+
+The language provides exactly what you need to write efficient code—nothing more. This philosophy enabled unprecedented control over hardware, at the cost of allowing memory bugs that crash programs.
+
+## Code Example
+
+```c filename="memory.c"
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
+    int value;
+    struct node *next;
+} node;
+
+node *create_list(int n) {
+    node *head = NULL, *prev = NULL;
+    for (int i = 0; i < n; i++) {
+        node *curr = malloc(sizeof(node));
+        curr->value = i;
+        curr->next = NULL;
+        if (prev) prev->next = curr;
+        else head = curr;
+        prev = curr;
+    }
+    return head;
+}
+
+void free_list(node *head) {
+    while (head) {
+        node *next = head->next;
+        free(head);
+        head = next;
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Operating Systems | Linux, Windows (NT kernel), macOS (core) |
+| Databases | MySQL, PostgreSQL, SQLite |
+| Compilers | GCC, LLVM |
+| Embedded | Firmware for microcontrollers, RTOS |
+
+## Influence & Legacy
+
+**Inspired by:** B, BCPL, Assembly
+
+**Influenced:** C++, Java, JavaScript, C#, Go, Rust, Perl, Python
+
+C is arguably the most influential language of all time. Every major operating system kernel is written in C. Languages that claim to be alternatives to C, like C++ and Rust, still maintain C compatibility or influence. The world's most critical infrastructure—power grids, aircraft, medical devices—runs on C code.
+
+UNIX, Linux, and all modern operating systems were made possible by C's unique combination of low-level control and high-level syntax.

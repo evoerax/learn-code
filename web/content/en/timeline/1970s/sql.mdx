@@ -1,0 +1,94 @@
+---
+title: SQL
+description: The universal language for relational database queries
+---
+
+import { Callout } from 'nextra/components'
+
+# SQL
+
+> _Declarative data manipulation, from banking to blogging._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1974 |
+| **Creator** | Donald Chamberlin, Raymond Boyce (IBM) |
+| **Paradigm** | Declarative, Set-oriented |
+| **Type System** | Dynamic |
+| **Platform** | Cross-platform |
+| **Current Version** | SQL:2023 |
+| **License** | ISO/IEC 9075 |
+
+## Origin Story
+
+SQL (Structured Query Language) was developed by Donald Chamberlin and Raymond Boyce at IBM in 1974, originally called SEQUEL. It was designed to manipulate and retrieve data from IBM's experimental RDBMS called SystemR.
+
+Boyce created the first version of SQL but tragically died from a brain tumor just days after presenting his paper at an ACM conference, at age 26. Chamberlin continued developing SQL, which became the standard language for relational databases.
+
+Oracle Corporation released the first commercial SQL implementation in 1979, beating IBM to market. This competitive dynamic drove rapid standardization, and SQL became the ANSI standard in 1986, with ISO following in 1987.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The customer is always right. Even when they're wrong, they're right. But a JOIN is always a JOIN." — Traditional SQL humor
+</Callout>
+
+SQL introduced revolutionary concepts:
+
+- **Declarative querying**: State what you want, not how to get it
+- **Set-based operations**: Process entire datasets at once
+- **Relational algebra**: Based on Codd's mathematical model
+- **Data independence**: Applications don't directly access storage
+
+The language was designed to be readable by non-programmers, using English-like syntax. "SELECT * FROM customers WHERE age > 21" reads almost like English, making data access accessible to business analysts.
+
+## Code Example
+
+```sql
+-- Complex queries show SQL's power
+SELECT 
+    customers.name,
+    COUNT(orders.id) AS order_count,
+    SUM(orders.total) AS lifetime_value
+FROM customers
+LEFT JOIN orders ON customers.id = orders.customer_id
+WHERE customers.country = 'USA'
+  AND customers.registered_at > '2020-01-01'
+GROUP BY customers.id, customers.name
+HAVING COUNT(orders.id) >= 5
+ORDER BY lifetime_value DESC
+LIMIT 100;
+
+-- A view for reusable query logic
+CREATE VIEW vip_customers AS
+SELECT * FROM customers
+WHERE lifetime_value > 10000
+   OR order_count > 50;
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Enterprise | Oracle, PostgreSQL, MySQL, SQL Server |
+| Web Applications | User data, content management |
+| Analytics | Data warehouses, BI tools |
+| Transaction Processing | Banking, inventory systems |
+
+## Influence & Legacy
+
+**Inspired by:** Relational algebra, SEQUEL, ISBL
+
+**Influenced:** NoSQL query languages, LINQ, GraphQL
+
+SQL became the universal data layer. Nearly every web application today communicates with a SQL database. Even "NoSQL" databases like MongoDB often provide SQL-like query interfaces.
+
+The language established:
+- Declarative programming as mainstream
+- Set theory as a programming tool
+- Data independence as a design principle
+- The importance of standardized interfaces
+
+Modern data engineering, analytics, and even machine learning pipelines build on SQL. Tools like Apache Spark expose SQL interfaces, and new languages like PromQL (Prometheus) model themselves on SQL's query patterns.

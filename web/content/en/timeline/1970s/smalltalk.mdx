@@ -1,0 +1,100 @@
+---
+title: Smalltalk
+description: The first pure object-oriented language from Xerox PARC
+---
+
+import { Callout } from 'nextra/components'
+
+# Smalltalk
+
+> _Everything is an object, and objects communicate via messages._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1972 |
+| **Creator** | Alan Kay, Adele Goldberg, Dan Ingalls (Xerox PARC) |
+| **Paradigm** | Object-oriented, Dynamic |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | Squeak 6.0 |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Smalltalk emerged from Xerox PARC's Learning Research Group in 1972, led by Alan Kay. Kay was inspired by biological cells and how they communicate through chemical signals—he envisioned software as a "biological system" of communicating objects.
+
+The name "Smalltalk" reflected Kay's goal: create a language powerful enough to simulate complex systems, yet small and simple enough for children to learn. This vision of computing as a medium for exploration and creativity shaped the personal computing revolution.
+
+The PARC team created multiple versions (Smalltalk-72, -76, -80) with different implementations. Smalltalk-80 became the basis for later commercial implementations and influenced countless subsequent languages.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The computer is the most extraordinary tool we've ever seen, but it should really be a medium for human expression." — Alan Kay
+</Callout>
+
+Smalltalk's revolutionary ideas:
+
+- **Everything is an object**: Numbers, strings, classes—all objects that respond to messages
+- **Message passing**: Objects communicate by sending messages, not calling methods
+- **Dynamic typing**: Types are determined at runtime
+- **Reflective**: Objects can inspect and modify themselves
+- **Live coding**: The environment is interactive; changes happen instantly
+
+The design prioritized conceptual elegance over implementation efficiency. Kay called this "humanity" in computing—designing for how humans think, not how machines work.
+
+## Code Example
+
+```smalltalk
+"Defining a class and using it"
+Object subclass: #BankAccount
+    instanceVariableNames: 'balance owner'
+    classVariableNames: ''
+    poolDictionaries: ''
+    category: 'Banking'
+
+"Instance methods"
+BankAccount>>deposit: amount
+    balance := balance + amount.
+    ^ self
+
+BankAccount>>withdraw: amount
+    balance >= amount ifTrue: [
+        balance := balance - amount.
+        ^ self
+    ] ifFalse: [
+        ^ self error: 'Insufficient funds'
+    ]
+
+"Usage"
+account := BankAccount new.
+account deposit: 1000.
+account withdraw: 500.
+account balance "Returns 500"
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| GUI Development | Macintosh concepts, widgets, windowing |
+| IDE Design | Refactoring browsers, live debuggers |
+| Education | Squeak Etoys, Scratch precursor |
+| Enterprise | VisualWorks, GemStone/S |
+
+## Influence & Legacy
+
+**Inspired by:** LISP, Simula, biological cells
+
+**Influenced:** Objective-C, Java, Python, Ruby, JavaScript, Dart, Swift
+
+Smalltalk's influence is immeasurable. It pioneered:
+- Pure object-oriented programming
+- The Model-View-Controller (MVC) architecture
+- Live/iterative development environments
+- Garbage collection in mainstream languages
+- The concept of "objects all the way down"
+
+Alan Kay's vision of mobile computing ("Dynabook") influenced the development of tablets and smartphones decades before they existed. Objective-C borrowed Smalltalk's message syntax directly, and Java absorbed its object model.

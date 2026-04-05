@@ -1,0 +1,92 @@
+---
+title: Prolog
+description: The declarative logic programming language for AI expert systems
+---
+
+import { Callout } from 'nextra/components'
+
+# Prolog
+
+> _Tell me what you want, not how to do it._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1972 |
+| **Creator** | Alain Colmerauer, Robert Kowalski (University of Marseille) |
+| **Paradigm** | Logic, Declarative |
+| **Type System** | Dynamic, Untyped |
+| **Platform** | Cross-platform |
+| **Current Version** | ISO Prolog (1995) |
+| **License** | Various |
+
+## Origin Story
+
+Prolog (Programmation en Logique) was created in 1972 by Alain Colmerauer at the University of Marseille, initially for natural language processing research. Robert Kowalski, working independently in Edinburgh, developed the theoretical foundations connecting logic programming to automated theorem proving.
+
+The project began as an attempt to use logic for parsing natural language. Colmerauer's team built a Prolog implementation in ALGOL-W, while Kowalski developed the theoretical framework that showed how Horn clauses could serve as a programming paradigm.
+
+Prolog became the language of choice for the Japanese Fifth Generation Computer Project in 1982, which aimed to create AI systems capable of human-like reasoning. Though the project didn't achieve its ambitious goals, it spread Prolog worldwide.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Logic programming is a way of computing that is based on a simple, unified formal system." — Robert Kowalski
+</Callout>
+
+Prolog's revolutionary approach:
+
+- **Declarative**: Programs specify relationships, not algorithms
+- **Pattern matching**: Unification replaces traditional control flow
+- **Backtracking**: Automatic exploration of possible solutions
+- **Relation-based**: Facts and rules, not functions and procedures
+
+You describe the problem in terms of facts and rules, and Prolog's inference engine finds solutions through logical deduction. For certain problems—puzzles, parsing, theorem proving—this approach is extraordinarily elegant.
+
+## Code Example
+
+```prolog
+% Family relationships as facts and rules
+parent(tom, bob).
+parent(tom, liz).
+parent(bob, ann).
+parent(bob, pat).
+parent(pat, jim).
+
+grandparent(X, Z) :-
+    parent(X, Y),
+    parent(Y, Z).
+
+sibling(X, Y) :-
+    parent(Z, X),
+    parent(Z, Y),
+    X \= Y.
+
+% Queries
+% ?- grandparent(tom, Who).  % Who = ann ; Who = pat
+% ?- sibling(ann, pat).      % true
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| AI Research | Expert systems, theorem provers |
+| Natural Language | Grammar parsing, machine translation |
+| Problem Solving | Sudoku solvers, scheduling |
+| Education | Computational logic courses |
+
+## Influence & Legacy
+
+**Inspired by:** Predicate logic, Horn clauses, resolution theorem proving
+
+**Influenced:** Mercury, Oz, CHR, Datalog, Answer Set Programming
+
+Prolog established logic programming as a major paradigm. Its influence appears in:
+- Constraint satisfaction languages
+- Query languages like SQL's declarative foundations
+- Expert system shells
+- Automated reasoning tools
+
+The Japanese Fifth Generation Project, though ultimately unsuccessful, trained a generation of researchers in parallel logic programming. The core ideas of declarative programming continue in modern languages like Mercury, Curry, and even embedded DSLs in mainstream languages.

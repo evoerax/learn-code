@@ -1,0 +1,92 @@
+---
+title: Prolog
+description: 用于人工智能专家系统的声明式逻辑编程语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Prolog
+
+> _告诉我你想要什么，而不是该怎么做。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1972 |
+| **创造者** | Alain Colmerauer、Robert Kowalski（马赛大学） |
+| **范式** | 逻辑、声明式 |
+| **类型系统** | 动态、无类型 |
+| **平台** | 跨平台 |
+| **当前版本** | ISO Prolog（1995） |
+| **许可证** | 多种 |
+
+## 起源故事
+
+Prolog（逻辑编程）于 1972 年由 Alain Colmerauer 在马赛大学创建，最初用于自然语言处理研究。Robert Kowalski 在爱丁堡独立工作，发展了将逻辑编程与自动定理证明联系起来理论基础。
+
+该项目最初尝试用逻辑来解析自然语言。Colmerauer 的团队在 ALGOL-W 中构建了 Prolog 实现，而 Kowalski 发展了理论基础，展示了 Horn 子句如何作为一种编程范式。
+
+Prolog 成为 1982 年日本第五代计算机项目的首选语言，该项目旨在创造具有类人推理能力的人工智能系统。尽管项目未能实现其雄心勃勃的目标，但它将 Prolog 传播到了全世界。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "逻辑编程是一种基于简单、统一形式系统的计算方式。" — Robert Kowalski
+</Callout>
+
+Prolog 的革命性方法：
+
+- **声明式**：程序指定关系，而非算法
+- **模式匹配**：合一替代传统控制流
+- **回溯**：自动探索可能的解决方案
+- **基于关系**：事实和规则，而非函数和过程
+
+你用事实和规则来描述问题，Prolog 的推理引擎通过逻辑推理找到解决方案。对于某些问题——谜题、解析、定理证明——这种方法非常优雅。
+
+## 代码示例
+
+```prolog
+% 家庭关系作为事实和规则
+parent(tom, bob).
+parent(tom, liz).
+parent(bob, ann).
+parent(bob, pat).
+parent(pat, jim).
+
+grandparent(X, Z) :-
+    parent(X, Y),
+    parent(Y, Z).
+
+sibling(X, Y) :-
+    parent(Z, X),
+    parent(Z, Y),
+    X \= Y.
+
+% 查询
+% ?- grandparent(tom, Who).  % Who = ann ; Who = pat
+% ?- sibling(ann, pat).      % true
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 人工智能研究 | 专家系统、定理证明器 |
+| 自然语言 | 语法分析、机器翻译 |
+| 问题求解 | 数独求解器、调度 |
+| 教育 | 计算逻辑课程 |
+
+## 影响与遗产
+
+**启发自：** 谓词逻辑、Horn 子句、消解定理证明
+
+**影响：** Mercury、Oz、CHR、Datalog、回答集编程
+
+Prolog 确立了逻辑编程作为一种主要范式的地位。它的影响体现在：
+- 约束满足语言
+- 如 SQL 声明式基础的查询语言
+- 专家系统外壳
+- 自动推理工具
+
+日本第五代计算机项目虽然最终未能成功，但培养了一代研究并行逻辑编程的研究人员。声明式编程的核心思想继续在 Mercury、Curry 等现代语言中传承，甚至嵌入在主流语言内部的 DSL 中。

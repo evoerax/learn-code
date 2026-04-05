@@ -1,0 +1,98 @@
+---
+title: C
+description: 贝尔实验室诞生的系统编程语言基石
+---
+
+import { Callout } from 'nextra/components'
+
+# C 语言
+
+> _系统编程的母语。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1972 |
+| **创造者** | Dennis Ritchie（贝尔实验室） |
+| **范式** | 命令式、过程式 |
+| **类型系统** | 静态、弱类型 |
+| **平台** | 跨平台 |
+| **当前版本** | C23（2024） |
+| **许可证** | BSD |
+
+## 起源故事
+
+C 语言由 Dennis Ritchie 于 1972 年在贝尔实验室创建，最初目的是实现 UNIX 操作系统。它从 Ken Thompson 的 B 语言演化而来，而 B 则源自 BCPL。
+
+C 与 UNIX 的故事密不可分。在 C 之前，操作系统只能用汇编语言编写，导致硬件依赖性强、难以移植。当 Ritchie 于 1973 年用 C 重写 UNIX 时，它证明了高级语言完全可以用于系统编程，开创了操作系统开发的新纪元。
+
+Ritchie 与 Brian Kernighan 合著的《C 程序设计语言》（1978）成为最具影响力的编程书籍之一，其简洁有力的文风也塑造了 C 文化的基调。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "C 是一把锋利的工具：强大到可以切得很深，但在新手手中却很危险。"
+</Callout>
+
+C 语言的设计哲学是信任程序员：
+
+- 最小运行时，无垃圾回收
+- 通过指针直接访问内存
+- 按需进行底层硬件操作
+- 简洁、可组合的构造
+- "只为需要的功能付费"
+
+这种哲学赋予程序员前所未有的硬件控制力，但也带来了可能导致程序崩溃的内存错误。
+
+## 代码示例
+
+```c filename="memory.c"
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
+    int value;
+    struct node *next;
+} node;
+
+node *create_list(int n) {
+    node *head = NULL, *prev = NULL;
+    for (int i = 0; i < n; i++) {
+        node *curr = malloc(sizeof(node));
+        curr->value = i;
+        curr->next = NULL;
+        if (prev) prev->next = curr;
+        else head = curr;
+        prev = curr;
+    }
+    return head;
+}
+
+void free_list(node *head) {
+    while (head) {
+        node *next = head->next;
+        free(head);
+        head = next;
+    }
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 操作系统 | Linux、Windows NT 内核、macOS 核心 |
+| 数据库 | MySQL、PostgreSQL、SQLite |
+| 编译器 | GCC、LLVM |
+| 嵌入式 | 微控制器固件、实时操作系统 |
+
+## 影响与遗产
+
+**启发自：** B、BCPL、汇编
+
+**影响：** C++、Java、JavaScript、C#、Go、Rust、Perl、Python
+
+C 或许是有史以来最具影响力的编程语言。所有主流操作系统的内核都用 C 编写。号称 C 替代者的语言如 C++ 和 Rust 仍然保持与 C 的兼容或受其影响。全球最关键的基础设施——电网、飞机、医疗设备——都运行在 C 代码之上。
+
+UNIX、Linux 及所有现代操作系统之所以成为可能，正是因为 C 独特地结合了底层控制力和高层语法。

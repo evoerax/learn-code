@@ -1,0 +1,94 @@
+---
+title: SQL
+description: 关系数据库查询的通用语言
+---
+
+import { Callout } from 'nextra/components'
+
+# SQL
+
+> _声明式数据操作，从银行到博客。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1974 |
+| **创造者** | Donald Chamberlin、Raymond Boyce（IBM） |
+| **范式** | 声明式、集合导向 |
+| **类型系统** | 动态 |
+| **平台** | 跨平台 |
+| **当前版本** | SQL:2023 |
+| **许可证** | ISO/IEC 9075 |
+
+## 起源故事
+
+SQL（结构化查询语言）由 Donald Chamberlin 和 Raymond Boyce 于 1974 年在 IBM 开发，最初称为 SEQUEL。它是为操作和检索 IBM 实验性 RDBMS（称为 SystemR）的数据而设计的。
+
+Boyce 创建了 SQL 的第一个版本，但在 ACM 会议上发表论文仅几天后因脑肿瘤去世，年仅 26 岁。Chamberlin 继续开发 SQL，使其成为关系数据库的标准语言。
+
+Oracle 公司于 1979 年发布了第一个商业 SQL 实现，比 IBM 更早进入市场。这种竞争动态推动了 rapid standardization，SQL 于 1986 年成为 ANSI 标准，1987 年成为 ISO 标准。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "客户永远是对的。即使他们错了，他们也是对的。但 JOIN 就是 JOIN。" — 传统 SQL 笑话
+</Callout>
+
+SQL 引入了革命性的概念：
+
+- **声明式查询**：说明你想要什么，而非如何获取
+- **集合操作**：一次处理整个数据集
+- **关系代数**：基于 Codd 的数学模型
+- **数据独立性**：应用程序不直接访问存储
+
+该语言设计得让非程序员也能阅读，使用类似英语的语法。"SELECT * FROM customers WHERE age > 21" 读起来几乎像英语，使数据访问对业务分析师也变得易于理解。
+
+## 代码示例
+
+```sql
+-- 复杂查询展示 SQL 的强大
+SELECT 
+    customers.name,
+    COUNT(orders.id) AS order_count,
+    SUM(orders.total) AS lifetime_value
+FROM customers
+LEFT JOIN orders ON customers.id = orders.customer_id
+WHERE customers.country = 'USA'
+  AND customers.registered_at > '2020-01-01'
+GROUP BY customers.id, customers.name
+HAVING COUNT(orders.id) >= 5
+ORDER BY lifetime_value DESC
+LIMIT 100;
+
+-- 用于重用查询逻辑的视图
+CREATE VIEW vip_customers AS
+SELECT * FROM customers
+WHERE lifetime_value > 10000
+   OR order_count > 50;
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 企业应用 | Oracle、PostgreSQL、MySQL、SQL Server |
+| Web 应用 | 用户数据、内容管理 |
+| 分析 | 数据仓库、BI 工具 |
+| 事务处理 | 银行、库存系统 |
+
+## 影响与遗产
+
+**启发自：** 关系代数、SEQUEL、ISBL
+
+**影响：** NoSQL 查询语言、LINQ、GraphQL
+
+SQL 成为通用的数据层。如今几乎每个 Web 应用程序都与 SQL 数据库通信。甚至像 MongoDB 这样的"NoSQL"数据库也经常提供类似 SQL 的查询接口。
+
+该语言确立了：
+- 声明式编程成为主流
+- 集合论作为编程工具
+- 数据独立性作为设计原则
+- 标准化接口的重要性
+
+现代数据工程、分析，甚至机器学习管道都建立在 SQL 之上。Apache Spark 等工具暴露 SQL 接口，PromQL（Prometheus）等新语言也以 SQL 的查询模式为模型。
