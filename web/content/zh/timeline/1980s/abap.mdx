@@ -1,0 +1,112 @@
+---
+title: ABAP
+description: SAP的企业编程语言，驱动全球商业系统
+---
+
+import { Callout } from 'nextra/components'
+
+# ABAP
+
+> _驱动世界企业软件的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1983 |
+| **创造者** | SAP（Systeme, Anwendungen, Produkte） |
+| **范式** | 事件驱动、面向对象（后期加入） |
+| **类型系统** | 静态、强类型 |
+| **平台** | SAP NetWeaver 应用服务器 |
+| **当前版本** | ABAP 7.58 |
+| **许可证** | 专有（SAP） |
+
+## 起源故事
+
+1983年，SAP（成立于1972年）正在为大企业构建商业应用软件。他们现有的系统用各种语言编写，因此创建了ABAP——"高级商业应用编程"——作为专有语言，专门用于商业应用。
+
+最初的ABAP是一种简单的脚本语言，用于定义报表和处理数据。随着SAP的发展，他们的R/3系统成为全球企业资源规划的支柱，ABAP演变成一门完整的编程语言，能够处理复杂的业务逻辑、数据库操作和用户界面开发。
+
+ABAP的决定性特征是其与SAP数据字典和业务逻辑层的紧密集成。当你编写ABAP时，你是在一个为数十年企业计算设计的庞大框架中工作。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "ABAP程序不是独立的——它们存在于SAP系统的元数据和业务逻辑基础设施中，并依赖于它们。"
+</Callout>
+
+ABAP为商业程序员而非计算机科学家设计：
+
+- **Open SQL**与ABAP原生SQL语法无缝集成
+- **内部表**提供强大的内存数据结构
+- **逻辑数据库**抽象出复杂的数据检索
+- **事件驱动编程**模型匹配业务处理流程
+- **工作进程**提供内置事务处理
+
+```abap filename="zreport.prog.abap"
+REPORT zemployee_report.
+
+TABLES: pernr, pa0001.
+
+DATA: lt_employees TYPE TABLE OF pa0001,
+      ls_employee  TYPE pa0001.
+
+START-OF-SELECTION.
+  SELECT *
+    FROM pa0001
+    INTO TABLE lt_employees
+    WHERE persk = '03'  " 职员
+    ORDER BY nachn.
+
+  LOOP AT lt_employees INTO ls_employee.
+    WRITE: / ls_employee-pernr,
+             ls_employee-vorna,
+             ls_employee-nachn,
+             ls_employee-werks.
+  ENDLOOP.
+```
+
+## 代码示例
+
+```abap filename="zclass.clas.abap"
+CLASS zcl_employee DEFINITION.
+  PUBLIC SECTION.
+    METHODS: constructor IMPORTING iv_name TYPE string
+                                  iv_salary TYPE dec,
+             calculate_bonus RETURNING VALUE(rv_bonus) TYPE dec.
+  PRIVATE SECTION.
+    DATA: mv_name TYPE string,
+          mv_salary TYPE dec.
+ENDCLASS.
+
+CLASS zcl_employee IMPLEMENTATION.
+  METHOD constructor.
+    mv_name = iv_name.
+    mv_salary = iv_salary.
+  ENDMETHOD.
+
+  METHOD calculate_bonus.
+    rv_bonus = mv_salary * '0.10'.
+  ENDMETHOD.
+ENDCLASS.
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| ERP | SAP R/3、S/4HANA核心定制 |
+| 金融 | SAP FI/CO模块自定义报表 |
+| 物流 | SAP MM/WM扩展 |
+| 人力资源 | SAP HR/薪资增强 |
+| 集成 | SAP PI/PO集成程序 |
+
+## 影响与遗产
+
+**启发自：** COBOL、RPG、SQL
+
+**影响：** SAP自有的UI框架、Business Workflow
+
+ABAP的影响力不是通过它启发的语言来衡量的，而是通过它每天处理的数万亿美元商业交易来衡量的。全球最大的公司——《财富》500强企业到政府机构——都在SAP系统上运行关键任务操作，这些系统都是用ABAP构建的。
+
+这门语言成功地从过程式演进到面向对象，从4GL演变为现代语法，并继续为全球商业的数字化骨干提供动力。当您跟踪包裹、查询银行余额或从大型零售商订购时，ABAP很可能在这个链条中的某个地方发挥作用。

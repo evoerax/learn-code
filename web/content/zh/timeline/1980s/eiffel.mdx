@@ -1,0 +1,90 @@
+---
+title: Eiffel
+description: 将契约式设计引入主流编程的语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Eiffel
+
+> _构建像桥梁一样可靠的软件。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1985 |
+| **创造者** | Bertrand Meyer |
+| **范式** | 面向对象、并发 |
+| **类型系统** | 静态、强类型、名目类型 |
+| **平台** | 跨平台 |
+| **当前版本** | ECMA 367 (ISO 25436) |
+| **许可证** | GPL / 商业许可 |
+
+## 起源故事
+
+Bertrand Meyer是苏黎世联邦理工学院的教授，在讲授面向对象编程时注意到了一个根本问题：软件构建缺乏严格的方式来规范组件应该做什么、不应该做什么。
+
+1985年，Meyer出版了《面向对象软件构造》并推出了Eiffel——一门围绕"契约式设计"(Design by Contract, DbC)概念构建的语言和方法学。Eiffel这个名字来自埃菲尔铁塔，象征着工程严谨和结构稳固。
+
+Eiffel不仅是一门语言，更是一套完整的方法论：类作为抽象数据类型，契约作为精确的规范，继承配合严谨的语义规则。目标是让软件工程像传统工程学科一样有纪律。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "当你写一个例程时，你是在做出承诺。当你调用它时，你是在签订一份契约。" — Bertrand Meyer
+</Callout>
+
+契约式设计是Eiffel的核心创新：
+
+- **前置条件**：调用者必须在例程运行前保证的事项
+- **后置条件**：例程结束时必须交付的保证
+- **类不变量**：对象状态必须保持为真的条件
+
+编译器可以在运行时验证契约，并在契约满足时优化代码。这使得调试更快，规范也不再模糊。
+
+## 代码示例
+
+```eiffel filename="stack.e"
+class STACK [G] feature
+    count: INTEGER is do ... end
+    
+    is_empty: BOOLEAN is do Result := (count = 0) end
+    is_full: BOOLEAN is do Result := (count >= capacity) end
+    
+    push (x: G) is
+        require
+            not is_full
+        do
+            storage.put (x, count + 1)
+        ensure
+            count = old count + 1
+            item = x
+        end
+    
+    item: G is
+        require
+            not is_empty
+        do
+            Result := storage.item (count)
+        end
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 金融 | EiffelFinance交易平台 |
+| 交通 | 西门子铁路信号系统 |
+| 企业 | ISE（Eiffel软件）工具集 |
+| 研究 | 米兰理工大学嵌入式系统 |
+
+## 影响与遗产
+
+**启发自：** ALGOL、Simula、Ada
+
+**影响：** Java（受检异常）、C#（契约）、Spec#
+
+Bertrand Meyer在DbC上的工作深刻影响了我们对软件规范的理解。Java采用了"受检异常"，这呼应了Eiffel处理契约违反的方法。微软的Spec#和后来的Code Contracts将契约式设计引入了C#。"例程调用即契约"的原则现已深入人心。
+
+Eiffel在形式化方法和验证研究中仍然具有影响力。它对精确规范的坚持继续启发着专注于软件正确性的语言和工具。

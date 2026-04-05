@@ -1,0 +1,115 @@
+---
+title: Eiffel
+description: The language that brought Design by Contract to mainstream programming
+---
+
+import { Callout } from 'nextra/components'
+
+# Eiffel
+
+> _Building software as reliable as bridges._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1985 |
+| **Creator** | Bertrand Meyer |
+| **Paradigm** | Object-oriented, Concurrent |
+| **Type System** | Static, Strong, Nominal |
+| **Platform** | Cross-platform |
+| **Current Version** | ECMA 367 (ISO 25436) |
+| **License** | GPL / Commercial |
+
+## Origin Story
+
+Bertrand Meyer, a professor at ETH Zurich, was teaching object-oriented programming and noticed a fundamental problem: software was being built without rigorous ways to specify what components should do and what they should not do.
+
+In 1985, Meyer published "Object-Oriented Software Construction" and introduced Eiffel—the language and methodology built around the concept of Design by Contract (DbC). The name Eiffel came from the Eiffel Tower, a symbol of engineering rigor and structural soundness.
+
+Eiffel was not just a language but a complete methodology: classes as abstract data types, contracts as precise specifications, and inheritance with careful semantic rules. The goal was to make software engineering as disciplined as traditional engineering disciplines.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "When you write a routine, you are making a promise. When you call it, you are entering into a contract." — Bertrand Meyer
+</Callout>
+
+Design by Contract is Eiffel's central innovation:
+
+- **Preconditions**: What the caller must guarantee before the routine runs
+- **Postconditions**: What the routine guarantees to deliver when it finishes
+- **Class invariants**: What must remain true about the object's state
+
+```eiffel filename="stack.e"
+class STACK [G] feature
+    count: INTEGER is do ... end
+    
+    is_empty: BOOLEAN is do Result := (count = 0) end
+    is_full: BOOLEAN is do Result := (count >= capacity) end
+    
+    push (x: G) is
+        require
+            not is_full
+        do
+            storage.put (x, count + 1)
+        ensure
+            count = old count + 1
+            item = x
+        end
+    
+    item: G is
+        require
+            not is_empty
+        do
+            Result := storage.item (count)
+        end
+```
+
+The compiler can verify contracts at runtime and optimize code when they're satisfied. This makes debugging faster and specifications unambiguous.
+
+## Code Example
+
+```eiffel filename="account.e"
+class ACCOUNT feature
+    balance: DOUBLE
+    minimum_balance: DOUBLE is 1000.0
+
+    deposit (amount: DOUBLE) is
+        require
+            amount > 0
+        do
+            balance := balance + amount
+        ensure
+            balance = old balance + amount
+        end
+
+    withdraw (amount: DOUBLE) is
+        require
+            amount > 0
+            balance - amount >= minimum_balance
+        do
+            balance := balance - amount
+        ensure
+            balance = old balance - amount
+        end
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Finance | EiffelFinance trading platform |
+| Transportation | Siemens rail signaling systems |
+| Enterprise | ISE (Eiffel software) toolset |
+| Research | Politecnico di Milano embedded systems |
+
+## Influence & Legacy
+
+**Inspired by:** ALGOL, Simula, Ada
+
+**Influenced:** Java (checked exceptions), C# (contracts), Spec#
+
+Bertrand Meyer's work on DbC profoundly influenced how we think about software specification. Java adopted "checked exceptions" which echo Eiffel's approach to handling contract violations. Microsoft's Spec# and later Code Contracts brought Design by Contract to C#. The principle that "a routine call is a contract" is now mainstream thinking in software engineering.
+
+Eiffel remains influential in formal methods and verification research. Its insistence on precise specifications continues to inspire languages and tools focused on software correctness.

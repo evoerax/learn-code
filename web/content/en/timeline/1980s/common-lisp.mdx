@@ -1,0 +1,92 @@
+---
+title: Common Lisp
+description: The ANSI-standardized general-purpose Lisp dialect that unified the Lisp world
+---
+
+import { Callout } from 'nextra/components'
+
+# Common Lisp
+
+> _The language that decided Lisp should have a standard._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1984 |
+| **Creator** | ANSI X3J13 Committee |
+| **Paradigm** | Multi-paradigm: Functional, OOP, Metaprogramming |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | CLTL2 (ANSI X3.226-1994) |
+| **License** | Public Domain / Various |
+
+## Origin Story
+
+By the early 1980s, Lisp had fragmented into dozens of incompatible dialects—Zetalisp, MacLisp, InterLisp, Franz Lisp, and others. Each had its own strengths, but the community was fragmented and code couldn't be shared.
+
+The ANSI X3J13 committee was formed to create a standard that would unify Lisp. After years of work, they published the Common Lisp standard in 1984. The goal was not to create a new language, but to consolidate the best features of existing dialects into one coherent whole.
+
+Unlike many standards that merely codify existing practice, Common Lisp was a synthesis—taking MacLisp's efficiency, InterLisp's programmer-friendly environment, and Zetalisp's object system (CLOS), weaving them into a unified language.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The purpose of the Common Lisp project was to provide a partial standardization and consolidation of the existing dialects." — Guy L. Steele Jr.
+</Callout>
+
+Common Lisp embodies the principle that the programmer knows best:
+
+- **Hygienic macros** that transform code without surprising side effects
+- **Condition system** for sophisticated error handling with restarts
+- **CLOS** (Common Lisp Object System) as an integral part of the language
+- **Interactive development** with REPL at the core
+- **Iterators and sequences** that work uniformly across data types
+
+The language trusts the programmer. There's no enforced purity—imperative code is fine when convenient, and the language provides the tools to build abstractions that match any problem.
+
+## Code Example
+
+```lisp filename="queens.lisp"
+;; N-Queens: classic constraint satisfaction problem
+(defun queens (n)
+  "Solve the N-Queens problem. Returns all solutions."
+  (let ((board (make-array n :initial-element nil)))
+    (labels ((safe-p (row col)
+               (loop for r from 0 below row
+                     for c = (aref board r)
+                     always (and (/= c col)
+                                 (/= (abs (- c col)) (- row r)))))
+             (place (row)
+               (if (= row n)
+                   (collect (copy-seq board))
+                   (loop for col from 0 below n
+                         when (safe-p row col)
+                         do (setf (aref board row) col)
+                            (place (1+ row))
+                            (setf (aref board row) nil)))))
+      (place 0))))
+
+;; Find all 92 solutions for 8-queens
+(queens 8)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| AI Research | CMU's road navigation, NASA spacecraft scheduling |
+| Finance | Quantitative trading systems at Jane Street |
+| Industry | AutoCAD's scripting engine |
+| Web | Reddit's early architecture (originally in Lisp) |
+| Education | SICP's base language (Scheme dialect) |
+
+## Influence & Legacy
+
+**Inspired by:** Lisp, MacLisp, InterLisp, Zetalisp
+
+**Influenced:** Clojure, Emacs Lisp, AutoLISP, Julia (的一部分)
+
+Common Lisp's condition system influenced error handling in Erlang and the "resumable exceptions" concept. CLOS's multi-methods predated many OOP languages' dispatch systems. The ANSI standard ensured Lisp survived as a unified ecosystem through decades when other languages fragmented and died.
+
+The language remains actively used in production at companies like Grammarly, Google (for ads optimization), and many hedge funds who value its interactive development and proven reliability.

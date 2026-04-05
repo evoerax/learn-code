@@ -1,0 +1,92 @@
+---
+title: Common Lisp
+description: ANSI标准化的通用Lisp方言，统一了Lisp世界
+---
+
+import { Callout } from 'nextra/components'
+
+# Common Lisp
+
+> _门语言决定Lisp需要一个标准。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1984 |
+| **创造者** | ANSI X3J13 委员会 |
+| **范式** | 多范式：函数式、面向对象、元编程 |
+| **类型系统** | 动态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | CLTL2 (ANSI X3.226-1994) |
+| **许可证** | 公有领域 / 多种 |
+
+## 起源故事
+
+到1980年代初，Lisp已经分裂成数十种不兼容的方言——Zetalisp、MacLisp、InterLisp、Franz Lisp等。每种都有各自的优势，但社区四分五裂，代码无法共享。
+
+ANSI X3J13委员会成立，旨在创建一个能统一Lisp的标准。经过数年的工作，他们于1984年发布了Common Lisp标准。目标不是创造一门新语言，而是将现有方言的最佳特性整合为一个连贯的整体。
+
+与许多仅编纂现有实践的标准不同，Common Lisp是一种综合——吸取MacLisp的效率、InterLisp的程序员友好环境，以及Zetalisp的对象系统(CLOS)，将它们编织成一门统一的语言。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "Common Lisp项目的目的是对现有方言进行部分标准化和整合。" — Guy L. Steele Jr.
+</Callout>
+
+Common Lisp体现了程序员最了解需求的原则：
+
+- **卫生宏**——转换代码而不产生意外的副作用
+- **条件系统**——通过重启进行复杂的错误处理
+- **CLOS**(Common Lisp Object System)作为语言的组成部分
+- **交互式开发**——REPL为核心
+- **迭代器和序列**——跨数据类型统一工作
+
+这门语言信任程序员。没有强制性的纯粹性——命令式代码在方便时完全可用，语言提供了匹配任何问题的抽象工具。
+
+## 代码示例
+
+```lisp filename="queens.lisp"
+;; N皇后：经典的约束满足问题
+(defun queens (n)
+  "求解N皇后问题，返回所有解。"
+  (let ((board (make-array n :initial-element nil)))
+    (labels ((safe-p (row col)
+               (loop for r from 0 below row
+                     for c = (aref board r)
+                     always (and (/= c col)
+                                 (/= (abs (- c col)) (- row r)))))
+             (place (row)
+               (if (= row n)
+                   (collect (copy-seq board))
+                   (loop for col from 0 below n
+                         when (safe-p row col)
+                         do (setf (aref board row) col)
+                            (place (1+ row))
+                            (setf (aref board row) nil)))))
+      (place 0))))
+
+;; 找出8皇后的全部92个解
+(queens 8)
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| AI研究 | CMU道路导航、NASA航天器调度 |
+| 金融 | Jane Street量化交易系统 |
+| 工业 | AutoCAD脚本引擎 |
+| Web | Reddit早期架构（最初使用Lisp构建） |
+| 教育 | SICP的基准语言（Scheme方言） |
+
+## 影响与遗产
+
+**启发自：** Lisp、MacLisp、InterLisp、Zetalisp
+
+**影响：** Clojure、Emacs Lisp、AutoLISP、Julia（部分）
+
+Common Lisp的条件系统影响了Erlang的错误处理和"可恢复异常"概念。CLOS的多方法早于许多OOP语言的调度系统。ANSI标准确保Lisp作为一个统一生态存活了数十年，其间其他语言都四分五裂并消亡了。
+
+这门语言在Grammarly、Google（用于广告优化）和许多对冲基金的生产环境中仍然活跃使用——他们都重视其交互式开发和经过验证的可靠性。

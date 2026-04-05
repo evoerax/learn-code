@@ -1,0 +1,112 @@
+---
+title: ABAP
+description: SAP's enterprise programming language powering global business systems
+---
+
+import { Callout } from 'nextra/components'
+
+# ABAP
+
+> _The language that runs the world's enterprise software._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1983 |
+| **Creator** | SAP (Software, Anwendungen, Produkte) |
+| **Paradigm** | Event-driven, Object-oriented (later additions) |
+| **Type System** | Static, Strong |
+| **Platform** | SAP NetWeaver Application Server |
+| **Current Version** | ABAP 7.58 |
+| **License** | Proprietary (SAP) |
+
+## Origin Story
+
+In 1983, SAP (founded in 1972) was building business application software for large enterprises. Their existing systems were written in various languages, so they created ABAP—"Advanced Business Application Programming"—as a proprietary language specifically for business applications.
+
+The original ABAP was a simple scripting language for defining reports and processing data. As SAP grew and their R/3 system became the backbone of enterprise resource planning worldwide, ABAP evolved into a full programming language capable of complex business logic, database operations, and user interface development.
+
+ABAP's defining characteristic is its tight integration with SAP's data dictionary and business logic layer. When you write ABAP, you're working within a massive framework designed for decades of enterprise computing.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "ABAP programs are not standalone—they exist within and depend upon the SAP system's metadata and business logic infrastructure."
+</Callout>
+
+ABAP was designed for business programmers, not computer scientists:
+
+- **Open SQL** integrates seamlessly with ABAP's native SQL syntax
+- **Internal tables** provide powerful in-memory data structures
+- **Logical databases** abstract away complex data retrieval
+- **Event-driven programming** model matches business processing flow
+- **Work processes** provide built-in transaction handling
+
+```abap filename="zreport.prog.abap"
+REPORT zemployee_report.
+
+TABLES: pernr, pa0001.
+
+DATA: lt_employees TYPE TABLE OF pa0001,
+      ls_employee  TYPE pa0001.
+
+START-OF-SELECTION.
+  SELECT *
+    FROM pa0001
+    INTO TABLE lt_employees
+    WHERE persk = '03'  " Clerks
+    ORDER BY nachn.
+
+  LOOP AT lt_employees INTO ls_employee.
+    WRITE: / ls_employee-pernr,
+             ls_employee-vorna,
+             ls_employee-nachn,
+             ls_employee-werks.
+  ENDLOOP.
+```
+
+## Code Example
+
+```abap filename="zclass.clas.abap"
+CLASS zcl_employee DEFINITION.
+  PUBLIC SECTION.
+    METHODS: constructor IMPORTING iv_name TYPE string
+                                  iv_salary TYPE dec,
+             calculate_bonus RETURNING VALUE(rv_bonus) TYPE dec.
+  PRIVATE SECTION.
+    DATA: mv_name TYPE string,
+          mv_salary TYPE dec.
+ENDCLASS.
+
+CLASS zcl_employee IMPLEMENTATION.
+  METHOD constructor.
+    mv_name = iv_name.
+    mv_salary = iv_salary.
+  ENDMETHOD.
+
+  METHOD calculate_bonus.
+    rv_bonus = mv_salary * '0.10'.
+  ENDMETHOD.
+ENDCLASS.
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| ERP | SAP R/3, S/4HANA core customization |
+| Finance | Custom reporting for SAP FI/CO modules |
+| Logistics | SAP MM/WM extensions |
+| HR | SAP HR/payroll enhancements |
+| Integration | SAP PI/PO integration programs |
+
+## Influence & Legacy
+
+**Inspired by:** COBOL, RPG, SQL
+
+**Influenced:** SAP's own UI frameworks, Business Workflow
+
+ABAP's influence is measured not by languages it inspired, but by the trillions of dollars of business transactions it processes daily. The world's largest companies—from Fortune 500 corporations to government agencies—run mission-critical operations on SAP systems built with ABAP.
+
+The language has successfully evolved from procedural to object-oriented, from 4GL to modern syntax, and continues to power the digital backbone of global commerce. When you track a package, check your bank balance, or order from a major retailer, there's a good chance ABAP is somewhere in the chain.
