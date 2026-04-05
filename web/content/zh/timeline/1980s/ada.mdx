@@ -1,0 +1,101 @@
+---
+title: Ada
+description: 为安全关键系统打造的高可靠性编程语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Ada
+
+> _正确性是不可妥协的。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1980 |
+| **创造者** | 美国国防部 / CII Honeywell Bull |
+| **范式** | 多范式：命令式、面向对象、并发 |
+| **类型系统** | 静态、强类型、名义类型 |
+| **平台** | 跨平台、嵌入式 |
+| **当前版本** | Ada 2022 |
+| **许可证** | GPL / 专有 |
+
+## 起源故事
+
+Ada 诞生于 1970 年代美国国防部的一项倡议。五角大楼花费数百万开发这门语言，因为他们有超过 400 种编程语言在各系统中使用——其中许多用于武器系统，一旦出错可能是灾难性的。
+
+这门语言以 Ada Lovelace 命名，她是世界上第一位程序员。设计过程异常严谨，涉及多个竞争团队和形式化方法。最终设计通过竞赛选出，并于 1980 年公开发布。
+
+美国国防部强制要求所有新的关键任务软件必须用 Ada 编写，这创造了一个稳定的市场，使这门语言在数十年中得以存活——否则它可能早已销声匿迹。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "程序的正确性不是事后添加的功能——它必须从一开始就被构建进去。"
+</Callout>
+
+Ada 的哲学核心是将正确性内置于语言本身：
+
+- 强大的编译时类型检查捕获整类错误
+- 范围类型防止缓冲区溢出和无效值
+- 任务（并发）是语言内置的，而非附加的
+- 子程序的契约指定前置条件和后置条件
+- 没有未定义行为——所有操作都有指定的语义
+
+这门语言使编写错误代码变得困难，而不是允许错误代码并寄希望于最好的结果。
+
+## 代码示例
+
+```ada filename="contracts.adb"
+package Counter is
+    type Counter is tagged private;
+    
+    procedure Increment (C : in out Counter);
+    procedure Decrement (C : in out Counter);
+    function Value (C : Counter) return Natural;
+    
+private
+    type Counter is tagged record
+        Val : Natural := 0;
+    end record;
+end Counter;
+
+package body Counter is
+    procedure Increment (C : in out Counter) is
+    begin
+        if C.Val < Natural'Last then
+            C.Val := C.Val + 1;
+        end if;
+    end Increment;
+    
+    procedure Decrement (C : in out Counter) is
+    begin
+        if C.Val > 0 then
+            C.Val := C.Val - 1;
+        end if;
+    end Decrement;
+    
+    function Value (C : Counter) return Natural is (C.Val);
+end Counter;
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 航空航天 | 波音777、空客A380飞控软件 |
+| 国防 | 美国海军武器系统、北约飞机 |
+| 铁路 | 法国TGV、伦敦地铁信号系统 |
+| 航天 | NASA火星车、ESA任务 |
+| 医疗 | 心脏起搏器、放射治疗机 |
+
+## 影响与遗产
+
+**启发自：** ALGOL、Pascal、PL/I
+
+**影响：** Rust、SPARK（形式化验证子集）
+
+Ada 引入的理念后来出现在更安全的语言中。它的契约、范围类型和内置并发强调，预见到了直到数十年后才成为主流的关注点。Rust 的所有权系统和 Ada 的契约式设计都源于同样的愿望：使非法状态无法表示。
+
+这门语言仍然是安全关键软件的黄金标准。当一艘现代飞船登陆火星，或飞机以不眨眼的可靠性飞行时，很可能有 Ada 在背后发挥作用。

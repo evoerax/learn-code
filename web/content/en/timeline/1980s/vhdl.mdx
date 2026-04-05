@@ -1,0 +1,100 @@
+---
+title: VHDL
+description: The hardware description language that revolutionized digital design
+---
+
+import { Callout } from 'nextra/components'
+
+# VHDL
+
+> _The language that made FPGAs possible._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1983 |
+| **Creator** | US Department of Defense (VHSSI project) |
+| **Paradigm** | Hardware Description Language |
+| **Type System** | Strong, Static |
+| **Platform** | FPGA, ASIC |
+| **Current Version** | IEEE 1076-2019 |
+| **License** | Open standard |
+
+## Origin Story
+
+VHDL (VHSIC Hardware Description Language) was born from the US Department of Defense's VHSIC (Very High Speed Integrated Circuits) program in 1983. The goal was to create a standard language for documenting and verifying hardware designs—not just for internal use, but as a contractual requirement for defense contractors.
+
+The language was designed to be readable by engineers, simulateable by computers, and synthesizable into actual gates. This combination of properties was revolutionary—before VHDL, hardware design was documented in schematic diagrams that couldn't be automatically verified.
+
+IEEE standardized VHDL in 1987 (1076), and it has been updated multiple times since. The language enabled the entire FPGA industry, where hardware can be reprogrammed after manufacturing—something unthinkable before the era of VHDL and Verilog.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "VHDL describes hardware at multiple levels of abstraction—from behavioral to structural to gate-level."
+</Callout>
+
+VHDL was designed with rigorous engineering principles:
+
+- Strong typing to catch mismatched signal widths early
+- Separate specification of interface and implementation
+- Concurrent processes for true hardware parallelism
+- Generate statements for parametric, repeated structures
+- Packages for reusable type definitions and functions
+
+The language forces designers to think explicitly about timing, concurrency, and resource usage—properties that are abstract in software but concrete in hardware.
+
+## Code Example
+
+```vhdl filename="counter.vhdl"
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity counter is
+  generic (
+    BITS : natural := 8
+  );
+  port (
+    clk     : in  std_logic;
+    reset   : in  std_logic;
+    enable  : in  std_logic;
+    count   : out unsigned(BITS-1 downto 0)
+  );
+end entity counter;
+
+architecture rtl of counter is
+begin
+  process(clk, reset) is
+  begin
+    if reset = '1' then
+      count <= (others => '0');
+    elsif rising_edge(clk) then
+      if enable = '1' then
+        count <= count + 1;
+      end if;
+    end if;
+  end process;
+end architecture rtl;
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Aerospace | SpaceX Falcon 9 flight computers, satellite systems |
+| Defense | Radar systems, military communications |
+| Automotive | ADAS systems, engine control units |
+| Communications | 5G base stations, optical transceivers |
+| Research | Particle accelerators, radio telescopes |
+
+## Influence & Legacy
+
+**Inspired by:** Ada, Pascal, VHDL has no direct software language ancestors
+
+**Influenced:** Verilog, SystemVerilog, SystemC
+
+VHDL created the market for FPGAs. Without a standard language to describe reprogrammable hardware, the entire industry of field-programmable logic would have been impossible. Xilinx (now AMD) and Intel (formerly Altera) built their entire businesses on VHDL and Verilog support.
+
+The language's rigorous type system influenced later hardware description languages and even some software languages. Its emphasis on explicit modeling of time and concurrency anticipates concerns that software engineers are only now grappling with in the era of multi-core processors.

@@ -1,0 +1,95 @@
+---
+title: Perl
+description: The legendary text processing language that powered the early web
+---
+
+import { Callout } from 'nextra/components'
+
+# Perl
+
+> _There's more than one way to do it._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1987 |
+| **Creator** | Larry Wall |
+| **Paradigm** | Multi-paradigm: Procedural, Functional, OOP |
+| **Type System** | Dynamic |
+| **Platform** | Cross-platform |
+| **Current Version** | 5.40 (2024) |
+| **License** | GPL / Artistic License |
+
+## Origin Story
+
+Larry Wall created Perl in 1987 while working as a programmer at Unisys. He had originally built a data extraction tool called " Pearl " to generate reports from text files, but when he tried to announce it, he discovered the name was already taken on a local BBS. So he shortened it to Perl.
+
+The language was designed to make text processing practical—something that was painfully difficult in languages like C. Wall combined the power of UNIX tools like sed, awk, and grep into a single scripting language that was both powerful and easy to use.
+
+Perl became the de facto language for CGI scripting in the early web, powering the first generation of dynamic websites. Its CPAN archive, started in 1993, became the model for package repositories that languages like Python and Ruby would later replicate.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The three principal virtues of a programmer are Laziness, Impatience, and Hubris." — Larry Wall
+</Callout>
+
+Larry Wall famously embraced linguistic relativism in Perl's design:
+
+- TMTOWTDI (There's More Than One Way To Do It)
+- Simple things should be simple, complex things possible
+- Regular expressions built into the syntax
+- Context-sensitive operations that adapt to surroundings
+- Design for the common case
+
+This philosophy made Perl incredibly flexible but also led to code that was sometimes difficult to read—a trait its critics never let go.
+
+## Code Example
+
+```perl filename="text_processor.pl"
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Text processing with regex
+my %word_count;
+while (<>) {
+    chomp;
+    # Split into words and count
+    for my $word (split(/\W+/, lc($_))) {
+        next if length($word) < 3;
+        $word_count{$word}++;
+    }
+}
+
+# Sort by frequency, display top 20
+print "Top 20 words:\n";
+my @sorted = sort { $word_count{$b} <=> $word_count{$a} } keys %word_count;
+for my $word (@sorted[0..19]) {
+    printf "%-20s %5d\n", $word, $word_count{$word};
+}
+
+# One-liner example: find palindromes in a file
+# perl -ane 'print if $_ eq reverse($_)' words.txt
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web/CGI | Early dynamic websites, bug tracking (RT) |
+| System Admin | Server automation, log processing |
+| Bioinformatics | BioPerl, genome data processing |
+| Finance | Bloomberg terminals legacy systems |
+| Testing | Perl's own test framework |
+
+## Influence & Legacy
+
+**Inspired by:** C, sed, awk, grep, UNIX shell
+
+**Influenced:** Python, Ruby, JavaScript, PHP, PostgreSQL (PL/pgSQL)
+
+Perl's impact on web development is incalculable. It established many conventions—CGI scripting, form handling, database access—that persist today. Python's "batteries included" philosophy was a direct response to Perl's CPAN dominance.
+
+The language's influence lives on in modern regular expression syntax. The Perl-compatible regular expressions (PCRE) library uses syntax that originated in Perl, and this syntax is now universal across languages from JavaScript to Java to Go.

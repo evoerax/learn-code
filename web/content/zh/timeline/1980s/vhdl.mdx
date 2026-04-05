@@ -1,0 +1,100 @@
+---
+title: VHDL
+description: 彻底改变数字设计业的硬件描述语言
+---
+
+import { Callout } from 'nextra/components'
+
+# VHDL
+
+> _使 FPGA 成为可能的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1983 |
+| **创造者** | 美国国防部（VHSSI项目） |
+| **范式** | 硬件描述语言 |
+| **类型系统** | 强类型、静态 |
+| **平台** | FPGA、ASIC |
+| **当前版本** | IEEE 1076-2019 |
+| **许可证** | 开放标准 |
+
+## 起源故事
+
+VHDL（VHSIC Hardware Description Language）诞生于 1983 年美国国防部的 VHSIC（超高速集成电路）计划。目标是创建一种标准语言来文档化和验证硬件设计——不仅供内部使用，还作为对国防承包商的合同要求。
+
+该语言被设计为让工程师可读、由计算机可模拟、可综合为实际门级电路。这种特性组合是革命性的——在 VHDL 之前，硬件设计用原理图文档化，无法自动验证。
+
+IEEE 于 1987 年将 VHDL 标准化（1076），此后多次更新。该语言使整个 FPGA 行业成为可能——硬件可以在制造后重新编程——这是在 VHDL 和 Verilog 时代之前不可想象的。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "VHDL 在多个抽象层次上描述硬件——从行为级到结构级再到门级。"
+</Callout>
+
+VHDL 设计遵循严谨的工程原理：
+
+- 强类型系统及早捕获信号宽度不匹配
+- 接口与实现分离描述
+- 并发进程对应真正的硬件并行
+- Generate 语句用于参数化、重复结构
+- 程序包用于可复用的类型定义和函数
+
+该语言迫使设计者显式地思考时序、并发和资源使用——这些在软件中是抽象的概念，在硬件中却是具体的。
+
+## 代码示例
+
+```vhdl filename="counter.vhdl"
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity counter is
+  generic (
+    BITS : natural := 8
+  );
+  port (
+    clk     : in  std_logic;
+    reset   : in  std_logic;
+    enable  : in  std_logic;
+    count   : out unsigned(BITS-1 downto 0)
+  );
+end entity counter;
+
+architecture rtl of counter is
+begin
+  process(clk, reset) is
+  begin
+    if reset = '1' then
+      count <= (others => '0');
+    elsif rising_edge(clk) then
+      if enable = '1' then
+        count <= count + 1;
+      end if;
+    end if;
+  end process;
+end architecture rtl;
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 航空航天 | SpaceX猎鹰9号航电、卫星系统 |
+| 国防 | 雷达系统、军事通信 |
+| 汽车 | ADAS系统、发动机控制单元 |
+| 通信 | 5G基站、光收发器 |
+| 科研 | 粒子加速器、射电望远镜 |
+
+## 影响与遗产
+
+**启发自：** Ada、Pascal（VHDL 没有直接的软件语言祖先）
+
+**影响：** Verilog、SystemVerilog、SystemC
+
+VHDL 创造了 FPGA 市场。没有一种标准语言来描述可重编程硬件，整个现场可编程逻辑行业就不可能存在。Xilinx（现为 AMD）和 Intel（前身为 Altera）的全部业务都建立在 VHDL 和 Verilog 支持之上。
+
+该语言的严格类型系统影响了后来的硬件描述语言，甚至一些软件语言。它对时间和并发的显式建模，预见到了软件工程师在多核处理器时代才刚开始应对的问题。

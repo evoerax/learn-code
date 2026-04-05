@@ -1,0 +1,95 @@
+---
+title: Perl
+description: 驱动早期互联网的传奇文本处理语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Perl
+
+> _做同一件事不只一种方法。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1987 |
+| **创造者** | Larry Wall |
+| **范式** | 多范式：过程式、函数式、面向对象 |
+| **类型系统** | 动态类型 |
+| **平台** | 跨平台 |
+| **当前版本** | 5.40 (2024) |
+| **许可证** | GPL / Artistic License |
+
+## 起源故事
+
+Larry Wall 1987 年在 Unisys 担任程序员时创建了 Perl。他原本创建了一个名为"Pearl"的数据提取工具，用于从文本文件生成报表，但当他试图宣布它时，发现本地 BBS 上该名称已被占用。于是他缩短为 Perl。
+
+该语言的设计目的是使文本处理变得实用——在 C 这样的语言中这是非常困难的。Wall 将 UNIX 工具如 sed、awk、grep 的能力结合成一种脚本语言，既强大又易于使用。
+
+Perl 成为早期 Web 上 CGI 脚本的事实标准，驱动了第一代动态网站。1993 年启动的 CPAN 档案库成为包仓库的模型，后来被 Python 和 Ruby 等语言复制。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "程序员的三大美德是懒惰、急躁和傲慢。" —— Larry Wall
+</Callout>
+
+Larry Wall 在 Perl 设计中著名的语言相对主义：
+
+- TMTOWTDI（做同一件事不只一种方法）
+- 简单的事应该简单，复杂的事应该可能
+- 正则表达式内置于语法中
+- 根据上下文敏感的操作
+- 为常见情况设计
+
+这一哲学使 Perl 极其灵活，但也导致了有时难以阅读的代码——这是其批评者从未放过的特点。
+
+## 代码示例
+
+```perl filename="text_processor.pl"
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Text processing with regex
+my %word_count;
+while (<>) {
+    chomp;
+    # Split into words and count
+    for my $word (split(/\W+/, lc($_))) {
+        next if length($word) < 3;
+        $word_count{$word}++;
+    }
+}
+
+# Sort by frequency, display top 20
+print "Top 20 words:\n";
+my @sorted = sort { $word_count{$b} <=> $word_count{$a} } keys %word_count;
+for my $word (@sorted[0..19]) {
+    printf "%-20s %5d\n", $word, $word_count{$word};
+}
+
+# One-liner example: find palindromes in a file
+# perl -ane 'print if $_ eq reverse($_)' words.txt
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| Web/CGI | 早期动态网站、bug跟踪（RT） |
+| 系统管理 | 服务器自动化、日志处理 |
+| 生物信息学 | BioPerl、基因组数据处理 |
+| 金融 | 彭通终端遗留系统 |
+| 测试 | Perl自己的测试框架 |
+
+## 影响与遗产
+
+**启发自：** C、sed、awk、grep、UNIX shell
+
+**影响：** Python、Ruby、JavaScript、PHP、PostgreSQL（PL/pgSQL）
+
+Perl 对 Web 开发的影响不可估量。它确立了许多沿用至今的约定——CGI 脚本、表单处理、数据库访问。Python 的" batteries included"哲学直接回应了 Perl 的 CPAN 主导地位。
+
+该语言的影响体现在现代正则表达式语法中。Perl 兼容正则表达式（PCRE）库使用的语法源自 Perl，现在在从 JavaScript 到 Java 再到 Go 的所有语言中都是通用的。

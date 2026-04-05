@@ -1,0 +1,100 @@
+---
+title: C++
+description: The multi-paradigm language that brought object-oriented programming to systems level
+---
+
+import { Callout } from 'nextra/components'
+
+# C++
+
+> _Power through complexity._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1983 |
+| **Creator** | Bjarne Stroustrup (Bell Labs) |
+| **Paradigm** | Multi-paradigm: OOP, Generic, Procedural |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | C++23 (2024) |
+| **License** | BSD |
+
+## Origin Story
+
+Bjarne Stroustrup at Bell Labs created C++ in 1983 as an extension to C. His goal was to add object-oriented programming features without sacrificing the efficiency and low-level control that made C powerful.
+
+Stroustrup originally called it "C with Classes" before renaming it to C++ in 1983 (the ++ is the C increment operator). The first commercial release came in 1985, and the language quickly gained traction for large-scale software projects that needed both performance and organizational benefits of OOP.
+
+The language was designed to be backward compatible with C, allowing gradual migration and reuse of existing codebases. This decision, while sometimes criticized, enabled C++ to ride the wave of C's popularity while offering new capabilities.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "C++ is a language for someone who wants the full control of a sports car without the ability to crash it."
+</Callout>
+
+C++ embraces the philosophy of "zero-overhead" abstractions:
+
+- You pay only for what you use
+- If you don't use a feature, you shouldn't pay for it
+- Abstraction mechanisms compile down to efficient machine code
+- Manual memory management with optional smart pointers
+- Templates enable compile-time polymorphism without runtime cost
+
+The language supports multiple programming styles—procedural, object-oriented, generic—allowing developers to choose the right tool for each problem.
+
+## Code Example
+
+```cpp filename="template.cpp"
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+template<typename T>
+class Container {
+    std::vector<T> data;
+public:
+    void add(T value) { data.push_back(value); }
+    
+    template<typename Predicate>
+    std::vector<T> filter(Predicate pred) const {
+        std::vector<T> result;
+        std::copy_if(data.begin(), data.end(), std::back_inserter(result), pred);
+        return result;
+    }
+    
+    void for_each(auto func) const {
+        std::for_each(data.begin(), data.end(), func);
+    }
+};
+
+int main() {
+    Container<int> nums;
+    nums.add(1); nums.add(2); nums.add(3); nums.add(4); nums.add(5);
+    
+    auto evens = nums.filter([](int n) { return n % 2 == 0; });
+    nums.for_each([](int n) { std::cout << n << " "; });
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Game Engines | Unreal Engine, Unity (core C++ parts) |
+| Browsers | Chrome, Firefox, Edge |
+| Databases | MySQL, PostgreSQL, SQLite |
+| Finance | High-frequency trading systems |
+| OS/Desktop | Windows, macOS (core components) |
+
+## Influence & Legacy
+
+**Inspired by:** C, Simula, ALGOL
+
+**Influenced:** Java, C#, Python, PHP, Perl, Rust
+
+C++ defined what "industrial-strength" programming meant. Its combination of performance and abstraction influenced virtually every major language that came after. Modern languages like Java and C# borrowed heavily from C++'s object-oriented features while adding garbage collection—though C++11's smart pointers brought safer memory management back to the language.
+
+The language continues to evolve, with modern C++ (C++11 onward) adding lambda expressions, range-based loops, and concepts—proving that a 40-year-old language can still innovate.

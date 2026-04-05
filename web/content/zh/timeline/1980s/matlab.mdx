@@ -1,0 +1,99 @@
+---
+title: MATLAB
+description: 数值计算和矩阵运算的领域专用语言
+---
+
+import { Callout } from 'nextra/components'
+
+# MATLAB
+
+> _数学与工程的交汇点。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1984 |
+| **创造者** | Cleve Moler（MathWorks） |
+| **范式** | 领域专用、数组式 |
+| **类型系统** | 动态类型，支持可选类型标注 |
+| **平台** | 跨平台 |
+| **当前版本** | R2024a |
+| **许可证** | 专有软件 |
+
+## 起源故事
+
+MATLAB——MATrix LABoratory（矩阵实验室）——由 Cleve Moler 于 1970 年代末在新墨西哥大学任教时创建。Moler 希望让学生能方便地使用 LINPACK 和 EISPACK 库，而不必编写 Fortran 代码。
+
+最初的 MATLAB 用 Fortran 编写，免费分发。1984年 Moler 创立 MathWorks 后，MATLAB 成为商业产品，具备交互环境和图形功能。
+
+从一个方便的数值库接口发展而来，MATLAB 演变为工程和科学的通用语言。如今，从航空航天到汽车再到生物技术，MATLAB 在各行业中都是不可或缺的工具，其数值能力和领域专用工具箱的结合无可替代。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "做科学的最好方式，是拥有一个可以探索的交互环境。"
+</Callout>
+
+MATLAB 从根本上为数 值计算而设计：
+
+- 矩阵作为基本数据类型
+- 内置数组操作（向量化代码无需显式循环）
+- Live Scripts 结合代码、输出和格式化文本
+- 丰富的领域专用工具箱库
+- 解释执行以实现快速原型开发
+
+该语言为数学问题的表达力而优化，而非通用编程。
+
+## 代码示例
+
+```matlab filename="signal_processing.m"
+% Signal processing example
+fs = 1000;           % Sampling frequency (Hz)
+t = 0:1/fs:1;        % Time vector
+f = 10;              % Signal frequency (Hz)
+
+% Generate signals
+clean = sin(2*pi*f*t);
+noise = 0.5*randn(size(t));
+signal = clean + noise;
+
+% FFT analysis
+n = length(signal);
+Y = fft(signal);
+P2 = abs(Y/n);
+P1 = P2(1:n/2+1);
+P1(2:end-1) = 2*P1(2:end-1);
+f_plot = fs*(0:(n/2))/n;
+
+% Visualization
+figure;
+subplot(2,1,1);
+plot(t, signal);
+title('Noisy Signal'); xlabel('Time (s)');
+
+subplot(2,1,2);
+plot(f_plot, P1);
+title('Single-Sided Amplitude Spectrum'); 
+xlabel('Frequency (Hz)');
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 控制系统 | 汽车ABS、飞机自动驾驶 |
+| 信号处理 | 雷达系统、音频编解码器 |
+| 图像处理 | 医学影像、卫星图像 |
+| 金融 | 量化分析、风险建模 |
+| 学术界 | 科研论文、教科书 |
+
+## 影响与遗产
+
+**启发自：** Fortran、LINPACK、EISPACK
+
+**影响：** NumPy、Julia（两者都承认借鉴了 MATLAB 的数组模型）
+
+MATLAB 的数组编程模型直接影响了 Python 中 NumPy 的设计，使更广泛的编程社区能够使用 MATLAB 风格的数值计算。Julia 被明确设计为 MATLAB 的"继承者"，具备更现代化的语言特性。
+
+在工程和科学领域，MATLAB 仍然是生产部署前算法原型开发的标准。从用于系统建模的 Simulink 到计算机视觉库，其工具箱非常专业化，即使具有更好的通用编程能力的语言也无法匹配其领域覆盖。

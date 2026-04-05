@@ -1,0 +1,99 @@
+---
+title: MATLAB
+description: The domain-specific language for numerical computing and matrix operations
+---
+
+import { Callout } from 'nextra/components'
+
+# MATLAB
+
+> _Where math meets engineering._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1984 |
+| **Creator** | Cleve Moler (MathWorks) |
+| **Paradigm** | Domain-specific, Array-based |
+| **Type System** | Dynamic with optional typing |
+| **Platform** | Cross-platform |
+| **Current Version** | R2024a |
+| **License** | Proprietary |
+
+## Origin Story
+
+MATLAB—MATrix LABoratory—was created by Cleve Moler in the late 1970s while he was at the University of New Mexico. Moler wanted to give his students easy access to the LINPACK and EISPACK libraries without having to write Fortran code.
+
+The original MATLAB was written in Fortran and distributed for free. When Moler co-founded MathWorks in 1984, MATLAB became a commercial product with an interactive environment and graphical capabilities.
+
+What started as a convenient interface to numerical libraries evolved into the lingua franca of engineering and science. Today, MATLAB is essential in industries from aerospace to automotive to biotech, where its combination of numerical power and domain-specific toolboxes remains unmatched.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The best way to do science is to have an interactive environment where you can explore."
+</Callout>
+
+MATLAB was designed for numerical computing from the ground up:
+
+- Matrix as the fundamental data type
+- Built-in array operations (no explicit loops for vectorized code)
+- Live scripts combining code, output, and formatted text
+- Extensive library of domain-specific toolboxes
+- Interpreted execution for rapid prototyping
+
+The language prioritizes expressiveness for mathematical problems over general-purpose programming concerns.
+
+## Code Example
+
+```matlab filename="signal_processing.m"
+% Signal processing example
+fs = 1000;           % Sampling frequency (Hz)
+t = 0:1/fs:1;        % Time vector
+f = 10;              % Signal frequency (Hz)
+
+% Generate signals
+clean = sin(2*pi*f*t);
+noise = 0.5*randn(size(t));
+signal = clean + noise;
+
+% FFT analysis
+n = length(signal);
+Y = fft(signal);
+P2 = abs(Y/n);
+P1 = P2(1:n/2+1);
+P1(2:end-1) = 2*P1(2:end-1);
+f_plot = fs*(0:(n/2))/n;
+
+% Visualization
+figure;
+subplot(2,1,1);
+plot(t, signal);
+title('Noisy Signal'); xlabel('Time (s)');
+
+subplot(2,1,2);
+plot(f_plot, P1);
+title('Single-Sided Amplitude Spectrum'); 
+xlabel('Frequency (Hz)');
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Control Systems | Automotive ABS, aircraft autopilot |
+| Signal Processing | Radar systems, audio codecs |
+| Image Processing | Medical imaging, satellite imagery |
+| Finance | Quantitative analysis, risk modeling |
+| Academia | Research papers, textbooks |
+
+## Influence & Legacy
+
+**Inspired by:** Fortran, LINPACK, EISPACK
+
+**Influenced:** NumPy, Julia (both acknowledge MATLAB's array model)
+
+MATLAB's array programming model directly influenced NumPy's design in Python, making MATLAB-style numerical computing accessible to the broader programming community. Julia was explicitly designed as a "successor" to MATLAB with modern language features.
+
+In engineering and scientific fields, MATLAB remains the standard for prototyping algorithms before production deployment. Its toolboxes—from Simulink for system modeling to computer vision libraries—are so specialized that even languages with better general-purpose capabilities can't match its domain coverage.

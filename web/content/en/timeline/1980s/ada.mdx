@@ -1,0 +1,101 @@
+---
+title: Ada
+description: The high-reliability programming language built for safety-critical systems
+---
+
+import { Callout } from 'nextra/components'
+
+# Ada
+
+> _Where correctness is non-negotiable._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1980 |
+| **Creator** | US Department of Defense / CII Honeywell Bull |
+| **Paradigm** | Multi-paradigm: Imperative, OOP, Concurrent |
+| **Type System** | Static, Strong, Nominal |
+| **Platform** | Cross-platform, Embedded |
+| **Current Version** | Ada 2022 |
+| **License** | GPL / Proprietary |
+
+## Origin Story
+
+Ada was born from a US Department of Defense initiative in the 1970s. The DoD spent millions developing the language because they had over 400 programming languages in use across their systems—many for weapons systems where bugs could be catastrophic.
+
+The language was named after Ada Lovelace, the world's first computer programmer. The design process was unusually rigorous, involving multiple competing teams and formal methods. The final design was selected through a competition and publicly published in 1980.
+
+The DoD mandated that all new mission-critical software be written in Ada, creating a guaranteed market that kept the language alive through decades when it might otherwise have faded into obscurity.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Program correctness is not a feature to be added later—it must be built in from the start."
+</Callout>
+
+Ada's philosophy centers on building correctness into the language itself:
+
+- Strong compile-time type checking catches entire categories of errors
+- Range types prevent buffer overflows and invalid values
+- Tasking (concurrency) built into the language, not bolted on
+- Contracts for subprograms specify preconditions and postconditions
+- No undefined behavior—all operations have specified semantics
+
+The language makes it difficult to write incorrect code, rather than allowing incorrect code and hoping for the best.
+
+## Code Example
+
+```ada filename="contracts.adb"
+package Counter is
+    type Counter is tagged private;
+    
+    procedure Increment (C : in out Counter);
+    procedure Decrement (C : in out Counter);
+    function Value (C : Counter) return Natural;
+    
+private
+    type Counter is tagged record
+        Val : Natural := 0;
+    end record;
+end Counter;
+
+package body Counter is
+    procedure Increment (C : in out Counter) is
+    begin
+        if C.Val < Natural'Last then
+            C.Val := C.Val + 1;
+        end if;
+    end Increment;
+    
+    procedure Decrement (C : in out Counter) is
+    begin
+        if C.Val > 0 then
+            C.Val := C.Val - 1;
+        end if;
+    end Decrement;
+    
+    function Value (C : Counter) return Natural is (C.Val);
+end Counter;
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Aerospace | Boeing 777, Airbus A380 flight software |
+| Defense | US Navy weapons systems, NATO aircraft |
+| Rail | French TGV, London Underground signaling |
+| Space | NASA Mars rovers, ESA missions |
+| Medical | Pacemakers, radiation therapy machines |
+
+## Influence & Legacy
+
+**Inspired by:** ALGOL, Pascal, PL/I
+
+**Influenced:** Rust, Spark (formal verification subset)
+
+Ada introduced ideas that later appeared in safer languages. Its emphasis on contracts, range types, and built-in concurrency anticipated concerns that only became mainstream decades later. Rust's ownership system and Ada's design-by-contract both stem from the same desire to make illegal states unrepresentable.
+
+The language remains the gold standard for safety-critical software. When a modern spacecraft lands on Mars or an aircraft flies with unblinking reliability, there's a good chance Ada is involved.

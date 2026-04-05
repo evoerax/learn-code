@@ -1,0 +1,100 @@
+---
+title: C++
+description: 将面向对象编程带入系统级计算的多范式语言
+---
+
+import { Callout } from 'nextra/components'
+
+# C++
+
+> _驾驭复杂性的力量。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1983 |
+| **创造者** | Bjarne Stroustrup（贝尔实验室） |
+| **范式** | 多范式：面向对象、泛型、过程式 |
+| **类型系统** | 静态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | C++23（2024） |
+| **许可证** | BSD |
+
+## 起源故事
+
+Bjarne Stroustrup 在贝尔实验室创建 C++，目标是向 C 语言添加面向对象编程特性，同时不牺牲 C 语言的高效性和底层控制力。
+
+Stroustrup 最初称其为"带类的 C"，1983年改名为 C++（++ 是 C 中的自增运算符）。1985年首个商业版本发布后，该语言迅速在大规模软件项目中流行开来，因为这些项目需要面向对象的组织能力，同时又不能损失性能。
+
+该语言被设计为与 C 向后兼容，允许渐进式迁移和复用现有代码库。这一决定虽然有时受到批评，却使 C++ 能够借助 C 的普及势头，同时提供新功能。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "C++ 是为想要赛车全部控制力、却又不希望翻车的人设计的语言。"
+</Callout>
+
+C++ 遵循"零开销"抽象的哲学：
+
+- 只为你使用的功能付费
+- 不使用的功能不应产生开销
+- 抽象机制编译为高效机器码
+- 手动内存管理配合可选的智能指针
+- 模板实现编译时多态，无运行时成本
+
+该语言支持多种编程风格——过程式、面向对象、泛型——让开发者能为每个问题选择合适的工具。
+
+## 代码示例
+
+```cpp filename="template.cpp"
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+template<typename T>
+class Container {
+    std::vector<T> data;
+public:
+    void add(T value) { data.push_back(value); }
+    
+    template<typename Predicate>
+    std::vector<T> filter(Predicate pred) const {
+        std::vector<T> result;
+        std::copy_if(data.begin(), data.end(), std::back_inserter(result), pred);
+        return result;
+    }
+    
+    void for_each(auto func) const {
+        std::for_each(data.begin(), data.end(), func);
+    }
+};
+
+int main() {
+    Container<int> nums;
+    nums.add(1); nums.add(2); nums.add(3); nums.add(4); nums.add(5);
+    
+    auto evens = nums.filter([](int n) { return n % 2 == 0; });
+    nums.for_each([](int n) { std::cout << n << " "; });
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 游戏引擎 | Unreal Engine、Unity（核心 C++ 部分） |
+| 浏览器 | Chrome、Firefox、Edge |
+| 数据库 | MySQL、PostgreSQL、SQLite |
+| 金融 | 高频交易系统 |
+| 操作系统/桌面 | Windows、macOS（核心组件） |
+
+## 影响与遗产
+
+**启发自：** C、Simula、ALGOL
+
+**影响：** Java、C#、Python、PHP、Perl、Rust
+
+C++ 定义了什么叫"工业级"编程。它将性能与抽象结合的方式影响了之后几乎所有主要语言。Java 和 C# 等现代语言大量借鉴了 C++ 的面向对象特性，同时添加了垃圾回收——尽管 C++11 的智能指针将更安全的内存管理带回了这门语言。
+
+这门语言持续演进，现代 C++（C++11 及以后）添加了 lambda 表达式、基于范围的循环和 concepts——证明了一门40年历史的语言仍然可以创新。
