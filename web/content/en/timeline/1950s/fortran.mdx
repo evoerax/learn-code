@@ -1,0 +1,88 @@
+---
+title: FORTRAN
+description: IBM's first successful high-level language for scientific computing
+---
+
+import { Callout } from 'nextra/components'
+
+# FORTRAN
+
+> _The language that proved computers could think symbolically._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1957 |
+| **Creator** | John Backus (IBM) |
+| **Paradigm** | Imperative, Procedural |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | FORTRAN 2018 |
+| **License** | ANSI |
+
+## Origin Story
+
+FORTRAN (Formula Translation) was created by John Backus and his team at IBM in 1957. It was the first successful high-level programming language and revolutionized scientific computing.
+
+Before FORTRAN, scientists had to write programs in assembly language or machine code, which was time-consuming and error-prone. Backus set out to create a language that would allow scientists to express mathematical formulas directly in their programs.
+
+The first FORTRAN compiler was released in 1957 for the IBM 704 computer. It reportedly generated code nearly as efficient as hand-written assembly, which convinced the industry that high-level languages were viable.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "I was mainly trying to get a language that would make it easier for scientists to program computers." — John Backus
+</Callout>
+
+FORTRAN's primary goal was efficiency: efficient programmer productivity and efficient compiled code. The language was designed specifically for numerical computation and scientific programming.
+
+Key design decisions:
+- Syntax that closely resembles mathematical notation
+- Compilation to efficient machine code
+- Support for array operations and matrix algebra
+- DO loops for iterative computations
+
+## Code Example
+
+```fortran
+      PROGRAM HELLO
+      PRINT *, 'Hello, World!'
+      END PROGRAM HELLO
+
+      SUBROUTINE MATRIX_MULT(A, B, C, N)
+      REAL A(N,N), B(N,N), C(N,N)
+      DO I = 1, N
+        DO J = 1, N
+          C(I,J) = 0.0
+          DO K = 1, N
+            C(I,J) = C(I,J) + A(I,K) * B(K,J)
+          END DO
+        END DO
+      END DO
+      END SUBROUTINE
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Scientific Computing | Climate models, weather prediction |
+| Engineering | Structural analysis, CFD |
+| Physics | Particle physics simulations |
+| Industry | Legacy aerospace systems |
+
+## Influence & Legacy
+
+**Inspired by:** ENIAC Short Code, Speedcoding
+
+**Influenced:** ALGOL, BASIC, C, Pascal, all subsequent imperative languages
+
+FORTRAN established many concepts that became fundamental to programming:
+- Variables with meaningful names
+- Arithmetic expressions
+- Subroutines and functions
+- DO loops for iteration
+- Arrays and matrix operations
+
+Despite being over 65 years old, FORTRAN remains the language of choice for climate modeling, weather prediction, and computational physics. The code running in many supercomputers today was originally written in FORTRAN decades ago.

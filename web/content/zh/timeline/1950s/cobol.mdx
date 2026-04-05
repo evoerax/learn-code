@@ -1,0 +1,92 @@
+---
+title: COBOL
+description: 为商业数据处理而生的语言，至今仍支撑着全球金融系统运转
+---
+
+import { Callout } from 'nextra/components'
+
+# COBOL
+
+> _一种用纯正英语表达业务逻辑的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **诞生时间** | 1959 |
+| **创始人** | CODASYL 委员会（格蕾丝·霍珀、霍华德·布龙伯格等） |
+| **范式** | 命令式、过程式 |
+| **类型系统** | 静态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | COBOL 2002 |
+| **许可协议** | ANSI/ISO |
+
+## 诞生背景
+
+COBOL（面向商业的通用语言）由 CODASYL（数据系统语言会议）组织的计算机厂商、用户和政府代表委员会于 1959 年创建。
+
+这门语言专为商业数据处理而设计——工资单、库存、应收账款等构成商业计算支柱的任务。编程先驱、编译器概念发明者格蕾丝·霍珀是 COBOL 开发中的关键人物。
+
+其设计目标是当时激进的：让不懂数学或工程的商业人士也能编程。COBOL 程序被设计成类似英文散文，使用 ADD、SUBTRACT、MULTIPLY、DIVIDE 等单词，而非神秘的符号。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "新语言的目标是面向非专业程序员——让不借助专家就能编写简单程序成为可能。"——格蕾丝·霍珀
+</Callout>
+
+COBOL 引入了几个开创性概念：
+
+- **类英语语法**：程序被设计成像商业文档一样可阅读
+- **数据分部**：将数据结构与程序逻辑明确分离
+- **文件处理**：内置支持记录导向文件处理
+- **可移植性**：设计为可在任何计算机上运行，不像之前语言那样依赖特定硬件
+
+语言的冗长是刻意的——以牺牲简洁换取对非程序员的清晰度和可访问性。
+
+## 代码示例
+
+```cobol
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. HELLO-WORLD.
+       
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-COUNTER PIC 9(3) VALUE ZERO.
+       
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+           DISPLAY "你好，世界！"
+           PERFORM PROCESS-PAYROLL
+           GOBACK.
+           
+       PROCESS-PAYROLL.
+           ADD 1 TO WS-COUNTER
+           MOVE "张三" TO EMPLOYEE-NAME
+           COMPUTE PAY = HOURS-WORKED * HOURLY-RATE
+           DISPLAY "员工 " EMPLOYEE-NAME " 的工资是 $" PAY
+           .
+```
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 银行业 | 95% 的 ATM 交易、大部分核心银行系统 |
+| 政府 | 社会保险管理局、税务局系统 |
+| 交通运输 | 空中交通管制系统 |
+| 医疗保健 | 保险理赔处理 |
+
+## 影响与遗产
+
+**灵感来源：** FLOW-MATIC、ENIAC Short Code
+
+**影响语言：** PL/I、ABAP
+
+COBOL 对计算的影响不在于它影响了多少语言，而在于它至今仍在支撑的系统：
+
+1. **银行业**：估计每天有 3 万亿美元的商贸通过 COBOL 系统流转
+2. **政府**：仅社会保险公司就用 COBOL 处理数百万福利申请
+3. **基础设施**：大多数航空公司预订系统、信用卡处理网络和军事后勤系统都运行在 COBOL 上
+
+尽管已有 60 多年历史，且常被批评为冗长过时，COBOL 在企业世界仍不可替代。2020 年新冠疫情期间，各国政府拼命寻找 COBOL 程序员来更新无法应对申请高峰的失业系统——这既凸显了该语言的持久性，也凸显了了解它的人的短缺。

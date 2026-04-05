@@ -1,0 +1,92 @@
+---
+title: COBOL
+description: The language built for business data processing that still runs the world
+---
+
+import { Callout } from 'nextra/components'
+
+# COBOL
+
+> _The language that speaks business in plain English._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1959 |
+| **Creator** | CODASYL Committee (Grace Hopper, Howard Bromberg, et al.) |
+| **Paradigm** | Imperative, Procedural |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | COBOL 2002 |
+| **License** | ANSI/ISO |
+
+## Origin Story
+
+COBOL (Common Business-Oriented Language) was created in 1959 by a committee of computer manufacturers, users, and government representatives organized under the CODASYL (Conference on Data Systems Languages) banner.
+
+The language was designed specifically for business data processing—tasks like payroll, inventory, and accounts receivable that formed the backbone of commercial computing. Grace Hopper, a pioneer in programming who also invented the concept of compilers, was a key figure in COBOL's development.
+
+The design goal was radical for its time: make programming accessible to businesspeople who weren't mathematicians or engineers. COBOL programs were written to look like English prose, using words like ADD, SUBTRACT, MULTIPLY, and DIVIDE instead of cryptic symbols.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The new languages were aimed at the nonprofessional programmer—someone who could write a simple program without needing a specialist." — Grace Hopper
+</Callout>
+
+COBOL introduced several pioneering concepts:
+
+- **English-like syntax**: Programs were designed to be read like business documents
+- **Data division**: Explicit separation of data structure from program logic
+- **File handling**: Built-in support for record-oriented file processing
+- **Portability**: Designed to run on any computer, unlike previous languages tied to specific hardware
+
+The language's verbosity was intentional—sacrificing brevity for clarity and accessibility to non-programmers.
+
+## Code Example
+
+```cobol
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. HELLO-WORLD.
+       
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-COUNTER PIC 9(3) VALUE ZERO.
+       
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+           DISPLAY "Hello, World!"
+           PERFORM PROCESS-PAYROLL
+           GOBACK.
+           
+       PROCESS-PAYROLL.
+           ADD 1 TO WS-COUNTER
+           MOVE "JOHN DOE" TO EMPLOYEE-NAME
+           COMPUTE PAY = HOURS-WORKED * HOURLY-RATE
+           DISPLAY "Pay for " EMPLOYEE-NAME " is $" PAY
+           .
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Banking | 95% of ATM transactions, most core banking systems |
+| Government | Social Security Administration, IRS systems |
+| Transportation | Air traffic control systems |
+| Healthcare | Insurance claims processing |
+
+## Influence & Legacy
+
+**Inspired by:** FLOW-MATIC, ENIAC Short Code
+
+**Influenced:** PL/I, ABAP
+
+COBOL's impact on computing is measured less by languages it influenced and more by the systems it still powers:
+
+1. **Banking**: An estimated $3 trillion in daily commerce runs through COBOL systems
+2. **Government**: The Social Security Administration alone processes millions of benefits using COBOL
+3. **Legacy infrastructure**: Most airline reservation systems, credit card processing networks, and military logistics systems run on COBOL
+
+Despite being over 60 years old and often criticized as verbose and archaic, COBOL remains irreplaceable in the enterprise world. The 2020 COVID pandemic saw governments desperately seeking COBOL programmers to update unemployment systems that couldn't handle the surge—highlighting both the language's longevity and the shortage of people who understand it.

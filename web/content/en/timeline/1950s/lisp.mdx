@@ -1,0 +1,86 @@
+---
+title: LISP
+description: The first functional programming language, foundation of AI research
+---
+
+import { Callout } from 'nextra/components'
+
+# LISP
+
+> _The language born from a mathematical insight about computation itself._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1958 |
+| **Creator** | John McCarthy (MIT) |
+| **Paradigm** | Functional, Multi-paradigm |
+| **Type System** | Dynamic |
+| **Platform** | Cross-platform |
+| **Current Version** | Racket, Common Lisp, Scheme |
+| **License** | Various (GPL, MIT, etc.) |
+
+## Origin Story
+
+LISP (List Processing) was created by John McCarthy at MIT in 1958. It emerged from a theoretical paper McCarthy wrote about using algebraic functions to describe computation. Unlike FORTRAN, which was designed for numerical efficiency, LISP was designed for symbolic computation—processing symbols and lists rather than numbers.
+
+The initial implementation was created by Steve Russell, who translated McDonald's theoretical paper into working code on an IBM 704. This made LISP the second high-level language after FORTRAN to have an implementation.
+
+LISP became the language of artificial intelligence research for decades. Its symbolic processing capabilities made it ideal for problem-solving, theorem proving, and early AI research.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The most powerful programming language is not the one with the most features, but the one that can express any computation most elegantly." — John McCarthy
+</Callout>
+
+LISP introduced radical ideas that were decades ahead of their time:
+
+- **Code as data**: Programs are represented as lists that can be manipulated by other programs
+- **Homoiconicity**: The structure of the code mirrors the structure of the data it processes
+- **Everything is a list**: Even functions and operators are expressed as lists
+- **Garbage collection**: Automatic memory management was pioneered in LISP
+
+The signature parenthesis syntax, while sometimes criticized as "excessive," enables the language's powerful macro system and reflective capabilities.
+
+## Code Example
+
+```lisp
+;; LISP's famous parentheses syntax
+(defun factorial (n)
+  (if (<= n 1)
+      1
+      (* n (factorial (- n 1)))))
+
+;; Code as data - LISP can manipulate its own code
+(quote (+ 1 2))  ; Returns the list (+ 1 2)
+(eval (quote (+ 1 2)))  ; Returns 3
+
+;; Functional style
+(mapcar #'factorial '(1 2 3 4 5))  ; (1 2 6 24 120)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| AI Research | SHRDLU, ELIZA, early expert systems |
+| Computer Science | Emacs editor, AutoCAD, GIMP |
+| Industry | KMAN, ACL2, many financial systems |
+
+## Influence & Legacy
+
+**Inspired by:** Lambda calculus, ENIAC Short Code
+
+**Influenced:** Scheme, Racket, Clojure, Haskell, Python, Ruby, JavaScript, Julia
+
+LISP's influence on programming is profound and pervasive:
+
+1. **Conditional expressions** (if-then-else) were invented for LISP and later adopted by every language
+2. **Recursion** as a programming technique was popularized through LISP
+3. **Garbage collection** was pioneered in LISP and is now in Java, Python, Go, and many others
+4. **Functional programming** concepts like map, reduce, and first-class functions came from LISP
+5. **Tree data structures** and symbolic expression parsing were LISP innovations
+
+Every dynamically typed language, from Python to JavaScript to Ruby, carries LISP's legacy in its approach to functions as first-class objects and its emphasis on expressiveness over syntactic sugar.
