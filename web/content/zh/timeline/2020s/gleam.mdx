@@ -1,0 +1,85 @@
+---
+title: Gleam
+description: 一门友好的语言，用于构建运行在 Erlang VM 上的类型安全并发系统。
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Gleam
+
+> _"类型安全、友好、快速。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2021 |
+| **Creator** | Louis Giroux（Gleam 团队） |
+| **Paradigm** | 函数式、并发 |
+| **Type System** | 静态、强类型 |
+| **Platform** | BEAM（Erlang 虚拟机）、JavaScript |
+| **Current Version** | 1.0（2024） |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Gleam 由 Louis Giroux 创建，于 2021 年首次发布。这门语言的诞生源于对在 BEAM 生态（Erlang/Elixir）中引入强静态类型，同时保持对开发者友好体验的渴望。Giroux 一直在使用 Elixir，喜爱 BEAM  actor 模型在并发方面的可靠性，但希望获得只有可靠类型系统才能提供的编译时保证。
+
+该语言大量借鉴了 Elm 的类型系统和错误提示、OCaml 的模式匹配，以及 Rust 的错误处理方式。其成果是一门能够构建高度并发、容错性强系统的语言，而不会产生运行时意外。
+
+## Design Philosophy
+
+Gleam 的指导原则是**通过安全性实现表达力**。类型系统旨在在编译时捕获各类 bug——空指针异常、模式匹配失败、类型强制转换错误——同时保持人体工程学且不会碍事。
+
+该语言拥抱 Erlang/Elixir 的 actor 模型，使编写并发代码变得轻而易举，进程可以崩溃并重启而不会导致整个系统宕机。进程通过类型化消息进行通信，编译器确保你不会向错误的进程发送错误类型的消息。
+
+<Callout type="default" emoji="💡">
+  Gleam 旨在成为当你需要构建一个将运行数十年、绝不能停机的网络服务时会想到的语言。
+</Callout>
+
+## Code Example
+
+Gleam 的模式匹配和类型系统使并发代码变得健壮：
+
+```gleam
+import gleam/otp/actor
+import gleam/erlang
+
+type Message {
+  Increment(counter: Int)
+  GetCount(reply_with: actor.Reply(send(Int), Message))
+}
+
+fn handle_message(message: Message, state: Int) {
+  case message {
+    Increment(n) -> actor.continue(state + n)
+    GetCount(reply) -> {
+      actor.reply(reply, state)
+      actor.continue(state)
+    }
+  }
+}
+
+pub fn main() {
+  assert Ok(pid) = actor.start(0, actor.Specify(handle_message, 1000))
+  actor.send(pid, Increment(1))
+  actor.send(pid, Increment(2))
+  actor.send(pid, GetCount(erlang.self()))
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web 服务 | Livebook (Elixir), Pager (Gleam 官方网站) |
+| 库 | gleam_stdlib, HTTP 客户端库 |
+| 工具 | gleam 语言服务器, 构建工具 |
+
+## Influence & Legacy
+
+**Inspired by:** Elm, OCaml, Rust, Elixir
+
+**Influenced:** （仍处于早期阶段，但在影响 BEAM 上类型化函数式语言方面展现潜力）
+
+Gleam 代表了 ML 系列语言与 BEAM 生态最佳理念的融合。它的成功可能会影响函数式语言对开发者体验的处理方式，特别是在生产导向环境中将友好错误提示与强静态类型结合的方式。

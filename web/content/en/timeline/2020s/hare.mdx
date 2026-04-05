@@ -1,0 +1,79 @@
+---
+title: Hare
+description: A minimal systems programming language focused on simplicity, stability, and readability.
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Hare
+
+> _"The language that says no to complexity."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2022 |
+| **Creator** | Drew DeVault (Drew DeVault's Systems) |
+| **Paradigm** | Systems Programming, Low-level |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform (Linux, FreeBSD) |
+| **Current Version** | 0.2024.1 (2024) |
+| **License** | GPL 3.0 |
+
+## Origin Story
+
+Hare was created by Drew DeVault, known for his work on the suckless.org projects and the Wayland compositor sway. Frustrated with the complexity of modern programming languages, DeVault designed Hare as a return to fundamentals—a language that does one thing well without layers of abstractions.
+
+First released in 2022, Hare prioritizes readability and hackability over feature count. The language has no generics, no inheritance, no exceptions, and no hidden control flow. Every line of Hare code should be understandable by a programmer who has never seen the codebase before.
+
+## Design Philosophy
+
+Hare's core philosophy is **radical simplicity**. The language has a small, comprehensible standard library, a deterministic build system, and a culture that values "doing one thing well" over "supporting everything."
+
+The language ships with a complete, auditable standard library—no third-party dependencies required for most tasks. Memory is managed manually with explicit allocators, but the language provides safe patterns to make this tractable. The result is a language where you can understand the entire stack from hardware to application.
+
+<Callout type="default" emoji="💡">
+  "We reject the idea that software needs to be complicated. Simple software is better software." — Drew DeVault
+</Callout>
+
+## Code Example
+
+Hare's straightforward syntax and manual memory management:
+
+```hare
+use fmt;
+use os;
+use strings;
+
+fn main() void = {
+	let s: str = "Hello, world!";
+	fmt::println(s)!;
+
+	// String slicing is explicit and safe
+	let slice: str = strings::slice(s, 0, 5);
+	fmt::println(slice)!; // "Hello"
+
+	// Manual memory but safe patterns
+	let alloc = mem::alloc(int::size);
+	defer mem::free(alloc);
+	*alloc = 42;
+	fmt::println(*alloc)!;
+};
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| System Tools | Hare itself, hare-fetch (package manager front-end) |
+| Shells | ysh (Yash shell reboot) |
+| Documentation | hare-git.sr.ht (source code hosting) |
+
+## Influence & Legacy
+
+**Inspired by:** C, Plan 9, Old Unix philosophy
+
+**Influenced:** (Still early, influencing conversations about language complexity)
+
+Hare represents a reaction against the ever-growing complexity of modern languages. Whether it achieves widespread adoption or not, its existence challenges the assumption that languages need generics, object-oriented inheritance, and massive standard libraries to be useful.

@@ -1,0 +1,81 @@
+---
+title: Carbon
+description: Google 实验性的 C++ 后继语言，专为与现有 C++ 代码库的互操作性而设计。
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Carbon
+
+> _"C++ 的继承者——实验性但充满希望。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2022 |
+| **Creator** | Google（Chandler Carruth 等） |
+| **Paradigm** | 命令式、面向对象、泛型 |
+| **Type System** | 静态、强类型 |
+| **Platform** | 跨平台（LLVM 后端） |
+| **Current Version** | 0.2（实验性） |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Carbon 由 Google 于 2022 年 7 月宣布，作为 C++ 的实验性继承者。由 Chandler Carruth 领导的该项目旨在解决 C++ 四十年来积累的技术债务，同时保持与现有 C++ 代码的双向互操作性。团队承认，由于其庞大的现有代码库和向后兼容性要求，演化 C++ 本身几乎是不可能的。
+
+目标不是一夜之间取代 C++，而是为最终想要迁移的新 C++ 项目提供一条前进的道路。Carbon 探索现代语言设计——泛型、内存安全默认值、强化可见性——同时能够直接调用和被 C++ 代码调用。
+
+## Design Philosophy
+
+Carbon 优先考虑**性能和互操作性**，同时改进 C++ 已知的问题。语言引入了"checked"语义（如 Rust 的 Result）用于错误处理，默认强制私有化，并使泛型成为一等公民而非事后考虑。
+
+该语言明确设计为可增量采用的——你可以在 C++ 项目中的单个文件中开始使用 Carbon 并逐步扩展。这种"迁移路径"理念承认了世界上的 C++ 代码不会消失。
+
+<Callout type="warning" emoji="⚠️">
+  Carbon 仍处于早期实验阶段。语言设计尚未定稿，预计会有重大变更。请勿将其用于生产系统。
+</Callout>
+
+## Code Example
+
+Carbon 的泛型和 checked 错误处理：
+
+```carbon
+package MyPackage api;
+
+fn Factorial[n:!Integer](n: i32) -> i32 {
+  var result: i32 = 1;
+  for (var i: i32 = 2; i <= n; i += 1) {
+    result *= i;
+  }
+  return result;
+}
+
+fn ReadFile(path: String) -> String!Error {
+  var file: File = open(path);
+  defer close(file);
+  return read(file);
+}
+
+fn Main() {
+  var result: i32 = Factorial(5);
+  print("5! = {0}", result);
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| 语言开发 | Carbon 语言工具链、LLVM 后端 |
+| 工具 | explorer（Carbon 体验场）、语言服务器 |
+| 互操作 | C++ 到 Carbon 转换器（早期） |
+
+## Influence & Legacy
+
+**Inspired by:** C++、Rust、Swift、Kotlin
+
+**Influenced:** （早期阶段，但旨在影响未来系统编程语言设计）
+
+Carbon 代表了 Google 对系统编程未来的愿景。无论 Carbon 本身是否成功，其在 C++ 互操作性和迁移路径方面的实验都将为未来语言如何处理替换遗留代码库的问题提供参考。

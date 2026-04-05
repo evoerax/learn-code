@@ -1,0 +1,85 @@
+---
+title: Gleam
+description: A friendly language for building type-safe, concurrent systems that run on the Erlang VM.
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Gleam
+
+> _"Type-safe, friendly, and fast."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2021 |
+| **Creator** | Louis Giroux (Gleam Team) |
+| **Paradigm** | Functional, Concurrent |
+| **Type System** | Static, Strong |
+| **Platform** | BEAM (Erlang VM), JavaScript |
+| **Current Version** | 1.0 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Gleam was created by Louis Giroux and first released in 2021. The language was born from a desire to bring strong static typing to the BEAM ecosystem (Erlang/Elixir) while keeping the developer experience friendly and approachable. Giroux had been working with Elixir and loved the reliability of the BEAM's actor model for concurrency, but wanted compile-time guarantees that only a sound type system could provide.
+
+The language takes heavy inspiration from Elm's type system and error messages, OCaml's pattern matching, and Rust's approach to error handling. The result is a language where you can build highly concurrent, fault-tolerant systems without runtime surprises.
+
+## Design Philosophy
+
+Gleam's guiding principle is **expressiveness through safety**. The type system is designed to catch entire categories of bugs at compile time—null pointer exceptions, pattern match failures, incorrect type coercions—while still feeling ergonomic and not get-in-your-way.
+
+The language embraces the actor model from Erlang/Elixir, making it trivial to write concurrent code that can crash and restart without bringing down the entire system. Processes communicate through typed messages, and the compiler ensures you can't send the wrong type of message to the wrong process.
+
+<Callout type="default" emoji="💡">
+  Gleam aims to be the language you reach for when you need to build a web service that will be running for decades and must never go down.
+</Callout>
+
+## Code Example
+
+Gleam's pattern matching and type system make concurrent code robust:
+
+```gleam
+import gleam/otp/actor
+import gleam/erlang
+
+type Message {
+  Increment(counter: Int)
+  GetCount(reply_with: actor.Reply(send(Int), Message))
+}
+
+fn handle_message(message: Message, state: Int) {
+  case message {
+    Increment(n) -> actor.continue(state + n)
+    GetCount(reply) -> {
+      actor.reply(reply, state)
+      actor.continue(state)
+    }
+  }
+}
+
+pub fn main() {
+  assert Ok(pid) = actor.start(0, actor.Specify(handle_message, 1000))
+  actor.send(pid, Increment(1))
+  actor.send(pid, Increment(2))
+  actor.send(pid, GetCount(erlang.self()))
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web Services | Livebook (Elixir), Pager ( Gleam's official site) |
+| Libraries | gleam_stdlib, HTTP client libraries |
+| Tooling | gleam language server, build tool |
+
+## Influence & Legacy
+
+**Inspired by:** Elm, OCaml, Rust, Elixir
+
+**Influenced:** (Still early, but showing promise for influencing typed functional languages on the BEAM)
+
+Gleam represents a synthesis of the best ideas from ML-family languages and the BEAM ecosystem. Its success could influence how functional languages approach developer experience, particularly the combination of friendly error messages with strong static typing in a production-oriented environment.

@@ -1,0 +1,79 @@
+---
+title: Hare
+description: 一门专注于简洁性、稳定性和可读性的极简系统编程语言。
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Hare
+
+> _"对复杂性说不的语言。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2022 |
+| **Creator** | Drew DeVault（Drew DeVault's Systems） |
+| **Paradigm** | 系统编程、低级 |
+| **Type System** | 静态、强类型 |
+| **Platform** | 跨平台（Linux、FreeBSD） |
+| **Current Version** | 0.2024.1（2024） |
+| **License** | GPL 3.0 |
+
+## Origin Story
+
+Hare 由 Drew DeVault 创建，他以 suckless.org 项目和 Wayland 合成器 sway 的工作而闻名。DeVault 对现代编程语言的复杂性感到沮丧，他将 Hare 设计为回归基础的语言——一种做一件事而且做得好的语言，没有层层抽象。
+
+Hare 于 2022 年首次发布，优先考虑可读性和可操作性，而非功能数量。该语言没有泛型、没有继承、没有异常、没有隐藏控制流。每一行 Hare 代码都应该让从未见过代码库的程序员能够理解。
+
+## Design Philosophy
+
+Hare 的核心哲学是**彻底简化**。该语言拥有一个小而完整的标准库、确定性的构建系统，以及"把一件事做好"而非"支持一切"的文化。
+
+该语言附带了完整、可审计的标准库——大多数任务不需要第三方依赖。内存由手动管理，有明确的分配器，但语言提供了安全的模式使这变得可控。其结果是，一门可以从硬件到应用程序理解整个堆栈的语言。
+
+<Callout type="default" emoji="💡">
+  "我们拒绝软件需要复杂的想法。简单的软件就是更好的软件。"——Drew DeVault
+</Callout>
+
+## Code Example
+
+Hare 简洁的语法和手动内存管理：
+
+```hare
+use fmt;
+use os;
+use strings;
+
+fn main() void = {
+	let s: str = "Hello, world!";
+	fmt::println(s)!;
+
+	// 字符串切片是显式且安全的
+	let slice: str = strings::slice(s, 0, 5);
+	fmt::println(slice)!; // "Hello"
+
+	// 手动内存但有安全模式
+	let alloc = mem::alloc(int::size);
+	defer mem::free(alloc);
+	*alloc = 42;
+	fmt::println(*alloc)!;
+};
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| 系统工具 | Hare 本身、hare-fetch（包管理器前端） |
+| Shell | ysh（Yash shell 重启） |
+| 文档 | hare-git.sr.ht（源代码托管） |
+
+## Influence & Legacy
+
+**Inspired by:** C、Plan 9、旧 Unix 哲学
+
+**Influenced:** （早期阶段，影响关于语言复杂性的讨论）
+
+Hare 代表了对现代语言日益复杂性的反叛。无论它是否能获得广泛应用，它的存在挑战了语言需要泛型、面向对象继承和庞大标准库才能有用的假设。
