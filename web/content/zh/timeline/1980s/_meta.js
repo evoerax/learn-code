@@ -5,4 +5,5 @@ export default {
   matlab: { title: 'MATLAB' },
   perl: { title: 'Perl' },
   vhdl: { title: 'VHDL' },
+  'objective-c': { title: 'Objective-C' },
 }

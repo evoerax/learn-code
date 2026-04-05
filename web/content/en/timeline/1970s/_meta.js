@@ -4,4 +4,5 @@ export default {
   smalltalk: { title: 'Smalltalk' },
   prolog: { title: 'Prolog' },
   sql: { title: 'SQL' },
+  scheme: { title: 'Scheme' },
 }

@@ -1,0 +1,124 @@
+---
+title: Objective-C
+description: 将面向对象编程带入C生态系统的语言，支撑苹果生态数十年
+---
+
+import { Callout } from 'nextra/components'
+
+# Objective-C
+
+> _C语言与面向对象编程之间的桥梁。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1983 |
+| **创造者** | Brad Cox（Stepstone） |
+| **范式** | 面向对象、消息传递 |
+| **类型系统** | 动态 / 静态（混合） |
+| **平台** | Apple平台、GNUstep |
+| **当前版本** | 2.0（2011） |
+| **许可证** | GPL（运行时）、Apache 2.0（编译器） |
+
+## 起源故事
+
+Brad Cox 在 Stepstone 于 1983 年创建 Objective-C，旨在为 C 语言添加面向对象能力。与 C++ 追求编译时安全和性能不同，Objective-C 走了另一条路：它借用了 Smalltalk 的消息传递风格，并将其嫁接到 C 上。
+
+关键创新是语法：不用 `object->method()`，Objective-C 使用 `-[object method]` 或 `[object method]` 来发送消息。这不仅仅是外观——它意味着方法调用在运行时解析，启用动态分派、方法交换和其他强大的反射能力。
+
+Apple 在 1990 年代和 2000 年代大量采用 Objective-C 进行 macOS 和 iOS 开发。当 Apple 在 2007 年推出 iPhone 时，Objective-C 成为支撑历史上最成功移动生态系统的语言。它一直是 Apple 的主要语言，直到 2014 年 Swift 的出现。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "面向对象模型使构建由精心设计的组件组合而成的程序变得容易——但真正的力量来自于它们之间的动态消息传递。"
+</Callout>
+
+Objective-C 的设计以消息传递为中心：
+
+- 消息与实现解耦——你可以向任何对象发送任何消息
+- 方法解析在运行时通过选择器机制进行
+- Categories 允许向现有类添加方法而无需子类化
+- Protocols 定义多个类可以实现的接口
+
+运行时被设计为真正动态的：你可以在运行时添加类和方法、交换实现、构建适应环境的框架。
+
+## 代码示例
+
+```objc filename="message.m"
+#import <Foundation/Foundation.h>
+
+@interface Calculator : NSObject
+@property (nonatomic, strong) NSMutableArray *history;
+
+- (instancetype)init;
+- (NSNumber *)add:(NSNumber *)a to:(NSNumber *)b;
+- (NSNumber *)multiply:(NSNumber *)a by:(NSNumber *)b;
+- (void)printHistory;
+@end
+
+@implementation Calculator
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _history = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (NSNumber *)add:(NSNumber *)a to:(NSNumber *)b {
+    NSNumber *result = @([a doubleValue] + [b doubleValue]);
+    [self.history addObject:[NSString stringWithFormat:@"%@ + %@ = %@", a, b, result]];
+    return result;
+}
+
+- (NSNumber *)multiply:(NSNumber *)a by:(NSNumber *)b {
+    NSNumber *result = @([a doubleValue] * [b doubleValue]);
+    [self.history addObject:[NSString stringWithFormat:@"%@ × %@ = %@", a, b, result]];
+    return result;
+}
+
+- (void)printHistory {
+    for (NSString *entry in self.history) {
+        NSLog(@"%@", entry);
+    }
+}
+
+@end
+
+int main() {
+    @autoreleasepool {
+        Calculator *calc = [[Calculator alloc] init];
+        [calc add:@3 to:@5];
+        [calc multiply:@4 by:@7];
+        [calc printHistory];
+    }
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| Apple 生态 | macOS、iOS、Cocoa、Cocoa Touch |
+| 框架 | UIKit、AppKit、Foundation |
+| IDE | Xcode |
+| 应用 | 大部分 2014 年前的 iOS/macOS 应用 |
+
+## 影响与遗产
+
+**启发自：** C、Smalltalk
+
+**影响：** Swift、Groovy
+
+Objective-C 的消息传递模型直接影响了我早期 Swift 的设计，特别是方法的调用方式。其括号语法和 `@` 前缀字面量的使用以修改后的形式延续到了 Swift 的语法中。
+
+这门语言支撑了数十年的 Apple 创新，从最初的 Macintosh 到 iPhone 革命。虽然 Swift 现在已经取代它成为新的 Apple 开发语言，但 Objective-C 运行时仍然为数百万应用提供动力，底层框架对于高级 iOS/macOS 开发仍然必不可少。
+
+## 你知道吗？
+
+<Callout type="info" emoji="🤔">
+  `[object method]` 这个语法来自 Smalltalk 的消息传递风格，在 Smalltalk 中向对象发送消息写作 `object message`。Cox 将其与 C 的括号记号结合，创造了一种让许多程序员困惑的独特语法，但却实现了强大的运行时能力。
+</Callout>

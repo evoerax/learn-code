@@ -1,0 +1,101 @@
+---
+title: Assembly
+description: The lowest-level programming language that maps directly to machine code instructions
+---
+
+import { Callout } from 'nextra/components'
+
+# Assembly
+
+> _The language of the machine, one instruction at a time._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1947 |
+| **Creator** | Kathleen Booth (University of London) |
+| **Paradigm** | Imperative, Low-level |
+| **Type System** | None (raw memory) |
+| **Platform** | CPU-specific |
+| **Current Version** | Varies by architecture (x86-64, ARM, RISC-V) |
+| **License** | N/A (public domain / CPU vendor) |
+
+## Origin Story
+
+Assembly language was invented by Kathleen Booth in 1947 at the University of London while working on the ARC (Automatic Relay Computer). Instead of writing binary machine code directly, Booth created a symbolic language that mapped each instruction to a mnemonic—"ADD" instead of a binary pattern, for example.
+
+The key innovation was the "assembler": a program that translated these symbolic instructions into raw machine code. This was the first step toward making programming accessible beyond mathematicians who could memorize binary opcodes.
+
+Before assembly, programming meant toggling switches or threading plugboards. After assembly, programmers could express logic in readable symbols while maintaining complete control over hardware.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Assembly is not a language to be learned—it is a necessity to be understood."
+</Callout>
+
+Assembly embodies several core principles:
+
+- **One-to-one mapping**: Each assembly instruction translates to exactly one CPU instruction
+- **No abstraction**: Every register, memory address, and hardware detail is explicit
+- **Maximum performance**: Zero overhead between your code and the hardware
+- **Complete control**: Direct access to CPU features like flags, stacks, and interrupts
+
+There is no compiler optimizing your code—the programmer is the optimizer. Every instruction executes exactly as written.
+
+## Code Example
+
+```asm filename="loop.x86"
+section .data
+    msg db 'Hello, World!', 0
+    len equ $ - msg
+
+section .text
+    global _start
+
+_start:
+    ; write to stdout
+    mov eax, 4          ; sys_write system call
+    mov ebx, 1         ; file descriptor (stdout)
+    mov ecx, msg       ; pointer to message
+    mov edx, len       ; message length
+    int 0x80           ; invoke kernel
+
+    ; exit with status 0
+    mov eax, 1          ; sys_exit system call
+    xor ebx, ebx        ; status = 0
+    int 0x80            ; invoke kernel
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Operating Systems | Linux kernel, Windows boot sectors, BIOS |
+| Embedded Systems | Firmware for appliances, automotive ECUs |
+| Game Consoles | Retro games (NES, Sega), speedrun optimizations |
+| Security | Shellcode, exploit development, rootkits |
+| Performance | Crypto libraries, emulator cores |
+
+## Influence & Legacy
+
+**Inspired by:** Machine code, binary notation
+
+**Influenced:** C, C++, Rust, all high-level languages
+
+Assembly is the bridge between pure hardware and human-readable code. Every processor architecture has its own assembly language (x86, ARM, RISC-V, MIPS), and understanding assembly gives deep insight into how computers actually work.
+
+Even though few programmers write assembly directly today, it remains essential for:
+- Writing boot loaders and firmware
+- Optimizing critical performance bottlenecks
+- Understanding how compilers work
+- Security research and malware analysis
+
+Modern languages like C and Rust compile down to assembly, making assembly knowledge invaluable for debugging and optimization.
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  The term "assembly language" comes from the "assembly" process—assembling individual instructions into machine code, just as workers assemble parts into a product on an assembly line.
+</Callout>

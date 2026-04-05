@@ -1,0 +1,124 @@
+---
+title: Objective-C
+description: The language that brought object-oriented programming to the C ecosystem and powered Apple's ecosystem for decades
+---
+
+import { Callout } from 'nextra/components'
+
+# Objective-C
+
+> _The bridge between C and object-oriented programming._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1983 |
+| **Creator** | Brad Cox (Stepstone) |
+| **Paradigm** | Object-oriented,消息传递 |
+| **Type System** | Dynamic / Static (hybrid) |
+| **Platform** | Apple platforms, GNUstep |
+| **Current Version** | 2.0 (2011) |
+| **License** | GPL (runtime), Apache 2.0 (compiler) |
+
+## Origin Story
+
+Brad Cox at Stepstone created Objective-C in 1983 as a way to add object-oriented capabilities to C. Unlike C++ which aimed for compile-time safety and performance, Objective-C took a different path: it borrowed Smalltalk's message-passing style and grafted it onto C.
+
+The key innovation was the syntax: instead of `object->method()`, Objective-C used `-[object method]` or `[object method]` for sending messages. This wasn't just cosmetic—it meant method calls were resolved at runtime, enabling dynamic dispatch, method swizzling, and other powerful reflection capabilities.
+
+Apple adopted Objective-C heavily in the 1990s and 2000s for macOS and iOS development. When Apple introduced the iPhone in 2007, Objective-C became the language powering the most successful mobile ecosystem in history. It remained Apple's primary language until Swift's introduction in 2014.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The object-oriented model makes it easy to build programs by composing well-designed components—but the real power comes from the dynamic messaging between them."
+</Callout>
+
+Objective-C's design centered on message passing:
+
+- Messages are decoupled from implementation—you can send any message to any object
+- Method resolution happens at runtime via the selector mechanism
+- Categories allow adding methods to existing classes without subclassing
+- Protocols define interfaces that multiple classes can implement
+
+The runtime was designed to be truly dynamic: you could add classes and methods at runtime, swap implementations, and build frameworks that adapted to their environment.
+
+## Code Example
+
+```objc filename="message.m"
+#import <Foundation/Foundation.h>
+
+@interface Calculator : NSObject
+@property (nonatomic, strong) NSMutableArray *history;
+
+- (instancetype)init;
+- (NSNumber *)add:(NSNumber *)a to:(NSNumber *)b;
+- (NSNumber *)multiply:(NSNumber *)a by:(NSNumber *)b;
+- (void)printHistory;
+@end
+
+@implementation Calculator
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _history = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (NSNumber *)add:(NSNumber *)a to:(NSNumber *)b {
+    NSNumber *result = @([a doubleValue] + [b doubleValue]);
+    [self.history addObject:[NSString stringWithFormat:@"%@ + %@ = %@", a, b, result]];
+    return result;
+}
+
+- (NSNumber *)multiply:(NSNumber *)a by:(NSNumber *)b {
+    NSNumber *result = @([a doubleValue] * [b doubleValue]);
+    [self.history addObject:[NSString stringWithFormat:@"%@ × %@ = %@", a, b, result]];
+    return result;
+}
+
+- (void)printHistory {
+    for (NSString *entry in self.history) {
+        NSLog(@"%@", entry);
+    }
+}
+
+@end
+
+int main() {
+    @autoreleasepool {
+        Calculator *calc = [[Calculator alloc] init];
+        [calc add:@3 to:@5];
+        [calc multiply:@4 by:@7];
+        [calc printHistory];
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Apple Ecosystem | macOS, iOS, Cocoa, Cocoa Touch |
+| Frameworks | UIKit, AppKit, Foundation |
+| IDEs | Xcode |
+| Apps | Most pre-2014 iOS/macOS apps |
+
+## Influence & Legacy
+
+**Inspired by:** C, Smalltalk
+
+**Influenced:** Swift, Groovy
+
+Objective-C's message-passing model directly influenced Swift's early design, particularly in how methods are called. Its use of brackets and the `@` prefix for literals carried over to Swift's syntax in modified form.
+
+The language enabled decades of Apple innovation, from the original Macintosh to the iPhone revolution. While Swift has now replaced it for new Apple development, the Objective-C runtime still powers millions of apps and the underlying frameworks remain essential for advanced iOS/macOS development.
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  The syntax `[object method]` comes from Smalltalk's message-passing style, where sending a message to an object was written as `object message`. Cox combined this with C's bracket notation to create a distinctive syntax that confused many programmers but enabled powerful runtime capabilities.
+</Callout>

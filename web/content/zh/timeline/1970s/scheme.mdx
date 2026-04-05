@@ -1,0 +1,106 @@
+---
+title: Scheme
+description: 极简主义的LISP方言，首创词法作用域和续体，影响了数代程序员的函数式编程思想
+---
+
+import { Callout } from 'nextra/components'
+
+# Scheme
+
+> _一个有原则的LISP方言，小巧而优雅。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1975 |
+| **创造者** | Guy L. Steele Jr. 和 Gerald Jay Sussman（MIT） |
+| **范式** | 函数式、词法作用域 |
+| **类型系统** | 动态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | R7RS（2016） |
+| **许可证** | 多样（MIT、Apache等） |
+
+## 起源故事
+
+Guy Steele 和 Gerald Sussman 于 1975 年在 MIT 创建了 Scheme。LISP 自 1958 年就已存在，采用动态作用域，而 Scheme 引入了词法作用域——变量的含义由其在源代码中的位置决定，而非调用栈。
+
+这个区别至关重要：使用动态作用域，变量的值取决于调用当前函数的外部函数。使用词法作用域，变量的行为与块结构语言中的预期一致。这使程序更容易推理，也让编译器能够有效优化。
+
+Scheme 也被设计为极简主义。Common LISP 试图包含所有能想到的特性，而 Scheme 只提供基本原语，允许程序员在其上构建抽象。这种"wire"哲学产生了一门优雅的语言，影响了许多后续语言的设计，包括 JavaScript。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "程序 = 数据 + 代码。在 Scheme 中，它们是相同的表示。"
+</Callout>
+
+Scheme 的极简主义哲学：
+
+- 第一类函数：函数可以作为参数传递、返回、存储在数据结构中
+- 词法闭包：函数捕获其词法环境
+- 正确的尾递归：循环表达为递归调用而不会导致栈增长
+- 变量和函数的单一命名空间（不同于 Common LISP）
+- 支持续体传递风格以实现复杂控制流
+
+这门语言证明，一组非常小的原语，一致地使用，能够表达巨大的计算能力。
+
+## 代码示例
+
+```scheme filename="closures.scm"
+;;; 简单的闭包示例：计数器工厂
+(define (make-counter)
+  (let ((count 0))
+    (lambda ()
+      (set! count (+ count 1))
+      count)))
+
+;;; 使用闭包
+(define my-counter (make-counter))
+(my-counter)  ; => 1
+(my-counter)  ; => 2
+(my-counter)  ; => 3
+
+;;; 另一个计数器是独立的
+(define other-counter (make-counter))
+(other-counter)  ; => 1
+(other-counter)  ; => 2
+
+;;; 高阶函数：组合
+(define (compose f g)
+  (lambda (x)
+    (f (g x))))
+
+(define (square x) (* x x))
+(define (inc x) (+ x 1))
+
+(define square-then-inc (compose square inc))
+(square-then-inc 5)  ; => 26 (= (5+1)^2)
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 教育 | SICP 教材、全球编程课程 |
+| 语言 | Racket、Guile、Chez Scheme |
+| Web | 早期 JavaScript 灵感来源 |
+| 工业 | GNU Emacs（扩展）、Cadence |
+
+## 影响与遗产
+
+**启发自：** LISP、ALGOL
+
+**影响：** JavaScript、Ruby、Python（第一类函数）、Clojure
+
+Scheme 的影响远远超出其直接使用。开创性的教材《计算机程序的构造和解释》（SICP）用 Scheme 教给了数代程序员，确立了许多至今普遍存在的计算概念。
+
+JavaScript 借用了 Scheme 的表达式语法和第一类函数，尽管保留了类似 C 的语法。Ruby 的代码块和 lambda 看起来像 Scheme。甚至 Python 的生成器表达式和列表推导式也有 Scheme 的根源。
+
+Scheme 还将正确的尾递归作为语言要求而非仅仅是优化——这保证了尾递归调用不会增长栈，使得以递归表达的循环真正高效。
+
+## 你知道吗？
+
+<Callout type="info" emoji="🤔">
+  MIT 著名的 SICP 课程（6.001）最初使用 Scheme 教学。许多计算先驱——包括 Patrick Winston，他后来说"我终于理解了我以前教学时在教的东西"——通过教授 Scheme 重新发现了关于计算的基本思想。
+</Callout>

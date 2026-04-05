@@ -3,4 +3,5 @@ export default {
   fortran: { title: 'FORTRAN' },
   lisp: { title: 'LISP' },
   cobol: { title: 'COBOL' },
+  assembly: { title: 'Assembly' },
 }

@@ -1,0 +1,106 @@
+---
+title: Scheme
+description: A minimalist LISP dialect that pioneered lexical scoping and continuations, and taught generations of programmers about functional programming
+---
+
+import { Callout } from 'nextra/components'
+
+# Scheme
+
+> _A principled dialect of LISP, small and elegant._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1975 |
+| **Creator** | Guy L. Steele Jr. and Gerald Jay Sussman (MIT) |
+| **Paradigm** | Functional, Lexical scope |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | R7RS (2016) |
+| **License** | Varies (MIT, Apache, etc.) |
+
+## Origin Story
+
+Guy Steele and Gerald Sussman created Scheme in 1975 at MIT. Where LISP had been around since 1958 with dynamic scoping, Scheme introduced lexical scoping—where the meaning of a variable is determined by its position in the source code, not by the call stack.
+
+This distinction matters enormously: with dynamic scoping, a variable could be bound to different values depending on which function called the current one. With lexical scoping, variables behave as expected in block-structured languages. This made programs easier to reason about and enabled compilers to optimize effectively.
+
+Scheme was also designed to be minimal. While Common LISP tried to include every feature imaginable, Scheme provided only essential primitives and allowed programmers to build abstractions on top. This "wire" philosophy produced an elegant language that influenced the design of many later languages, including JavaScript.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Programs = Data + Code. In Scheme, they're the same representation."
+</Callout>
+
+Scheme's minimalist philosophy:
+
+- First-class functions: functions can be passed as arguments, returned, stored in data structures
+- Lexical closures: functions capture their lexical environment
+- Proper tail recursion: loops expressed as recursive calls without stack growth
+- Single namespace for variables and functions (unlike Common LISP)
+- Continuation-passing style support for complex control flow
+
+The language proves that a very small set of primitives, used consistently, can express enormous computational power.
+
+## Code Example
+
+```scheme filename=" closures.scm"
+;;; A simple closure example: counter factory
+(define (make-counter)
+  (let ((count 0))
+    (lambda ()
+      (set! count (+ count 1))
+      count)))
+
+;;; Using the closure
+(define my-counter (make-counter))
+(my-counter)  ; => 1
+(my-counter)  ; => 2
+(my-counter)  ; => 3
+
+;;; Another counter is independent
+(define other-counter (make-counter))
+(other-counter)  ; => 1
+(other-counter)  ; => 2
+
+;;; Higher-order function: compose
+(define (compose f g)
+  (lambda (x)
+    (f (g x))))
+
+(define (square x) (* x x))
+(define (inc x) (+ x 1))
+
+(define square-then-inc (compose square inc))
+(square-then-inc 5)  ; => 26 (= (5+1)^2)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Education | SICP textbook, programming courses worldwide |
+| Languages | Racket, Guile, Chez Scheme |
+| Web | Early JavaScript inspiration |
+| Industry | GNU Emacs (extensions), Cadence |
+
+## Influence & Legacy
+
+**Inspired by:** LISP, ALGOL
+
+**Influenced:** JavaScript, Ruby, Python (first-class functions), Clojure
+
+Scheme's influence extends far beyond its direct usage. The groundbreaking textbook "Structure and Interpretation of Computer Programs" (SICP) taught Scheme to generations of programmers, establishing many concepts about computation that appear everywhere today.
+
+JavaScript borrowed Scheme's expression syntax and first-class functions, though it kept C-like syntax. Ruby's blocks and lambdas feel Scheme-like. Even Python's generator expressions and list comprehensions have Scheme roots.
+
+Scheme also pioneered proper tail recursion as a language requirement, not just an optimization—this guaranteed that tail-recursive calls wouldn't grow the stack, making loops expressed as recursion truly efficient.
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  The famous SICP course (6.001) at MIT was originally taught using Scheme. Many computing pioneers—including Patrick Winston, who later said "I finally understand what I was teaching before I understood what I was teaching"—rediscovered fundamental ideas about computation through teaching Scheme.
+</Callout>
