@@ -1,0 +1,89 @@
+---
+title: Nim
+description: 编译为C的系统编程语言，拥有Python般语法和接近C的性能
+---
+
+import { Callout } from 'nextra/components'
+
+# Nim
+
+> _一门用Python语法编写，但以C速度运行的系统语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2008 |
+| **创始人** | Andreas Rumpf（最初名为"Nimrod"） |
+| **范式** | 多范式（过程式、面向对象、函数式） |
+| **类型系统** | 静态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | Nim 2.0 (2023) |
+| **许可证** | MIT |
+
+## 起源故事
+
+Nim（最初名为"Nimrod"）由Andreas Rumpf于2008年创建，最初是一个爱好项目，后来发展为一门严肃的系统编程语言。目标是创造一门具有Python优雅语法但拥有C语言性能和紧凑二进制大小的语言。
+
+语言经历了重大演变，特别是在2019年1.0版本发布后，垃圾回收器得到了大幅改进。2014年，为了避免圣经典故，名字从"Nimrod"改为"Nim"。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "Nim的元编程能力让你编写能写代码的代码，而不会有宏的视觉噪音。" — Nim文档
+</Callout>
+
+Nim的核心原则：
+- **人体工学优先** — 缩进语法，无样板代码
+- **零成本抽象** — 编译时求值产生高效代码
+- **无需宏的元编程** — 模板和宏是卫生且可读的
+- **C互操作** — 生成干净的C代码，可编译为C/C++/Objective-C/JavaScript
+
+## 代码示例
+
+```nim
+import std/[strutils, sequtils]
+
+# Nim使用模板的元编程
+template `||`(a, b: untyped): untyped =
+  "logical_or"
+
+# UFCS和链式操作
+let numbers = @[1, 2, 3, 4, 5]
+let result = numbers
+  .filter(proc(x: int): bool = x mod 2 == 0)
+  .mapIt(x * 2)
+  .foldl(a + b, 0)
+
+echo result  # 输出: 12
+
+# 编译时求值
+const fib10 = block:
+  var a, b = 1
+  for _ in 0..<10:
+    swap(a, b)
+    b = a + b
+  b
+echo fib10  # 输出: 89
+```
+
+## 知名项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 游戏开发 | nimGL, Frump |
+| Web | Jester (Web框架), aporia |
+| CLI工具 | choon, nimfetch |
+| 系统 | nimbu ( bootloader), vedad |
+
+## 影响与遗产
+
+**受启发于:** Python、C++、Ada、Lisp
+
+**影响:** Janet, G Procedural Language
+
+Nim证明了一门系统编程语言可以在不牺牲性能的前提下优先考虑开发者体验。其宏系统影响了后来语言对编译时代码生成的方法，作为一个社区驱动项目的成功激励了其他开源语言计划。
+
+<Callout type="info" emoji="🤔">
+  Nim可以编译为C、C++、Objective-C或JavaScript，使其成为世界上最通用的交叉编译器之一。
+</Callout>

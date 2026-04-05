@@ -1,0 +1,89 @@
+---
+title: Nim
+description: Compile-to-C systems language with Python-like syntax and near-C performance
+---
+
+import { Callout } from 'nextra/components'
+
+# Nim
+
+> _The language that writes Python but runs at C speed._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2008 |
+| **Creator** | Andreas Rumpf (originally "Nimrod") |
+| **Paradigm** | Multi-paradigm (Procedural, OOP, Functional) |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | Nim 2.0 (2023) |
+| **License** | MIT |
+
+## Origin Story
+
+Nim (originally named "Nimrod") was created by Andreas Rumpf in 2008 as a hobby project that grew into a serious systems programming language. The goal was to create a language with Python's elegant syntax but C's performance and small binary size.
+
+The language underwent significant evolution, particularly after version 1.0 in 2019 when the garbage collector was substantially improved. The name change from "Nimrod" to "Nim" occurred in 2014 to avoid biblical connotations.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Nim's meta-programming capabilities let you write code that writes code, without the visual noise of macros." — Nim Documentation
+</Callout>
+
+Nim's core principles:
+- **Ergonomics first** — indentation-based syntax, no boilerplate
+- **Zero-cost abstractions** — compile-time evaluation produces efficient code
+- **Metaprogramming without macros** — templates and macros are hygienic and readable
+- **C interoperability** — generates clean C code, compiles to C/C++/Objective-C/JavaScript
+
+## Code Example
+
+```nim
+import std/[strutils, sequtils]
+
+# Nim's metaprogramming with templates
+template `||`(a, b: untyped): untyped =
+  "logical_or"
+
+# UFCS and chained operations
+let numbers = @[1, 2, 3, 4, 5]
+let result = numbers
+  .filter(proc(x: int): bool = x mod 2 == 0)
+  .mapIt(x * 2)
+  .foldl(a + b, 0)
+
+echo result  # Output: 12
+
+# Compile-time evaluation
+const fib10 = block:
+  var a, b = 1
+  for _ in 0..<10:
+    swap(a, b)
+    b = a + b
+  b
+echo fib10  # Output: 89
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Game Development | nimGL, Frump, |
+| Web | Jester (web framework), aporia |
+| CLI Tools | choon, nimfetch |
+| Systems | nimbu (bootloader), vedad |
+
+## Influence & Legacy
+
+**Inspired by:** Python, C++, Ada, Lisp
+
+**Influenced:** Janet, G Procedural Language
+
+Nim demonstrated that a systems language could prioritize developer experience without sacrificing performance. Its macro system influenced later languages' approach to compile-time code generation, and its success as a community-driven project inspired other open-source language initiatives.
+
+<Callout type="info" emoji="🤔">
+  Nim compiles to C, C++, Objective-C, or JavaScript, making it one of the most versatile cross-compilers in existence.
+</Callout>

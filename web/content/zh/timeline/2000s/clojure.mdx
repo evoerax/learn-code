@@ -1,0 +1,90 @@
+---
+title: Clojure
+description: 运行在JVM上的现代Lisp，具有不可变数据结构和函数式并发
+---
+
+import { Callout } from 'nextra/components'
+
+# Clojure
+
+> _为JVM重新发明的Lisp，默认使用不可变数据。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2007 |
+| **创始人** | Rich Hickey |
+| **范式** | 函数式、Lisp |
+| **类型系统** | 动态、强类型 |
+| **平台** | JVM、CLR、JavaScript |
+| **当前版本** | Clojure 1.11 (2023) |
+| **许可证** | Eclipse Public License |
+
+## 起源故事
+
+Clojure由Rich Hickey于2007年创建，经过18个月的开发。Hickey是一位长期对Java企业复杂性感到沮丧的开发者，致力于将Lisp的力量带到JVM上，同时专注于函数式编程和不可变数据。
+
+与之前将可变性视为常态的Lisp不同，Clojure默认使用高效的持久化数据结构实现不可变性。这种"新时代"方法使得并发编程无需显式锁定更加安全。"Clojure"这个名字是"closure"的文字游戏，也是Hickey项目中Clojure目录的路径。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "目标是让编写正确的程序变得更容易。" — Rich Hickey
+</Callout>
+
+Clojure的设计围绕：
+- **不可变数据结构** — 每个值创建后就是永久的
+- **持久化数据结构** — 新版本高效共享结构
+- **Seq抽象** — 统一所有集合的接口
+- **宿主互操作** — 无缝的Java/.NET/JS互操作
+- **无锁并发** — atoms、refs、agents和vars用于安全的状态管理
+
+## 代码示例
+
+```clojure
+;; Clojure的thread-first宏用于可读的数据转换
+(def languages
+  [{:name "C" :year 1972 :type :systems}
+   {:name "Python" :year 1991 :type :general}
+   {:name "Clojure" :year 2007 :type :functional}])
+
+;; 使用thread-last (->>)进行转换和过滤
+(->> languages
+     (filter #(> (:year %) 1980))
+     (map :name)
+     (clojure.string/join ", "))
+;; => "Python, Clojure"
+
+;; Atoms用于安全的独立变更
+(def counter (atom 0))
+(swap! counter inc)  ; 线程安全的递增
+;; Atoms使用比较和设置，而非锁
+
+;; 惰性无限序列
+(def fibs
+  (lazy-cat [0 1]
+            (map + fibs (rest fibs))))
+(take 10 fibs)  ; => (0 1 1 2 3 5 8 13 21 34)
+```
+
+## 知名项目
+
+| 领域 | 项目 |
+|--------|---------|
+| Web | Metabase (BI工具), Nubank (巴西最大金融科技) |
+| 数据处理 | Apache Spark集成 |
+| 桌面 | Nightcode (IDE), seesaw (GUI) |
+| 测试 | Midje (测试框架) |
+
+## 影响与遗产
+
+**受启发于:** Common Lisp、Scheme、Haskell、Erlang、Java
+
+**影响:** Joker (Clojure转JS编译器), Ocalm的Jane Street库
+
+Clojure证明了Lisp可以在21世纪蓬勃发展，以及具有不可变数据的函数式编程可以处理真实世界的企业工作负载。其在Nubank等公司的成功表明，一门源于学术思想的语言可以扩展到数百万用户。
+
+<Callout type="info" emoji="🤔">
+  Rich Hickey famously拒绝多年为Clojure添加破坏性变更，优先考虑稳定性而非功能速度。
+</Callout>

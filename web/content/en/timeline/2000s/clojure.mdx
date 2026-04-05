@@ -1,0 +1,90 @@
+---
+title: Clojure
+description: A modern Lisp running on the JVM with immutable data structures and functional concurrency
+---
+
+import { Callout } from 'nextra/components'
+
+# Clojure
+
+> _Lisp re-invented for the JVM, where immutable data is the default._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2007 |
+| **Creator** | Rich Hickey |
+| **Paradigm** | Functional, Lisp |
+| **Type System** | Dynamic, Strong |
+| **Platform** | JVM, CLR, JavaScript |
+| **Current Version** | Clojure 1.11 (2023) |
+| **License** | Eclipse Public License |
+
+## Origin Story
+
+Clojure was created by Rich Hickey in 2007 after 18 months of development. Hickey, a longtime developer frustrated with the complexity of enterprise Java, sought to bring Lisp's power to the JVM with a focus on functional programming and immutable data.
+
+Unlike previous Lisps that treated mutability as normal, Clojure made immutability the default with efficient persistent data structures. This "新时代" approach made concurrent programming safer without requiring explicit locking. The name "Clojure" is a play on "closure" and the path to Clojure's directory in Hickey's projects.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The goal is to make it easier to write correct programs." — Rich Hickey
+</Callout>
+
+Clojure's design centers on:
+- **Immutable data structures** — every value is permanent once created
+- **Persistent data structures** — new versions share structure efficiently
+- **Seq abstraction** — uniform interface for all collections
+- **Host interoperability** — seamless Java/.NET/JS interop
+- **Lock-free concurrency** — atoms, refs, agents, and vars for safe state management
+
+## Code Example
+
+```clojure
+;; Clojure's thread-first macro for readable data transformation
+(def languages
+  [{:name "C" :year 1972 :type :systems}
+   {:name "Python" :year 1991 :type :general}
+   {:name "Clojure" :year 2007 :type :functional}])
+
+;; Transform and filter with thread-last (->>)
+(->> languages
+     (filter #(> (:year %) 1980))
+     (map :name)
+     (clojure.string/join ", "))
+;; => "Python, Clojure"
+
+;; Atoms for safe independent mutation
+(def counter (atom 0))
+(swap! counter inc)  ; thread-safe increment
+;; Atoms use compare-and-set, not locks
+
+;; Lazy infinite sequences
+(def fibs
+  (lazy-cat [0 1]
+            (map + fibs (rest fibs))))
+(take 10 fibs)  ; => (0 1 1 2 3 5 8 13 21 34)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web | Metabase (BI tool), Nubank (Brazil's largest fintech) |
+| Data Processing | Apache Spark integrations |
+| Desktop | Nightcode (IDE),-seesaw (GUI) |
+| Testing | Midje (testing framework) |
+
+## Influence & Legacy
+
+**Inspired by:** Common Lisp, Scheme, Haskell, Erlang, Java
+
+**Influenced:** Joker (Clojure transpiler to JS), Ocalm's Jane Street libraries
+
+Clojure proved that Lisp could thrive in the 21st century and that functional programming with immutable data could handle real-world enterprise workloads. Its success at companies like Nubank demonstrated that a language born from academic ideas could scale to millions of users.
+
+<Callout type="info" emoji="🤔">
+  Rich Hickey famously refused to add breaking changes to Clojure for years, prioritizing stability over feature velocity.
+</Callout>

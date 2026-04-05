@@ -1,0 +1,79 @@
+---
+title: D
+description: C++的现代替代方案，支持可选的垃圾回收和强大的元编程
+---
+
+import { Callout } from 'nextra/components'
+
+# D
+
+> _一门尝试摆脱C++历史包袱的现代语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2001 |
+| **创始人** | Walter Bright (Digital Mars) |
+| **范式** | 多范式（面向对象、函数式、元编程） |
+| **类型系统** | 静态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | D 2.100 (2023) |
+| **许可证** | Boost Software License |
+
+## 起源故事
+
+D语言由Zortech C++编译器的创建者Walter Bright于2001年创立。Bright对C++的复杂性感到沮丧，决定在保持实际可行的C兼容性的同时，从头设计一门现代化的继任语言。
+
+这门语言最初被称为"C/C++ complementary"，后来才改为单字母名称"D"。2007年左右，Andrei Alexandrescu作为联合设计者加入，为模板和ranges做出了重大改进，塑造了现代D语言的面貌。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "D是一门具有C++强大能力但像Python一样简单的语言。" — Walter Bright
+</Callout>
+
+D的设计旨在解决C++的痛点同时保留其能力：
+- **垃圾回收是可选的** — 当性能需要时可以使用手动内存管理
+- **简洁性** — 无头文件，语法更简单，复杂性降低
+- **实用主义** — 为真实世界编程设计，而非学术优雅
+- **编译时反射** — 强大的元编程能力，无需预处理器
+
+## 代码示例
+
+```d
+import std.stdio : writeln;
+
+// 使用ranges的现代D
+int[] filterEvens(int[] arr) {
+    return arr.filter!(x => x % 2 == 0);
+}
+
+void main() {
+    // UFCS (统一函数调用语法)
+    [1, 2, 3, 4, 5, 6]
+        .filter!(x => x % 2 == 0)
+        .writeln;  // 输出: [2, 4, 6]
+}
+```
+
+## 知名项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 游戏 | DFL (DirectFB GUI), Polyphant |
+| Web | Vibe.d (异步Web框架) |
+| 编译器 | DMD (D编译器本身) |
+| 工具 | Dustmite (Bug最小化工具) |
+
+## 影响与遗产
+
+**受启发于:** C++、Java、Python、C#
+
+**影响:** Odin, V (Vlang), Q#
+
+D语言证明了一门系统编程语言可以在不牺牲性能的前提下优先考虑开发者生产力。它的编译时求值特性影响了后来的语言，其社区展示了没有企业支持的语言也可以维持二十多年的开发。
+
+<Callout type="info" emoji="🤔">
+  自2007年Digital Mars终止商业支持后，D语言完全由社区驱动开发。
+</Callout>

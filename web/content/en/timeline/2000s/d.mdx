@@ -1,0 +1,79 @@
+---
+title: D
+description: C++'s modern alternative with optional garbage collection and powerful metaprogramming
+---
+
+import { Callout } from 'nextra/components'
+
+# D
+
+> _The language that tried to be C++ without the baggage._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2001 |
+| **Creator** | Walter Bright (Digital Mars) |
+| **Paradigm** | Multi-paradigm (OOP, Functional, Metaprogramming) |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | D 2.100 (2023) |
+| **License** | Boost Software License |
+
+## Origin Story
+
+D was created by Walter Bright, the creator of the Zortech C++ compiler, starting in 2001. Frustrated with C++'s complexity and willing to make breaking changes, Bright designed D from scratch as a modern successor while maintaining C compatibility where practical.
+
+The language was originally called "C/C++ complementary" before settling on the single-letter name. Andrei Alexandrescu joined as co-designer around 2007, contributing significant improvements to templates and ranges that shaped modern D.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "D is a language with C++'s power and Python's simplicity." — Walter Bright
+</Callout>
+
+D was designed to fix C++'s pain points while preserving its capabilities:
+- **Garbage collection is optional** — you can use manual memory management when performance demands it
+- **Simplicity** — no header files, simpler syntax, reduced complexity
+- **Pragmatism** — designed for real-world programming, not academic elegance
+- **Compile-time reflection** — powerful metaprogramming without preprocessor hacks
+
+## Code Example
+
+```d
+import std.stdio : writeln;
+
+// Modern D with ranges
+int[] filterEvens(int[] arr) {
+    return arr.filter!(x => x % 2 == 0);
+}
+
+void main() {
+    // UFCS (Uniform Function Call Syntax)
+    [1, 2, 3, 4, 5, 6]
+        .filter!(x => x % 2 == 0)
+        .writeln;  // Output: [2, 4, 6]
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Games | DFL (DirectFB GUI), Polyphant |
+| Web | Vibe.d (async web framework) |
+| Compilers | DMD (D compiler itself) |
+| Utilities | Dustmite (bug minimization tool) |
+
+## Influence & Legacy
+
+**Inspired by:** C++, Java, Python, C#
+
+**Influenced:** Odin, V (Vlang), Q#
+
+D demonstrated that a systems language could prioritize developer productivity without sacrificing performance. Its compile-time evaluation features influenced later languages, and its community showed that a language without corporate backing could sustain development for over two decades.
+
+<Callout type="info" emoji="🤔">
+  D's development has been entirely community-driven since Digital Mars discontinued commercial support in 2007.
+</Callout>
