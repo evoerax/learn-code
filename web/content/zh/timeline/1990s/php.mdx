@@ -1,0 +1,110 @@
+---
+title: PHP
+description: 服务端语言，驱动了早期互联网，如今仍支撑着全球43%的网站
+---
+
+import { Callout } from 'nextra/components'
+
+# PHP
+
+> _构建了互联网的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1995 |
+| **创造者** | Rasmus Lerdorf |
+| **范式** | 命令式、面向对象 |
+| **类型系统** | 动态、弱类型 |
+| **平台** | 服务端（跨平台） |
+| **当前版本** | PHP 8.3（2024） |
+| **许可证** | PHP License |
+
+## 起源故事
+
+Rasmus Lerdorf 在1995年创建了 PHP，最初是为了追踪他在线简历的访问量。他称之为"个人主页工具"，并开源了源代码，希望其他人会发现它有用。
+
+这门语言是自然生长的。人们不断添加功能——条件语句、循环、函数。到1997年，Zeev Suraski 和 Andi Gutmans 重写了解析器，PHP 3 成为了一门真正的编程语言。
+
+PHP 4（2000）添加了 Zend Engine，PHP 5（2004）带来了完整的对象模型、异常处理和 SPL。PHP 7 通过新的 Zend Engine II 大幅提升了性能。PHP 8 引入了 JIT 编译和联合类型。
+
+PHP 统治地位的关键在于共享主机。PHP 运行成本低廉——只需将文件添加到 Web 目录即可。结合 MySQL，它创造了 LAMP 栈，支撑了第一波动态 Web 内容。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "PHP 是一个配角试图穿主角鞋子的尝试。" —— Rasmus Lerdorf
+</Callout>
+
+PHP 的实用主义设计优先考虑完成任务：
+- 嵌入 HTML：`<?php echo "你好" ?>`
+- 一切都是全局函数或变量
+- 松散类型，自动类型转换
+- 庞大的标准库处理 Web 任务
+
+批评者指出其不一致性（函数命名：`strpos` vs `substr`），但 PHP 的实用主义也是其优势。它为工作的程序员设计，他们需要交付功能，而不是计算机科学学者。
+
+## 代码示例
+
+```php filename="router.php"
+<?php
+class Router {
+    private array $routes = [];
+    
+    public function add(string $method, string $path, callable $handler): void {
+        $this->routes[] = [
+            'method' => strtoupper($method),
+            'path' => $path,
+            'handler' => $handler
+        ];
+    }
+    
+    public function dispatch(string $method, string $uri): void {
+        $uri = parse_url($uri, PHP_URL_PATH);
+        
+        foreach ($this->routes as $route) {
+            if ($route['method'] !== strtoupper($method)) continue;
+            
+            $pattern = preg_replace('/\{(\w+)\}/', '(?P<$1>[^/]+)', $route['path']);
+            $pattern = "#^{$pattern}$#";
+            
+            if (preg_match($pattern, $uri, $matches)) {
+                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+                $handler = $route['handler'];
+                $handler($params);
+                return;
+            }
+        }
+        
+        http_response_code(404);
+        echo "页面未找到";
+    }
+}
+
+$router = new Router();
+$router->add('GET', '/users/{id}', function($params) {
+    echo "用户ID：" . $params['id'];
+});
+$router->dispatch('GET', '/users/42');
+?>
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 内容管理系统 | WordPress（43% 网站）、Drupal、Magento |
+| 框架 | Laravel、Symfony、CodeIgniter |
+| SaaS 应用 | Facebook（早期）、Wikipedia、Tumblr |
+| 电商 | Shopify、WooCommerce、PrestaShop |
+
+## 影响与遗产
+
+**启发自：** C、Perl、Java
+
+**影响：** Hack、PHP 8 改进
+
+PHP 的影响力不可否认。仅 WordPress 就支撑了全球 43% 的网站。Facebook 创建了 Hack 作为类型化变体来解决 PHP 的弱点。语言包管理器 Composer 统一了生态系统。
+
+批评者轻视 PHP，但它几十年来一直是 Web 开发的实用选择。现代 PHP 8 的 JIT 编译、命名参数、属性和联合类型表明这门语言仍在不断发展。

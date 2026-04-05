@@ -1,0 +1,113 @@
+---
+title: Ruby
+description: The language built around developer happiness, with elegant syntax that reads like English
+---
+
+import { Callout } from 'nextra/components'
+
+# Ruby
+
+> _A programmer's best friend._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1995 |
+| **Creator** | Yukihiro "Matz" Matsumoto |
+| **Paradigm** | Object-oriented, Pure OOP, Functional |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | Ruby 3.3 (2024) |
+| **License** | BSD |
+
+## Origin Story
+
+Yukihiro "Matz" Matsumoto created Ruby in 1995, frustrated by the verbosity of other languages. He wanted a language that made programming enjoyable, that developers would actually want to use.
+
+Matz studied his favorite languages—Perl for text processing, Python for scripting, Smalltalk for pure OOP—and synthesized their best ideas into Ruby. The result was a language that prioritized human needs over computer convenience.
+
+Ruby's breakthrough came with Ruby on Rails in 2004. David Heinemeier Hansson (DHH) extracted Rails from Basecamp, and suddenly the language was everywhere. Rails' "convention over configuration" and "don't repeat yourself" principles changed how web frameworks were designed.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Ruby is designed to make programmers happy." — Yukihiro Matsumoto
+</Callout>
+
+Ruby's guiding principle is developer joy:
+
+- Everything is an object—including numbers and `nil`
+- Natural syntax that reads like English sentences
+- Blocks and iterators as first-class concepts
+- Monkey patching allowed (modify any class)
+- Symbol garbage collection prevents memory leaks
+
+```ruby
+# Methods can be called without parentheses
+5.times { puts "Hello" }
+
+# Blocks can be used for resource management
+File.open("data.txt") do |file|
+  puts file.read
+end
+
+# Symbols are immutable identifiers
+status = :pending
+```
+
+## Code Example
+
+```ruby filename="dsl_builder.rb"
+class DomainSpecificLanguage
+  def initialize(&block)
+    @rules = []
+    instance_eval(&block) if block
+  end
+  
+  def validate(name, &condition)
+    @rules << { name: name, check: condition }
+  end
+  
+  def check(data)
+    @rules.each do |rule|
+      result = rule[:check].call(data)
+      puts "#{rule[:name]}: #{result ? 'PASS' : 'FAIL'}"
+    end
+  end
+  
+  def method_missing(name, *args, &block)
+    puts "Defining rule: #{name}"
+    validate(name) do |data|
+      data.key?(name)
+    end
+  end
+end
+
+class UserValidator < DomainSpecificLanguage
+  validate :email) { |u| u[:email].include?('@') }
+  validate :age) { |u| u[:age] && u[:age] >= 18 }
+end
+
+validator = UserValidator.new
+validator.check({ email: "user@example.com", age: 25, name: "John" })
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web | Ruby on Rails, GitHub, Shopify, Airbnb |
+| DevOps | Chef, Vagrant, Ansible (parts) |
+| Testing | RSpec, Cucumber, Minitest |
+| Scripting | Jekyll, Middleman, Bundler |
+
+## Influence & Legacy
+
+**Inspired by:** Perl, Python, Smalltalk, Lisp
+
+**Influenced:** Groovy, Elixir, Crystal, Rust (error handling)
+
+Ruby established that programming languages could prioritize human happiness. Its influence on web frameworks is profound—Rails inspired Django (Python), Laravel (PHP), Phoenix (Elixir), and countless others.
+
+Ruby's focus on developer experience predated the modern DX (developer experience) movement by decades. The language proved that syntactic elegance and productivity weren't opposites.

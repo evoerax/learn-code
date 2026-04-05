@@ -1,0 +1,105 @@
+---
+title: JavaScript
+description: 唯一的浏览器原生语言，如今运行在从服务器到太空的每个角落
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# JavaScript
+
+> _驱动 web 的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1995 |
+| **创造者** | Brendan Eich（Netscape） |
+| **范式** | 多范式：原型式面向对象、函数式、事件驱动 |
+| **类型系统** | 动态、弱类型 |
+| **平台** | 浏览器、服务器（Node.js）、嵌入式 |
+| **当前版本** | ES2024（2024） |
+| **许可证** | BSD |
+
+## 起源故事
+
+Brendan Eich 在1995年9月仅为 Netscape Navigator 浏览器用10天时间就创造了 JavaScript。当时 Netscape 需要一种脚本语言来与微软新发布的 J++ 竞争。
+
+"JavaScript" 这个名字是一个营销决策——Sun Microsystems（Java 的所有者）想借助 Java 的知名度。尽管名字相似，JavaScript 和 Java 是完全不同的语言，有着不同的设计、目的和类型系统。
+
+Eich 的设计受到了 Scheme（函数式、一等函数）和 Self（原型继承）的影响。结果是一门立即可用的语言，但要真正被理解还需要很多年。
+
+Netscape 在 Navigator 2.0 中发布了 JavaScript，微软对其进行了逆向工程，为 Internet Explorer 创建了 JScript。这引发了浏览器大战——以及困扰 Web 开发人员十年的不兼容 DOM 实现。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "任何可以用 JavaScript 编写的应用程序，最终都会用 JavaScript 编写。" —— Atwood 定律
+</Callout>
+
+JavaScript 的设计拥抱灵活性：
+- 函数是一等公民
+- 原型继承（非类继承）
+- 动态对象修改
+- 异步.report操作的事件循环
+
+语言的"精华部分"（函数、原型继承、闭包）令人喜爱。它的"糟粕部分"（全局变量、类型强制转换、`this` 绑定）催生了 TypeScript 等静态分析工具来增加安全性。
+
+## 代码示例
+
+```javascript filename="event-emitter.js"
+class EventEmitter {
+  #listeners = new Map();
+  
+  on(event, listener) {
+    if (!this.#listeners.has(event)) {
+      this.#listeners.set(event, []);
+    }
+    this.#listeners.get(event).push(listener);
+    return this;
+  }
+  
+  emit(event, ...args) {
+    if (this.#listeners.has(event)) {
+      this.#listeners.get(event).forEach(listener => 
+        Promise.resolve(listener(...args)).catch(console.error)
+      );
+    }
+    return this;
+  }
+  
+  off(event, listener) {
+    if (this.#listeners.has(event)) {
+      this.#listeners.set(event, 
+        this.#listeners.get(event).filter(l => l !== listener)
+      );
+    }
+    return this;
+  }
+}
+
+const emitter = new EventEmitter();
+emitter.on('data', chunk => process.stdout.write(chunk))
+       .on('end', () => console.log('\n完成！'))
+       .emit('data', '你好，JavaScript！\n');
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 前端 | React、Vue、Angular、Next.js |
+| 后端 | Node.js、Express、NestJS |
+| 移动端 | React Native、Expo、Ionic |
+| 桌面端 | Electron、NW.js |
+| 工具链 | Webpack、Vite、ESLint |
+
+## 影响与遗产
+
+**启发自：** Scheme、Self、Java
+
+**影响：** TypeScript、Flow、JSDoc、Dart、Kotlin（JS 编译目标）
+
+JavaScript 吞噬了世界。它是唯一原生运行在浏览器中的语言，使其成为历史上部署最广泛的编程语言。Node.js 证明了 JavaScript 可以在服务器上大放异彩，创造了全栈 JavaScript 开发。
+
+从 ES5 到现代 ES6+ 的演进将它从脚本玩具转变为具有类、模块、async/await 和强大数组方法的严肃编程语言。Brendan Eich 在10天内创造的东西成为了现代 Web 开发的基础。

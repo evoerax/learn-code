@@ -1,0 +1,108 @@
+---
+title: JavaScript
+description: The only language native to browsers, now running everywhere from servers to space
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# JavaScript
+
+> _The language that powers the web._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1995 |
+| **Creator** | Brendan Eich (Netscape) |
+| **Paradigm** | Multi-paradigm: Prototype-based OOP, Functional, Event-driven |
+| **Type System** | Dynamic, Weak |
+| **Platform** | Browser, Server (Node.js), Embedded |
+| **Current Version** | ES2024 (2024) |
+| **License** | BSD |
+
+## Origin Story
+
+Brendan Eich created JavaScript in just 10 days in September 1995 at Netscape Communications. The company needed a scripting language for its Netscape Navigator browser to compete with Microsoft's newly announced J++.
+
+The name "JavaScript" was a marketing decision—Sun Microsystems (Java's owner) wanted to ride Java's popularity. Despite the name similarity, JavaScript and Java are completely different languages with different designs, purposes, and type systems.
+
+Eich's design was influenced by Scheme (functional, with first-class functions) and Self (prototype-based inheritance). The result was a language that was immediately usable but took years to be understood properly.
+
+Netscape released JavaScript in Navigator 2.0, and Microsoft reverse-engineered it to create JScript for Internet Explorer. This created the browser wars—and the incompatible DOM implementations that haunted web developers for a decade.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Any application that can be written in JavaScript, will eventually be written in JavaScript." — Atwood's Law
+</Callout>
+
+JavaScript's design embraces flexibility:
+- Functions as first-class citizens
+- Prototype-based inheritance (not class-based)
+- Dynamic object mutation
+- Event loop for asynchronous operations
+
+The language's "good parts" (functions, prototypal inheritance, closures) are beloved. Its "bad parts" (global variables, type coercion, `this` binding) have spawned static analysis tools like TypeScript to add safety.
+
+## Code Example
+
+```javascript filename="async-pipeline.js"
+const { pipeline } = require('stream/promises');
+const fs = require('fs');
+
+class EventEmitter {
+  #listeners = new Map();
+  
+  on(event, listener) {
+    if (!this.#listeners.has(event)) {
+      this.#listeners.set(event, []);
+    }
+    this.#listeners.get(event).push(listener);
+    return this;
+  }
+  
+  emit(event, ...args) {
+    if (this.#listeners.has(event)) {
+      this.#listeners.get(event).forEach(listener => 
+        Promise.resolve(listener(...args)).catch(console.error)
+      );
+    }
+    return this;
+  }
+  
+  off(event, listener) {
+    if (this.#listeners.has(event)) {
+      this.#listeners.set(event, 
+        this.#listeners.get(event).filter(l => l !== listener)
+      );
+    }
+    return this;
+  }
+}
+
+const emitter = new EventEmitter();
+emitter.on('data', chunk => process.stdout.write(chunk))
+       .on('end', () => console.log('\nDone!'))
+       .emit('data', 'Hello, JavaScript!\n');
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Frontend | React, Vue, Angular, Next.js |
+| Backend | Node.js, Express, NestJS |
+| Mobile | React Native, Expo, Ionic |
+| Desktop | Electron, NW.js |
+| Tooling | Webpack, Vite, ESLint |
+
+## Influence & Legacy
+
+**Inspired by:** Scheme, Self, Java
+
+**Influenced:** TypeScript, Flow, JSDoc, Dart, Kotlin (JS compilation targets)
+
+JavaScript consumed the world. It's the only language that runs natively in browsers, making it the most deployed programming language in history. Node.js proved JavaScript could excel on the server, creating full-stack JavaScript development.
+
+The language's evolution from ES5 to modern ES6+ transformed it from a scripting toy into a serious programming language with classes, modules, async/await, and powerful array methods. What Brendan Eich created in 10 days became the foundation of modern web development.

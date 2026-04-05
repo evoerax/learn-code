@@ -1,0 +1,114 @@
+---
+title: Java
+description: The object-oriented language that introduced "write once, run anywhere" to the world
+---
+
+import { Callout } from 'nextra/components'
+
+# Java
+
+> _Write once, run anywhere._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1995 |
+| **Creator** | James Gosling (Sun Microsystems) |
+| **Paradigm** | Object-oriented, Class-based |
+| **Type System** | Static, Strong |
+| **Platform** | JVM (Java Virtual Machine) |
+| **Current Version** | Java 23 (2024) |
+| **License** | GPL v2 |
+
+## Origin Story
+
+Sun Microsystems released Java in 1995 with a revolutionary promise: "Write Once, Run Anywhere." James Gosling and his team at Sun had been working on the language since 1991, originally called Oak, intended for set-top boxes and consumer electronics.
+
+The timing couldn't have been better. The World Wide Web was exploding, and Java applets promised to bring interactive content to browsers. But it was server-side Java that truly changed the industry—servlets, JSP, and later Spring Framework made Java the backbone of enterprise computing.
+
+Sun's strategy was brilliant: give away the JDK for free, profit from Java's popularity through hardware and enterprise software. This open approach built an ecosystem that no single vendor could control.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Java is C++ without the guns, knives, and sharp edges." — James Gosling
+</Callout>
+
+Java's founding principles:
+- Simple: No pointer arithmetic, automatic memory management
+- Object-oriented: Everything is an object (except primitives)
+- Robust: Strong type checking, exception handling
+- Secure: Sandboxed execution for untrusted code
+- Portable: JVM as abstraction layer
+
+The JVM was the key innovation. Instead of compiling to specific machine code, Java compiled to bytecode that any JVM could execute—Windows, Linux, Mac, embedded systems. This portability transformed enterprise software development.
+
+## Code Example
+
+```java filename="StrategyPattern.java"
+interface PaymentStrategy {
+    void pay(double amount);
+}
+
+class CreditCardPayment implements PaymentStrategy {
+    private String cardNumber;
+    
+    CreditCardPayment(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+    
+    @Override
+    public void pay(double amount) {
+        System.out.printf("Paid %.2f with credit card %s%n", 
+            amount, cardNumber.substring(cardNumber.length() - 4));
+    }
+}
+
+class PayPalPayment implements PaymentStrategy {
+    private String email;
+    
+    PayPalPayment(String email) {
+        this.email = email;
+    }
+    
+    @Override
+    public void pay(double amount) {
+        System.out.printf("Paid %.2f via PayPal to %s%n", amount, email);
+    }
+}
+
+class ShoppingCart {
+    private List<PaymentStrategy> items = new ArrayList<>();
+    
+    void addItem(PaymentStrategy item) {
+        items.add(item);
+    }
+    
+    void checkout(PaymentStrategy payment) {
+        double total = items.stream().mapToDouble(i -> 10.0).sum();
+        payment.pay(total);
+        items.clear();
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Enterprise | Spring Framework, Hibernate, Apache Kafka |
+| Android | Android SDK, millions of mobile apps |
+| Web | Gmail, LinkedIn, Amazon |
+| Big Data | Hadoop, Spark, Elasticsearch |
+| Finance | Banking systems, trading platforms |
+
+## Influence & Legacy
+
+**Inspired by:** C++, Objective-C, Smalltalk
+
+**Influenced:** C#, Kotlin, Groovy, Scala, TypeScript
+
+Java established the template for modern enterprise software. Its influence on Android development is absolute—Kotlin itself is a direct descendant. The Spring Framework's dependency injection patterns are now considered best practices across all programming ecosystems.
+
+The JVM ecosystem proved that a virtual machine could be practical and performant. Languages like Kotlin, Scala, Clojure, and Groovy all chose the JVM, creating a polyglot environment where Java code could seamlessly call code written in these other languages.

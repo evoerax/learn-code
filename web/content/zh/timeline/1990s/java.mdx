@@ -1,0 +1,114 @@
+---
+title: Java
+description: Write Once, Run Anywhere 将跨平台带入企业级计算
+---
+
+import { Callout } from 'nextra/components'
+
+# Java
+
+> _一次编写，到处运行。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1995 |
+| **创造者** | James Gosling（Sun Microsystems） |
+| **范式** | 面向对象、类基 |
+| **类型系统** | 静态、强类型 |
+| **平台** | JVM（Java 虚拟机） |
+| **当前版本** | Java 23（2024） |
+| **许可证** | GPL v2 |
+
+## 起源故事
+
+Sun Microsystems 于1995年发布 Java，带来了一个革命性的承诺："一次编写，到处运行"。James Gosling 和他在 Sun 的团队自1991年起就开始研发这门语言，最初名为 Oak，旨在用于机顶盒和消费电子产品。
+
+时机恰到好处。万维网正在蓬勃发展，Java 小程序承诺为浏览器带来交互内容。但真正改变行业的是服务器端 Java——Servlet、JSP，以及后来的 Spring Framework 使 Java 成为企业计算的支柱。
+
+Sun 的策略极为精明：免费提供 JDK，通过 Java 的流行度从硬件和企业软件中获利。这种开放的方式构建了一个没有任何单一供应商能够控制的生态系统。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "Java 是 C++ 减去枪支、刀子和锋利的棱角。" —— James Gosling
+</Callout>
+
+Java 的设计原则：
+- 简单：无指针运算，自动内存管理
+- 面向对象：一切皆为对象（除了基本类型）
+- 健壮：强类型检查，异常处理
+- 安全：沙箱执行保护不可信代码
+- 可移植：JVM 作为抽象层
+
+JVM 是关键创新。Java 不是编译为特定的机器码，而是编译成字节码，任何 JVM 都能执行——Windows、Linux、Mac、嵌入式系统。这种可移植性改变了企业软件开发的面貌。
+
+## 代码示例
+
+```java filename="StrategyPattern.java"
+interface PaymentStrategy {
+    void pay(double amount);
+}
+
+class CreditCardPayment implements PaymentStrategy {
+    private String cardNumber;
+    
+    CreditCardPayment(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+    
+    @Override
+    public void pay(double amount) {
+        System.out.printf("使用信用卡 %s 支付了 %.2f%n", 
+            cardNumber.substring(cardNumber.length() - 4), amount);
+    }
+}
+
+class PayPalPayment implements PaymentStrategy {
+    private String email;
+    
+    PayPalPayment(String email) {
+        this.email = email;
+    }
+    
+    @Override
+    public void pay(double amount) {
+        System.out.printf("通过 PayPal %s 支付了 %.2f%n", email, amount);
+    }
+}
+
+class ShoppingCart {
+    private List<PaymentStrategy> items = new ArrayList<>();
+    
+    void addItem(PaymentStrategy item) {
+        items.add(item);
+    }
+    
+    void checkout(PaymentStrategy payment) {
+        double total = items.stream().mapToDouble(i -> 10.0).sum();
+        payment.pay(total);
+        items.clear();
+    }
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 企业应用 | Spring Framework、Hibernate、Apache Kafka |
+| 安卓开发 | Android SDK、数百万移动应用 |
+| Web 应用 | Gmail、LinkedIn、Amazon |
+| 大数据 | Hadoop、Spark、Elasticsearch |
+| 金融 | 银行系统、交易平台 |
+
+## 影响与遗产
+
+**启发自：** C++、Objective-C、Smalltalk
+
+**影响：** C#、Kotlin、Groovy、Scala、TypeScript
+
+Java 建立了现代企业软件的模板。它对安卓开发的影响是绝对的——Kotlin 本身就是直接后裔。Spring Framework 的依赖注入模式现在被认为是所有编程生态系统的最佳实践。
+
+JVM 生态系统证明虚拟机可以是实用且高效的。Kotlin、Scala、Clojure 和 Groovy 等语言都选择 JVM，创建了一个多语言环境，Java 代码可以无缝调用用这些其他语言编写的代码。

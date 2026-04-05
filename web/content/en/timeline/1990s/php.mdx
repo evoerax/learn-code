@@ -1,0 +1,110 @@
+---
+title: PHP
+description: The server-side language that powered the early web and still runs 43% of websites today
+---
+
+import { Callout } from 'nextra/components'
+
+# PHP
+
+> _The language that built the web._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1995 |
+| **Creator** | Rasmus Lerdorf |
+| **Paradigm** | Imperative, Object-oriented |
+| **Type System** | Dynamic, Weak |
+| **Platform** | Server-side (Cross-platform) |
+| **Current Version** | PHP 8.3 (2024) |
+| **License** | PHP License |
+
+## Origin Story
+
+Rasmus Lerdorf created PHP in 1995 to track visits to his online resume. He called it "Personal Home Page Tools" and released the source code, believing other people might find it useful.
+
+The language grew organically. People kept adding features—conditional statements, loops, functions. By 1997, Zeev Suraski and Andi Gutmans rewrote the parser, and PHP 3 was a proper programming language.
+
+PHP 4 (2000) added the Zend Engine, and PHP 5 (2004) brought a complete object model with exceptions and SPL. PHP 7 dramatically improved performance with the new Zend Engine II. PHP 8 introduced JIT compilation and union types.
+
+The key to PHP's dominance was shared hosting. PHP was cheap to run—just add a file to your web directory. Combined with MySQL, it created the LAMP stack that powered the first wave of dynamic web content.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "PHP is a minor role player's attempt to wear the hero's shoes." — Rasmus Lerdorf
+</Callout>
+
+PHP's pragmatic design prioritizes getting things done:
+- Embedded in HTML: `<?php echo "Hello" ?>`
+- Everything is a global function or variable
+- Loosely typed with automatic type coercion
+- A huge standard library for web tasks
+
+The language's detractors point to its inconsistency (function naming: `strpos` vs `substr`), but PHP's pragmatism is also its strength. It was designed for working programmers who needed to ship features, not for computer science academics.
+
+## Code Example
+
+```php filename="router.php"
+<?php
+class Router {
+    private array $routes = [];
+    
+    public function add(string $method, string $path, callable $handler): void {
+        $this->routes[] = [
+            'method' => strtoupper($method),
+            'path' => $path,
+            'handler' => $handler
+        ];
+    }
+    
+    public function dispatch(string $method, string $uri): void {
+        $uri = parse_url($uri, PHP_URL_PATH);
+        
+        foreach ($this->routes as $route) {
+            if ($route['method'] !== strtoupper($method)) continue;
+            
+            $pattern = preg_replace('/\{(\w+)\}/', '(?P<$1>[^/]+)', $route['path']);
+            $pattern = "#^{$pattern}$#";
+            
+            if (preg_match($pattern, $uri, $matches)) {
+                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+                $handler = $route['handler'];
+                $handler($params);
+                return;
+            }
+        }
+        
+        http_response_code(404);
+        echo "Not Found";
+    }
+}
+
+$router = new Router();
+$router->add('GET', '/users/{id}', function($params) {
+    echo "User ID: " . $params['id'];
+});
+$router->dispatch('GET', '/users/42');
+?>
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| CMS | WordPress (43% of websites), Drupal, Magento |
+| Frameworks | Laravel, Symfony, CodeIgniter |
+| SaaS | Facebook (early), Wikipedia, Tumblr |
+| E-commerce | Shopify, WooCommerce, PrestaShop |
+
+## Influence & Legacy
+
+**Inspired by:** C, Perl, Java
+
+**Influenced:** Hack, PHP 8 improvements
+
+PHP's influence is undeniable. WordPress alone powers 43% of all websites. Facebook created Hack as a typed variant to address PHP's weaknesses. The language's package manager Composer unified the ecosystem.
+
+Critics dismissed PHP, but it remained the practical choice for web development for decades. Modern PHP 8 with JIT compilation, named arguments, attributes, and union types showed the language continues to evolve.

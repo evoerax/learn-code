@@ -1,0 +1,113 @@
+---
+title: Ruby
+description: 为开发者幸福感而设计的语言，优雅语法读起来像英文
+---
+
+import { Callout } from 'nextra/components'
+
+# Ruby
+
+> _程序员的最佳伙伴。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1995 |
+| **创造者** | 松本行弘（Matz） |
+| **范式** | 面向对象、纯 OOP、函数式 |
+| **类型系统** | 动态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | Ruby 3.3（2024） |
+| **许可证** | BSD |
+
+## 起源故事
+
+松本行弘（Matz）在1995年创建了 Ruby，对其他语言的冗长感到沮丧。他想要一种让编程变得愉快的语言，一种开发者实际上愿意使用的语言。
+
+Matz 研究了他最喜欢的语言——Perl 的文本处理、Python 的脚本能力、Smalltalk 的纯 OOP——并将它们的最佳思想综合成 Ruby。结果是一种优先考虑人类需求而非计算机便利性的语言。
+
+Ruby 的突破来自 2004 年的 Ruby on Rails。David Heinemeier Hansson（DHH）从 Basecamp 中提取出 Rails，突然之间这门语言无处不在。Rails 的"约定优于配置"和"不要重复自己"原则改变了 Web 框架的设计方式。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "Ruby 的设计是为了让程序员快乐。" —— 松本行弘
+</Callout>
+
+Ruby 的指导原则是开发者愉悦：
+
+- 一切皆为对象——包括数字和 `nil`
+- 自然语法读起来像英文句子
+- 块和迭代器是一等概念
+- 允许猴子补丁（修改任何类）
+- 符号垃圾回收防止内存泄漏
+
+```ruby
+# 方法调用可以不用括号
+5.times { puts "你好" }
+
+# 块可用于资源管理
+File.open("data.txt") do |file|
+  puts file.read
+end
+
+# 符号是不可变的标识符
+status = :pending
+```
+
+## 代码示例
+
+```ruby filename="dsl_builder.rb"
+class DomainSpecificLanguage
+  def initialize(&block)
+    @rules = []
+    instance_eval(&block) if block
+  end
+  
+  def validate(name, &condition)
+    @rules << { name: name, check: condition }
+  end
+  
+  def check(data)
+    @rules.each do |rule|
+      result = rule[:check].call(data)
+      puts "#{rule[:name]}: #{result ? '通过' : '失败'}"
+    end
+  end
+  
+  def method_missing(name, *args, &block)
+    puts "定义规则: #{name}"
+    validate(name) do |data|
+      data.key?(name)
+    end
+  end
+end
+
+class UserValidator < DomainSpecificLanguage
+  validate :email) { |u| u[:email].include?('@') }
+  validate :age) { |u| u[:age] && u[:age] >= 18 }
+end
+
+validator = UserValidator.new
+validator.check({ email: "user@example.com", age: 25, name: "John" })
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| Web 开发 | Ruby on Rails、GitHub、Shopify、Airbnb |
+| DevOps | Chef、Vagrant、Ansible（部分） |
+| 测试 | RSpec、Cucumber、Minitest |
+| 脚本工具 | Jekyll、Middleman、Bundler |
+
+## 影响与遗产
+
+**启发自：** Perl、Python、Smalltalk、Lisp
+
+**影响：** Groovy、Elixir、Crystal、Rust（错误处理）
+
+Ruby 确立了编程语言可以优先考虑人类快乐的原则。它对 Web 框架的影响是深远的——Rails 启发了 Django（Python）、Laravel（PHP）、Phoenix（Elixir）以及无数其他框架。
+
+Ruby 对开发者体验的关注比现代 DX（开发者体验）运动早了几十年。这门语言证明了语法优雅和生产力并非对立面。
