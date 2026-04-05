@@ -6,4 +6,6 @@ export default {
   gleam: { title: 'Gleam' },
   carbon: { title: 'Carbon' },
   hare: { title: 'Hare' },
+  mojo: { title: 'Mojo' },
+  roc: { title: 'Roc' },
 }

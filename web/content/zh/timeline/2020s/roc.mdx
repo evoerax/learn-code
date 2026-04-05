@@ -1,0 +1,86 @@
+---
+title: Roc
+description: 一门快速、友好、函数式编程语言专注于极快的编译速度和友好的错误信息，是 Elm 面向生产环境的精神继承者。
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Roc
+
+> _"一门快速、友好、函数式编程语言。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2020（开发启动） |
+| **Creator** | Richard Feldman |
+| **Paradigm** | 函数式 |
+| **Type System** | 静态、强类型、类型推断 |
+| **Platform** | 跨平台（机器码、WebAssembly） |
+| **Current Version** | Alpha（0.x） |
+| **License** | UPL-1.0 |
+
+## Origin Story
+
+Roc 由 Richard Feldman 创建，他是 Elm 的创始人。在多年维护 Elm 并见证其对前端开发的影响后，Feldman 想要创造一门语言，将 Elm 的理念——友好的错误信息、无运行时异常、纯函数式编程——应用到真正可用于生产环境的语言中，而不仅仅局限于浏览器。
+
+他的洞察是 Elm 虽然在当时具有革命性，但已经积累了一些难以改变的设计决策。Roc 代表了一个全新的开始：相同的基本原则（有用的错误、不可变数据、elm-format 理念），但有着现代化的实现。该语言使用 Zig 和 Rust 编写，编译为原生代码或 WebAssembly。
+
+<Callout type="default" emoji="💡">
+  Roc 被设计为你想要在需要构建超越 web 前端的真实生产系统时使用的语言，同时保留 Elm 的开发者体验。
+</Callout>
+
+## Design Philosophy
+
+Roc 的指导原则直接来自 Elm 的遗产，但以生产为导向：
+
+- **友好的错误优先**：编译器以错误信息而闻名（或"臭名昭著"），不仅告诉你哪里错了，还建议如何修复
+- **无运行时异常**：如果代码能编译，你就得到了关于行为的保证
+- **单一范式**：纯函数式，无对象、无类、无继承
+- **快速编译**：快速编译是明确的设计目标之一
+- **友好的默认值**：标准库和工具链优先考虑可发现性和清晰度
+
+该语言使用类似 Python 和 Elm 的缩进语法，并大量依赖类型推断，因此你很少需要编写显式类型注解。
+
+## Code Example
+
+Roc 的语法简洁，基于缩进，配合强大的模式匹配进行错误处理：
+
+```roc
+main! = |args|
+    stdout = Stdout.line!("你好，世界！")
+    # Roc 使用 ! 后缀标记有副作用的函数
+    # 可以进行 I/O 或每次产生不同输出
+
+store_email! = |path|
+    url = File.read_utf8!(path)? handle_err!
+    user = Http.get!(url, Json.utf8)?
+
+    dest = Path.from_str("$(user.name).txt")
+    File.write_utf8!(dest, user.email)?
+
+    Stdout.line!("已写入邮件到 $(Path.display(dest))")
+
+handle_err! = |err|
+    when err is
+        HttpErr url _ -> Stderr.line!("获取错误: $url")
+        FileReadErr path _ -> Stderr.line!("读取错误: $(Path.display(path))")
+        FileWriteErr path _ -> Stderr.line!("写入错误: $(Path.display(path))")
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web 服务 | basic-webserver 平台，roc-pg（PostgreSQL 驱动） |
+| CLI 工具 | basic-cli 平台，网站静态生成器 |
+| 嵌入式 | 各种实验性项目 |
+
+## Influence & Legacy
+
+**Inspired by:** Elm, Haskell, OCaml, Rust
+
+**Influenced:**（仍处于早期阶段，但 Roc 代表了 Elm 理念的进化）
+
+Roc 代表了 Elm 理念的成熟。Elm 将函数式编程引入浏览器是开创性的，而 Roc 将这些原则扩展到通用语言。如果成功，它可以为错误信息应该是什么样的以及函数式语言应该如何对待初学者定义新的标准。

@@ -1,0 +1,86 @@
+---
+title: Roc
+description: A fast, friendly, functional language focused on excellent compile times and friendly error messages, Elm's spiritual successor for production use.
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Roc
+
+> _"A fast, friendly, functional language."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2020 (Development started) |
+| **Creator** | Richard Feldman |
+| **Paradigm** | Functional |
+| **Type System** | Static, Strong, Inference |
+| **Platform** | Cross-platform (Machine code, WebAssembly) |
+| **Current Version** | Alpha (0.x) |
+| **License** | UPL-1.0 |
+
+## Origin Story
+
+Roc was created by Richard Feldman, the creator of Elm. After years of maintaining Elm and seeing its impact on frontend development, Feldman wanted to create a language that took Elm's philosophy—friendly error messages, no runtime exceptions, pure functional programming—and apply it to a language ready for production use beyond just the browser.
+
+The insight was that Elm, while revolutionary for its time, had accumulated some design decisions that were hard to change. Roc represents a fresh start: the same core principles (helpful errors, immutable data, the elm-format philosophy) but with a modern implementation. The language is written in Zig and Rust, compiling to native code or WebAssembly.
+
+<Callout type="default" emoji="💡">
+  Roc is designed to be the language you reach for when you want Elm's developer experience but need to build real-world production systems beyond just web frontends.
+</Callout>
+
+## Design Philosophy
+
+Roc's guiding principles come directly from Elm's legacy but with a production focus:
+
+- **Helpful errors first**: The compiler is famous (or infamous) for error messages that not only tell you what's wrong but suggest how to fix it
+- **No runtime exceptions**: If it compiles, you get guarantees about behavior
+- **Single paradigm**: Pure functional, no objects, no classes, no inheritance
+- **Fast compilation**: One of the explicit design goals is compilation speed
+- **Friendly defaults**: The standard library and tooling prioritize discoverability and clarity
+
+The language uses indentation-based syntax similar to Python and Elm, with a heavy emphasis on type inference so you rarely need to write explicit type annotations.
+
+## Code Example
+
+Roc's syntax is clean and indentation-based, with powerful pattern matching for error handling:
+
+```roc
+main! = |args|
+    stdout = Stdout.line!("Hello, World!")
+    # Roc uses the ! suffix to mark effectful functions
+    # that can do I/O or produce different outputs
+
+store_email! = |path|
+    url = File.read_utf8!(path)? handle_err!
+    user = Http.get!(url, Json.utf8)?
+
+    dest = Path.from_str("$(user.name).txt")
+    File.write_utf8!(dest, user.email)?
+
+    Stdout.line!("Wrote email to $(Path.display(dest))")
+
+handle_err! = |err|
+    when err is
+        HttpErr url _ -> Stderr.line!("Error fetching: $url")
+        FileReadErr path _ -> Stderr.line!("Error reading: $(Path.display(path))")
+        FileWriteErr path _ -> Stderr.line!("Error writing: $(Path.display(path))")
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web Services | basic-webserver platform, roc-pg (PostgreSQL driver) |
+| CLI Tools | basic-cli platform, website static generator |
+| Embedded | Various experimental projects |
+
+## Influence & Legacy
+
+**Inspired by:** Elm, Haskell, OCaml, Rust
+
+**Influenced:** (Still early, but Roc represents the next evolution of Elm's philosophy)
+
+Roc represents the maturation of Elm's ideas. While Elm was groundbreaking for bringing functional programming to the browser, Roc takes those principles and extends them to a general-purpose language. If successful, it could define a new standard for what error messages should be and how functional languages should treat beginners.

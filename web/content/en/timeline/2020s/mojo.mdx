@@ -1,0 +1,95 @@
+---
+title: Mojo
+description: A Python superset designed for AI hardware acceleration, claiming to be 10,000x faster than Python in AI computation scenarios.
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Mojo
+
+> _"The Python that's 10,000x faster."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2023 |
+| **Creator** | Chris Lattner, Modular Team |
+| **Paradigm** | Multi-paradigm, Systems Programming |
+| **Type System** | Gradual Typing, Static Types Optional |
+| **Platform** | Cross-platform, AI Accelerators |
+| **Current Version** | 0.8 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Mojo was created by Chris Lattner, the legendary engineer behind LLVM, Clang, Swift, and Rust's build system Cargo. After his tenure at Apple, Google (working on TensorFlow), and most recently at Modular AI, Lattner observed that the AI ecosystem was fragmented across dozens of incompatible systems, making it nearly impossible to write portable high-performance code.
+
+The insight was radical: instead of building another tensor compiler from scratch, why not extend Python—the language every AI researcher already knows—with the systems programming features needed for true hardware acceleration? The result is Mojo, which combines Python's usability with C-level performance through ahead-of-time compilation and explicit memory management.
+
+<Callout type="default" emoji="💡">
+  Mojo isn't trying to replace Python—it's designed to be the performance layer that Python code can call when needed, the same way C extensions work today but with native syntax and safety.
+</Callout>
+
+## Design Philosophy
+
+Mojo's core philosophy is **incremental adoption**: you can start writing regular Python in Mojo and gradually introduce performance optimizations. The language adds:
+
+- **Static types** via `fn` declarations for functions that need performance
+- **Structs** instead of classes for memory layout control
+- **Traits** for interface polymorphism
+- **Inlinable functions** that the compiler can optimize aggressively
+- **Memory management** without GC through ownership and borrowing
+
+The key insight is that 95% of Python code doesn't need optimization. Mojo lets you write normal Python and only annotate the hot paths with types, achieving C-like performance where it matters.
+
+## Code Example
+
+Mojo's killer feature: writing AI kernels that outperform Python without abandoning Python syntax:
+
+```mojo
+from tensor import Tensor
+
+fn matrix_multiply[T: DType](lhs: Tensor[T], rhs: Tensor[T]) -> Tensor[T]:
+    """High-performance matrix multiplication with explicit memory."""
+    let m = lhs.dim(0)
+    let n = rhs.dim(1)
+    let k = lhs.dim(1)
+    var result = Tensor[T](m, n)
+    
+    @space_for(m)
+    @vectorize
+    @parallelize
+    for i in range(m):
+        for j in range(n):
+            var sum: T = 0
+            for k_var in range(k):
+                sum += lhs[i, k_var] * rhs[k_var, j]
+            result[i, j] = sum
+    
+    return result
+
+fn main():
+    let a = Tensor[DType.float32].random(512, 512)
+    let b = Tensor[DType.float32].random(512, 512)
+    let c = matrix_multiply(a, b)
+    print(c.shape())
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| AI Inference | Modular's MAX platform |
+| Research | University AI labs adopting Mojo for performance |
+| Compiler | Mojo stdlib, Modular AI tools |
+
+## Influence & Legacy
+
+**Inspired by:** Python, Swift, Rust, C++
+
+**Influenced:** (Still very early, but Mojo's approach to gradual typing may influence Python's future evolution)
+
+Mojo represents the most serious attempt to solve Python's performance problems without abandoning the language's ecosystem. Its success could fundamentally change how AI applications are written—if every AI researcher can write CUDA kernels in what looks like Python, the democratization of hardware acceleration could accelerate dramatically.
+
+Chris Lattner's pedigree (LLVM, Clang, Swift) suggests this isn't vaporware—Mojo's compiler infrastructure is built on proven technology. The question is whether the ecosystem can grow fast enough to match the ambition.
