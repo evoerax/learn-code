@@ -1,0 +1,104 @@
+---
+title: Lua
+description: 诞生于巴西的轻量级嵌入式脚本语言，为游戏和嵌入式系统提供动力
+---
+
+import { Callout } from 'nextra/components'
+
+# Lua
+
+> _一种强大、高效、轻量的脚本语言。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 1993 |
+| **创造者** | Roberto Ierusalimschy, Luiz Henrique de Figueiredo, Waldemar Celes（PUC-Rio） |
+| **范式** | 多范式、脚本、嵌入式 |
+| **类型系统** | 动态、强类型 |
+| **平台** | 跨平台、可嵌入 |
+| **当前版本** | Lua 5.4 (2020) |
+| **许可证** | MIT |
+
+## 起源故事
+
+Lua于1993年在巴西里约热内卢的PUC-Rio大学创建。这门语言被设计为嵌入到其他应用程序中的脚本语言，填补了专有配置语言和全功能编程语言之间的空白。
+
+"Lua"这个名字来自葡萄牙语中"月亮"的意思，反映了这门语言的巴西血统。创造者故意选择了一个简单、小型的核心，可以轻松嵌入，并提供干净的C API进行集成。
+
+2004年《魔兽世界》采用Lua作为插件脚本后，Lua成为游戏嵌入式脚本的事实标准。2006年Roblox的采用进一步巩固了这一地位，使Lua成为游戏脚本的首选语言。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "Lua是一种用少量实现大量功能的语言。" — Roberto Ierusalimschy
+</Callout>
+
+Lua的设计原则：
+- **简洁性**：小型、正交的功能集
+- **可移植性**：纯ANSI C，可在任何地方运行
+- **可嵌入性**：易于与C/C++宿主程序集成
+- **高效性**：快速解释器，小内存占用
+- **协程**：内置轻量级并发
+
+Lua"机制而非策略"的设计哲学意味着语言提供核心原语而不强制刚性结构，允许宿主实现自己的模式。
+
+## 代码示例
+
+```lua filename="GameScript.lua"
+-- 表作为主要数据结构
+player = {
+    name = "Hero",
+    health = 100,
+    position = {x = 0, y = 0}
+}
+
+-- 多返回值的函数
+function get_player_info()
+    return player.name, player.health
+end
+
+-- 协程用于协作式多任务
+co = coroutine.create(function()
+    for i = 1, 5 do
+        print("协程步骤:", i)
+        coroutine.yield()
+    end
+end)
+
+-- 元表用于面向对象编程
+setmetatable(player, {
+    __tostring = function(self)
+        return string.format("%s (HP: %d)", self.name, self.health)
+    end
+})
+
+-- 模块
+local MathUtils = {}
+function MathUtils.distance(x1, y1, x2, y2)
+    return math.sqrt((x2-x1)^2 + (y2-y1)^2)
+end
+return MathUtils
+```
+
+## 知名项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 游戏 | 魔兽世界插件、Roblox、Garry's Mod |
+| 嵌入式 | Redis（脚本）、Nginx（OpenResty）、Apache APISIX |
+| 工业 | 工业自动化、Wireshark脚本 |
+| 教育 | 计算机科学入门课程 |
+| 配置 | 轻量级应用程序配置 |
+
+## 影响与遗产
+
+**受启发于：** SOL (Simple Object Language), DEL, C++（通过引用）
+
+**启发了：** 
+- **Mojo**：用于ML/AI硬件的类Python语言
+- **Julia**：一些协程概念
+- Unity中的游戏脚本（Boo/Lua方案）
+
+Lua证明了 一种小巧的语言可以产生巨大的影响。它在游戏脚本领域的影响无与伦比，其可嵌入性使其成为扩展应用程序的典范。Lua在巴西的成功也激励了其他地区的编程语言开发。

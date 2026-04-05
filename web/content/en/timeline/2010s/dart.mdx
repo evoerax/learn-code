@@ -1,0 +1,105 @@
+---
+title: Dart
+description: Google's client-optimized language for fast apps on any platform
+---
+
+import { Callout } from 'nextra/components'
+
+# Dart
+
+> _The language for building beautiful, natively compiled applications._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2011 |
+| **Creator** | Lars Bak and Kasper Lund (Google) |
+| **Paradigm** | Object-oriented, Class-based, Functional |
+| **Type System** | Static with type inference, Optional typing |
+| **Platform** | Cross-platform (Web, Mobile, Desktop, Server) |
+| **Current Version** | Dart 3.4 (2024) |
+| **License** | BSD 3-Clause |
+
+## Origin Story
+
+Dart was unveiled by Google in 2011, initially designed to replace JavaScript for web development. Led by Lars Bak, who previously created the V8 JavaScript engine, the language was built from the ground up for better performance and developer productivity.
+
+The original vision was ambitious: Dart would compile to JavaScript for browser execution while also offering a standalone virtual machine. Early adoption was modest, but everything changed in 2017 when Google released Flutter—a cross-platform UI toolkit that used Dart as its sole language.
+
+Flutter's meteoric rise transformed Dart from a web language into the go-to choice for cross-platform mobile development. Today, apps built with Flutter run on iOS, Android, web, Windows, macOS, and Linux from a single codebase.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Dart is a client-optimized language for fast apps on any platform." — dart.dev
+</Callout>
+
+Dart's founding principles:
+- **Productivity**: Hot reload during development for rapid iteration
+- **Performance**: AOT compilation for native execution speed
+- **Cross-platform**: One codebase, many platforms
+- **Sound null safety**: Null pointer exceptions eliminated at compile time
+- **Type-safe**: Type system designed for reliability with type inference
+
+The language balances object-oriented and functional paradigms, including first-class functions, arrow functions, and pattern matching in recent versions.
+
+## Code Example
+
+```dart filename="DartExample.dart"
+// Null safety: the type system tracks nullable values
+String? maybeName;
+String name = maybeName ?? 'Anonymous';
+
+// Classes and mixins
+class Animal {
+  final String name;
+  Animal(this.name);
+  
+  void speak() => print('$name makes a sound');
+}
+
+class Dog extends Animal {
+  Dog(String name) : super(name);
+  
+  @override
+  void speak() => print('$name barks');
+}
+
+// Async/await for asynchronous programming
+Future<String> fetchUserData(int id) async {
+  final response = await http.get(Uri.parse('/user/$id'));
+  return response.body;
+}
+
+// Records (Dart 3) for structured data
+(String, int) getUser() => ('Alice', 30);
+
+// Pattern matching (Dart 3)
+String describe(Object obj) => switch (obj) {
+  case int i when i > 0 => 'Positive integer',
+  case String s => 'String: $s',
+  case _ => 'Something else',
+};
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Mobile | Flutter apps ( billions of downloads), Google Ads |
+| Web | google.com, dart.dev, web apps |
+| Desktop | Flutter Desktop apps, Figma ( Electron alternative) |
+| Server | Aqueduct, Shelf, Angel frameworks |
+| Embedded | Smart displays, Google Nest devices |
+
+## Influence & Legacy
+
+**Inspired by:** Java, JavaScript, C#, Smalltalk, Eiffel's contract programming
+
+**Influenced:** 
+- **Flutter**: Changed how cross-platform development works
+- **Jetpack Compose**: Google's declarative UI framework for Android drew inspiration from Dart/Flutter's approach
+- **Agda**: Type system ideas
+
+Dart's contribution is proving that a single language can effectively target all major platforms. Flutter's success has influenced how Microsoft (NET Multi-platform App UI) and others approach cross-platform development. The sound null safety feature has also been cited as a model for other languages.

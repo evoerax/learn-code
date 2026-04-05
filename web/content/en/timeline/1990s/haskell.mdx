@@ -1,0 +1,96 @@
+---
+title: Haskell
+description: The purely functional language that pioneered lazy evaluation and powerful type systems
+---
+
+import { Callout } from 'nextra/components'
+
+# Haskell
+
+> _A purely functional language where functions have no side effects._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1990 |
+| **Creator** | Committee of researchers (see History) |
+| **Paradigm** | Pure Functional, Lazy Evaluation |
+| **Type System** | Static, Strong, Hindley-Milner with Extensions |
+| **Platform** | Cross-platform (GHC, Hugs, Cardelli) |
+| **Current Version** | GHC 9.10 (2024) |
+| **License** | BSD 3-Clause |
+
+## Origin Story
+
+In 1980, a committee of researchers began designing a unified, purely functional language that would combine the best ideas from existing functional languages like Miranda and ML. After a decade of research, Haskell was first published in 1990, named after the logician Haskell Curry whose work on combinatory logic influenced the language's foundations.
+
+The language emerged from academia rather than industry, created specifically to serve as a testbed for research in functional programming, lazy evaluation, and advanced type systems. The Committee's goal was to provide a stable, fully-specified language that could be used for teaching, research, and practical applications.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Haskell is the only widely-used language that is purely functional." — Simon Peyton Jones
+</Callout>
+
+Haskell's founding principles:
+- **Pure functions**: No side effects—functions always return the same result for the same inputs
+- **Lazy evaluation**: Expressions are only evaluated when needed
+- **Static typing**: Type errors caught at compile time
+- **Type inference**: You rarely need to explicitly annotate types
+- **Algebraic data types**: Powerful pattern matching and data structures
+
+The most revolutionary design decision was lazy evaluation by default. This means Haskell only evaluates an expression when its value is actually needed, enabling elegant definitions of infinite data structures and modular, composable code.
+
+## Code Example
+
+```haskell filename="HaskellExample.hs"
+-- Pattern matching and recursion
+fibonacci :: Integer -> Integer
+fibonacci 0 = 0
+fibonacci 1 = 1
+fibonacci n = fibonacci (n - 1) + fibonacci (n - 2)
+
+-- Lazy infinite list of Fibonacci numbers
+fibs :: [Integer]
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+
+-- Higher-order functions
+square :: Integer -> Integer
+square x = x * x
+
+sumOfSquares :: [Integer] -> Integer
+sumOfSquares = sum . map square
+
+-- Monadic parsing example
+data Expr = Add Expr Expr | Mul Expr Expr | Val Int
+  deriving Show
+
+eval :: Expr -> Int
+eval (Val n) = n
+eval (Add x y) = eval x + eval y
+eval (Mul x y) = eval x * eval y
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Compilers & Tools | GHC (Glasgow Haskell Compiler), Cabal, Stack |
+| Web Development | Yesod, Servant, Snap |
+| Finance | Jane Street's Core trading system (OCaml, but Haskell in research) |
+| Formal Verification | Agda, Idris (dependently typed languages inspired by Haskell) |
+| Industry | Facebook's spam filter (Haskell AntiSpam), Galois Inc |
+
+## Influence & Legacy
+
+**Inspired by:** Miranda, ML, Hope, Susan
+
+**Influenced:** 
+- **Idris**: Dependently typed functional language
+- **Elm**: Pure functional frontend language  
+- **PureScript**: Haskell-like language compiling to JavaScript
+- **Agda**: Proof assistant based on Haskell's type system
+- Many ideas influenced Rust, Swift, and modern type systems
+
+Haskell established lazy pure functional programming as a serious practical approach. Its type system innovations—particularly monads for handling side effects in a pure way—influenced nearly every modern functional language. The concept of "programming with types" and advanced features like GADTs and type families have propagated into mainstream languages.

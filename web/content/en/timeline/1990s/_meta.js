@@ -5,4 +5,7 @@ export default {
   javascript: { title: 'JavaScript' },
   php: { title: 'PHP' },
   ruby: { title: 'Ruby' },
+  haskell: { title: 'Haskell' },
+  lua: { title: 'Lua' },
+  r: { title: 'R' },
 }

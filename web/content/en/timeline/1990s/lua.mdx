@@ -1,0 +1,104 @@
+---
+title: Lua
+description: The lightweight embeddable scripting language born in Brazil, powering games and embedded systems
+---
+
+import { Callout } from 'nextra/components'
+
+# Lua
+
+> _A powerful, efficient, lightweight scripting language._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1993 |
+| **Creator** | Roberto Ierusalimschy, Luiz Henrique de Figueiredo, Waldemar Celes (PUC-Rio) |
+| **Paradigm** | Multi-paradigm, Scripting, Embeddable |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform, Embeddable |
+| **Current Version** | Lua 5.4 (2020) |
+| **License** | MIT |
+
+## Origin Story
+
+Lua was created in 1993 at PUC-Rio, a private university in Rio de Janeiro, Brazil. The language was designed to be embedded in other applications, filling a gap between proprietary configuration languages and full-featured programming languages.
+
+The name "Lua" comes from the Portuguese word for "moon," reflecting the language's Brazilian origins. The creators deliberately chose a simple, small core that could be easily embedded, with a clean C API for integration.
+
+Lua became the de facto standard for embedding scripting in games after World of Warcraft adopted it for add-ons in 2004. This success was followed by Roblox's adoption in 2006, cementing Lua's position as the language of choice for game scripting.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Lua is a language that tries to do a lot with a little." — Roberto Ierusalimschy
+</Callout>
+
+Lua's founding principles:
+- **Simplicity**: Small, orthogonal feature set
+- **Portability**: Pure ANSI C, runs anywhere
+- **Embeddability**: Easy to integrate with C/C++ host programs
+- **Efficiency**: Fast interpreter, small footprint
+- **Coroutines**: Lightweight concurrency built in
+
+Lua's design philosophy of "mechanisms instead of policies" means the language provides core primitives without imposing rigid structures, allowing hosts to implement their own patterns.
+
+## Code Example
+
+```lua filename="GameScript.lua"
+-- Tables as the primary data structure
+player = {
+    name = "Hero",
+    health = 100,
+    position = {x = 0, y = 0}
+}
+
+-- Function with multiple returns
+function get_player_info()
+    return player.name, player.health
+end
+
+-- Coroutines for cooperative multitasking
+co = coroutine.create(function()
+    for i = 1, 5 do
+        print("Coroutine step:", i)
+        coroutine.yield()
+    end
+end)
+
+-- Metatables for object-oriented programming
+setmetatable(player, {
+    __tostring = function(self)
+        return string.format("%s (HP: %d)", self.name, self.health)
+    end
+})
+
+-- Modules
+local MathUtils = {}
+function MathUtils.distance(x1, y1, x2, y2)
+    return math.sqrt((x2-x1)^2 + (y2-y1)^2)
+end
+return MathUtils
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Gaming | World of Warcraft add-ons, Roblox, Garry's Mod |
+| Embedded | Redis (scripting), Nginx (OpenResty), Apache APISIX |
+| Industrial | Industrial automation, Wireshark scripting |
+| Education | Computer science introductory courses |
+| Configuration | Lightweight application configuration |
+
+## Influence & Legacy
+
+**Inspired by:** SOL (Simple Object Language), DEL, C++ (via references)
+
+**Influenced:** 
+- **Mojo**: Python-like language for ML/AI hardware
+- **Julia**: Some coroutine concepts
+- Game scripting in Unity (Boo/Lua approaches)
+
+Lua demonstrated that a tiny language could have enormous impact. Its influence on game scripting is unmatched, and its embeddability has made it a model for extending applications. The language's success in Brazil also inspired programming language development in other regions.

@@ -1,0 +1,105 @@
+---
+title: Julia
+description: 为高性能数值计算而生的动态语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Julia
+
+> _像Python一样优雅，像C一样快速。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 2012 |
+| **创造者** | Jeff Bezanson, Stefan Karpinski, Viral B. Shah, Alan Edelman |
+| **范式** | 多范式、动态、高性能 |
+| **类型系统** | 动态+可选静态类型、多分派 |
+| **平台** | 跨平台 |
+| **当前版本** | Julia 1.11 (2024) |
+| **许可证** | MIT |
+
+## 起源故事
+
+Julia由MIT的Jeff Bezanson、Stefan Karpinski、Viral B. Shah和Alan Edelman创建。这门语言源于许多科学家和工程师共同的挫败感：他们必须在慢速动态语言（如Python和MATLAB）和低级编译语言（如C和Fortran）之间做出选择用于数值计算。
+
+创始人希望有一种语言能结合两者最好的特性：动态语言的开发效率和编译语言的性能。他们专门设计Julia来解决"两种语言问题"——研究人员用高级语言原型开发，但必须用C重写才能用于生产。
+
+第一个公开版本于2012年发布，Julia迅速在科学计算领域获得关注。2017年，Julia 1.0发布，标志其正式可用于生产。NASA、联邦储备银行和气候研究人员等主要机构采用Julia因其独特的速度和表现力组合。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "走路像Python，奔跑像C。" — Julia 宣传语
+</Callout>
+
+Julia的设计原则：
+- **多分派**：函数根据所有参数类型表现不同
+- **JIT编译**：Julia使用LLVM编译成本地机器码
+- **元编程**：代码即数据——宏和求值能力
+- **直接调用C**：不需要包装器，直接用ccall
+- **可选类型**：可以添加类型以提高清晰度和分派效率
+
+关键技术突破是Julia基于LLVM的JIT编译结合可选类型标注，指导专门化而不牺牲生产力。
+
+## 代码示例
+
+```julia filename="JuliaExample.jl"
+# 多分派：相同函数，不同行为
++(x::String, y::String) = x * " " * y
++(x::Number, y::Number) = Base.add(x, y)
+
+# 类型系统和多分派
+abstract type Animal end
+struct Dog <: Animal
+    name::String
+end
+struct Cat <: Animal
+    name::String
+end
+speak(a::Animal) = println("未知动物")
+speak(d::Dog) = println("$(d.name) 吠叫")
+speak(c::Cat) = println("$(c.name) 喵喵叫")
+
+# 元编程的宏
+macro sayhello()
+    return :(println("来自宏的问候！"))
+end
+
+# @distributed 并行计算
+using Distributed
+@distributed for i in 1:10
+    println("任务 $i 在 worker $(myid())")
+end
+
+# 线性代数是一等的
+A = rand(3, 3)
+eigenvalues = eigvals(A)
+x = A \ b  # 求解线性系统
+
+# 推导式
+[x^2 for x in 1:10 if iseven(x)]
+```
+
+## 知名项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 科学计算 | DifferentialEquations.jl, JuMP优化 |
+| 金融 | Julia Computing的产品，联邦储备银行模型 |
+| 机器学习 | Flux.jl（深度学习），MLJ.jl |
+| 气候 | 气候建模接口，NASA气候模拟 |
+| 研究 | 许多学术论文包含Julia代码 |
+
+## 影响与遗产
+
+**受启发于：** MATLAB, Python, Ruby, Lisp, C, Fortran, Perl
+
+**启发了：** 
+- **Mojo**：Modler为AI硬件设计的Python超集
+- **Python NumPy**：Julia的数组广播影响了Python生态
+- **MATLAB替代品**：推动MathWorks改进MATLAB
+
+Julia解决了困扰科学计算数十年的两种语言问题。它的成功迫使其他语言改进其数值计算能力，而多分派范式也影响了其他语言对多态性的思考方式。

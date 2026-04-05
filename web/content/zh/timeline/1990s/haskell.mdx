@@ -1,0 +1,96 @@
+---
+title: Haskell
+description: 纯函数式语言，先驱性地实现了惰性求值和强大的类型系统
+---
+
+import { Callout } from 'nextra/components'
+
+# Haskell
+
+> _没有副作用的纯函数式语言。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 1990 |
+| **创造者** | 研究委员会（详见历史） |
+| **范式** | 纯函数式、惰性求值 |
+| **类型系统** | 静态、强类型、 Hindley-Milner 类型推导 |
+| **平台** | 跨平台（GHC, Hugs, Cardelli） |
+| **当前版本** | GHC 9.10 (2024) |
+| **许可证** | BSD 3-Clause |
+
+## 起源故事
+
+1980年，一群研究人员开始设计一种统一的纯函数式语言，结合现有函数式语言（如Miranda和ML）的最佳特性。经过十年的研究，Haskell于1990年首次发布，以逻辑学家Haskell Curry的名字命名——他对组合逻辑的研究奠定了这门语言的基础。
+
+这门语言源于学术界而非工业界，专门为函数式编程、惰性求值和高级类型系统的研究而创建。委员会的目标是提供一个稳定、完整规范的语言，可用于教学、研究和实际应用。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "Haskell是唯一被广泛使用的纯函数式语言。" — Simon Peyton Jones
+</Callout>
+
+Haskell的设计原则：
+- **纯函数**：没有副作用——相同输入总是返回相同结果
+- **惰性求值**：表达式只在需要时才被求值
+- **静态类型**：类型错误在编译时被捕获
+- **类型推导**：几乎不需要显式标注类型
+- **代数数据类型**：强大的模式匹配和数据结构
+
+最具革命性的设计决策是默认惰性求值。这意味着Haskell只在实际需要值时才求值表达式，使得无限数据结构的优雅定义和模块化、可组合的代码成为可能。
+
+## 代码示例
+
+```haskell filename="HaskellExample.hs"
+-- 模式匹配和递归
+fibonacci :: Integer -> Integer
+fibonacci 0 = 0
+fibonacci 1 = 1
+fibonacci n = fibonacci (n - 1) + fibonacci (n - 2)
+
+-- 惰性无限斐波那契数列
+fibs :: [Integer]
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+
+-- 高阶函数
+square :: Integer -> Integer
+square x = x * x
+
+sumOfSquares :: [Integer] -> Integer
+sumOfSquares = sum . map square
+
+-- 单子解析示例
+data Expr = Add Expr Expr | Mul Expr Expr | Val Int
+  deriving Show
+
+eval :: Expr -> Int
+eval (Val n) = n
+eval (Add x y) = eval x + eval y
+eval (Mul x y) = eval x * eval y
+```
+
+## 知名项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 编译器和工具 | GHC (Glasgow Haskell Compiler), Cabal, Stack |
+| Web 开发 | Yesod, Servant, Snap |
+| 金融 | Jane Street 的 Core 交易系统（OCaml，但Haskell用于研究） |
+| 形式验证 | Agda, Idris（受Haskell启发的依赖类型语言） |
+| 业界应用 | Facebook 的反垃圾邮件系统（ Haskell AntiSpam），Galois Inc |
+
+## 影响与遗产
+
+**受启发于：** Miranda, ML, Hope, Susan
+
+**启发了：** 
+- **Idris**：依赖类型的函数式语言
+- **Elm**：纯函数式前端语言  
+- **PureScript**：编译为JavaScript的类Haskell语言
+- **Agda**：基于Haskell类型系统的证明助手
+- 许多现代类型系统的理念影响了 Rust、Swift 等语言
+
+Haskell确立了惰性纯函数式编程作为严肃实用方法的重要性。其类型系统创新——特别是用单子来处理纯代码中的副作用——几乎影响了所有现代函数式语言。"用类型编程"的概念和 GADTs、类型族等高级特性已传播到主流语言中。

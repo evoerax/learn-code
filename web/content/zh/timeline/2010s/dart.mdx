@@ -1,0 +1,105 @@
+---
+title: Dart
+description: Google为在任何平台上快速构建精美应用而优化的客户端语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Dart
+
+> _用于在任何平台上构建精美原生应用的客户端优化语言。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 2011 |
+| **创造者** | Lars Bak 和 Kasper Lund（Google） |
+| **范式** | 面向对象、基于类、函数式 |
+| **类型系统** | 静态类型推导、可选类型 |
+| **平台** | 跨平台（Web、移动端、桌面端、服务端） |
+| **当前版本** | Dart 3.4 (2024) |
+| **许可证** | BSD 3-Clause |
+
+## 起源故事
+
+Dart由Google于2011年公布，最初设计目的是取代JavaScript用于Web开发。由之前创建V8 JavaScript引擎的Lars Bak领导，这门语言从一开始就为更好的性能和开发者生产力而构建。
+
+最初的愿景是雄心勃勃的：Dart会编译成JavaScript在浏览器中执行，同时提供独立的虚拟机。早期采用率一般，但2017年一切改变了——Google发布了Flutter，这是一个跨平台UI工具包，使用Dart作为其唯一语言。
+
+Flutter的快速崛起将Dart从Web语言转变为跨平台移动开发的首选。今天，使用Flutter构建的应用运行在iOS、Android、Web、Windows、macOS和Linux上，只需一个代码库。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "Dart是一种为在任何平台上快速构建应用而优化的客户端语言。" — dart.dev
+</Callout>
+
+Dart的设计原则：
+- **生产力**：开发期间热重载实现快速迭代
+- **性能**：AOT编译实现原生执行速度
+- **跨平台**：一个代码库，多个平台
+- **空安全**：空指针异常在编译时消除
+- **类型安全**：类型系统为可靠性而设计，支持类型推导
+
+语言平衡了面向对象和函数式范式，包括一等函数、箭头函数和最新版本中的模式匹配。
+
+## 代码示例
+
+```dart filename="DartExample.dart"
+// 空安全：类型系统追踪可空值
+String? maybeName;
+String name = maybeName ?? 'Anonymous';
+
+// 类和混入
+class Animal {
+  final String name;
+  Animal(this.name);
+  
+  void speak() => print('$name makes a sound');
+}
+
+class Dog extends Animal {
+  Dog(String name) : super(name);
+  
+  @override
+  void speak() => print('$name barks');
+}
+
+// 异步编程的 async/await
+Future<String> fetchUserData(int id) async {
+  final response = await http.get(Uri.parse('/user/$id'));
+  return response.body;
+}
+
+// 记录（Dart 3）用于结构化数据
+(String, int) getUser() => ('Alice', 30);
+
+// 模式匹配（Dart 3）
+String describe(Object obj) => switch (obj) {
+  case int i when i > 0 => '正整数',
+  case String s => '字符串: $s',
+  _ => '其他',
+};
+```
+
+## 知名项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 移动端 | Flutter应用（数十亿下载量）、Google Ads |
+| Web | google.com, dart.dev, Web 应用 |
+| 桌面端 | Flutter桌面应用、Figma（Electron替代方案） |
+| 服务端 | Aqueduct, Shelf, Angel 框架 |
+| 嵌入式 | 智能显示器、Google Nest 设备 |
+
+## 影响与遗产
+
+**受启发于：** Java, JavaScript, C#, Smalltalk, Eiffel的契约式编程
+
+**启发了：** 
+- **Flutter**：改变了跨平台开发方式
+- **Jetpack Compose**：Google的Android声明式UI框架借鉴了Dart/Flutter的方法
+- **Agda**：类型系统理念
+
+Dart的贡献在于证明了一种语言可以有效地针对所有主要平台。Flutter的成功影响了微软（.NET Multi-platform App UI）和其他人接近跨平台开发的方式。空安全特性也被引用为其他语言的典范。

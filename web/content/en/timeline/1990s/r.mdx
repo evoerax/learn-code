@@ -1,0 +1,101 @@
+---
+title: R
+description: The statistical computing language that revolutionized data analysis and visualization
+---
+
+import { Callout } from 'nextra/components'
+
+# R
+
+> _The language for statistical computing and graphics._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1993 |
+| **Creator** | Ross Ihaka and Robert Gentleman (University of Auckland) |
+| **Paradigm** | Functional, Array-oriented, Dynamic |
+| **Type System** | Dynamic with strong typing |
+| **Platform** | Cross-platform |
+| **Current Version** | R 4.4 (2024) |
+| **License** | GPL v2 |
+
+## Origin Story
+
+R was created in 1993 at the University of Auckland in New Zealand by Ross Ihaka and Robert Gentleman. It was designed as an open-source implementation of the S language, which was developed at Bell Laboratories in 1976 by John Chambers.
+
+The name "R" partly came from the names of the creators (Ross and Robert), and partly from their respect for S as the predecessor. The goal was to create a language that combined the statistical capabilities of S with the flexibility of a modern programming language.
+
+R gained massive traction in academia and research because it was free, powerful, and specifically designed for statistical analysis. The Comprehensive R Archive Network (CRAN) became the central repository for packages, making it easy to extend R for virtually any statistical task.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The goal of R is to turn ideas into software, quickly and faithfully." — Ross Ihaka
+</Callout>
+
+R's founding principles:
+- **Statistical focus**: Every feature serves data analysis
+- **Vectorized operations**: Operations apply to whole vectors, not just elements
+- **Functional programming**: Functions are first-class citizens
+- **Extensibility**: Package system allows user-contributed libraries
+- **Interactive use**: Designed for exploratory data analysis
+
+The language excels at data manipulation, statistical modeling, and visualization. Its formula syntax for statistical models (`y ~ x1 + x2`) has become a standard notation in statistics.
+
+## Code Example
+
+```r filename="DataAnalysis.R"
+# Data frames and vectorized operations
+data(iris)
+sepal_area <- iris$Sepal.Length * iris$Sepal.Width
+mean_sepal_area <- mean(sepal_area)
+
+# Statistical modeling with formulas
+model <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+summary(model)
+
+# Data visualization with ggplot2
+library(ggplot2)
+ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Sepal Length by Species")
+
+# Functional programming with apply family
+apply(iris[, 1:4], 2, mean)  # Column means
+lapply(split(iris$Sepal.Length, iris$Species), summary)
+
+# Tidyverse piping
+library(dplyr)
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    mean_sepal = mean(Sepal.Length),
+    sd_sepal = sd(Sepal.Length),
+    n = n()
+  )
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Statistics | Comprehensive R Archive Network (CRAN) with 20,000+ packages |
+| Visualization | ggplot2, Shiny, R Markdown |
+| Machine Learning | caret, tidymodels, XGBoost interface |
+| Bioinformatics | Bioconductor (genomics data) |
+| Finance | quantmod, PerformanceAnalytics |
+
+## Influence & Legacy
+
+**Inspired by:** S, Scheme (lexical scoping)
+
+**Influenced:** 
+- **Python pandas**: Data frame concepts from R
+- **Julia**: Statistical computing capabilities
+- **Spark**: Dataframe abstractions
+- Many statistical languages and tools
+
+R established the data frame as a primary data structure for analysis, pioneered the concept of "grammar of graphics" for visualization, and created the model formula notation that is now standard in statistical software. Its influence on data science tooling is profound—nearly every modern data analysis environment has borrowed concepts from R.

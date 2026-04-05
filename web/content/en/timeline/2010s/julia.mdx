@@ -1,0 +1,105 @@
+---
+title: Julia
+description: The high-performance dynamic language for numerical computing
+---
+
+import { Callout } from 'nextra/components'
+
+# Julia
+
+> _Looks like Python, runs like C._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2012 |
+| **Creator** | Jeff Bezanson, Stefan Karpinski, Viral B. Shah, Alan Edelman |
+| **Paradigm** | Multi-paradigm, Dynamic, High-performance |
+| **Type System** | Dynamic with optional static typing, Multiple dispatch |
+| **Platform** | Cross-platform |
+| **Current Version** | Julia 1.11 (2024) |
+| **License** | MIT |
+
+## Origin Story
+
+Julia was created by Jeff Bezanson, Stefan Karpinski, Viral B. Shah, and Alan Edelman at MIT. The language emerged from a frustration shared by many scientists and engineers: they had to choose between slow dynamic languages (like Python and MATLAB) or low-level compiled languages (like C and Fortran) for numerical computing.
+
+The founders wanted a language that would combine the best of both worlds: the productivity of a dynamic language with the performance of a compiled language. They specifically designed Julia to solve the "two-language problem" where researchers prototype in a high-level language but must rewrite in C for production.
+
+The first public version was released in 2012, and Julia quickly gained traction in scientific computing. In 2017, Julia 1.0 was released, signaling production readiness. Major institutions like NASA, Federal Reserve, and climate researchers adopted Julia for its unique combination of speed and expressiveness.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Walks like Python. Runs like C." — Julia tagline
+</Callout>
+
+Julia's founding principles:
+- **Multiple dispatch**: Functions behave differently based on all argument types
+- **JIT compilation**: Julia uses LLVM to compile to native machine code
+- **Meta-programming**: Code is data—macros and eval capabilities
+- **Calling C directly**: No wrappers needed, just use ccall
+- **Optional typing**: Types can be added for clarity and dispatch
+
+The key technical breakthrough is Julia's LLVM-based JIT compilation combined with optional type annotations that guide specialization without sacrificing productivity.
+
+## Code Example
+
+```julia filename="JuliaExample.jl"
+# Multiple dispatch: same function, different behavior
++(x::String, y::String) = x * " " * y
++(x::Number, y::Number) = Base.add(x, y)
+
+# Type system and multiple dispatch
+abstract type Animal end
+struct Dog <: Animal
+    name::String
+end
+struct Cat <: Animal
+    name::String
+end
+speak(a::Animal) = println("Unknown animal")
+speak(d::Dog) = println("$(d.name) barks")
+speak(c::Cat) = println("$(c.name) meows")
+
+# Macros for metaprogramming
+macro sayhello()
+    return :(println("Hello from macro!"))
+end
+
+# Parallel computing with @distributed
+using Distributed
+@distributed for i in 1:10
+    println("Task $i on worker $(myid())")
+end
+
+# Linear algebra is first-class
+A = rand(3, 3)
+eigenvalues = eigvals(A)
+x = A \ b  # solve linear system
+
+# Comprehensions
+[x^2 for x in 1:10 if iseven(x)]
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Scientific Computing | DifferentialEquations.jl, JuMP optimization |
+| Finance | Julia Computing's products, Federal Reserve models |
+| Machine Learning | Flux.jl (deep learning), MLJ.jl |
+| Climate | Climate Modeling Interface, NASA's climate simulations |
+| Research | Many academic papers include Julia code |
+
+## Influence & Legacy
+
+**Inspired by:** MATLAB, Python, Ruby, Lisp, C, Fortran, Perl
+
+**Influenced:** 
+- **Mojo**: Modler's Python superset for AI hardware
+- **Python NumPy**: Julia's array broadcasting influenced Python ecosystem
+- **MATLAB alternatives**: Pushed MathWorks to improve MATLAB
+
+Julia solved the two-language problem that plagued scientific computing for decades. Its success has forced other languages to improve their numerical computing story, and the Multiple Dispatch paradigm has influenced how other languages think about polymorphism.

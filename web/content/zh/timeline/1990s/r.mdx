@@ -1,0 +1,101 @@
+---
+title: R
+description: 彻底改变了数据分析与可视化的统计计算语言
+---
+
+import { Callout } from 'nextra/components'
+
+# R
+
+> _用于统计计算和图形的语言。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 1993 |
+| **创造者** | Ross Ihaka 和 Robert Gentleman（奥克兰大学） |
+| **范式** | 函数式、数组导向、动态 |
+| **类型系统** | 动态类型，强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | R 4.4 (2024) |
+| **许可证** | GPL v2 |
+
+## 起源故事
+
+R语言于1993年由新西兰奥克兰大学的Ross Ihaka和Robert Gentleman创建。作为S语言（1976年由贝尔实验室的John Chambers开发）的开源实现，R的设计目的是提供一个免费、强大的统计计算工具。
+
+"R"这个名字部分来自两位创造者的名字首字母（Ross和Robert），部分源于他们对前辈S语言的敬意。目标是创造一种结合S语言的统计能力和现代编程语言的灵活性的语言。
+
+R在学术界和研究领域获得了巨大关注，因为它免费、功能强大，且专门为统计分析而设计。综合R档案网络（CRAN）成为包的中心仓库，使扩展R以完成各种统计任务变得非常简单。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "R的目标是将想法快速、准确地转化为软件。" — Ross Ihaka
+</Callout>
+
+R语言的设计原则：
+- **统计焦点**：每个特性都为数据分析服务
+- **向量化操作**：操作应用于整个向量，而非逐个元素
+- **函数式编程**：函数是一等公民
+- **可扩展性**：包系统允许用户贡献库
+- **交互式使用**：为探索性数据分析而设计
+
+这门语言在数据操作、统计建模和可视化方面表现出色。其用于统计模型的公式语法（`y ~ x1 + x2`）已成为统计学中的标准记号。
+
+## 代码示例
+
+```r filename="DataAnalysis.R"
+-- 数据框和向量化操作
+data(iris)
+sepal_area <- iris$Sepal.Length * iris$Sepal.Width
+mean_sepal_area <- mean(sepal_area)
+
+-- 使用公式的统计建模
+model <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+summary(model)
+
+-- 使用 ggplot2 进行数据可视化
+library(ggplot2)
+ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "不同物种的花萼长度")
+
+-- 使用 apply 族进行函数式编程
+apply(iris[, 1:4], 2, mean)  # 列均值
+lapply(split(iris$Sepal.Length, iris$Species), summary)
+
+-- Tidyverse 管道操作
+library(dplyr)
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    mean_sepal = mean(Sepal.Length),
+    sd_sepal = sd(Sepal.Length),
+    n = n()
+  )
+```
+
+## 知名项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 统计学 | 综合R档案网络（CRAN）拥有 20,000+ 包 |
+| 可视化 | ggplot2, Shiny, R Markdown |
+| 机器学习 | caret, tidymodels, XGBoost 接口 |
+| 生物信息学 | Bioconductor（基因组数据） |
+| 金融 | quantmod, PerformanceAnalytics |
+
+## 影响与遗产
+
+**受启发于：** S, Scheme（词法作用域）
+
+**启发了：** 
+- **Python pandas**：借鉴R的数据框概念
+- **Julia**：统计计算能力
+- **Spark**：数据框抽象
+- 许多现代数据分析工具
+
+R确立了数据框作为分析主要数据结构的地位，开创了"图形语法"的可视化方式，并创建了现已称为统计软件标准的模型公式记号。它对数据科学工具的影响是深远的——今天几乎每个现代数据分析环境都从R借鉴了概念。
