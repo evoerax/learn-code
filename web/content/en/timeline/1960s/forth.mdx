@@ -1,0 +1,107 @@
+---
+title: Forth
+description: A stack-based concatenative language for embedded and real-time systems
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Forth
+
+> _The language that speaks in reverse._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1968 |
+| **Creator** | Charles H. Moore (MIT) |
+| **Paradigm** | Stack-based, Concatenative, Reflective |
+| **Type System** | Dynamic, Untyped |
+| **Platform** | Cross-platform, Embedded systems |
+| **Current Version** | Forth 2012 |
+| **License** | ANSI/ISO Standard |
+
+## Origin Story
+
+Forth was created by Charles H. Moore in 1968 at MIT's radio astronomy observatory, where he was developing software to control a radio telescope. The existing languages were too slow, too memory-hungry, or too inflexible for the real-time control tasks he needed.
+
+Moore's solution was radically simple: eliminate the parser entirely. Instead of interpreting statements, Forth uses a dictionary of words. Each word is a procedure that manipulates a stack of values. To add two numbers, you type `+`, which pops the top two values, adds them, and pushes the result.
+
+This concatenative approach—where program structure comes from word composition rather than syntax—proved extraordinarily powerful for embedded systems. The entire Forth environment could fit in a few kilobytes of memory, making it ideal for devices with severe resource constraints.
+
+Moore continued developing Forth at FORTH, Inc., which he co-founded in 1973, bringing it to embedded systems, space applications, and even the DEC POP-11 minicomputer.
+
+## Design Philosophy
+
+Forth's design is built on three core concepts:
+
+1. **The Stack**: All operations work by pushing values onto and popping values from a stack. There's no need for operator precedence or parentheses because position determines order.
+
+2. **Reverse Polish Notation (RPN)**: `3 4 +` means "push 3, push 4, add" — the operator follows its operands.
+
+3. **Words**: Everything in Forth is a word (procedure). New words are defined in terms of existing ones, creating a vocabulary for the problem domain.
+
+<Callout type="default" emoji="💡">
+  In Forth, the program IS the syntax. There's no grammar beyond "read word, execute word."
+</Callout>
+
+Forth also pioneered **reflection**—the ability of a program to examine and modify its own structure at runtime. This made it uniquely flexible for real-time control.
+
+## Code Example
+
+```forth
+\ Define a word to calculate factorial
+: FACTORIAL ( n -- n! )
+  DUP 0 = IF DROP 1 EXIT THEN
+  DUP 1 - FACTORIAL *
+;
+
+\ A more idiomatic version using recursion
+: FACT ( n )
+  1 SWAP ( start with accumulator=1 )
+  BEGIN DUP 0 >
+  WHILE OVER * SWAP 1 - REPEAT
+  DROP
+;
+
+\ Define a colon (compound) word
+: SQUARE ( n -- n^2 ) DUP * ;
+: CUBE ( n -- n^3 ) DUP DUP * * ;
+
+\ Stack manipulation examples
+5 SQUARE          \ Result: 25
+3 4 + 5 *         \ Result: 35 (3+4=7, 7*5=35)
+10 20 SWAP        \ Result: 20 10 (swap top two)
+```
+
+This example demonstrates Forth's stack-based paradigm: `DUP` duplicates the top value, `SWAP` exchanges the top two values, and `DROP` removes the top value.
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Space | NASA Hubble control, Forth chips for satellites |
+| Embedded | EPOCH real-time operating system, CNC controllers |
+| Instrumentation | Oscilloscopes, spectrum analyzers |
+| Archaeology | Ancient systems still running on Forth |
+
+## Influence & Legacy
+
+**Inspired by:** Burroughs B5000 (shared their "no parser" philosophy)
+
+**Influenced:** Joy, Factor, Cat, RPL (Hewlett-Packard calculators)
+
+Forth's contributions to programming:
+
+1. **Concatenative programming**: Languages like Factor and Joy directly descend from Forth's compositional approach
+2. **HP calculators**: Hewlett-Packard's RPL language, used in their graphing calculators, draws directly from Forth
+3. **Bootstrapping**: Forth's minimal footprint made it perfect for bootstrapping other systems
+4. **Interactive development**: Forth pioneered the immediate feedback loop that modern REPLs provide
+
+<Cards num={3}>
+  <Cards.Card title="Factor" href="/timeline/2000s/factor" arrow />
+  <Cards.Card title="Joy" href="/timeline/2000s/joy" arrow />
+  <Cards.Card title="RPL" href="/timeline/1980s/rpl" arrow />
+</Cards>
+
+Forth remains in active use in embedded systems and space applications where its tiny footprint and extreme flexibility are irreplaceable.

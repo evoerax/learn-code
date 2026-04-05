@@ -1,0 +1,110 @@
+---
+title: Logo
+description: 通过海龟绘图教孩子编程的教育语言
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Logo
+
+> _让编程走进儿童世界的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **诞生时间** | 1968 |
+| **创始人** | 西摩·佩帕特、沃利·菲泽格、辛西娅·所罗门（MIT） |
+| **范式** | 教育、声明式、多范式 |
+| **类型系统** | 动态 |
+| **平台** | 跨平台 |
+| **当前版本** | UCBLogo 6.2 |
+| **许可协议** | GPL |
+
+## 诞生背景
+
+Logo 于 1968 年诞生于麻省理工学院人工智能实验室，由西摩·佩帕特（Seymour Papert）、沃利·菲泽格（Wally Feurzeig）和辛西娅·所罗门（Cynthia Solomon）创建。佩帕特是一位数学家和教育家，曾与让·皮亚杰合作，并深受建构主义学习理论的影响——即儿童通过动手构建来学习效果最好的理念。
+
+Logo 的核心洞察简单而有力：给孩子们一只可以在屏幕上画图的"海龟"。这使得抽象的数学概念变得具体可感。一个让孩子告诉海龟"前进 100"或"右转 90"的孩子，在不知不觉中学习坐标系、角度和过程式思维。
+
+与早期将儿童视为被动学习者的教育计算尝试不同，Logo 将儿童定位为创造者。佩帕特相信这种"建构主义"方法比被动讲授能产生更深刻的学习。
+
+## 设计理念
+
+Logo 的设计理念围绕"低门槛、高天花板、宽围墙"：
+
+- **低门槛**：像 `FORWARD 50` 和 `RIGHT 90` 这样的简单命令儿童即可掌握
+- **高天花板**：高级程序员可以探索递归、复杂几何和人工智能概念
+- **宽围墙**：Logo 可应用于音乐、机器人、模拟和游戏
+
+海龟绘图系统是 Logo 最独特的特性——一个可以移动、转向和绘图的虚拟（或实体）机器人。`FD`、`BK`、`RT`、`LT` 等命令成为孩子第一门编程课的词汇。
+
+<Callout type="default" emoji="💡">
+  西摩·佩帕特的洞见："最好的学习发生在孩子成为创造者而非消费者的时候。"
+</Callout>
+
+## 代码示例
+
+```logo
+; 画一个正方形
+TO SQUARE :SIZE
+  REPEAT 4 [
+    FORWARD :SIZE
+    RIGHT 90
+  ]
+END
+
+; 用递归画螺旋
+TO SPIRAL :SIZE :ANGLE
+  IF :SIZE > 100 [STOP]
+  FORWARD :SIZE
+  RIGHT :ANGLE
+  SPIRAL :SIZE + 5 :ANGLE
+END
+
+; 递归画树
+TO TREE :SIZE :LEVEL
+  IF :LEVEL = 0 [STOP]
+  FORWARD :SIZE
+  LEFT 30
+  TREE :SIZE * 0.7 :LEVEL - 1
+  RIGHT 60
+  TREE :SIZE * 0.7 :LEVEL - 1
+  LEFT 30
+  BACK :SIZE
+END
+
+SQUARE 100
+SPIRAL 5 90
+```
+这个例子展示了 Logo 的魅力：用简单的规则生成复杂图案的递归过程。
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 教育 | Universal Logo、UCBLogo、MSWLogo |
+| 机器人 | 基于 Logo 的海龟机器人（实体设备） |
+| 数学 | 探索分形、几何、混沌理论 |
+| 人工智能研究 | 学习和发现理论的早期工作 |
+
+## 影响与遗产
+
+**灵感来源：** LISP（递归结构、列表处理）
+
+**影响语言：** Scratch、Blockly、Python（turtle 模块）、LEGO Mindstorms
+
+Logo 的影响远超其自身用途：
+
+1. **Scratch**（MIT 2007）本质上是用现代视觉块界面重塑的 Logo 精神
+2. **Python 的 `turtle` 模块**将 Logo 风格的绘图带到了世界上最流行的语言之一
+3. **LEGO Mindstorms** 融入了类似 Logo 的机器人编程
+4. 佩帕特的建构主义理论继续影响着我们对儿童编程教育的理解
+
+<Cards num={3}>
+  <Cards.Card title="Scratch" href="/timeline/2000s/scratch" arrow />
+  <Cards.Card title="Python" href="/timeline/1990s/python" arrow />
+  <Cards.Card title="LISP" href="/timeline/1950s/lisp" arrow />
+</Cards>
+
+Logo 的遗产不仅仅是一门语言——它是一种理念：编程教育应该是动手的、个性化的、赋能的。

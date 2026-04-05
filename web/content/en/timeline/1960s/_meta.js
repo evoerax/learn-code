@@ -9,5 +9,7 @@ export default {
   apl: { title: 'APL' },
   simula: { title: 'Simula' },
   bcpl: { title: 'BCPL' },
+  logo: { title: 'Logo' },
+  forth: { title: 'Forth' },
   b: { title: 'B' },
 }

@@ -1,0 +1,110 @@
+---
+title: Logo
+description: The language that taught children to program through turtle graphics
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Logo
+
+> _The language that put programming within reach of children._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1968 |
+| **Creator** | Seymour Papert, Wally Feurzeig, Cynthia Solomon (MIT) |
+| **Paradigm** | Educational, Declarative, Multi-paradigm |
+| **Type System** | Dynamic |
+| **Platform** | Cross-platform |
+| **Current Version** | UCBLogo 6.2 |
+| **License** | GPL |
+
+## Origin Story
+
+Logo was born in 1968 at MIT's Artificial Intelligence Laboratory, created by Seymour Papert, Wally Feurzeig, and Cynthia Solomon. Papert, a mathematician and educator, had worked with Jean Piaget and was deeply influenced by constructivist learning theory—the idea that children learn best by building things.
+
+The central insight of Logo was remarkably simple yet powerful: give children a "turtle" they could command to draw pictures on screen. This made abstract mathematical concepts tangible and personal. A child telling a turtle to "forward 100" or "right 90" was, without knowing it, learning coordinate systems, angles, and procedural thinking.
+
+Unlike earlier educational computing attempts that treated children as passive learners, Logo positioned children as creators. Papert believed this "constructionist" approach would produce deeper learning than passive instruction.
+
+## Design Philosophy
+
+Logo's design philosophy centered on **low floor, high ceiling, wide walls**:
+
+- **Low floor**: Simple commands like `FORWARD 50` and `RIGHT 90` were accessible to young children
+- **High ceiling**: Advanced programmers could explore recursion, complex geometry, and AI concepts
+- **Wide walls**: Logo could be applied to music, robotics, simulations, and games
+
+The turtle graphics system was Logo's most distinctive feature—a virtual (or physical) robot that could move, turn, and draw. Commands like `FD`, `BK`, `RT`, `LT` became the vocabulary of a child's first programming experience.
+
+<Callout type="default" emoji="💡">
+  Seymour Papert's insight: "The best learning happens when children are makers, not just consumers."
+</Callout>
+
+## Code Example
+
+```logo
+; Draw a square using the turtle
+TO SQUARE :SIZE
+  REPEAT 4 [
+    FORWARD :SIZE
+    RIGHT 90
+  ]
+END
+
+; Draw a spiral using recursion
+TO SPIRAL :SIZE :ANGLE
+  IF :SIZE > 100 [STOP]
+  FORWARD :SIZE
+  RIGHT :ANGLE
+  SPIRAL :SIZE + 5 :ANGLE
+END
+
+; A recursive tree
+TO TREE :SIZE :LEVEL
+  IF :LEVEL = 0 [STOP]
+  FORWARD :SIZE
+  LEFT 30
+  TREE :SIZE * 0.7 :LEVEL - 1
+  RIGHT 60
+  TREE :SIZE * 0.7 :LEVEL - 1
+  LEFT 30
+  BACK :SIZE
+END
+
+SQUARE 100
+SPIRAL 5 90
+```
+This example shows Logo's strengths: recursive procedures that generate complex patterns from simple rules.
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Education | Universal Logo, UCBLogo, MSWLogo |
+| Robotics | Logo-based turtle robots (physical devices) |
+| Mathematics | Exploring fractals, geometry, chaos theory |
+| AI Research | Early work in learning and discovery |
+
+## Influence & Legacy
+
+**Inspired by:** LISP (recursive structure, list processing)
+
+**Influenced:** Scratch, Blockly, Python (turtle module), LEGO Mindstorms
+
+Logo's impact extends far beyond its own use:
+
+1. **Scratch** (MIT 2007) is essentially Logo's spirit reborn with a modern visual block interface
+2. **Python's `turtle` module** brings Logo-style graphics to one of the world's most popular languages
+3. **LEGO Mindstorms** incorporated Logo-like programming for robots
+4. Papert's constructionist theories continue to influence how we teach programming to children
+
+<Cards num={3}>
+  <Cards.Card title="Scratch" href="/timeline/2000s/scratch" arrow />
+  <Cards.Card title="Python" href="/timeline/1990s/python" arrow />
+  <Cards.Card title="LISP" href="/timeline/1950s/lisp" arrow />
+</Cards>
+
+Logo's legacy is not just a language—it's a philosophy that programming education should be hands-on, personal, and empowering.
