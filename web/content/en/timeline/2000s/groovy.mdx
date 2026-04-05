@@ -1,0 +1,112 @@
+---
+title: Groovy
+description: JVM上的动态语言，Gradle构建脚本和Jenkins Pipeline的专用语言
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Groovy
+
+> _Java平台上的敏捷动态语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2003 |
+| **Creator** | James Strachan (Apache) |
+| **Paradigm** | Object-oriented, Dynamic, Functional |
+| **Type System** | Dynamic / Static (optional) |
+| **Platform** | JVM |
+| **Current Version** | 4.0 (2021) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+James Strachan created Groovy in 2003 while working at BEA Systems. He was frustrated with Java's verbosity and wanted a language that combined the power of Python, Ruby, and Smalltalk's dynamic features with the JVM's robustness and portability. The first version of Groovy was released in 2004, and it quickly gained popularity for its concise syntax and seamless Java interoperability.
+
+In 2007, Groovy was accepted into the Java Community Process as JSR-241, officially recognizing it as a standard scripting language for the Java platform. Red Hat acquired SpringSource (which had acquired Groovy) in 2009, ensuring the language's continued development and commercial support.
+
+## Design Philosophy
+
+Groovy's guiding principle is **"reducing boilerplate while maintaining Java compatibility"**. Every syntactic feature aims to eliminate the ceremonial code that Java requires. The language embraces the principle of "sensible defaults" — you can often omit semicolons, return types, type declarations, and parentheses, letting Groovy infer what you mean.
+
+Groovy also pioneered optional typing — you can write dynamically typed code for rapid prototyping or add static type annotations for performance-critical production code. This flexibility lets developers choose the right level of safety vs. productivity for each situation.
+
+## Code Example
+
+```groovy filename="groovy_example.groovy"
+// Dynamic typing with closures
+def list = [1, 2, 3, 4, 5]
+def doubled = list.collect { it * 2 }
+println doubled // [2, 4, 6, 8, 10]
+
+// String interpolation and GStrings
+def name = "World"
+def greeting = "Hello, ${name}!"
+println greeting // Hello, World!
+
+// Builder pattern made easy
+def xml = """
+<html>
+    <body>
+        <p>${greeting}</p>
+    </body>
+</html>
+"""
+
+// Safe navigation operator
+class User {
+    String name
+    Address address
+}
+Address addr = user?.address // null instead of NPE if user is null
+
+//运行在JVM上，与Java无缝互操作
+String javaString = "I am Java"
+println javaString.toUpperCase()
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Build Tools | Gradle (Android/multi-language build system) |
+| CI/CD | Jenkins Pipeline ( scripted and declarative pipelines) |
+| Scripting | Jenkins shared libraries, automation scripts |
+| Web Frameworks | Grails (Groovy on Rails) |
+| Testing | Spock framework for Java testing |
+
+## Influence & Legacy
+
+**Inspired by:** Python, Ruby, Smalltalk, Java
+
+**Influenced:** Kotlin (optional typing), Gradle DSL (built with Groovy, now also Kotlin), Jenkins Pipeline syntax
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | Grape (Groovy grapes), Maven Central |
+| Major Frameworks | Grails, Ratpack, Spock |
+| Build Tools | Gradle (primary build script) |
+| Testing | Spock, Geb (browser automation) |
+| IDE Support | IntelliJ IDEA (excellent Groovy support) |
+
+## When to Use
+
+**Good fit:**
+- Gradle build scripts (industry standard for Android)
+- Jenkins Pipeline automation
+- Rapid prototyping on the JVM
+- Adding dynamic scripting to Java applications
+- Domain-specific languages (Groovy's builder syntax is unmatched)
+
+**Not a good fit:**
+- Android app development (Kotlin preferred)
+- High-performance systems where static typing is required
+- Team environments that prefer Java's explicitness
+
+<Callout type="info" emoji="🤔">
+  Gradle, the most popular build tool for Android development, uses Groovy as its primary domain-specific language (DSL). While Gradle now supports Kotlin DSL as an alternative, Groovy remains the original and widely-used option.
+</Callout>

@@ -1,0 +1,119 @@
+---
+title: PowerShell
+description: 微软推出的基于.NET的Shell脚本语言，Windows系统管理和DevOps工具
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# PowerShell
+
+> _从Windows管理到跨平台自动化。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2006 |
+| **Creator** | Jeffrey Snover, Bruce Payette (Microsoft) |
+| **Paradigm** | Object-oriented, Scripting, Functional |
+| **Type System** | Dynamic (with optional static types) |
+| **Platform** | Cross-platform (Windows, macOS, Linux) |
+| **Current Version** | 7.4 (2024) |
+| **License** | MIT |
+
+## Origin Story
+
+PowerShell emerged from Microsoft's need to address limitations in the traditional Windows command-line environment. In 2002, Jeffrey Snover at Microsoft wrote the "Monad Manifesto," envisioning a new scripting platform that combined the power of Unix shells with the robustness of the .NET framework. After years of development, PowerShell 1.0 shipped in 2006 as a Windows-only component.
+
+Initially called "Monad," the project was renamed PowerShell in 2006 to align with Microsoft's Windows branding. The breakthrough came with PowerShell 2.0 (2009), which introduced remoting, modules, and background jobs. In 2016, Microsoft open-sourced PowerShell and made it cross-platform, rebranding it as PowerShell Core (v6+), breaking free from Windows-only dependencies.
+
+## Design Philosophy
+
+PowerShell's innovation is treating **everything as an object** rather than text. Where Unix pipes carry streams of text, PowerShell pipes pass .NET objects with rich type information. This means you can chain operations without parsing text—`Get-Process | Where-Object CPU -gt 100 | Sort-Object CPU -Descending` naturally filters and sorts structured data.
+
+The language embraces **verb-noun naming** conventions (`Get-Item`, `Set-Content`, `Remove-Item`) making commands self-documenting. Cmdlets (pronounced "command-lets") are the atomic units, written in C# or PowerShell itself. The type system, borrowed from .NET, brings strong typing and real classes to the shell world.
+
+## Code Example
+
+```powershell filename="powershell_example.ps1"
+# Objects, not text - structured data through the pipeline
+Get-Process | 
+    Where-Object CPU -gt 10 |
+    Sort-Object CPU -Descending |
+    Select-Object -First 5 Name, CPU, @{N='Memory(MB)';E={$_.WorkingSet/1MB}}
+
+# Script blocks and closures
+$double = { param($x) $x * 2 }
+1..5 | ForEach-Object -Parallel $_ * 2
+
+# .NET integration - use any .NET class directly
+Add-Type -AssemblyName System.Windows.Forms
+$form = New-Object System.Windows.Forms.Form
+$form.Text = "Hello from PowerShell"
+$form.Size = @{Width=400; Height=300}
+
+# Classes for complex scripts
+class Server {
+    [string]$Name
+    [string]$Role
+    [int]$MemoryGB
+    
+    [bool] IsHealthy() {
+        return $this.MemoryGB -ge 16
+    }
+}
+
+# DSC - Infrastructure as Code
+Configuration IISSetup {
+    Node WebServer {
+        WindowsFeature IIS {
+            Name = "Web-Server"
+            Ensure = "Present"
+        }
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| DevOps | Azure Automation, GitHub Actions, Azure DevOps |
+| Cloud | Azure CLI (underlying implementation), AWS Tools |
+| Configuration | DSC (Desired State Configuration), PowerShell Desired State |
+| Windows Mgmt | System Center, SCCM, group policy automation |
+| Cross-platform | PS Core on Linux/macOS, Docker management |
+
+## Influence & Legacy
+
+**Inspired by:** Bash, Perl, C#, KornShell
+
+**Influenced:** Azure CLI (adopted PowerShell patterns), AWS PowerShell tools, Ansible's win_* modules
+
+<Callout type="default" emoji="💡">
+  Before PowerShell, Windows administrators automated tasks through VBScript or batch files parsing text output. PowerShell's object pipeline transformed sysadmin scripting from fragile text parsing to robust structured data manipulation.
+</Callout>
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | PowerShell Gallery (PSResourceGet) |
+| Major Frameworks | Azure PowerShell, AWS Tools for PowerShell, Pester (testing) |
+| Build Tools | PSake, Invoke-Build |
+| Testing | Pester (BBDD-style testing for scripts) |
+| IDE Support | VSCode (PowerShell extension), PowerShell ISE |
+
+## When to Use
+
+**Good fit:**
+- Windows server administration and automation
+- Azure/AWS cloud management
+- DevOps pipelines (especially Windows-based CI/CD)
+- Tasks requiring .NET integration
+- Configuration management via DSC
+
+**Not a good fit:**
+- Linux-centric environments (Bash/Zsh are more natural)
+- macOS daily driving (unless managing Windows VMs or Azure)
+- Performance-critical computations (interpreted scripting overhead)

@@ -1,0 +1,118 @@
+---
+title: Haxe
+description: 强类型跨平台编译语言，可编译为JavaScript、Python、C++、Java等多个目标，游戏开发常用
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Haxe
+
+> _一次编写，多平台编译。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2005 |
+| **Creator** | Nicolas Cannasse (Alliance Entertainment) |
+| **Paradigm** | 面向对象、函数式、泛型 |
+| **Type System** | 静态、强类型、类型推断 |
+| **Platform** | 跨平台（JS、Python、C++、Java、PHP、Flash、NME、C#） |
+| **Current Version** | 4.3 (2023) |
+| **License** | GPL 2.0 / 商业许可 |
+
+## Origin Story
+
+Nicolas Cannasse于2005年在Alliance Entertainment工作时创建了Haxe。当时公司需要一种能够从单一代码库针对多个平台（尤其是Flash和C++）的语言，同时避免运行时解释器的性能开销。Haxe被设计为高级、静态类型的语言，可为每个目标平台编译优化后的原生代码。
+
+最初称为"haXe"（Haxe Evolution），在2.0版本后改为Haxe以避免商标问题。该语言在游戏开发社区获得了广泛关注，跨平台部署对游戏至关重要。
+
+## Design Philosophy
+
+Haxe的核心原则是**"一次编写，到处运行"**——但具有强类型保证。与其他为可移植性牺牲性能的跨平台解决方案不同，Haxe生成针对各平台优化的代码。类型系统在编译时捕获错误，同时支持类型推断，让你获得安全性而不必牺牲简洁性。
+
+该语言还开创了**类型安全的元编程**概念，通过其宏系统允许开发者编写在编译时转换代码的程序。这使得强大的功能（如自动序列化、ORM生成和DSL创建）成为可能，且没有运行时开销。
+
+## Code Example
+
+```haxe filename="haxe_example.hx"
+// 跨平台类型安全代码
+class Main {
+    static function main() {
+        var shapes:Array<Shape> = [
+            new Circle(5.0),
+            new Rectangle(4.0, 6.0)
+        ];
+        
+        for (shape in shapes) {
+            trace('${shape.name} area: ${shape.area()}');
+        }
+    }
+}
+
+abstract Shape {
+    public var name:String;
+    public function area():Float;
+}
+
+class Circle extends Shape {
+    public var radius:Float;
+    public function new(r:Float) {
+        name = "Circle";
+        radius = r;
+    }
+    public override function area():Float {
+        return Math.PI * radius * radius;
+    }
+}
+
+// 条件编译针对不同平台
+#if js
+import js.Browser.document;
+#elseif python
+import python.lib.Stdout;
+#end
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 游戏引擎 | Heaps.io（跨平台3D）、Away3D（Flash 3D） |
+| 游戏 | Dead Cells（Motion Twin）、Papers Please（Lucas Pope） |
+| 工具 | Discord.js（最初使用Haxe）、MassiveInteractive |
+| Web | OpenFL（类似Flash的API，目标为HTML5 Canvas） |
+| 移动端 | 通过OpenFL开发iOS/Android游戏 |
+
+## Influence & Legacy
+
+**Inspired by:** ActionScript, ML, OCaml, Java
+
+**Influenced:** TypeScript（类型系统设计）、Kotlin Multiplatform（跨平台理念）
+
+<Callout type="default" emoji="💡">
+  Dead Cells是Motion Twin出品的备受赞誉的类银河战士 rogue-like游戏，完全使用Haxe和Heaps构建。这款游戏展示了Haxe从一个代码库交付高性能、精致跨平台游戏的能力。
+</Callout>
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | haxelib |
+| 主要框架 | Heaps（3D）、OpenFL（2D）、Flixel（2D游戏框架） |
+| 构建工具 | Haxe构建系统、Lime（OpenFL跨平台工具） |
+| 测试 | Utest, Munit |
+| IDE支持 | VSCode（Haxe扩展）、FlashDevelop、HaxeDevelop |
+
+## When to Use
+
+**Good fit:**
+- 跨平台游戏开发（移动端、桌面端、Web）
+- 多平台工具或库
+- 需要Flash到HTML5迁移的项目
+- 需要从单一代码库针对多个平台的团队
+
+**Not a good fit:**
+- Web开发（TypeScript/JavaScript生态更丰富）
+- 没有Haxe经验的团队（学习曲线）
+- 快速原型开发（编译时间增加摩擦）

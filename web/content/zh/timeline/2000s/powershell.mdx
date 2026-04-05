@@ -1,0 +1,119 @@
+---
+title: PowerShell
+description: 微软推出的基于.NET的Shell脚本语言，Windows系统管理和DevOps工具
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# PowerShell
+
+> _从Windows管理到跨平台自动化。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2006 |
+| **Creator** | Jeffrey Snover, Bruce Payette (Microsoft) |
+| **Paradigm** | 面向对象、脚本、函数式 |
+| **Type System** | 动态（可选静态类型） |
+| **Platform** | 跨平台（Windows、macOS、Linux） |
+| **Current Version** | 7.4 (2024) |
+| **License** | MIT |
+
+## Origin Story
+
+PowerShell源于微软解决传统Windows命令行环境局限性的需求。2002年，微软的Jeffrey Snover编写了"Monad宣言"，设想了一种结合Unix shell强大功能和.NET框架稳健性的新脚本平台。经过多年开发，PowerShell 1.0于2006年发布，最初仅支持Windows。
+
+该项目最初名为"Monad"，2006年更名为PowerShell以配合微软的Windows品牌策略。突破出现在PowerShell 2.0（2009），引入了远程处理、模块和后台作业。2016年，微软将PowerShell开源并使其跨平台，将其重塑为PowerShell Core（v6+），摆脱了Windows-only的依赖。
+
+## Design Philosophy
+
+PowerShell的创新在于将**一切视为对象**而非文本。Unix管道传递文本流，而PowerShell管道传递带有丰富类型信息的.NET对象。这意味着你可以链接操作而无需解析文本——`Get-Process | Where-Object CPU -gt 100 | Sort-Object CPU -Descending` 自然地过滤和排序结构化数据。
+
+该语言采用**动词-名词命名约定**（`Get-Item`、`Set-Content`、`Remove-Item`）使命令自文档化。Cmdlet（读作"command-lets"）是原子单元，可以用C#或PowerShell本身编写。从.NET借用的类型系统为shell世界带来了强类型和真正的类。
+
+## Code Example
+
+```powershell filename="powershell_example.ps1"
+# 对象而非文本 - 通过管道传递结构化数据
+Get-Process | 
+    Where-Object CPU -gt 10 |
+    Sort-Object CPU -Descending |
+    Select-Object -First 5 Name, CPU, @{N='Memory(MB)';E={$_.WorkingSet/1MB}}
+
+# 脚本块和闭包
+$double = { param($x) $x * 2 }
+1..5 | ForEach-Object -Parallel $_ * 2
+
+# .NET集成 - 直接使用任何.NET类
+Add-Type -AssemblyName System.Windows.Forms
+$form = New-Object System.Windows.Forms.Form
+$form.Text = "Hello from PowerShell"
+$form.Size = @{Width=400; Height=300}
+
+# 类用于复杂脚本
+class Server {
+    [string]$Name
+    [string]$Role
+    [int]$MemoryGB
+    
+    [bool] IsHealthy() {
+        return $this.MemoryGB -ge 16
+    }
+}
+
+# DSC - 基础设施即代码
+Configuration IISSetup {
+    Node WebServer {
+        WindowsFeature IIS {
+            Name = "Web-Server"
+            Ensure = "Present"
+        }
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| DevOps | Azure Automation, GitHub Actions, Azure DevOps |
+| 云平台 | Azure CLI（底层实现）、AWS Tools |
+| 配置管理 | DSC (Desired State Configuration)、PowerShell Desired State |
+| Windows管理 | System Center, SCCM, 组策略自动化 |
+| 跨平台 | Linux/macOS上的PS Core、Docker管理 |
+
+## Influence & Legacy
+
+**Inspired by:** Bash, Perl, C#, KornShell
+
+**Influenced:** Azure CLI（采用PowerShell模式）、AWS PowerShell工具、Ansible的win_*模块
+
+<Callout type="default" emoji="💡">
+  在PowerShell之前，Windows管理员通过VBScript或批处理文件来自动化任务，这些文件解析文本输出。PowerShell的对象管道将脆弱的文本解析转变为稳健的结构化数据操作。
+</Callout>
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | PowerShell Gallery (PSResourceGet) |
+| 主要框架 | Azure PowerShell、AWS Tools for PowerShell、Pester（测试） |
+| 构建工具 | PSake、Invoke-Build |
+| 测试 | Pester（BBDD风格脚本测试） |
+| IDE支持 | VSCode（PowerShell扩展）、PowerShell ISE |
+
+## When to Use
+
+**Good fit:**
+- Windows服务器管理和自动化
+- Azure/AWS云管理
+- DevOps流水线（尤其是基于Windows的CI/CD）
+- 需要.NET集成的任务
+- 通过DSC进行配置管理
+
+**Not a good fit:**
+- 以Linux为中心的环境（Bash/Zsh更自然）
+- macOS日常使用（除非管理Windows VM或Azure）
+- 性能关键计算（解释型脚本开销）

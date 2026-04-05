@@ -1,0 +1,118 @@
+---
+title: Haxe
+description: 强类型跨平台编译语言，可编译为JavaScript、Python、C++、Java等多个目标，游戏开发常用
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Haxe
+
+> _一次编写，多平台编译。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2005 |
+| **Creator** | Nicolas Cannasse (Alliance Entertainment) |
+| **Paradigm** | Object-oriented, Functional, Generic |
+| **Type System** | Static, Strong, Type inference |
+| **Platform** | Cross-platform (JS, Python, C++, Java, PHP, Flash, NME, C#) |
+| **Current Version** | 4.3 (2023) |
+| **License** | GPL 2.0 / Commercial |
+
+## Origin Story
+
+Nicolas Cannasse created Haxe in 2005 while working at Alliance Entertainment. The company needed a language that could target multiple platforms—particularly Flash and C++—from a single codebase, without the performance overhead of a runtime interpreter. Haxe was designed as a high-level, statically typed language that compiles to native code for each target platform.
+
+Originally called "haXe" (Haxe Evolution), the language dropped the camelCase naming after version 2.0 to avoid confusion with trademark issues. The language gained significant traction in the game development community, where cross-platform deployment is crucial.
+
+## Design Philosophy
+
+Haxe's core principle is **"write once, run everywhere"** — but with strong typing. Unlike other cross-platform solutions that sacrifice performance for portability, Haxe generates optimized, platform-specific code. The type system catches errors at compile time while still supporting type inference, so you get safety without verbosity.
+
+The language also pioneered the concept of **type-safe metaprogramming** through its macro system, allowing developers to write code that transforms code at compile time. This enables powerful features like auto-serialization, ORM generation, and DSL creation without runtime overhead.
+
+## Code Example
+
+```haxe filename="haxe_example.hx"
+// Cross-platform type-safe code
+class Main {
+    static function main() {
+        var shapes:Array<Shape> = [
+            new Circle(5.0),
+            new Rectangle(4.0, 6.0)
+        ];
+        
+        for (shape in shapes) {
+            trace('${shape.name} area: ${shape.area()}');
+        }
+    }
+}
+
+abstract Shape {
+    public var name:String;
+    public function area():Float;
+}
+
+class Circle extends Shape {
+    public var radius:Float;
+    public function new(r:Float) {
+        name = "Circle";
+        radius = r;
+    }
+    public override function area():Float {
+        return Math.PI * radius * radius;
+    }
+}
+
+// 条件编译针对不同平台
+#if js
+import js.Browser.document;
+#elseif python
+import python.lib.Stdout;
+#end
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Game Engines | Heaps.io (cross-platform 3D), Away3D (Flash 3D) |
+| Games | Dead Cells (Motion Twin), Papers Please (Lucas Pope) |
+| Tools | Discord.js (originally), MassiveInteractive |
+| Web | OpenFL (Flash-like API, targets HTML5 Canvas) |
+| Mobile | Game development for iOS/Android via OpenFL |
+
+## Influence & Legacy
+
+**Inspired by:** ActionScript, ML, OCaml, Java
+
+**Influenced:** TypeScript (type system design), Kotlin Multiplatform (cross-platform philosophy)
+
+<Callout type="default" emoji="💡">
+  Dead Cells, the acclaimed roguelike-metroidvania game by Motion Twin, was built entirely with Haxe and Heaps. The game demonstrates Haxe's ability to deliver high-performance, polished games across multiple platforms from a single codebase.
+</Callout>
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | haxelib |
+| Major Frameworks | Heaps (3D), OpenFL (2D), Flixel (2D game framework) |
+| Build Tools | Haxe build system, Lime (OpenFL's cross-platform tool) |
+| Testing | Utest, Munit |
+| IDE Support | VSCode (Haxe extension), FlashDevelop, HaxeDevelop |
+
+## When to Use
+
+**Good fit:**
+- Cross-platform game development (mobile, desktop, web)
+- Multi-platform tools or libraries
+- Projects needing Flash-to-HTML5 migration
+- Teams targeting multiple platforms from one codebase
+
+**Not a good fit:**
+- Web development (TypeScript/JavaScript ecosystem is richer)
+- Teams without Haxe experience (learning curve)
+- Rapid prototyping (compilation time adds friction)
