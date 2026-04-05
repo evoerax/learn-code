@@ -1,0 +1,68 @@
+---
+title: Short Code / Brief Code
+description: An easier programming alternative for UNIVAC I computers
+---
+
+import { Callout } from 'nextra/components'
+
+# Short Code / Brief Code
+
+> _Making UNIVAC I programming accessible through symbolic notation._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1949 |
+| **Creator** | William F. Bruck, Betty Holberton (Remington Rand) |
+| **Paradigm** | Imperative |
+| **Type System** | None |
+| **Platform** | UNIVAC I |
+| **Current Version** | N/A (historical) |
+| **License** | Public Domain |
+
+## Origin Story
+
+Short Code (also known as Brief Code) was developed in 1949 by William F. Bruck and Betty Holberton at Remington Rand for the UNIVAC I computer. It evolved from the earlier Short Code system created for the BINAC, but was significantly refined for UNIVAC I.
+
+Where ENIAC required manual compilation through human "compilers," Short Code introduced a more systematic approach: programs were written in a simplified symbolic notation that an interpreter could process. Each mathematical expression was converted into a two-address code format.
+
+<Callout type="default" emoji="💡">
+  Short Code required approximately 50 times more machine instructions than hand-written machine code, but programmers could write code roughly 50 times faster—a revolutionary trade-off.
+</Callout>
+
+## Design Philosophy
+
+Short Code represented a pragmatic approach to early programming:
+
+- **Symbolic Representation**: Variables and operations expressed in mathematical shorthand
+- **Two-Address Format**: Each instruction specified operation and two memory locations
+- **Interpretive Execution**: A resident interpreter processed Short Code into machine instructions
+
+The language was optimized for human productivity rather than machine efficiency—a theme that would echo throughout the evolution of programming languages.
+
+## Code Example
+
+```shortcode
+X1 = 5000
+X2 = X1 + 200
+X3 = X2 / 200
+```
+
+This example shows Short Code's approach: simple mathematical statements in a notation closer to algebra than machine code. The programmer wrote in this symbolic form; the interpreter handled translation to UNIVAC's machine language.
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Business Computing | Early commercial data processing |
+| Government | Census data analysis |
+| Science | Engineering calculations |
+
+## Influence & Legacy
+
+**Inspired by:** ENIAC Short Code, Mathematical notation
+
+**Influenced:** FLOW-MATIC, COBOL
+
+Short Code established an important principle: programming should prioritize human understanding over machine efficiency. This philosophy directly influenced Grace Hopper's work on FLOW-MATIC, which in turn shaped COBOL—one of the most enduring languages in history. Short Code demonstrated that higher-level abstractions, even if slower, could make computers more accessible to a broader range of users.
