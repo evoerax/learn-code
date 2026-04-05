@@ -1,0 +1,92 @@
+---
+title: IPL
+description: The first artificial intelligence language, pioneer of list processing and symbolic reasoning
+---
+
+import { Callout } from 'nextra/components'
+
+# IPL (Information Processing Language)
+
+> _The language that taught computers to think symbolically._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1956 |
+| **Creator** | Allen Newell, Herbert Simon, Cliff Shaw (RAND Corporation) |
+| **Paradigm** | Symbolic, List processing |
+| **Type System** | Dynamic |
+| **Platform** | RAND Corporation computers (e.g., JOHNNIAC) |
+| **Current Version** | IPL-II, IPL-III (variant implementations) |
+| **License** | None (Research project) |
+
+## Origin Story
+
+IPL (Information Processing Language) was created in 1956 by a team at RAND Corporation: Allen Newell, Herbert Simon, and Cliff Shaw. This trio was working on artificial intelligence research and needed a language that could manipulate symbolic information—rather than just numbers.
+
+The project grew from Simon and Newell's work on theorem proving and cognitive psychology. They wanted to build programs that could simulate human problem-solving, which required representing and manipulating symbols, not performing arithmetic. This made IPL the world's first AI programming language.
+
+The name "Information Processing Language" reflects its purpose: processing information symbolically, not numerically. This was a radical departure from contemporary languages like FORTRAN, which focused on mathematical computation.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  IPL was designed not to compute answers, but to represent knowledge and reasoning processes symbolically.
+</Callout>
+
+Key innovations that IPL pioneered:
+
+- **List structures**: IPL introduced the concept of linked lists for organizing data, a fundamental data structure still central to programming
+- **Symbolic processing**: Programs could manipulate symbols representing concepts, not just numbers
+- **Recursive functions**: IPL supported recursion, allowing functions to call themselves
+- **Symbol manipulation**: The ability to create, modify, and traverse symbolic expressions
+- **Elementary AI operations**: Built-in support for operations like association (finding related concepts) and search
+
+IPL's design directly influenced how LISP was conceived, though LISP took these ideas much further with its elegant lambda calculus foundation.
+
+## Code Example
+
+```lisp
+; IPL-like symbolic list processing
+; A list is represented as a sequence of elements
+
+; Define a list of symbols
+(LIST (A B C D))
+
+; Association list lookup - find value by key
+(ASSOC 'KEY1 '((KEY1 . VALUE1) (KEY2 . VALUE2)))
+
+; Recursive traversal
+(DEFINE (MEMBER X LST)
+  (IF (NULL LST)
+      NIL
+      (IF (EQ X (CAR LST))
+          T
+          (MEMBER X (CDR LST)))))
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| AI Research | Logic Theory Machine, General Problem Solver (GPS) |
+| Theorem Proving | Early mathematical reasoning programs |
+| Cognitive Modeling | Simulation of human problem-solving |
+| Precursor | Direct inspiration for LISP |
+
+## Influence & Legacy
+
+**Inspired by:** None (it was the first of its kind)
+
+**Influenced:** LISP, POP-2, Python, Ruby
+
+IPL's legacy is primarily historical but profound:
+
+1. **First AI language**: It pioneered the idea that computers could manipulate symbols and represent knowledge
+2. **List processing foundation**: The linked list data structure and list manipulation operations IPL pioneered became fundamental to LISP
+3. **Recursive programming**: IPL demonstrated recursion as a practical programming technique
+4. **AI as a field**: The programs written in IPL (theorem provers, problem solvers) helped establish artificial intelligence as a discipline
+
+Though LISP eventually superseded IPL in popularity, IPL was the proof-of-concept that showed symbolic AI programming was possible. Without IPL's pioneering work, LISP might never have been conceived.
+
