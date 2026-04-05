@@ -1,7 +1,90 @@
 ---
 title: 时间线总览
+description: 八十年编程语言发展史，从1940年代的汇编语言到2020年代的人工智能时代
 ---
+
+import { Cards } from 'nextra/components'
 
 # 时间线总览
 
-_内容待填充_
+> 编程语言的历史，是思想的历史。每个十年都带来了新的问题，也催生了将全新思维方式凝结成形的新语言。
+
+本时间线涵盖**八个十年**中的 **100+ 种编程语言**，按语言诞生的年代及其所要解决的问题加以组织。
+
+---
+
+## 八个时代
+
+<Cards>
+  <Cards.Card title="1940年代 — 黎明" href="/timeline/1940s" arrow>
+    第一批可编程计算机问世。ENIAC 的早期编码系统，以及 Konrad Zuse 的 Plankalkül——第一种高级语言。
+  </Cards.Card>
+  <Cards.Card title="1950年代 — 科学计算" href="/timeline/1950s" arrow>
+    FORTRAN 让数值计算触手可及。COBOL 将编程带入商业领域。LISP 奠定了符号人工智能的基础。
+  </Cards.Card>
+  <Cards.Card title="1960年代 — 结构与抽象" href="/timeline/1960s" arrow>
+    ALGOL 确立了结构化编程。BASIC 让学生也能使用计算机。Simula 发明了面向对象编程。
+  </Cards.Card>
+  <Cards.Card title="1970年代 — 系统与范式" href="/timeline/1970s" arrow>
+    C 语言驱动 Unix，成为现代系统语言之母。Prolog 与 Smalltalk 各自开创了全新的编程范式。
+  </Cards.Card>
+  <Cards.Card title="1980年代 — 蓬勃发展" href="/timeline/1980s" arrow>
+    C++ 将面向对象引入系统编程。Ada 瞄准安全关键软件。Erlang 实现了容错分布式系统。
+  </Cards.Card>
+  <Cards.Card title="1990年代 — 互联网时代" href="/timeline/1990s" arrow>
+    Python、Java、JavaScript、Ruby 和 PHP 相继涌现。互联网彻底改变了软件的使命。
+  </Cards.Card>
+  <Cards.Card title="2000年代 — 实用主义" href="/timeline/2000s" arrow>
+    C# 将 Java 理念带入 Windows 平台。Scala 与 Clojure 在 JVM 上复兴函数式编程。Go 悄然起步。
+  </Cards.Card>
+  <Cards.Card title="2010年代 — 文艺复兴" href="/timeline/2010s" arrow>
+    Rust 解决了内存安全难题。Kotlin 与 Swift 重塑移动端开发。TypeScript 驯服了大规模 JavaScript。
+  </Cards.Card>
+  <Cards.Card title="2020年代 — 人工智能时代" href="/timeline/2020s" arrow>
+    Mojo 专为 AI 硬件而生。Carbon、Zig 与 Gleam 重新诠释系统编程与函数式编程。
+  </Cards.Card>
+</Cards>
+
+---
+
+## 历史脉络
+
+| 年代 | 核心主题 | 代表语言 |
+|------|----------|----------|
+| **1940年代** | 机器级表达 | Plankalkül、Short Code、ENIAC 编码系统 |
+| **1950年代** | 编译器与商业化 | FORTRAN、COBOL、LISP、汇编语言 |
+| **1960年代** | 结构化与普及教育 | ALGOL、BASIC、PL/I、Simula、SNOBOL |
+| **1970年代** | 系统编程与理论 | C、Pascal、SQL、Prolog、Smalltalk、ML |
+| **1980年代** | 对象与安全 | C++、Ada、Objective-C、Perl、Erlang、MATLAB |
+| **1990年代** | 互联网爆发 | Python、Java、JavaScript、Ruby、PHP、Haskell |
+| **2000年代** | 平台与规模化 | C#、Scala、Groovy、Clojure、Go、D |
+| **2010年代** | 安全性与人体工程学 | Rust、Kotlin、Swift、TypeScript、Elixir、Julia |
+| **2020年代** | 人工智能与下一代系统 | Mojo、Carbon、Zig、Gleam、Roc |
+
+---
+
+## 如何阅读时间线
+
+每个年代页面都会介绍：
+
+- **历史背景** — 彼时计算领域正在发生什么，是什么推动了新语言设计
+- **核心语言** — 每种语言引入的突破性思想
+- **深远影响** — 那个时代的创新如何塑造了我们今天使用的语言
+
+每种具体语言的页面则更为深入：起源故事、设计哲学、代码示例，以及对后续语言的影响。
+
+---
+
+## 跨越年代的模式
+
+驱动语言演化的几对核心张力：
+
+**安全性 vs. 性能** — 从 C 语言的"信任程序员"哲学，到 Rust 的所有权系统，语言始终在控制力与正确性之间寻求平衡。
+
+**简洁性 vs. 表达力** — BASIC 以简洁为设计目标，APL 则追求极致表达力。大多数语言试图找到中间地带——而在哪里，各有主张。
+
+**静态类型 vs. 动态类型** — FORTRAN 是静态类型的，LISP 是动态的。两种传统至今都在蓬勃发展，TypeScript 和 mypy 等语言则尝试融合两者的优势。
+
+**通用语言 vs. 领域专用语言** — SQL、MATLAB 和 PostScript 在特定领域表现出色；C、Python 和 Java 则试图解决一切问题。
+
+理解这些张力，会让这段历史远比一串日期和名字更加丰富。
