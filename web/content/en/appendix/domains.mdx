@@ -1,7 +1,271 @@
 ---
-title: 应用领域
+title: Application Domains
 ---
 
-# 应用领域
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# Application Domains
+
+Different application domains make different demands on programming languages: systems programming requires control over memory; data science requires numerical libraries and interactive exploration; web development requires fast iteration and browser compatibility. This appendix maps the major application domains to the languages built for — or most widely used in — each.
+
+<Callout type="info">
+  Language choice is rarely purely technical. Ecosystem maturity, team expertise, hiring availability, and historical momentum often matter more than raw language features. The entries here reflect both design intent and real-world adoption.
+</Callout>
+
+---
+
+## Systems Programming
+
+Systems programming means writing software that is close to the hardware: operating systems, device drivers, embedded firmware, runtime engines, databases, and high-performance network servers. The requirements: predictable performance, minimal memory overhead, precise control over resource allocation and layout, and ideally no garbage collector pauses.
+
+| Language | Role |
+|----------|------|
+| C | The universal systems language since 1972; Linux, macOS, Windows kernels; most embedded firmware |
+| C++ | Systems + abstraction; game engines, browsers (Chrome, Firefox), high-frequency trading |
+| Rust | Memory-safe systems programming; growing use in OS (Linux kernel modules, Windows), embedded, WebAssembly |
+| Zig | Minimal C alternative with comptime; cross-compilation, embedded, WASM |
+| Ada | Safety-critical embedded: avionics (F-35, A380), rail, medical |
+| Assembly | Direct hardware access; boot loaders, crypto primitives, inner loops |
+
+<Callout type="warning">
+  C is the most widely deployed systems language but also the source of the majority of critical security vulnerabilities (buffer overflows, use-after-free, integer overflows). Rust was designed specifically to provide C-level performance without C's memory safety hazards.
+</Callout>
+
+---
+
+## Web Backend Development
+
+Web backends serve HTTP requests, execute business logic, query databases, call external APIs, and return data (HTML, JSON, gRPC). The requirements are diverse: some backends need extreme throughput (millions of requests/second), others need rapid iteration speed, others need strong consistency guarantees.
+
+| Language | Ecosystem | Strength |
+|----------|-----------|----------|
+| JavaScript / Node.js | Express, Fastify, NestJS | Same language as frontend; large npm ecosystem; I/O-heavy workloads |
+| Python | Django, Flask, FastAPI | Rapid development; data science integration; large community |
+| Java | Spring Boot, Quarkus, Micronaut | Enterprise; mature ecosystem; JVM performance |
+| Go | net/http, Gin, Echo, Fiber | High throughput, low memory; excellent for microservices and CLIs |
+| Rust | Axum, Actix-web | Maximum performance; memory safety; used for latency-critical services |
+| PHP | Laravel, Symfony | Powers ~78% of all websites; WordPress, Drupal |
+| Ruby | Ruby on Rails | Convention-over-configuration; rapid prototyping; strong developer ergonomics |
+| C# | ASP.NET Core | Microsoft ecosystem; enterprise; Azure-native |
+| Kotlin | Ktor, Spring (JVM) | Modern Java alternative; null safety; coroutines |
+| Elixir | Phoenix | Erlang-based; real-time features (channels); extreme fault tolerance |
+
+---
+
+## Web Frontend Development
+
+Frontend development runs in the browser: HTML rendering, user interaction, animations, API calls, and local state management. JavaScript is the only language that runs natively in browsers; everything else compiles or transpiles to it.
+
+| Language / Technology | Role |
+|----------------------|------|
+| JavaScript | The only native browser language; ubiquitous |
+| TypeScript | JavaScript + static types; compiles to JS; dominant in large codebases |
+| HTML / CSS | Structure and style; declarative; not Turing-complete |
+| WebAssembly (WASM) | Binary format for near-native performance in the browser; compile target for Rust, C++, Go, C# |
+| Elm | Purely functional; compiles to JS; strong type guarantees; no runtime exceptions |
+| ClojureScript | Clojure on the browser; immutable data; React-friendly |
+| Dart | Flutter's language; compiles to JS for web, native for mobile |
+
+**Major frameworks** (all JavaScript/TypeScript): React, Vue, Angular, Svelte, SolidJS, Astro.
+
+---
+
+## Mobile Development
+
+Mobile development targets iOS and Android. Historically this meant Objective-C/Swift for iOS and Java/Kotlin for Android. Cross-platform frameworks have grown significantly, letting teams share code across platforms.
+
+| Language | Platform | Framework |
+|----------|----------|-----------|
+| Swift | iOS / macOS / watchOS / tvOS | SwiftUI, UIKit |
+| Kotlin | Android | Jetpack Compose, Android SDK |
+| Objective-C | iOS (legacy) | UIKit |
+| Java | Android (legacy) | Android SDK |
+| Dart | iOS + Android | Flutter (Google) |
+| JavaScript / TypeScript | iOS + Android | React Native (Meta) |
+| C# | iOS + Android | .NET MAUI, Xamarin |
+| Kotlin Multiplatform | iOS + Android (shared logic) | KMP |
+
+<Callout type="info">
+  Flutter and React Native are the two dominant cross-platform frameworks. Flutter compiles to native ARM code via Dart; React Native bridges JavaScript to native UI components. Both have significant adoption: Flutter for its consistent rendering, React Native for its JavaScript ecosystem.
+</Callout>
+
+---
+
+## Data Science and Machine Learning
+
+Data science work involves data exploration, statistical analysis, visualization, and building predictive models. Machine learning adds training neural networks on large datasets, deploying models, and serving predictions.
+
+| Language | Role |
+|----------|------|
+| Python | The dominant language; NumPy, Pandas, Matplotlib, Scikit-learn, TensorFlow, PyTorch |
+| R | Statistical computing and visualization; dominant in academic statistics and biostatistics |
+| Julia | High-performance numerical computing; bridges the "two-language problem" (Python speed vs. C speed) |
+| SQL | Data extraction and aggregation from relational databases; used at every scale |
+| Scala | Spark (big data processing); JVM performance with functional abstractions |
+| MATLAB | Numerical computing in engineering, signal processing, and academia |
+| Mojo | Python superset with systems-level performance; targeting AI model development |
+
+**Key libraries:**
+- **NumPy / SciPy** — numerical arrays, linear algebra, scientific computing
+- **Pandas** — tabular data manipulation
+- **PyTorch / TensorFlow / JAX** — deep learning frameworks
+- **Scikit-learn** — classical machine learning algorithms
+- **Spark (Scala/Python)** — distributed big data processing
+- **dbt (SQL)** — data transformation in the warehouse
+
+---
+
+## Scientific and High-Performance Computing (HPC)
+
+Scientific computing and HPC run simulations, model physical systems, and process massive datasets on supercomputer clusters. Requirements: floating-point performance, efficient memory access patterns, MPI parallelism, and reproducibility.
+
+| Language | Role |
+|----------|------|
+| Fortran | The original scientific computing language (1957); still in production for numerical codes (BLAS, LAPACK, climate models) |
+| C / C++ | Low-level performance control; CUDA wrappers; HPC system libraries |
+| Python | Orchestration, visualization, interface to C/Fortran libraries |
+| Julia | Modern replacement for Fortran in research; multiple dispatch; LLVM-backed |
+| CUDA / OpenCL | GPU programming for parallel computation |
+| R | Statistical simulation and analysis |
+| Chapel | HPC-focused language from Cray; data-parallel and task-parallel abstractions |
+
+---
+
+## Database and Data Query Languages
+
+Databases form the persistence layer of nearly every application. SQL remains the dominant query language; specialized NoSQL systems have introduced their own query dialects.
+
+| Language / Query System | Domain |
+|------------------------|--------|
+| SQL | Relational databases (PostgreSQL, MySQL, SQLite, SQL Server, Oracle) |
+| PL/pgSQL / T-SQL | Stored procedures; server-side logic in the database |
+| MongoDB Query Language | Document databases |
+| Cypher | Graph databases (Neo4j) |
+| SPARQL | RDF semantic data |
+| Datalog | Deductive databases; program analysis |
+| GraphQL | API query language for nested data fetching |
+| Flux / PromQL | Time-series databases (InfluxDB, Prometheus) |
+
+---
+
+## Game Development
+
+Game development combines real-time graphics rendering, physics simulation, audio, input handling, networking, and asset pipelines. Performance and iteration speed are both critical.
+
+| Language | Role |
+|----------|------|
+| C++ | The dominant game language; Unreal Engine, most AAA titles |
+| C# | Unity's scripting language; indie games; mobile games |
+| Lua | Embedded scripting in game engines (Roblox, LÖVE, many custom engines) |
+| GDScript | Godot's built-in language; Python-like; beginner-friendly |
+| Rust | Emerging in game engines (Bevy); memory safety with systems performance |
+| HLSL / GLSL / WGSL | GPU shader languages for rendering |
+| Python | Game prototyping (Pygame); build tooling |
+
+<Callout type="info">
+  The Unity (C#) vs. Unreal (C++) choice largely defines the indie vs. AAA division. Unity dominates mobile and indie; Unreal dominates photorealistic AAA titles and virtual production.
+</Callout>
+
+---
+
+## Embedded and Firmware
+
+Embedded systems run on microcontrollers and specialized hardware with severe resource constraints: kilobytes of RAM, no OS, no dynamic allocation, deterministic timing requirements.
+
+| Language | Role |
+|----------|------|
+| C | The standard for embedded; direct hardware access; supported everywhere |
+| C++ | Embedded C++ (restricted subset) for larger embedded systems |
+| Rust | Growing use in embedded; `no_std` mode; memory safety without GC |
+| Ada / SPARK | Safety-critical embedded (aerospace, rail, medical, automotive) |
+| Assembly | Inner loops, boot code, interrupt handlers |
+| MicroPython / CircuitPython | Python for microcontrollers; beginner-friendly; slower |
+| Zig | Emerging in embedded; simple cross-compilation story |
+
+---
+
+## DevOps, Infrastructure, and Scripting
+
+DevOps languages automate infrastructure provisioning, deployment pipelines, system administration, and configuration management.
+
+| Language | Role |
+|----------|------|
+| Bash / Shell | The universal Unix scripting glue; available on every Linux/macOS system |
+| Python | The preferred scripting language for complex automation; Ansible, AWS CDK |
+| Go | CLI tools (Docker, kubectl, Terraform, GitHub CLI); cross-platform binaries |
+| Ruby | Chef, Vagrant; Rails-era scripting |
+| PowerShell | Windows automation and Azure management |
+| Terraform HCL | Infrastructure as code (declarative) |
+| Nix | Reproducible system configuration |
+| Dhall | Typed configuration language |
+| Starlark | Build description language (Bazel) |
+
+---
+
+## Compilers, Interpreters, and Language Tooling
+
+Building programming languages, compilers, and developer tools is its own domain. Tools in this space include parsers, type checkers, optimizers, code formatters, and IDE language servers.
+
+| Language | Role |
+|----------|------|
+| OCaml | The compiler implementation language of choice; used in the Rust compiler (early), the Reason/ReScript compilers, Hack (Facebook PHP) |
+| Haskell | GHC (Glasgow Haskell Compiler); Pandoc; many research compilers |
+| Rust | Modern compiler infrastructure: `rustc`, Cranelift, new LLVM frontends |
+| C++ | LLVM, Clang, GCC, V8 (Chrome's JS engine) |
+| Java / Kotlin | Eclipse IDE, IntelliJ IDEA, Kotlin compiler |
+| Python | CPython itself; build and test tooling |
+
+---
+
+## Financial Technology (FinTech)
+
+Finance has unique requirements: correctness (money must be exact), auditability, compliance, and performance for trading systems.
+
+| Language | Role |
+|----------|------|
+| Java / Kotlin | Enterprise banking systems; Android fintech apps; Spring ecosystem |
+| C++ | High-frequency trading (microsecond latency); risk systems |
+| Python | Quantitative analysis, backtesting, data pipelines |
+| R | Statistical risk modeling, financial research |
+| COBOL | Still powers core banking and payment systems at major banks worldwide |
+| Scala | Functional stream processing (Akka, Apache Spark) for market data |
+| Haskell | Quantitative finance research, type-safe financial modeling |
+| SQL | Transaction processing, reporting, audit trails |
+
+<Callout type="warning">
+  COBOL processes an estimated $3 trillion in daily transactions worldwide — more than any other language. Despite being 65 years old, it runs the core banking systems of most major financial institutions. Replacing it is expensive, risky, and rarely done.
+</Callout>
+
+---
+
+## Artificial Intelligence and Language Models
+
+The rapid rise of large language models (LLMs) and generative AI has created new language-level requirements: tensor computation, automatic differentiation, efficient GPU/TPU utilization, and model deployment.
+
+| Language | Role |
+|----------|------|
+| Python | The universal AI research language; PyTorch, TensorFlow, JAX, Hugging Face |
+| CUDA (C/C++) | GPU kernel programming; underlies all major DL frameworks |
+| Mojo | Python superset with MLIR backend; targeting AI acceleration hardware |
+| Julia | Scientific computing research; differentiable programming (Zygote.jl) |
+| Triton (Python DSL) | GPU kernel authoring at higher abstraction than CUDA |
+| Rust | Inference runtimes (Candle, llm.rs); performance-critical serving |
+
+---
+
+## Summary: Language–Domain Matrix
+
+| Domain | Primary Languages | Secondary / Emerging |
+|--------|------------------|---------------------|
+| Systems | C, C++, Rust | Zig, Ada |
+| Web Backend | Python, Go, Java, JS | Rust, Elixir, Kotlin |
+| Web Frontend | JavaScript, TypeScript | Elm, WASM |
+| Mobile | Swift, Kotlin, Dart | Kotlin Multiplatform |
+| Data Science / ML | Python, R, SQL | Julia, Scala |
+| HPC / Scientific | Fortran, C/C++, Julia | Python (orchestration) |
+| Game Dev | C++, C# | GDScript, Rust |
+| Embedded | C, Rust, Ada | Zig, Assembly |
+| DevOps / Infra | Bash, Python, Go | HCL, Nix |
+| Compilers / Tooling | OCaml, Haskell, Rust | C++ |
+| Finance | Java, C++, COBOL, Python | Haskell, Scala |
+| AI / LLMs | Python, CUDA | Mojo, Triton, Rust |

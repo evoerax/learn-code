@@ -2,6 +2,270 @@
 title: 应用领域
 ---
 
+import { Callout } from 'nextra/components'
+
 # 应用领域
 
-_内容待填充_
+不同的应用领域对编程语言提出了不同的要求：系统编程需要对内存的精确控制；数据科学需要数值库和交互式探索；Web 开发需要快速迭代和浏览器兼容性。本附录将主要应用领域与为之设计或在其中广泛使用的语言一一对应。
+
+<Callout type="info">
+  语言选择很少是纯粹的技术决策。生态系统成熟度、团队专业知识、招聘可用性和历史惯性往往比语言特性本身更重要。以下条目同时反映了设计意图和真实世界的采用情况。
+</Callout>
+
+---
+
+## 系统编程
+
+系统编程意味着编写接近硬件的软件：操作系统、设备驱动、嵌入式固件、运行时引擎、数据库和高性能网络服务器。要求：可预测的性能、最小内存开销、对资源分配和内存布局的精确控制，以及理想情况下没有垃圾回收暂停。
+
+| 语言 | 作用 |
+|------|------|
+| C | 自 1972 年以来的通用系统语言；Linux、macOS、Windows 内核；大多数嵌入式固件 |
+| C++ | 系统 + 抽象；游戏引擎、浏览器（Chrome、Firefox）、高频交易 |
+| Rust | 内存安全的系统编程；在 OS（Linux 内核模块、Windows）、嵌入式、WebAssembly 中的应用日益增长 |
+| Zig | 简洁的 C 替代品，具有 comptime；交叉编译、嵌入式、WASM |
+| Ada | 安全关键嵌入式：航空（F-35、A380）、铁路、医疗 |
+| Assembly | 直接硬件访问；引导程序、加密原语、内循环 |
+
+<Callout type="warning">
+  C 是应用最广泛的系统语言，但也是大多数关键安全漏洞的根源（缓冲区溢出、释放后使用、整数溢出）。Rust 就是专门为了在不牺牲 C 级性能的前提下消除内存安全隐患而设计的。
+</Callout>
+
+---
+
+## Web 后端开发
+
+Web 后端处理 HTTP 请求、执行业务逻辑、查询数据库、调用外部 API 并返回数据（HTML、JSON、gRPC）。需求多样：有些后端需要极高的吞吐量（每秒数百万请求），有些需要快速的迭代速度，有些需要强一致性保证。
+
+| 语言 | 生态 | 优势 |
+|------|------|------|
+| JavaScript / Node.js | Express、Fastify、NestJS | 与前端同语言；庞大的 npm 生态；I/O 密集型工作负载 |
+| Python | Django、Flask、FastAPI | 快速开发；数据科学集成；庞大社区 |
+| Java | Spring Boot、Quarkus、Micronaut | 企业级；成熟生态；JVM 性能 |
+| Go | net/http、Gin、Echo、Fiber | 高吞吐量、低内存；微服务和 CLI 的极佳选择 |
+| Rust | Axum、Actix-web | 极致性能；内存安全；用于延迟敏感的服务 |
+| PHP | Laravel、Symfony | 驱动约 78% 的网站；WordPress、Drupal |
+| Ruby | Ruby on Rails | 约定优于配置；快速原型；强大的开发者体验 |
+| C# | ASP.NET Core | 微软生态；企业级；Azure 原生 |
+| Kotlin | Ktor、Spring（JVM）| 现代 Java 替代品；空安全；协程 |
+| Elixir | Phoenix | 基于 Erlang；实时功能（channels）；极高容错性 |
+
+---
+
+## Web 前端开发
+
+前端开发运行在浏览器中：HTML 渲染、用户交互、动画、API 调用和本地状态管理。JavaScript 是唯一能在浏览器中原生运行的语言；其他所有语言都需要编译或转译为 JavaScript。
+
+| 语言 / 技术 | 作用 |
+|------------|------|
+| JavaScript | 唯一的原生浏览器语言；无处不在 |
+| TypeScript | JavaScript + 静态类型；编译为 JS；在大型代码库中占主导 |
+| HTML / CSS | 结构与样式；声明式；非图灵完备 |
+| WebAssembly（WASM）| 浏览器中接近原生性能的二进制格式；Rust、C++、Go、C# 的编译目标 |
+| Elm | 纯函数式；编译为 JS；强类型保证；无运行时异常 |
+| ClojureScript | 浏览器上的 Clojure；不可变数据；React 友好 |
+| Dart | Flutter 的语言；编译为 JS（Web）或原生代码（移动端）|
+
+**主要框架**（均为 JavaScript/TypeScript）：React、Vue、Angular、Svelte、SolidJS、Astro。
+
+---
+
+## 移动端开发
+
+移动端开发面向 iOS 和 Android。历史上，这意味着 iOS 用 Objective-C/Swift，Android 用 Java/Kotlin。跨平台框架已显著增长，让团队可以在平台间共享代码。
+
+| 语言 | 平台 | 框架 |
+|------|------|------|
+| Swift | iOS / macOS / watchOS / tvOS | SwiftUI、UIKit |
+| Kotlin | Android | Jetpack Compose、Android SDK |
+| Objective-C | iOS（遗留）| UIKit |
+| Java | Android（遗留）| Android SDK |
+| Dart | iOS + Android | Flutter（Google）|
+| JavaScript / TypeScript | iOS + Android | React Native（Meta）|
+| C# | iOS + Android | .NET MAUI、Xamarin |
+| Kotlin Multiplatform | iOS + Android（共享逻辑）| KMP |
+
+<Callout type="info">
+  Flutter 和 React Native 是两个主导性的跨平台框架。Flutter 通过 Dart 编译为原生 ARM 代码；React Native 将 JavaScript 桥接到原生 UI 组件。两者都有大量应用：Flutter 以其一致的渲染著称，React Native 依托其 JavaScript 生态。
+</Callout>
+
+---
+
+## 数据科学与机器学习
+
+数据科学工作包括数据探索、统计分析、可视化和构建预测模型。机器学习在此之上增加了在大型数据集上训练神经网络、部署模型和提供预测的工作。
+
+| 语言 | 作用 |
+|------|------|
+| Python | 主导语言；NumPy、Pandas、Matplotlib、Scikit-learn、TensorFlow、PyTorch |
+| R | 统计计算与可视化；在学术统计学和生物统计学领域占主导 |
+| Julia | 高性能数值计算；解决"两语言问题"（Python 的易用性 vs. C 的性能）|
+| SQL | 从关系型数据库提取和聚合数据；适用于各种规模 |
+| Scala | Spark（大数据处理）；JVM 性能与函数式抽象 |
+| MATLAB | 工程、信号处理和学术领域的数值计算 |
+| Mojo | Python 的超集，具有系统级性能；面向 AI 模型开发 |
+
+**关键库：**
+- **NumPy / SciPy** — 数值数组、线性代数、科学计算
+- **Pandas** — 表格数据处理
+- **PyTorch / TensorFlow / JAX** — 深度学习框架
+- **Scikit-learn** — 经典机器学习算法
+- **Spark（Scala/Python）** — 分布式大数据处理
+- **dbt（SQL）** — 数据仓库中的数据变换
+
+---
+
+## 科学与高性能计算（HPC）
+
+科学计算和 HPC 在超级计算机集群上运行模拟、建模物理系统并处理海量数据集。要求：浮点性能、高效的内存访问模式、MPI 并行性和可重复性。
+
+| 语言 | 作用 |
+|------|------|
+| Fortran | 最初的科学计算语言（1957年）；仍在生产中用于数值代码（BLAS、LAPACK、气候模型）|
+| C / C++ | 底层性能控制；CUDA 封装；HPC 系统库 |
+| Python | 编排、可视化、C/Fortran 库的接口 |
+| Julia | 研究中 Fortran 的现代替代品；多重分派；LLVM 后端 |
+| CUDA / OpenCL | 并行计算的 GPU 编程 |
+| R | 统计模拟和分析 |
+| Chapel | Cray 面向 HPC 的语言；数据并行和任务并行抽象 |
+
+---
+
+## 数据库与数据查询语言
+
+数据库构成了几乎每个应用程序的持久层。SQL 仍然是主导查询语言；专门的 NoSQL 系统引入了自己的查询方言。
+
+| 语言 / 查询系统 | 领域 |
+|---------------|------|
+| SQL | 关系型数据库（PostgreSQL、MySQL、SQLite、SQL Server、Oracle）|
+| PL/pgSQL / T-SQL | 存储过程；数据库中的服务端逻辑 |
+| MongoDB 查询语言 | 文档数据库 |
+| Cypher | 图数据库（Neo4j）|
+| SPARQL | RDF 语义数据 |
+| Datalog | 演绎数据库；程序分析 |
+| GraphQL | 嵌套数据获取的 API 查询语言 |
+| Flux / PromQL | 时序数据库（InfluxDB、Prometheus）|
+
+---
+
+## 游戏开发
+
+游戏开发融合了实时图形渲染、物理模拟、音频、输入处理、网络和资产管道。性能和迭代速度都至关重要。
+
+| 语言 | 作用 |
+|------|------|
+| C++ | 主导的游戏语言；Unreal Engine、大多数 AAA 大作 |
+| C# | Unity 的脚本语言；独立游戏；移动游戏 |
+| Lua | 嵌入在游戏引擎中的脚本（Roblox、LÖVE、许多定制引擎）|
+| GDScript | Godot 的内置语言；类 Python 语法；对初学者友好 |
+| Rust | 在游戏引擎中兴起（Bevy）；内存安全与系统性能 |
+| HLSL / GLSL / WGSL | 用于渲染的 GPU 着色器语言 |
+| Python | 游戏原型（Pygame）；构建工具 |
+
+<Callout type="info">
+  Unity（C#）vs. Unreal（C++）的选择基本上定义了独立游戏 vs. AAA 大作的分界线。Unity 在移动端和独立游戏中占主导；Unreal 在照片级真实感的 AAA 大作和虚拟制作中占主导。
+</Callout>
+
+---
+
+## 嵌入式与固件
+
+嵌入式系统运行在微控制器和专用硬件上，资源极其有限：千字节级别的 RAM、无操作系统、无动态内存分配、严格的时序要求。
+
+| 语言 | 作用 |
+|------|------|
+| C | 嵌入式的标准语言；直接硬件访问；无处不支持 |
+| C++ | 嵌入式 C++（受限子集）用于较大的嵌入式系统 |
+| Rust | 嵌入式中日益增长的应用；`no_std` 模式；无 GC 的内存安全 |
+| Ada / SPARK | 安全关键嵌入式（航空航天、铁路、医疗、汽车）|
+| Assembly | 内循环、引导代码、中断处理程序 |
+| MicroPython / CircuitPython | 微控制器上的 Python；对初学者友好；速度较慢 |
+| Zig | 嵌入式中新兴；简洁的交叉编译故事 |
+
+---
+
+## DevOps、基础设施与脚本
+
+DevOps 语言用于自动化基础设施配置、部署流水线、系统管理和配置管理。
+
+| 语言 | 作用 |
+|------|------|
+| Bash / Shell | 通用的 Unix 脚本胶水；在每个 Linux/macOS 系统上都可用 |
+| Python | 复杂自动化的首选脚本语言；Ansible、AWS CDK |
+| Go | CLI 工具（Docker、kubectl、Terraform、GitHub CLI）；跨平台二进制文件 |
+| Ruby | Chef、Vagrant；Rails 时代的脚本 |
+| PowerShell | Windows 自动化和 Azure 管理 |
+| Terraform HCL | 基础设施即代码（声明式）|
+| Nix | 可重现的系统配置 |
+| Dhall | 有类型的配置语言 |
+| Starlark | 构建描述语言（Bazel）|
+
+---
+
+## 编译器、解释器与语言工具链
+
+构建编程语言、编译器和开发工具是其自己的专业领域。这个领域的工具包括：解析器、类型检查器、优化器、代码格式化器和 IDE 语言服务器。
+
+| 语言 | 作用 |
+|------|------|
+| OCaml | 编译器实现的首选语言；用于早期 Rust 编译器、Reason/ReScript 编译器、Hack（Facebook 的 PHP 变体）|
+| Haskell | GHC（Glasgow Haskell 编译器）；Pandoc；众多研究用编译器 |
+| Rust | 现代编译器基础设施：`rustc`、Cranelift、新的 LLVM 前端 |
+| C++ | LLVM、Clang、GCC、V8（Chrome 的 JS 引擎）|
+| Java / Kotlin | Eclipse IDE、IntelliJ IDEA、Kotlin 编译器 |
+| Python | CPython 本身；构建和测试工具 |
+
+---
+
+## 金融科技（FinTech）
+
+金融领域有独特的要求：正确性（货币必须精确）、可审计性、合规性，以及交易系统的高性能。
+
+| 语言 | 作用 |
+|------|------|
+| Java / Kotlin | 企业银行系统；Android 金融科技应用；Spring 生态 |
+| C++ | 高频交易（微秒级延迟）；风险系统 |
+| Python | 量化分析、回测、数据流水线 |
+| R | 统计风险建模、金融研究 |
+| COBOL | 仍在主要银行的核心银行和支付系统中运行 |
+| Scala | 用于市场数据的函数式流处理（Akka、Apache Spark）|
+| Haskell | 量化金融研究、类型安全的金融建模 |
+| SQL | 事务处理、报告、审计追踪 |
+
+<Callout type="warning">
+  COBOL 每天处理全球约 3 万亿美元的交易——比任何其他语言都多。尽管已有 65 年历史，它仍在运行大多数主要金融机构的核心银行系统。替换它成本高昂、风险极大，且很少被实施。
+</Callout>
+
+---
+
+## 人工智能与大语言模型
+
+大语言模型（LLM）和生成式 AI 的快速崛起创造了新的语言级需求：张量计算、自动微分、高效的 GPU/TPU 利用率和模型部署。
+
+| 语言 | 作用 |
+|------|------|
+| Python | 通用的 AI 研究语言；PyTorch、TensorFlow、JAX、Hugging Face |
+| CUDA（C/C++）| GPU 内核编程；驱动所有主要深度学习框架 |
+| Mojo | 带 MLIR 后端的 Python 超集；面向 AI 加速硬件 |
+| Julia | 科学计算研究；可微分编程（Zygote.jl）|
+| Triton（Python DSL）| 比 CUDA 更高抽象级别的 GPU 内核编写 |
+| Rust | 推理运行时（Candle、llm.rs）；性能关键的服务 |
+
+---
+
+## 汇总：语言–领域矩阵
+
+| 领域 | 主要语言 | 次要 / 新兴语言 |
+|------|---------|--------------|
+| 系统编程 | C、C++、Rust | Zig、Ada |
+| Web 后端 | Python、Go、Java、JS | Rust、Elixir、Kotlin |
+| Web 前端 | JavaScript、TypeScript | Elm、WASM |
+| 移动端 | Swift、Kotlin、Dart | Kotlin Multiplatform |
+| 数据科学 / 机器学习 | Python、R、SQL | Julia、Scala |
+| HPC / 科学计算 | Fortran、C/C++、Julia | Python（编排）|
+| 游戏开发 | C++、C# | GDScript、Rust |
+| 嵌入式 | C、Rust、Ada | Zig、Assembly |
+| DevOps / 基础设施 | Bash、Python、Go | HCL、Nix |
+| 编译器 / 工具链 | OCaml、Haskell、Rust | C++ |
+| 金融 | Java、C++、COBOL、Python | Haskell、Scala |
+| AI / 大模型 | Python、CUDA | Mojo、Triton、Rust |

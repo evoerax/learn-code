@@ -1,7 +1,182 @@
 ---
-title: 编程范式
+title: Programming Paradigms
 ---
 
-# 编程范式
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# Programming Paradigms
+
+A programming paradigm is a fundamental style or approach to programming — a set of ideas about how programs should be structured, how computation should be expressed, and what the unit of abstraction should be. Most languages support multiple paradigms; the classification below reflects each language's primary design philosophy.
+
+<Callout type="info">
+  No paradigm is universally superior. Each captures a different mental model of computation, and each has domains where it excels. The most influential languages often pioneer or synthesize paradigms rather than rigidly implementing one.
+</Callout>
+
+## The Major Paradigms
+
+| Paradigm | Core Idea | Landmark Languages |
+|----------|-----------|-------------------|
+| Imperative | Describe *how* to do it: step-by-step instructions that change program state | Assembly, C, Pascal |
+| Object-Oriented | Organize code as interacting objects with state and behavior | Smalltalk, C++, Java, Python |
+| Functional | Describe *what* to compute: pure functions, immutable data, no side effects | LISP, Haskell, Erlang, Clojure |
+| Declarative | Specify the desired result, not the procedure | SQL, Prolog, HTML |
+| Logic | Define facts and rules; let inference find the answer | Prolog, Datalog |
+| Concurrent / Actor | Model programs as communicating processes or actors | Erlang, Go, Elixir |
+| Reactive | Model programs as data flows that react to events | RxJS, Elm, Arrow (Kotlin) |
+| Metaprogramming | Write code that generates or transforms other code | Lisp macros, Rust macros, Julia |
+
+---
+
+## Imperative Programming
+
+The oldest paradigm: programs are sequences of instructions that modify state. The machine executes statements one after another, updating variables and memory. Assembly language is pure imperative; C and Pascal brought structure (loops, conditionals, functions) without abandoning the state-mutation model.
+
+**Strengths:** Direct mapping to hardware, maximum control, predictable performance.
+**Weaknesses:** Hard to reason about global state, error-prone mutation, difficult to parallelize.
+
+**Representative languages:** Assembly, Fortran, COBOL, C, Pascal, BASIC
+
+---
+
+## Object-Oriented Programming (OOP)
+
+OOP organizes code around *objects* — bundles of state (fields) and behavior (methods). Objects communicate by sending messages (calling methods). The paradigm was invented in Simula (1967) and perfected in Smalltalk (1972), then popularized by C++, Java, and Python.
+
+**Core concepts:**
+- **Encapsulation** — hide internal state; expose a controlled interface
+- **Inheritance** — reuse behavior from parent classes; specialize in subclasses
+- **Polymorphism** — the same interface works on different types at runtime
+- **Message passing** — Alan Kay's original vision: objects communicate, not share memory
+
+<Callout type="warning">
+  OOP has faced criticism for encouraging accidental complexity: deep inheritance hierarchies, shared mutable state hidden inside objects, and the "banana-gorilla-jungle problem" (you wanted a banana but got the gorilla holding it, and the entire jungle). Modern languages often prefer composition over inheritance.
+</Callout>
+
+**Representative languages:** Simula, Smalltalk, C++, Java, C#, Python, Ruby, Swift, Kotlin
+
+---
+
+## Functional Programming (FP)
+
+Functional programming treats computation as the evaluation of mathematical functions. The key constraints: pure functions (no side effects, same inputs always produce the same output), immutable data (data cannot be changed in place, only transformed into new data), and first-class functions (functions can be passed as arguments, returned from functions, and stored in data structures).
+
+**Core concepts:**
+- **Pure functions** — no global state, no I/O, fully deterministic
+- **Immutability** — data structures cannot be mutated; transformations return new values
+- **Higher-order functions** — `map`, `filter`, `reduce` as building blocks
+- **Recursion** — iteration expressed as recursive calls rather than loops
+- **Referential transparency** — any expression can be replaced by its value without changing program behavior
+
+**Why it matters today:**
+- Concurrency is easier: immutable data can be safely shared across threads
+- Testing is easier: pure functions have no hidden dependencies
+- Reasoning is easier: you can understand a function in isolation
+
+**Representative languages:** LISP, Haskell, ML, OCaml, Erlang, Clojure, Elm, F#, Scala (multi-paradigm)
+
+---
+
+## Declarative Programming
+
+Declarative programming describes *what* the result should be, not *how* to compute it. The execution engine figures out the steps. SQL is the most widely used declarative language: `SELECT name FROM users WHERE age > 30` specifies the desired result; the database query planner decides how to retrieve it.
+
+HTML and CSS are declarative: you describe structure and style; the browser decides how to render it. Prolog is declarative: you state facts and rules; the inference engine derives conclusions.
+
+**Strengths:** Concise, closer to the problem domain, easier to optimize (the runtime can choose the best algorithm).
+**Weaknesses:** Less control over performance; debugging is harder when the engine does unexpected things.
+
+**Representative languages:** SQL, Prolog, HTML/CSS, Datalog, Terraform HCL, GraphQL
+
+---
+
+## Logic Programming
+
+Logic programming is a special case of declarative programming where programs are expressed as logical statements: facts (what is true) and rules (what can be inferred). The runtime uses unification and backtracking to find solutions.
+
+Prolog (1972) is the canonical logic language. You define:
+```prolog
+parent(tom, bob).
+parent(bob, ann).
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+```
+Then query: `?- ancestor(tom, ann).` → `true.`
+
+Logic programming found industrial use in expert systems and natural language processing. Datalog, a restricted subset of Prolog, powers modern program analysis tools like Doop and Souffle.
+
+**Representative languages:** Prolog, Datalog, Mercury, Curry
+
+---
+
+## Concurrent and Actor-Based Programming
+
+As multicore hardware became universal, the question of how to express concurrent programs became critical. Two dominant models emerged:
+
+**Shared-memory concurrency** (threads + locks): multiple threads access the same memory; correctness depends on careful synchronization. This is the model in Java, C++, and most OS-level programming. It is powerful but error-prone: races, deadlocks, and priority inversions are notoriously hard to debug.
+
+**Message-passing / Actor model**: processes (actors) share nothing. They communicate only by sending messages. If you want another actor's data, you ask for it; you can't reach in and take it. This eliminates races by design. Erlang pioneered this model in 1986; Go adopted a related model with goroutines and channels; Elixir brought it to a modern syntax.
+
+| Model | Languages | Strength |
+|-------|-----------|----------|
+| Threads + locks | C, Java, C++ | Fine-grained control |
+| Goroutines + channels | Go | Simplicity, structured concurrency |
+| Actors | Erlang, Elixir, Akka | Fault isolation, distribution |
+| Async/await | Python, JavaScript, Rust | Single-threaded cooperative multitasking |
+| CSP (communicating sequential processes) | Go, occam | Formal model, composable |
+
+---
+
+## Reactive Programming
+
+Reactive programming models computation as data flows and the propagation of change. Instead of imperative state updates, you define relationships: "this value depends on that value." When a source changes, dependent values automatically update.
+
+Event-driven UIs are a natural fit: when the user clicks, a stream of click events flows through transformations (filter, map, debounce) and produces UI updates. RxJS, Reactor, and RxJava bring reactive streams to JavaScript and the JVM. Elm pioneered the Elm Architecture (Model-View-Update), a pure functional reactive pattern that influenced React and SwiftUI.
+
+**Representative libraries/languages:** RxJS, RxJava, Reactor, Elm, Cycle.js, Arrow (Kotlin)
+
+---
+
+## Metaprogramming
+
+Metaprogramming is writing code that generates, inspects, or transforms other code. It bridges the gap between the language and the programs written in it.
+
+**Forms of metaprogramming:**
+
+- **Macros** (Lisp, Rust, Julia) — code that runs at compile time, transforming syntax before compilation. Lisp macros famously operate on code-as-data (homoiconicity). Rust procedural macros power `#[derive(Debug)]`.
+- **Reflection** (Java, Python) — runtime inspection of types, methods, and fields. Powers dependency injection frameworks.
+- **Templates** (C++) — compile-time generic programming that can produce highly optimized specialized code; also notoriously difficult to use correctly.
+- **Code generation** — tools (like `protoc`, `sqlc`) generate source code from schemas, reducing boilerplate.
+
+**Representative languages:** LISP, Scheme, Rust, Julia, C++ (templates), Ruby (eval), Python (decorators)
+
+---
+
+## Multi-Paradigm Languages
+
+Modern languages rarely commit to a single paradigm. They offer paradigms as tools, letting programmers choose the right model for each problem:
+
+| Language | Paradigms |
+|----------|-----------|
+| Python | Imperative, OOP, functional (partial) |
+| Scala | OOP + functional (JVM) |
+| Rust | Imperative, functional features, ownership system |
+| Kotlin | OOP + functional (null safety, lambdas, coroutines) |
+| JavaScript | Imperative, OOP (prototype-based), functional (first-class functions) |
+| Julia | Imperative, multiple dispatch (a form of polymorphism), metaprogramming |
+| F# | Functional-first, OOP interop with .NET |
+
+The trend since 2010 is clear: even traditionally OOP languages (Java, C#, Kotlin, Swift) have adopted functional features — lambdas, immutable data classes, pattern matching, pipe operators. The paradigms are converging.
+
+---
+
+## Choosing a Paradigm
+
+No single paradigm fits all problems. A rough heuristic:
+
+- **Systems programming** (OS, drivers, embedded) → imperative (C, Rust, Zig)
+- **Business logic, CRUD** → OOP or multi-paradigm (Java, C#, Python)
+- **Data pipelines, transformations** → functional (Haskell, Clojure, F#) or hybrid (Scala, Kotlin)
+- **Concurrent distributed systems** → actor model (Erlang, Elixir) or CSP (Go)
+- **Data queries** → declarative (SQL, Datalog)
+- **Constraint satisfaction, AI reasoning** → logic (Prolog, Datalog)
+- **UI event handling** → reactive (Elm, RxJS, SwiftUI)
