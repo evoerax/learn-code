@@ -1,0 +1,91 @@
+---
+title: Pascal
+description: Niklaus Wirth 设计的结构化编程语言，成为计算机教育的典范
+---
+
+import { Callout } from 'nextra/components'
+
+# Pascal
+
+> _为结构化编程教育而生的语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1970 |
+| **Creator** | Niklaus Wirth（苏黎世联邦理工学院） |
+| **Paradigm** | 命令式、结构化 |
+| **Type System** | 静态、强类型 |
+| **Platform** | 跨平台 |
+| **Current Version** | ISO 7185:1990（扩展版：1990） |
+| **License** | 公有领域 / BSD |
+
+## Origin Story
+
+Pascal 由 Niklaus Wirth 于 1970 年在瑞士苏黎世联邦理工学院创建，以法国数学家 Blaise Pascal（发明了机械计算器）的名字命名。Wirth 设计这门语言初衷是作为结构化编程的教学工具。
+
+该语言诞生于一个研究项目——创造一门能通过严格类型检查和结构化控制流来培养良好编程习惯的语言。Pascal 在 1970 至 80 年代的学术界被广泛采用，成为计算机科学教学的事实标准。
+
+加州大学圣地亚哥分校开发的 UCSD Pascal 影响力尤为深远——它运行于 Apple II 上，并成为苹果早期 Lisa 和 Macintosh 软件开发的基础。
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "程序是为了让人类阅读而写的，顺便让计算机执行。" — Donald Knuth
+</Callout>
+
+Pascal 的设计围绕三个核心原则：
+
+- **结构化编程** — 无 goto 语句，通过循环和子程序实现结构化
+- **强类型系统** — 在编译时而非运行时捕获错误
+- **简洁性** — 小而正交的语言，易于学习
+
+Wirth 认为语言应该强制程序员写出清晰、正确的代码。Pascal 严格的类型系统避免了 C 等语言中常见的许多编程错误。
+
+## Code Example
+
+```pascal filename="sort.pas"
+program SortDemo;
+type
+  IntArray = array[1..10] of integer;
+var
+  data: IntArray;
+  i, j, temp: integer;
+
+procedure BubbleSort(var arr: IntArray; n: integer);
+var
+  k, l: integer;
+begin
+  for k := 1 to n - 1 do
+    for l := 1 to n - k do
+      if arr[l] > arr[l + 1] then
+      begin
+        temp := arr[l];
+        arr[l] := arr[l + 1];
+        arr[l + 1] := temp;
+      end;
+end;
+
+begin
+  data := [64, 25, 12, 22, 11, 90, 45, 33, 78, 5];
+  BubbleSort(data, 10);
+end.
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 操作系统 | Mac OS（早期版本）、Lisa OS |
+| 集成开发环境 | Turbo Pascal、Delphi |
+| 教育 | 全球大学计算机课程 |
+| 嵌入式 | 心脏起搏器编程器 |
+
+## Influence & Legacy
+
+**Inspired by:** ALGOL 60, Algol-W
+
+**Influenced:** Modula-2, Oberon, Ada, Delphi, Object Pascal
+
+Pascal 的影响远超教育领域。它衍生出 Oberon 家族（包括 Oberon-2 和 Component Pascal），并直接启发了 Ada。1983 年 Borland 发布的 Turbo Pascal 是当时最流行的开发工具之一，为 Delphi 奠定了基础。Apple 的 Object Pascal 用于 Mac 应用开发一直延续到 1990 年代。

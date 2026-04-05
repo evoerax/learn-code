@@ -1,0 +1,79 @@
+---
+title: AWK
+description: The Unix text processing language that revolutionized data extraction and reporting
+---
+
+import { Callout } from 'nextra/components'
+
+# AWK
+
+> _Pattern scanning and processing, in one elegant little language._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1977 |
+| **Creator** | Alfred Aho, Brian Kernighan, Peter Weinberger (Bell Labs) |
+| **Paradigm** | Declarative, Text-oriented |
+| **Type System** | Dynamic, String-centric |
+| **Platform** | Unix/Linux, Cross-platform |
+| **Current Version** | POSIX AWK (IEEE Std 1003.1) |
+| **License** | GPL / BSD |
+
+## Origin Story
+
+AWK was created in 1977 at Bell Labs by Alfred Aho, Brian Kernighan, and Peter Weinberger. The name comes from the initials of its three creators. It was designed as a simple, powerful tool for processing text files—particularly structured data like tables and logs.
+
+AWK introduced the concept of pattern-action pairs: for each line of input matching a pattern, execute an action. This simple model proved incredibly versatile. The language became a core part of the Unix philosophy: small tools that do one thing well, combined through pipes.
+
+The 1978 paper "The AWK Programming Language" by its creators became a Unix classic, and AWK remains one of the most practical tools for data manipulation on any platform.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "AWK is a language for processing text files—files containing fields and records." — Aho, Kernighan, Weinberger
+</Callout>
+
+AWK's genius is its simplicity:
+
+- **Implicit variables** — $0 is the whole line, $1, $2, ... are fields split by FS
+- **Pattern matching** — conditions before { } actions filter which lines to process
+- **Built-in variables** — NF (number of fields), NR (record number), FS (field separator)
+- **Associative arrays** — arrays indexed by strings, not numbers
+- **Regular expressions** — first-class pattern matching as filter conditions
+
+Every line of an AWK program is a pattern-action pair. When the pattern matches, the action executes.
+
+## Code Example
+
+```awk filename="sales.awk"
+# Calculate total sales per region from CSV data
+# Input: date,region,product,sales
+
+BEGIN { FS = ","; print "Region", "Total Sales" }
+{ sales[$2] += $4 }
+END { 
+    for (region in sales) 
+        printf "%-10s $%.2f\n", region, sales[region] 
+}
+```
+
+Run with: `awk -f sales.awk sales.csv`
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| System Administration | Log parsing, configuration processing |
+| Data Analysis | Quick tabular data transformations |
+| Report Generation | Formatted text reports from raw data |
+| Programming Education | Learning text processing concepts |
+
+## Influence & Legacy
+
+**Inspired by:** C (syntax), SNOBOL (pattern matching)
+
+**Influenced:** Perl, Ruby, Python (list comprehensions), PostgreSQL (array functions)
+
+AWK's pattern-action model influenced many later languages. Perl arguably descends directly from AWK's text processing philosophy. Python's list comprehensions have AWK's field processing as a conceptual ancestor. Even modern tools like jq (JSON processing) carry AWK's DNA. The language remains indispensable—pre-installed on virtually every Unix system.

@@ -1,0 +1,91 @@
+---
+title: Pascal
+description: Niklaus Wirth's structured programming language that became a teaching paradigm
+---
+
+import { Callout } from 'nextra/components'
+
+# Pascal
+
+> _The language that brought structure to programming education._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1970 |
+| **Creator** | Niklaus Wirth (ETH Zurich) |
+| **Paradigm** | Imperative, Structured |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | ISO 7185:1990 (Extended: 1990) |
+| **License** | Public Domain / BSD |
+
+## Origin Story
+
+Pascal was created by Niklaus Wirth at ETH Zurich in 1970, named after the French mathematician Blaise Pascal who invented the mechanical calculator. Wirth designed it specifically as a teaching tool for structured programming.
+
+The language was developed as part of a research project to create a language that would encourage good programming practices through strict type checking and structured control flows. It was widely adopted in academia throughout the 1970s and 1980s, becoming the de facto standard for teaching computer science.
+
+UCSD Pascal, developed at the University of California, San Diego, was particularly influential—it ran on Apple II and became the foundation for Apple's early Lisa and Macintosh software development.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Programs are meant to be read by humans and only incidentally for computers to execute." — Donald Knuth
+</Callout>
+
+Pascal was designed around three core principles:
+
+- **Structured programming** — goto-less design with proper loops and subroutines
+- **Strong typing** — catch errors at compile time, not runtime
+- **Simplicity** — a small, orthogonal language that's easy to learn
+
+Wirth believed that a language should force programmers to write clear, correct code. Pascal's strict type system prevented many common programming errors that plagued languages like C.
+
+## Code Example
+
+```pascal filename="sort.pas"
+program SortDemo;
+type
+  IntArray = array[1..10] of integer;
+var
+  data: IntArray;
+  i, j, temp: integer;
+
+procedure BubbleSort(var arr: IntArray; n: integer);
+var
+  k, l: integer;
+begin
+  for k := 1 to n - 1 do
+    for l := 1 to n - k do
+      if arr[l] > arr[l + 1] then
+      begin
+        temp := arr[l];
+        arr[l] := arr[l + 1];
+        arr[l + 1] := temp;
+      end;
+end;
+
+begin
+  data := [64, 25, 12, 22, 11, 90, 45, 33, 78, 5];
+  BubbleSort(data, 10);
+end.
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Operating Systems | Mac OS (early versions), Lisa OS |
+| IDEs | Turbo Pascal, Delphi |
+| Education | University curricula worldwide |
+| Embedded | Cardiac pacemaker programmer |
+
+## Influence & Legacy
+
+**Inspired by:** ALGOL 60, Algol-W
+
+**Influenced:** Modula-2, Oberon, Ada, Delphi, Object Pascal
+
+Pascal's influence extends far beyond education. It spawned the Oberon family (which includes Oberon-2 and Component Pascal) and directly inspired Ada. Turbo Pascal, released by Borland in 1983, was one of the most popular development tools of its era and laid the groundwork for Delphi. Apple's Object Pascal was used for Mac application development well into the 1990s.

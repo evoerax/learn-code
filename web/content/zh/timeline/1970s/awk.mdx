@@ -1,0 +1,79 @@
+---
+title: AWK
+description: Unix 文本处理语言，彻底改变了数据提取和报表生成
+---
+
+import { Callout } from 'nextra/components'
+
+# AWK
+
+> _模式扫描与处理，融入一门小巧而优雅的语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1977 |
+| **Creator** | Alfred Aho, Brian Kernighan, Peter Weinberger（贝尔实验室） |
+| **Paradigm** | 声明式、文本导向 |
+| **Type System** | 动态、字符串为中心 |
+| **Platform** | Unix/Linux，跨平台 |
+| **Current Version** | POSIX AWK (IEEE Std 1003.1) |
+| **License** | GPL / BSD |
+
+## Origin Story
+
+AWK 由 Alfred Aho、Brian Kernighan 和 Peter Weinberger 于 1977 年在贝尔实验室创建，语言名称取自三位创建者名字的首字母。它的设计初衷是作为处理文本文件的简洁强大工具——尤其是表格和日志等结构化数据。
+
+AWK 引入了"模式-动作对"的概念：对于每个匹配模式的输入行，执行相应动作。这种简单模型被证明极其多功能。该语言成为 Unix 哲学的核心部分：小工具各司其职，通过管道组合使用。
+
+1978 年三位创建者发表的论文《The AWK Programming Language》成为 Unix 经典，AWK 至今仍是任何平台上数据处理最实用的工具之一。
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "AWK 是一种用于处理文本文件的语言——包含字段和记录的文件。" — Aho, Kernighan, Weinberger
+</Callout>
+
+AWK 的精髓在于简洁：
+
+- **隐式变量** — $0 是整行，$1、$2... 是按 FS 分隔的字段
+- **模式匹配** — { } 动作前的条件过滤要处理的行
+- **内置变量** — NF（字段数）、NR（记录号）、FS（字段分隔符）
+- **关联数组** — 用字符串而非数字索引的数组
+- **正则表达式** — 作为过滤条件的一等公民模式匹配
+
+AWK 程序的每一行都是模式-动作对。当模式匹配时，动作执行。
+
+## Code Example
+
+```awk filename="sales.awk"
+# 从 CSV 数据计算每个区域的总销售额
+# 输入格式: 日期,区域,产品,销售额
+
+BEGIN { FS = ","; print "区域", "总销售额" }
+{ sales[$2] += $4 }
+END { 
+    for (region in sales) 
+        printf "%-10s $%.2f\n", region, sales[region] 
+}
+```
+
+运行方式：`awk -f sales.awk sales.csv`
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 系统管理 | 日志解析、配置处理 |
+| 数据分析 | 快速表格数据转换 |
+| 报表生成 | 从原始数据生成格式化报表 |
+| 编程教育 | 学习文本处理概念 |
+
+## Influence & Legacy
+
+**Inspired by:** C（语法）、SNOBOL（模式匹配）
+
+**Influenced:** Perl, Ruby, Python（列表推导式）、PostgreSQL（数组函数）
+
+AWK 的模式-动作模型影响了许多后续语言。Perl 可谓直接继承自 AWK 的文本处理理念。Python 的列表推导式将 AWK 的字段处理作为概念先驱。甚至现代工具如 jq（JSON 处理）也带有 AWK 的基因。该语言至今不可或缺——几乎每个 Unix 系统都预装了它。

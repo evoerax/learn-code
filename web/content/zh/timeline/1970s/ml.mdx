@@ -1,0 +1,82 @@
+---
+title: ML
+description: 首个具有 Hindley-Milner 类型推断的编程语言，引领函数式编程
+---
+
+import { Callout } from 'nextra/components'
+
+# ML
+
+> _证明了类型可以自我推断的语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1973 |
+| **Creator** | Robin Milner 等人（爱丁堡大学） |
+| **Paradigm** | 函数式、多态 |
+| **Type System** | 静态、强类型、类型推断 |
+| **Platform** | 跨平台 |
+| **Current Version** | Standard ML 97 (1997) |
+| **License** | BSD 风格 |
+
+## Origin Story
+
+ML（Meta-Language，元语言）由 Robin Milner 及其同事于 1973 年在爱丁堡大学创建，最初是作为 LCF（可计算函数逻辑）证明助手的定理证明系统。
+
+其突破在于引入了 Hindley-Milner 类型推断算法，能自动推断表达式的类型而无需显式标注。这是革命性的——程序员不再需要写出类型声明，但语言仍然能在编译时捕获类型错误。
+
+ML 证明了函数式语言既富有表现力又实用，同时拥有能在早期捕获错误的健全类型系统。
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  ML 的类型系统在编译时捕获所有类型错误，但你几乎不需要写一个类型标注。
+</Callout>
+
+ML 开创了若干重要概念：
+
+- **类型推断** — 编译器自动推断类型
+- **多态函数** — 可作用于任何类型的函数
+- **代数数据类型** — 对结构化数据进行模式匹配
+- **垃圾回收** — 自动内存管理
+- **异常处理** — 首批包含异常的主流语言
+
+这门语言最初为严格的数学推理而设计，但其实用特性使其成为通用工具。
+
+## Code Example
+
+```ml (* fibonacci.ml *)
+(* 模式匹配与代数数据类型 *)
+datatype tree = Empty | Node of int * tree * tree;
+
+fun insert(x, Empty) = Node(x, Empty, Empty)
+  | insert(x, Node(y, left, right)) =
+      if x < y then Node(y, insert(x, left), right)
+      else Node(y, left, insert(x, right));
+
+(* 高阶函数与多态 *)
+fun map f [] = []
+  | map f (x::xs) = f x :: map f xs;
+
+(* 类型推断：'a list -> 'a list *)
+val doubleAll = map (fn x => x * 2);
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 定理证明 | LCF, HOL, Isabelle |
+| 编译器 | Standard ML of New Jersey, MLton |
+| 金融 | Jane Street 的 OCaml |
+| 教育 | 编程语言研究 |
+
+## Influence & Legacy
+
+**Inspired by:** LISP, Hope（早期带类型的函数式语言）
+
+**Influenced:** Haskell, OCaml, F#, Scala, Rust 类型系统
+
+ML 的遗产深远。它直接启发了 Haskell（采用了 Hindley-Milner 类型推断）和 OCaml（添加了对象成为 Jane Street 的生产语言）。ML 家族的语言在编程语言研究和形式化方法中仍然处于核心地位。甚至 Rust 的所有权类型也可以追溯到 ML 类型系统开创的思想。

@@ -1,0 +1,82 @@
+---
+title: ML
+description: The first language with Hindley-Milner type inference, pioneering functional programming
+---
+
+import { Callout } from 'nextra/components'
+
+# ML
+
+> _The language that proved types could infer themselves._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1973 |
+| **Creator** | Robin Milner and others (University of Edinburgh) |
+| **Paradigm** | Functional, Polymorphic |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Cross-platform |
+| **Current Version** | Standard ML 97 (1997) |
+| **License** | BSD-style |
+
+## Origin Story
+
+ML (Meta-Language) was created by Robin Milner and his colleagues at the University of Edinburgh in 1973, initially as a theorem-proving system for the LCF (Logic for Computable Functions) proof assistant.
+
+The breakthrough was that ML introduced the Hindley-Milner type inference algorithm, which could automatically deduce the types of expressions without explicit annotations. This was revolutionary—no longer did programmers need to write out type declarations, yet the language still caught type errors at compile time.
+
+ML established that functional languages could be both expressive and practical, with a sound type system that caught errors early.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  ML's type system catches all type errors at compile time, yet you rarely need to write a single type annotation.
+</Callout>
+
+ML pioneered several concepts:
+
+- **Type inference** — the compiler deduces types automatically
+- **Polymorphic functions** — functions that work on any type
+- **Algebraic data types** — pattern matching on structured data
+- **Garbage collection** — automatic memory management
+- **Exceptions** — first major language to include them
+
+The language was designed for rigorous mathematical reasoning, but its practical features made it a general-purpose tool.
+
+## Code Example
+
+```ml (* fibonacci.ml *)
+(* Pattern matching on algebraic data types *)
+datatype tree = Empty | Node of int * tree * tree;
+
+fun insert(x, Empty) = Node(x, Empty, Empty)
+  | insert(x, Node(y, left, right)) =
+      if x < y then Node(y, insert(x, left), right)
+      else Node(y, left, insert(x, right));
+
+(* Higher-order functions and polymorphism *)
+fun map f [] = []
+  | map f (x::xs) = f x :: map f xs;
+
+(* Type-inferred: 'a list -> 'a list *)
+val doubleAll = map (fn x => x * 2);
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Theorem Proving | LCF, HOL, Isabelle |
+| Compilers | Standard ML of New Jersey, MLton |
+| Financial | Jane Street's OCaml |
+| Education | Programming language research |
+
+## Influence & Legacy
+
+**Inspired by:** LISP, Hope (earlier typed functional language)
+
+**Influenced:** Haskell, OCaml, F#, Scala, Rust's type system
+
+ML's legacy is profound. It directly inspired Haskell (which adopted Hindley-Milner type inference) and OCaml (which added objects and became Jane Street's production language). The ML family of languages remains central to programming language research and formal methods. Even Rust's ownership types can be traced back to ideas pioneered in ML's type system.
