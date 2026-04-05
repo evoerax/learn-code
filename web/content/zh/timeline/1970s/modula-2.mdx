@@ -1,0 +1,128 @@
+---
+title: Modula-2
+description: Niklaus Wirth 的模块化系统编程语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Modula-2
+
+> _一种证明安全系统编程和底层控制可以共存的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1979 |
+| **创造者** | Niklaus Wirth（苏黎世联邦理工学院） |
+| **范式** | 过程式、模块化、系统编程 |
+| **类型系统** | 静态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | ISO/IEC 10514-1:1996 |
+| **许可证** | 公共领域 / BSD |
+
+## 起源故事
+
+Niklaus Wirth 于 1979 年在苏黎世联邦理工学院创建了 Modula-2，作为 Pascal 的后继者。虽然 Pascal 在教授结构化编程方面表现出色，但 Wirth 意识到它在真正系统编程方面的局限性——特别是无法干净地表达并发、输入输出设备和硬件访问等底层概念。
+
+"Modula"这个名字反映了这门语言的中心创新：强制信息隐藏的模块系统。每个模块都有一个明确定义的接口（定义部分）和一个实现（实现部分）。这使得大型程序可以被分解成独立的编译单元，可以单独开发和测试。
+
+Wirth 在 ETH 设计和开发 Lilith 计算机时创建了 Modula-2——这是一个雄心勃勃的项目，语言和硬件一起演进。Lilith 使用 Modula-2 来编写其整个操作系统和应用软件。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "语言的设计不能仅仅是一组功能的集合；这些功能必须以连贯的方式组合在一起。" — Niklaus Wirth
+</Callout>
+
+Modula-2 的定义性原则：
+
+- **模块隔离**：模块是分解的基本单位；接口隐藏实现细节
+- **协程**：通过协程和监视器内置支持并发执行
+- **显式导入/导出**：依赖关系显式声明，而非临时添加
+- **底层逃生舱**：`SYSTEM` 模块在需要时提供直接硬件访问
+- **正交设计**：每个功能都有单一、清晰的目的；功能可预测地组合
+
+Wirth 信奉"小语言"——只有最小、正交功能的语言，可以干净地组合。Modula-2 体现了这一点：没有可以从其他功能构建的功能，没有特殊情况，没有功能的厨房水槽。
+
+## 代码示例
+
+```modula-2
+(* 定义模块 - 公共接口 *)
+DEFINITION MODULE Counter;
+
+  PROCEDURE Incr();
+  PROCEDURE Decr();
+  PROCEDURE Reset();
+  PROCEDURE Value() : INTEGER;
+
+END Counter.
+
+(* 实现模块 - 隐藏的内部实现 *)
+IMPLEMENTATION MODULE Counter;
+
+  VAR count : INTEGER;
+
+  PROCEDURE Incr();
+  BEGIN
+    INC(count)
+  END Incr;
+
+  PROCEDURE Decr();
+  BEGIN
+    DEC(count)
+  END Decr;
+
+  PROCEDURE Reset();
+  BEGIN
+    count := 0
+  END Reset;
+
+  PROCEDURE Value() : INTEGER;
+  BEGIN
+    RETURN count
+  END Value;
+
+BEGIN
+  count := 0
+END Counter.
+
+(* 使用模块 *)
+MODULE Test;
+
+IMPORT Counter;
+
+BEGIN
+  Counter.Reset();
+  Counter.Incr(); Counter.Incr(); Counter.Incr();
+  Counter.Incr(); Counter.Incr();
+  (* Counter.Value() 返回 5 *)
+END Test.
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| 操作系统 | ETH 苏黎世的 Lilith OS、各种研究系统 |
+| 嵌入式系统 | 工业控制系统 |
+| 教育 | 系统编程大学课程 |
+| 语言开发 | Oberon 的初始实现 |
+
+## 影响与遗产
+
+**启发自：** Pascal、Mesa、Concurrent Pascal
+
+**影响：** Oberon（Wirth 的下一门语言）、Ada（模块概念）、Modula-3、Python（模块概念）、Java（包概念）
+
+Modula-2 的模块系统超前于时代。一个模块应该显式声明它导出和导入什么的想法，成为现代软件工程的基础。Python 的 `import` 语句、Java 的包，甚至 ES6 模块都与 Modula-2 的设计相呼应。
+
+这门语言还首创了"安全"系统编程语言的概念——可以编写操作系统但不牺牲高级语言提供的内存安全。这影响了后来对 Rust 和 Swift 等语言的研究。
+
+Wirth 后来创建了 Oberon（1988）作为 Modula-2 的进一步简化，整个 Oberon 操作系统完全用 Oberon 编写。
+
+## 你知道吗？
+
+<Callout type="info" emoji="🤔">
+  最初的 Modula-2 编译器是用 Modula-2 本身编写的——这是语言开发中常见的自举技术。这种自托管特性被认为是设计良好的语言的标志。
+</Callout>

@@ -1,0 +1,128 @@
+---
+title: Modula-2
+description: Niklaus Wirth's systems programming language with module isolation
+---
+
+import { Callout } from 'nextra/components'
+
+# Modula-2
+
+> _The language that proved safe systems programming and low-level control could coexist._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1979 |
+| **Creator** | Niklaus Wirth (ETH Zurich) |
+| **Paradigm** | Procedural, Modular, Systems |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | ISO/IEC 10514-1:1996 |
+| **License** | Public Domain / BSD |
+
+## Origin Story
+
+Niklaus Wirth created Modula-2 in 1979 at ETH Zurich as the successor to Pascal. While Pascal was excellent for teaching structured programming, Wirth recognized its limitations for true systems programming—particularly the inability to express low-level concepts like concurrency, input/output devices, and hardware access cleanly.
+
+The name "Modula" reflects the language's central innovation: a module system that enforces information hiding. Each module has a clearly defined interface (the definition part) and an implementation (the implementation part). This allowed large programs to be decomposed into independent compilation units that could be developed and tested separately.
+
+Wirth designed Modula-2 alongside the Lilith computer at ETH—an ambitious project to build a complete computer system where the language and hardware evolved together. The Lilith used Modula-2 for its entire operating system and application software.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The design of a language must not be merely a collection of features; the features must fit together in a coherent way." — Niklaus Wirth
+</Callout>
+
+Modula-2's defining principles:
+
+- **Module isolation**: Modules are the unit of decomposition; interfaces hide implementation details
+- **Coroutines**: Built-in support for concurrent execution via coroutines and monitors
+- **Explicit import/export**: Dependencies declared explicitly, not ad-hoc
+- **Low-level escape**: The `SYSTEM` module provides direct hardware access when needed
+- **Orthogonal design**: Each feature has a single, clear purpose; features combine predictably
+
+Wirth believed in "small languages"—languages with minimal, orthogonal features that compose cleanly. Modula-2 embodies this: no features that could be built from others, no special cases, no kitchen sinks.
+
+## Code Example
+
+```modula-2
+(* Definition module - the public interface *)
+DEFINITION MODULE Counter;
+
+  PROCEDURE Incr();
+  PROCEDURE Decr();
+  PROCEDURE Reset();
+  PROCEDURE Value() : INTEGER;
+
+END Counter.
+
+(* Implementation module - hidden internals *)
+IMPLEMENTATION MODULE Counter;
+
+  VAR count : INTEGER;
+
+  PROCEDURE Incr();
+  BEGIN
+    INC(count)
+  END Incr;
+
+  PROCEDURE Decr();
+  BEGIN
+    DEC(count)
+  END Decr;
+
+  PROCEDURE Reset();
+  BEGIN
+    count := 0
+  END Reset;
+
+  PROCEDURE Value() : INTEGER;
+  BEGIN
+    RETURN count
+  END Value;
+
+BEGIN
+  count := 0
+END Counter.
+
+(* Using the module *)
+MODULE Test;
+
+IMPORT Counter;
+
+BEGIN
+  Counter.Reset();
+  Counter.Incr(); Counter.Incr(); Counter.Incr();
+  Counter.Incr(); Counter.Incr();
+  (* Counter.Value() returns 5 *)
+END Test.
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Operating Systems | ETH Zurich's Lilith OS, various research systems |
+| Embedded Systems | Industrial control systems |
+| Education | University courses on systems programming |
+| Language Development | Initial implementation of Oberon |
+
+## Influence & Legacy
+
+**Inspired by:** Pascal, Mesa, Concurrent Pascal
+
+**Influenced:** Oberon (Wirth's next language), Ada (module concept), Modula-3, Python (module concept), Java (package concept)
+
+Modula-2's module system was ahead of its time. The idea that a module should explicitly declare what it exports and imports became foundational to modern software engineering. Python's `import` statements, Java's packages, and even ES6 modules all echo Modula-2's design.
+
+The language also pioneered the idea of a "safe" systems programming language—one that could write operating systems without sacrificing the memory safety that high-level languages provided. This influenced later research into languages like Rust and Swift.
+
+Wirth later created Oberon (1988) as a further simplification of Modula-2, and the Oberon operating system was written entirely in Oberon.
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  The original Modula-2 compiler was written in Modula-2 itself—a bootstrapping technique common in language development. This self-hosting property was considered a mark of a well-designed language.
+</Callout>

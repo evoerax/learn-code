@@ -1,0 +1,106 @@
+---
+title: sed
+description: The Unix stream editor for programmatic text transformation
+---
+
+import { Callout } from 'nextra/components'
+
+# sed
+
+> _The ultimate text surgery tool: precise, powerful, and unapologetically line-oriented._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1974 |
+| **Creator** | Lee E. McMahon (Bell Labs) |
+| **Paradigm** | Procedural, Stream-oriented |
+| **Type System** | Dynamic / String-based |
+| **Platform** | Unix/Linux, Cross-platform |
+| **Current Version** | POSIX.1-2017 |
+| **License** | GPL / BSD |
+
+## Origin Story
+
+sed was born in 1974 at Bell Labs as a natural evolution of the grep editor. Lee E. McMahon recognized that programmers often needed to make repetitive text transformations across multiple files—substitutions, deletions, insertions—and doing this manually with ed was tedious and error-prone.
+
+The name stands for "stream editor." Unlike interactive editors that open a full file in memory, sed processes text stream-by-stream, making it ideal for Unix's philosophy of small, composable tools. A pipeline could now include sophisticated text manipulation without leaving the shell.
+
+McMahon's design was influenced by the earlier ed editor, but sed added crucial capabilities: non-interactive operation via scripts, regular expression support, and the hold buffer (a temporary workspace for multi-line operations).
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "sed is an obedient servant. Give it precise instructions, and it will execute them flawlessly on any amount of text." — Unix philosophy applied
+</Callout>
+
+sed's core concepts:
+
+- **Line-oriented**: sed processes files line by line, applying transformations sequentially
+- **Regex power**: Uses basic regular expressions (BRE) with support for grouping, alternation, and quantifiers
+- **In-place editing**: The `-i` flag modifies files directly (a later addition)
+- **Two buffers**: The pattern space (current line) and hold buffer (cross-line operations)
+- **Addressable commands**: Apply transformations only to specific lines using line numbers or patterns
+
+The syntax follows the form: `sed [options] 'address command' file`
+
+## Code Example
+
+```sed filename="transform.sed"
+# Comments start with #
+# Basic substitution: s/pattern/replacement/flags
+# g = global (all occurrences on each line)
+
+# Substitute 'foo' with 'bar' globally
+sed 's/foo/bar/g' input.txt
+
+# Substitute only on lines containing 'error'
+sed '/error/s/warning/critical/' log.txt
+
+# Delete lines 1-10
+sed '1,10d' file.txt
+
+# Insert text before line 3
+sed '3i\New line content' file.txt
+
+# Append text after line 5
+sed '5a\Appended content' file.txt
+
+# Use & to reference matched text
+sed 's/[0-9]+/(&)/' numbers.txt
+
+# Multi-line operations using hold buffer
+# Reverse lines in file (simplified)
+sed '1!G;h;$!d' file.txt
+```
+
+```bash
+# Pipeline example: extract IPs from log, sort, count unique
+cat access.log | sed 's/.*from \(.*\)\.*/\1/' | sort | uniq -c | sort -rn
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| System Administration | Log processing, config file manipulation |
+| Data Extraction | Pulling structured data from unstructured text |
+| Text Processing Pipelines | awk, grep, cut combinations |
+| Build Systems | Makefile text generation |
+
+## Influence & Legacy
+
+**Inspired by:** ed (the Unix line editor), grep
+
+**Influenced:** awk (which extended sed's capabilities with condition-action pairs), Perl (text processing), modern CLI tools like sd
+
+sed's lasting contribution is proving that line-oriented text processing could be both powerful and composable. It established the pattern that Perl, Python's `re` module, and countless other tools follow: read text, apply transformations, output result.
+
+The `/pattern/action` address syntax influenced how we think about selective text processing. Every time you run a one-liner to transform JSON, fix imports, or anonymize logs, you're using sed's descendants.
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  In 2018, a 45-year-old PDP-11 running sed scripts was still managing the New York City subway system's signage. Some tools are simply too perfect to replace.
+</Callout>
