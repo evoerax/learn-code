@@ -1,0 +1,159 @@
+---
+title: Delphi
+description: Borland's Object-Oriented Pascal that defined the Windows desktop development experience
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Delphi
+
+> _Where Pascal grew up and learned to build Windows applications._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1995 |
+| **Creator** | Borland Software Corporation |
+| **Paradigm** | Object-oriented, Procedural, Component-based |
+| **Type System** | Static / Strong |
+| **Platform** | Windows (cross-compilable to Linux, macOS) |
+| **Current Version** | RAD Studio 12 (2023) |
+| **License** | Proprietary (Embarcadero) |
+
+## Origin Story
+
+Delphi emerged from Borland's legendary "Denali" project in the early 1990s. The goal was simple but ambitious: combine the Object Pascal language with a visual component-based architecture and a lightning-fast native compiler to create the ultimate Windows development environment.
+
+Anders Hejlsberg, the architect of Turbo Pascal, led the design. Hejlsberg would later go on to design C#. The core innovation was the **Visual Component Library (VCL)**—a rich ecosystem of pre-built, reusable components that developers could drag onto forms. The compiler was famously fast, producing native x86 machine code that ran without any runtime interpreter.
+
+Delphi 1.0 launched in 1995 and immediately won acclaim. The slogan "Come for the compiler, stay for the components" captured its appeal: Delphi's compilation speed was so fast that debugging felt like editing, and the VCL was so comprehensive that most common UI tasks required zero custom code.
+
+## Design Philosophy
+
+Delphi's design centered on three pillars:
+
+- **Native Performance**: Direct compilation to machine code, no虚拟机 overhead
+- **Component Architecture**: Reusable, composable software parts with properties and events
+- **Productivity Through Convention**: Strong typing catches errors at compile time, not runtime
+
+<Callout type="default" emoji="💡">
+  "Delphi's VCL was the first major component framework—JavaBeans and .NET Components came later and borrowed heavily from this model."
+</Callout>
+
+The language enforced rigorous type safety while the IDE provided visual development speed. This combination was unprecedented in 1995.
+
+## Code Example
+
+```pascal filename="HelloWorld.pas"
+program HelloWorld;
+
+{$APPTYPE CONSOLE}
+
+begin
+  WriteLn('Hello, World!');
+end.
+```
+
+```pascal filename="ButtonClick.pas"
+unit Unit1;
+
+interface
+
+uses
+  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    btnClick: TButton;
+    lblOutput: TLabel;
+    procedure btnClickClick(Sender: TObject);
+  end;
+
+implementation
+
+procedure TForm1.btnClickClick(Sender: TObject);
+begin
+  lblOutput.Caption := 'Button clicked at ' + DateTimeToStr(Now);
+end;
+
+end.
+```
+
+```pascal filename="CustomComponent.pas"
+{ Custom component demonstrating Delphi's OOP architecture }
+type
+  TCounter = class(TComponent)
+  private
+    FValue: Integer;
+    FOnChange: TNotifyEvent;
+  protected
+    procedure DoChange; virtual;
+  public
+    constructor Create(AOwner: TComponent); override;
+    procedure Increment;
+    procedure Decrement;
+    procedure Reset;
+    property Value: Integer read FValue;
+  published
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+  end;
+
+constructor TCounter.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FValue := 0;
+end;
+
+procedure TCounter.Increment;
+begin
+  Inc(FValue);
+  DoChange;
+end;
+
+procedure TCounter.DoChange;
+begin
+  if Assigned(FOnChange) then
+    FOnChange(Self);
+end;
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Database Applications | SQL Navigator, TOAD alternatives |
+| Enterprise Software | Skype's early Windows client |
+| IDEs | Delphi itself, various CASE tools |
+| Financial | Bloomberg terminal components |
+
+## Influence & Legacy
+
+**Inspired by:** Pascal, Object Pascal, Turbo Pascal
+
+**Influenced:**
+- **C#**: Anders Hejlsberg led both Delphi and C# design; many concepts transferred
+- **Java**: Component model concepts influenced JavaBeans
+- **.NET**: VCL-inspired the initial .NET component model
+- **Oxygene (Chrome)**: Pascal dialect running on .NET and Java
+
+<Callout type="info" emoji="📜">
+  Despite 30 years of evolution, a Delphi 1 application can still be opened and compiled in Delphi 12 with surprisingly few changes. Backward compatibility is legendary.
+</Callout>
+
+## When to Use
+
+**Good fit:**
+- Windows desktop applications requiring native performance
+- Database-driven business applications
+- Legacy system maintenance
+- Rapid UI prototyping with professional results
+
+**Not a good fit:**
+- Cross-platform mobile applications (FireMonkey helps but not native)
+- Web front-end development
+- Systems programming requiring bare-metal control
+
+## Did You Know?
+
+The codename "Delphi" came from the Greek oracle—Borland hoped it would be prophetic for software development. The parallel to the Oracle at Delphi proved apt: Delphi's database connectivity (via SQL Links) made it the "prophetic" choice for database application development throughout the late 1990s.

@@ -1,0 +1,120 @@
+---
+title: Visual Basic
+description: 微软的事件驱动编程语言，彻底改变了 Windows 桌面应用开发
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Visual Basic
+
+> _让 Windows 编程走进普通开发者的语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1991 |
+| **Creator** | 微软公司 (Microsoft Corporation) |
+| **Paradigm** | 事件驱动、面向对象、过程式 |
+| **Type System** | 动态类型 / 弱类型 |
+| **Platform** | Windows |
+| **Current Version** | VB.NET (2002) |
+| **License** | 专有软件 |
+
+## Origin Story
+
+1980年代末，微软意识到 Windows 应用程序开发门槛极高。创建 GUI 应用需要处理复杂的 API、内存管理，以及晦涩的 C 代码。Alan Cooper 与微软的 Basic 团队合作，开发了一个可视化拖放开发环境，让程序员可以通过绘制界面而非手写代码来构建 Windows 应用。
+
+Visual Basic 1.0 于 1991 年首次亮相，震惊了整个行业。这是第一次，Windows 应用程序开发变得触手可及，不再只是系统专家的专利。流传甚广的"Ruby Tuesday"这个说法，指的是微软 VB 团队第一次成功在屏幕上显示窗口时的庆祝时刻。
+
+到了 VB6（1998年），它已成为全球最流行的编程语言之一，从小型工具到关键业务应用，无所不包。
+
+## Design Philosophy
+
+Visual Basic 将**程序员生产力**置于理论纯粹性之上。设计原则包括：
+
+- **可视化开发**：通过拖放控件进行 WYSIWYG 表单设计
+- **事件驱动编程**：代码响应用户操作（点击、按键）
+- **快速应用开发 (RAD)**：几小时而非几个月构建可用软件
+- **平缓的学习曲线**：BASIC 传统使其对新手友好
+
+<Callout type="default" emoji="💡">
+  "最好的编程语言是那个让你用最少阻力构建所需内容的语言。"
+</Callout>
+
+其理念是务实的：如果它能帮开发者更快交付软件，它就是好的。
+
+## Code Example
+
+```vb filename="HelloWorld.bas"
+' Visual Basic 6 - 经典 Hello World
+Private Sub Form_Load()
+    MsgBox "你好，世界！", vbInformation, "Visual Basic"
+End Sub
+```
+
+```vb filename="ButtonClick.vb"
+' 事件驱动编程模型
+Public Class Form1
+    Private Sub btnClick_Click(sender As Object, e As EventArgs) _
+            Handles btnClick.Click
+        lblOutput.Text = "按钮点击于 " & Now()
+    End Sub
+End Class
+```
+
+```vb filename="DataEntry.vb"
+' VB.NET - Windows Forms 数据绑定
+Public Class CustomerForm
+    Inherits System.Windows.Forms.Form
+
+    Private txtName As New TextBox()
+    Private btnSave As New Button()
+    Private lblGreeting As New Label()
+
+    Private Sub InitializeComponent()
+        txtName.Location = New Point(10, 10)
+        txtName.Size = New Size(200, 25)
+        
+        btnSave.Text = "保存"
+        btnSave.Location = New Point(10, 50)
+        AddHandler btnSave.Click, AddressOf SaveCustomer
+        
+        lblGreeting.Location = New Point(10, 90)
+        lblGreeting.AutoSize = True
+    End Sub
+
+    Private Sub SaveCustomer(sender As Object, e As EventArgs)
+        lblGreeting.Text = $"你好，{txtName.Text}！"
+    End Sub
+End Class
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 企业软件 | SAP GUI 客户端、Microsoft Office 宏 |
+| 桌面应用 | WinAmp 皮肤引擎、Lotus Notes UI |
+| 游戏开发 | 早期 World of Warcraft 安装程序 |
+| 自动化 | Excel/Word 自动化脚本 |
+
+## Influence & Legacy
+
+**受以下语言启发：** BASIC、QuickBASIC、Windows API
+
+**影响了下述语言：**
+- **VB.NET**：基于 .NET 框架的完全重写
+- **VBA (Visual Basic for Applications)**：嵌入 Office 应用的脚本语言
+- **C#**：微软新一代语言，借鉴了 VB 的 RAD 理念
+- **Windows Forms**：VB 表单设计器的直接继承者
+
+VB 开创的拖放 GUI 构建器概念影响了几乎所有现代 IDE，包括 Visual Studio、Qt Designer 和 Android Studio。
+
+<Callout type="warning" emoji="⚠️">
+  Visual Basic 6.0 (1998) 于 2008 年进入"遗留"状态。微软终止了支持，但热情的社区通过 Vulpes 和 TwinBasic 等项目延续着它的生命。
+</Callout>
+
+## Did You Know?
+
+"Visual Basic" 这个名称变得如此家喻户晓，以至于催生了一个流派：**"VB 风格"语言**。即使在今天，其影响也体现在与传统的纯代码方式相比，初学者能多快地创建出可运行的 GUI 应用程序。

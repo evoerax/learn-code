@@ -1,0 +1,120 @@
+---
+title: Visual Basic
+description: Microsoft's event-driven programming language that revolutionized Windows desktop development
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Visual Basic
+
+> _The language that brought Windows programming to the masses._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1991 |
+| **Creator** | Microsoft Corporation |
+| **Paradigm** | Event-driven, Object-oriented, Procedural |
+| **Type System** | Dynamic / Weak |
+| **Platform** | Windows |
+| **Current Version** | VB.NET (2002) |
+| **License** | Proprietary |
+
+## Origin Story
+
+In the late 1980s, Microsoft recognized that Windows applications were difficult to build. Creating a GUI application required dealing with complex APIs, memory management, and cryptic C code. Alan Cooper, working with Microsoft's Basic team, developed a visual drag-and-drop environment that let programmers build Windows interfaces by drawing them rather than coding from scratch.
+
+Visual Basic 1.0 debuted in 1991, shocking the industry. For the first time, building a Windows application was accessible to programmers who weren't systems experts. The phrase "Ruby Tuesday" refers to a specific event—Microsoft's VB team celebrated when they could successfully display a window on screen.
+
+By VB6 (1998), it was one of the most popular programming languages globally, used to build everything from small utilities to mission-critical business applications.
+
+## Design Philosophy
+
+Visual Basic prioritized **programmer productivity** over theoretical purity. The design principles were:
+
+- **Visual Development**: WYSIWYG form design with drag-and-drop controls
+- **Event-Driven Programming**: Code responds to user actions (clicks, keystrokes)
+- **Rapid Application Development (RAD)**: Build working software in hours, not months
+- **Gentle Learning Curve**: BASIC heritage made it approachable for newcomers
+
+<Callout type="default" emoji="💡">
+  "The best programming language is the one that lets you build what you need with the least friction."
+</Callout>
+
+The philosophy was pragmatic: if it helped developers ship software faster, it was good.
+
+## Code Example
+
+```vb filename="HelloWorld.bas"
+' Visual Basic 6 - Classic Hello World
+Private Sub Form_Load()
+    MsgBox "Hello, World!", vbInformation, "Visual Basic"
+End Sub
+```
+
+```vb filename="ButtonClick.vb"
+' Event-driven programming model
+Public Class Form1
+    Private Sub btnClick_Click(sender As Object, e As EventArgs) _
+            Handles btnClick.Click
+        lblOutput.Text = "Button clicked at " & Now()
+    End Sub
+End Class
+```
+
+```vb filename="DataEntry.vb"
+' VB.NET - Windows Forms with data binding
+Public Class CustomerForm
+    Inherits System.Windows.Forms.Form
+
+    Private txtName As New TextBox()
+    Private btnSave As New Button()
+    Private lblGreeting As New Label()
+
+    Private Sub InitializeComponent()
+        txtName.Location = New Point(10, 10)
+        txtName.Size = New Size(200, 25)
+        
+        btnSave.Text = "Save"
+        btnSave.Location = New Point(10, 50)
+        AddHandler btnSave.Click, AddressOf SaveCustomer
+        
+        lblGreeting.Location = New Point(10, 90)
+        lblGreeting.AutoSize = True
+    End Sub
+
+    Private Sub SaveCustomer(sender As Object, e As EventArgs)
+        lblGreeting.Text = $"Hello, {txtName.Text}!"
+    End Sub
+End Class
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Enterprise Software | SAP GUI clients, Microsoft Office macros |
+| Desktop Applications | WinAmp skin engine, Lotus Notes UI |
+| Game Development | Early World of Warcraft installer |
+| Automation | Excel/Word automation scripts |
+
+## Influence & Legacy
+
+**Inspired by:** BASIC, QuickBASIC, Windows API
+
+**Influenced:**
+- **VB.NET**: Complete rewrite with .NET framework
+- **VBA (Visual Basic for Applications)**: Embedded in Office applications
+- **C#**: Microsoft's next-generation language borrowed VB's RAD concepts
+- **Windows Forms**: Direct descendant of VB's form designer
+
+The drag-and-drop GUI builder concept pioneered by VB influenced virtually every modern IDE, including Visual Studio, Qt Designer, and Android Studio.
+
+<Callout type="warning" emoji="⚠️">
+  Visual Basic 6.0 (1998) reached "legacy" status in 2008. Microsoft ended support, but a passionate community still maintains it through projects like Vulpes and TwinBasic.
+</Callout>
+
+## Did You Know?
+
+The phrase "Visual Basic" became so associated with rapid development that it spawned a genre: **"VB-style" languages**. Even today, the influence shows in how quickly beginners can create working GUI applications compared to traditional approaches.

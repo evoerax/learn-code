@@ -1,0 +1,149 @@
+---
+title: OCaml
+description: The practical functional language with powerful type inference, used in finance and verified systems
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# OCaml
+
+> _ML's practical child: academic pedigree, industrial strength._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1996 |
+| **Creator** | INRIA (French National Research Institute) |
+| **Paradigm** | Functional, Imperative, Object-oriented, Modular |
+| **Type System** | Static / Strong / inferred |
+| **Platform** | Cross-platform |
+| **Current Version** | 5.2 (2024) |
+| **License** | QPL-1.0 / LGPL |
+
+## Origin Story
+
+OCaml traces its lineage to the ML (Meta Language) created in 1983 by Robin Milner and his colleagues at the University of Edinburgh. ML was designed as a meta-language for proving theorems about programs—a tall order that required a powerful type system.
+
+In 1996, Gérard Huet and Xavier Leroy at INRIA released OCaml (Objective Caml), adding object-oriented features to Caml. The "Objective" prefix reflected the addition of classes, objects, and inheritance to the purely functional Caml heritage.
+
+What made OCaml remarkable was its practicality. It offered:
+- **Fast native code compilation** alongside an interactive toplevel
+- **Powerful static typing** without verbose annotations
+- **Impressive performance** competitive with C on many benchmarks
+
+Jane Street Capital, a quantitative trading firm, adopted OCaml in the mid-2000s for its critical trading infrastructure. The combination of safety, performance, and expressiveness proved irresistible for high-stakes financial systems where bugs cost money directly.
+
+## Design Philosophy
+
+OCaml synthesizes several programming traditions:
+
+- **Functional First**: Immutable data structures, pure functions as默认值
+- **Practical Type Inference**: The compiler figures out types; you don't annotate redundantly
+- **Modules as First-Class**: Functors (parameterized modules) provide compile-time polymorphism
+- **Objects Without Compromise**: Object system integrated without sacrificing performance
+
+<Callout type="default" emoji="💡">
+  "OCaml's type inference is so powerful that you often write less code than in dynamically typed languages while retaining static safety."
+</Callout>
+
+The language embraces **data immutability by default**, but allows mutation when needed. This "escape hatch" prevents the purist frustration that sometimes plagues Haskell programs.
+
+## Code Example
+
+```ocaml filename="hello.ml"
+(* Hello World *)
+let () = print_endline "Hello, World!"
+```
+
+```ocaml filename="type_inference.ml"
+(* Type inference in action *)
+let add x y = x + y  (* Compiler infers: int -> int -> int *)
+
+let result = add 10 20  (* result: int = 30 *)
+
+(* Variants - sum types *)
+type shape =
+  | Circle of float
+  | Rectangle of float * float
+  | Triangle of float * float * float
+
+let area = function
+  | Circle r -> Float.pi *. r *. r
+  | Rectangle (w, h) -> w *. h
+  | Triangle (a, b, c) -> 
+    let s = (a +. b +. c) /. 2.0 in
+    sqrt (s *. (s -. a) *. (s -. b) *. (s -. c))
+
+let c = Circle 5.0 in
+print_endline ("Area: " ^ string_of_float (area c))
+```
+
+```ocaml filename="monads.ml"
+(* Option monad - explicit binding *)
+let rec find_opt (p : 'a -> bool) (lst : 'a list) : 'a option =
+  match lst with
+  | [] -> None
+  | x :: rest -> if p x then Some x else find_opt p rest
+
+(* Pattern matching with result捆绑 *)
+let divide x y =
+  if y = 0 then Error "Division by zero"
+  else Ok (x / y)
+
+let result = 
+  match divide 10 2 with
+  | Ok v -> string_of_int v
+  | Error msg -> "Error: " ^ msg
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Financial Trading | Jane Street Capital's trading infrastructure |
+| Proof Assistants | Coq proof assistant (trusted kernel) |
+| Static Analysis | Infer (Facebook's bug finder) |
+| Compilers | Unison, Melt, ocaml-compiler-libs |
+| Web | Dream, Opium |
+
+## Influence & Legacy
+
+**Inspired by:** ML, Caml, Standard ML, Lisp
+
+**Influenced:**
+- **F#**: Microsoft's OCaml-inspired .NET language
+- **Rust**: Borrow checker draws from ownership research
+- **ReasonML**: OCaml syntax for JavaScript ecosystem
+- **Hack**: Facebook's PHP derivative with static typing
+
+<Callout type="info" emoji="🔒">
+  OCaml's type system makes it ideal for verified software. The CompCert C compiler, used by Airbus for safety-critical code, is written in OCaml and its correctness is machine-verified with Coq.
+</Callout>
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | opam (OCaml Package Manager) |
+| Build Tools | Dune, Make |
+| Testing | Alcotest, QCheck |
+| Web Frameworks | Dream, Opium, Eliom |
+| Editors | VSCode-OCaml, Merlin, Tuareg |
+
+## When to Use
+
+**Good fit:**
+- Financial systems where correctness matters
+- Static analysis and program verification tools
+- Compilers and interpreters
+- Any domain where runtime bugs are expensive
+
+**Not a good fit:**
+- Rapid prototyping where iteration speed dominates
+- Teams without functional programming background
+- Simple scripts (overkill)
+
+## Did You Know?
+
+OCaml is the language behind Meta's Infer static analyzer, which has found thousands of critical bugs in Facebook's mobile apps before they shipped. The key insight: OCaml's type system and pattern matching make writing precise static analyses surprisingly tractable.

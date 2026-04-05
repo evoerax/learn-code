@@ -1,0 +1,149 @@
+---
+title: OCaml
+description: 实用的函数式语言，拥有强大的类型推断，广泛应用于金融和系统验证领域
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# OCaml
+
+> _ML 的务实继承者：学术血统，工业强度。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1996 |
+| **Creator** | INRIA（法国国家信息与自动化研究所）|
+| **Paradigm** | 函数式、命令式、面向对象、模块化 |
+| **Type System** | 静态 / 强类型 / 推断 |
+| **Platform** | 跨平台 |
+| **Current Version** | 5.2 (2024) |
+| **License** | QPL-1.0 / LGPL |
+
+## Origin Story
+
+OCaml 的血统可以追溯到 1983 年 Robin Milner 和他在爱丁堡大学的同事们创造的 ML（Meta Language）。ML 被设计为证明程序定理的元语言——这个崇高目标需要强大的类型系统。
+
+1996 年，INRIA 的 Gérard Huet 和 Xavier Leroy 发布了 OCaml（Objective Caml），在纯函数式的 Caml 基础上添加了面向对象特性。"Objective" 前缀反映了从 Caml 的纯函数式传统加入了类、对象和继承。
+
+OCaml 的卓越之处在于它的实用性：
+- **快速的原生代码编译**以及交互式 toplevel
+- **强大的静态类型**无需冗长的类型注解
+- **令人印象深刻的性能**在许多基准测试中可与 C 媲美
+
+Jane Street Capital 这家量化交易公司在 2000 年代中期采用 OCaml 构建其关键的交易基础设施。安全性、性能和表达力的结合，对于直接因 bug 损失金钱的高风险金融系统来说，是无法抗拒的选择。
+
+## Design Philosophy
+
+OCaml 综合了多种编程传统：
+
+- **函数式优先**：不可变数据结构，纯函数作为默认值
+- **实用的类型推断**：编译器推导出类型，你无需冗余地注解
+- **模块一等公民**：函子（参数化模块）提供编译期多态
+- **无妥协的对象**：对象系统与性能并存
+
+<Callout type="default" emoji="💡">
+  "OCaml 的类型推断如此强大，你经常写出比动态类型语言更少的代码，同时拥有静态安全性。"
+</Callout>
+
+语言默认拥抱**数据不可变性**，但在需要时允许变更。这个"逃生舱"防止了纯粹主义者的沮丧——这种沮丧有时困扰着 Haskell 程序。
+
+## Code Example
+
+```ocaml filename="hello.ml"
+(* Hello World *)
+let () = print_endline "你好，世界！"
+```
+
+```ocaml filename="type_inference.ml"
+(* 类型推断示例 *)
+let add x y = x + y  (* 编译器推断: int -> int -> int *)
+
+let result = add 10 20  (* result: int = 30 *)
+
+(* Variant - 和类型 *)
+type shape =
+  | Circle of float
+  | Rectangle of float * float
+  | Triangle of float * float * float
+
+let area = function
+  | Circle r -> Float.pi *. r *. r
+  | Rectangle (w, h) -> w *. h
+  | Triangle (a, b, c) -> 
+    let s = (a +. b +. c) /. 2.0 in
+    sqrt (s *. (s -. a) *. (s -. b) *. (s -. c))
+
+let c = Circle 5.0 in
+print_endline ("面积: " ^ string_of_float (area c))
+```
+
+```ocaml filename="monads.ml"
+(* Option monad - 显式绑定 *)
+let rec find_opt (p : 'a -> bool) (lst : 'a list) : 'a option =
+  match lst with
+  | [] -> None
+  | x :: rest -> if p x then Some x else find_opt p rest
+
+(* 带结果的模式匹配 *)
+let divide x y =
+  if y = 0 then Error "除以零"
+  else Ok (x / y)
+
+let result = 
+  match divide 10 2 with
+  | Ok v -> string_of_int v
+  | Error msg -> "错误: " ^ msg
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 金融交易 | Jane Street Capital 的交易基础设施 |
+| 证明辅助器 | Coq 证明助手（可信内核）|
+| 静态分析 | Infer（Facebook 的 bug 发现工具）|
+| 编译器 | Unison、Melt、ocaml-compiler-libs |
+| Web | Dream、Opium |
+
+## Influence & Legacy
+
+**受以下语言启发：** ML、Caml、Standard ML、Lisp
+
+**影响了下述语言：**
+- **F#**：微软受 OCaml 启发的 .NET 语言
+- **Rust**：借用检查器借鉴了所有权研究
+- **ReasonML**：面向 JavaScript 生态的 OCaml 语法
+- **Hack**：Facebook 的 PHP 扩展，加入静态类型
+
+<Callout type="info" emoji="🔒">
+  OCaml 的类型系统使其成为验证软件的理想选择。用于空中客车安全关键代码的 CompCert C 编译器就是用 OCaml 编写的，其正确性通过 Coq 进行了机器验证。
+</Callout>
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | opam (OCaml Package Manager) |
+| 构建工具 | Dune、Make |
+| 测试 | Alcotest、QCheck |
+| Web 框架 | Dream、Opium、Eliom |
+| 编辑器 | VSCode-OCaml、Merlin、Tuareg |
+
+## When to Use
+
+**适合场景：**
+- 正确性至关重要的金融系统
+- 静态分析和程序验证工具
+- 编译器和解释器
+- 任何运行时 bug 代价高昂的领域
+
+**不适合场景：**
+- 迭代速度优先的快速原型
+- 没有函数式编程背景的团队
+- 简单脚本（杀鸡用牛刀）
+
+## Did You Know?
+
+OCaml 是 Meta 静态分析器 Infer 的背后语言，它在 Facebook 的移动应用发布前发现了数千个关键 bug。关键洞察：OCaml 的类型系统和模式匹配使编写精确的静态分析出人意料地 tractable。

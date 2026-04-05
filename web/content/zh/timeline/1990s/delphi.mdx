@@ -1,0 +1,159 @@
+---
+title: Delphi
+description: Borland 的面向对象 Pascal，定义了 Windows 桌面开发体验
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Delphi
+
+> _Pascal 长大成人学会了构建 Windows 应用的摇篮。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1995 |
+| **Creator** | Borland Software Corporation |
+| **Paradigm** | 面向对象、过程式、组件化 |
+| **Type System** | 静态类型 / 强类型 |
+| **Platform** | Windows（可交叉编译至 Linux、macOS） |
+| **Current Version** | RAD Studio 12 (2023) |
+| **License** | 专有软件 (Embarcadero) |
+
+## Origin Story
+
+Delphi 诞生于 Borland 1990 年代初期的"Denali"项目。目标简单却雄心勃勃：将 Object Pascal 语言与可视化的组件架构和极速原生编译器结合，创造终极 Windows 开发环境。
+
+Anders Hejlsberg，Turbo Pascal 的架构师，主导了这次设计。他后来又设计了 C#。核心创新是**可视化组件库 (VCL)**——一个丰富的预构建、可复用组件生态系统，开发者可以将它们拖放到表单上。编译器以极速著称，直接生成 x86 机器码，无需任何运行时解释器。
+
+Delphi 1.0 于 1995 年发布，旋即赢得赞誉。"为编译器而来，为组件而留"这句 slogan 精辟概括了它的魅力：Delphi 的编译速度快到让调试感觉像在编辑，而 VCL 丰富完整，大多数常见 UI 任务无需编写任何自定义代码。
+
+## Design Philosophy
+
+Delphi 的设计围绕三大支柱：
+
+- **原生性能**：直接编译为机器码，无虚拟机开销
+- **组件架构**：具有属性和事件的可复用、可组合软件部件
+- **通过约定提升生产力**：强类型在编译期而非运行时捕获错误
+
+<Callout type="default" emoji="💡">
+  "Delphi 的 VCL 是首个主要组件框架——JavaBeans 和 .NET Components 出现得更晚，大量借鉴了这一模型。"
+</Callout>
+
+语言强制严格的类型安全，而 IDE 提供可视化开发速度。这种组合在 1995 年前所未有。
+
+## Code Example
+
+```pascal filename="HelloWorld.pas"
+program HelloWorld;
+
+{$APPTYPE CONSOLE}
+
+begin
+  WriteLn('你好，世界！');
+end.
+```
+
+```pascal filename="ButtonClick.pas"
+unit Unit1;
+
+interface
+
+uses
+  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    btnClick: TButton;
+    lblOutput: TLabel;
+    procedure btnClickClick(Sender: TObject);
+  end;
+
+implementation
+
+procedure TForm1.btnClickClick(Sender: TObject);
+begin
+  lblOutput.Caption := '按钮点击于 ' + DateTimeToStr(Now);
+end;
+
+end.
+```
+
+```pascal filename="CustomComponent.pas"
+{ 展示 Delphi OOP 架构的自定义组件 }
+type
+  TCounter = class(TComponent)
+  private
+    FValue: Integer;
+    FOnChange: TNotifyEvent;
+  protected
+    procedure DoChange; virtual;
+  public
+    constructor Create(AOwner: TComponent); override;
+    procedure Increment;
+    procedure Decrement;
+    procedure Reset;
+    property Value: Integer read FValue;
+  published
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+  end;
+
+constructor TCounter.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FValue := 0;
+end;
+
+procedure TCounter.Increment;
+begin
+  Inc(FValue);
+  DoChange;
+end;
+
+procedure TCounter.DoChange;
+begin
+  if Assigned(FOnChange) then
+    FOnChange(Self);
+end;
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 数据库应用 | SQL Navigator、TOAD 替代品 |
+| 企业软件 | Skype 早期 Windows 客户端 |
+| IDE | Delphi 本身、各种 CASE 工具 |
+| 金融 | Bloomberg 终端组件 |
+
+## Influence & Legacy
+
+**受以下语言启发：** Pascal、Object Pascal、Turbo Pascal
+
+**影响了下述语言：**
+- **C#**：Anders Hejlsberg 同时主导了 Delphi 和 C# 的设计；许多概念一脉相承
+- **Java**：组件模型概念影响了 JavaBeans
+- **.NET**：VCL 启发了初代 .NET 组件模型
+- **Oxygene (Chrome)**：运行在 .NET 和 Java 上的 Pascal 方言
+
+<Callout type="info" emoji="📜">
+  尽管经历了 30 年的演进，一个 Delphi 1 应用程序仍然可以用 Delphi 12 打开并编译，只需要极少的修改。向后兼容性堪称传奇。
+</Callout>
+
+## When to Use
+
+**适合场景：**
+- 需要原生性能的 Windows 桌面应用
+- 数据库驱动的业务应用
+- 遗留系统维护
+- 专业级快速 UI 原型开发
+
+**不适合场景：**
+- 跨平台移动应用（FireMonkey 有帮助但不是原生）
+- Web 前端开发
+- 需要底层金属控制的系统编程
+
+## Did You Know?
+
+"Delphi" 这个代号来自希腊神谕——Borland 希望它能成为软件开发的"预言"。与德尔斐神谕的类比证明是准确的：Delphi 通过 SQL Links 实现的数据连接能力，使其成为整个 1990 年代末数据库应用开发的"预言性"选择。
