@@ -1,0 +1,95 @@
+---
+title: Zig
+description: A low-level programming language prioritizing safety, performance, and readability.
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Zig
+
+> _"Simple, explicit, and performant."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2016 |
+| **Creator** | Andrew Kelley (Independent) |
+| **Paradigm** | Low-level, Systems Programming |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | 0.13.0 (2024) |
+| **License** | MIT |
+
+## Origin Story
+
+Andrew Kelley started Zig in 2012 as a hobby project, officially launching it in 2016. Frustrated with the complexity of C++ and the hidden control flow in languages like Go, Kelley designed Zig to be a practical, explicit systems language. The name "Zig" was chosen randomly from a list of short, unused names—it's simply a name, not an acronym or reference to the letter Z.
+
+The language gained significant attention when Bun (a JavaScript runtime) and Ghostty (a terminal emulator) were written in Zig, demonstrating its viability for real-world production software. Zig's philosophy centers on "fighting complexity at every turn," stripping away features that add hidden costs or behaviors.
+
+## Design Philosophy
+
+Zig's core principle is **explicit over implicit**. There are no hidden allocations, no hidden control flow, and no magic macros. Every function call, every memory allocation, and every error path is visible in the code.
+
+The language provides no build system by default—users choose between existing solutions. This "pay-for-what-you-use" philosophy means you only include what you need. Comptime (compile-time execution) is a first-class feature, allowing metaprogramming without macros or code generation.
+
+```zig
+const std = @import("std");
+
+pub fn main() void {
+    const nums = [_]i32{ 1, 2, 3, 4, 5 };
+    var sum: i32 = 0;
+
+    for (nums) |n| {
+        sum += n;
+    }
+
+    std.debug.print("Sum: {d}\n", .{sum});
+}
+```
+
+## Code Example
+
+Zig's comptime feature enables powerful zero-cost abstractions:
+
+```zig
+fn Matrix(comptime T: type, comptime rows: usize, comptime cols: usize) type {
+    return [rows][cols]T;
+}
+
+fn transpose(comptime T: type, comptime rows: usize, comptime cols: usize, m: Matrix(T, rows, cols)) Matrix(T, cols, rows) {
+    var result: Matrix(T, cols, rows) = undefined;
+    for (m) |row, i| {
+        for (row) |val, j| {
+            result[j][i] = val;
+        }
+    }
+    return result;
+}
+
+pub fn main() void {
+    const m = Matrix(i32, 2, 3){
+        .{ 1, 2, 3 },
+        .{ 4, 5, 6 },
+    };
+    const t = transpose(i32, 2, 3, m);
+    std.debug.print("{d}\n", .{t[0][0]}); // 1
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Runtime | Bun, zls (Zig Language Server) |
+| Terminal | Ghostty |
+| Databases | Turso (libSQL), zed (Zed editor) |
+| Game Dev | Dovetail (game engine) |
+
+## Influence & Legacy
+
+**Inspired by:** C, C++, Go, Rust
+
+**Influenced:** V (Vlang), Carbon (some design elements)
+
+Zig is emerging as a modern alternative to C for systems where safety matters but garbage collection is unacceptable. Its comptime model influences how developers think about compile-time computation without complex template systems.

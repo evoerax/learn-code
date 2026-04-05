@@ -1,0 +1,94 @@
+---
+title: V
+description: A fast, safe, and concise language inspired by Go and Rust, with zero dependencies.
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# V (Vlang)
+
+> _"Simple, fast, and refreshing."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2019 |
+| **Creator** | Alexander Medvednikov |
+| **Paradigm** | Low-level, Systems Programming |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform (transpiles to C) |
+| **Current Version** | 0.4 (2023) |
+| **License** | GPL 3 or MIT (commercial) |
+
+## Origin Story
+
+V (Vlang) was created by Alexander Medvednikov in 2019 as a modern systems programming language that combines the simplicity of Go with the safety features of Rust, all while achieving C-like compilation speed. The language's name is simply "V"—not an acronym, though it has been compared to the Roman numeral for 5 (V) and the letter's shape representing versatility.
+
+Medvednikov built V from scratch with a goal of creating a language that could compile large codebases in under a second, with no dependencies and predictable performance. The vlang.io website was famously a single HTML file, and the entire compiler was initially under 1 million lines of code, though it has grown since.
+
+## Design Philosophy
+
+V's guiding principles are **simplicity**, **fast compilation**, and **predictability**. The language has no hidden state, no garbage collector pauses, and no build configuration complexity. The transpiler outputs human-readable C code, allowing integration with existing C codebases.
+
+The language deliberately omits many features to keep the language small and learnable: no classes, no inheritance, no exceptions, and no generics (until recently).
+
+```v
+module main
+
+fn main() {
+    nums := [1, 2, 3, 4, 5]
+    mut sum := 0
+    for num in nums {
+        sum += num
+    }
+    println('Sum: ${sum}')
+}
+```
+
+## Code Example
+
+V's clean syntax and hot code reloading:
+
+```v
+module main
+
+import time
+
+struct Counter {
+mut:
+    value int
+}
+
+fn (mut c Counter) increment() {
+    c.value++
+}
+
+fn main() {
+    mut counter := Counter{value: 0}
+    
+    // Hot reload demonstration
+    for i := 0; i < 5; i++ {
+        counter.increment()
+        println('Count: ${counter.value}')
+        time.sleep(500 * time.millisecond)
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web | vweb (V's web framework) |
+| Editors | Ved (text editor) |
+| Tools | VLS (V Language Server) |
+| Utilities | vpm (V package manager) |
+
+## Influence & Legacy
+
+**Inspired by:** Go, Rust, Oberon, Pascal
+
+**Influenced:** V's approach has influenced discussions about simplifying language design while maintaining performance
+
+V represents an experiment in stripping language design to its essentials while maintaining practical utility. Its instant compilation speed and clean syntax offer a different point in the design space between Go's simplicity and Rust's safety guarantees.

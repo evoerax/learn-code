@@ -1,0 +1,97 @@
+---
+title: Move
+description: A resource-oriented programming language for secure, verifiable smart contracts.
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Move
+
+> _"Resources are never copied, only moved."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2019 |
+| **Creator** | Facebook (Diem Association) |
+| **Paradigm** | Resource-oriented, Smart Contract |
+| **Type System** | Static, Strong |
+| **Platform** | Blockchain (Move VM) |
+| **Current Version** | Language 2.0 (2023) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Move was developed by Facebook's Novi Financial (now Meta Financial) team and released in 2019 as the programming language for the Diem blockchain (originally called Libra). The language was designed by Sam Blackshear, Mathieu Baudet, and others who had previously worked on the Rust-based Move Prover.
+
+The core innovation of Move is its **resource type system**—digital assets like tokens are modeled as resources that can only be moved, never copied or double-spent. This makes Move programs formally verifiable, with mathematical proofs that certain classes of bugs (like the infamous $50M Ethereum DAO hack) cannot occur.
+
+After Diem was shut down in 2022, the open-source Move language found new life in the Aptos, Sui, and Movement blockchains.
+
+## Design Philosophy
+
+Move treats digital assets as **first-class resources** with strict ownership semantics. Unlike Solidity where a token balance is just a number in a map, Move's `struct` types can express linear resource semantics—the compiler enforces that resources are always consumed or transferred, never duplicated.
+
+The Move Prover (MVP) allows developers to write formal specifications that are automatically verified against the code, proving the absence of entire bug classes before deployment.
+
+```move
+module 0x1::Coin {
+    use std::signer;
+
+    /// A resource that holds a coin value
+    struct Coin has key {
+        value: u64
+    }
+
+    /// Publish a coin under the account's address
+    public fun publish(coin: Coin, account: &signer) {
+        move_to(account, coin);
+    }
+
+    /// Transfer the coin from one account to another
+    public fun transfer(coin: Coin, from: &signer, to: address) {
+        let addr = signer::address_of(from);
+        move_from<Coin>(addr);
+        move_to<Coin>(to, coin);
+    }
+}
+```
+
+## Code Example
+
+Move's module system and resource types:
+
+```move
+module 0x1::Token {
+    struct Token has store {
+        amount: u64
+    }
+
+    public fun mint(amount: u64): Token {
+        Token { amount }
+    }
+
+    public fun transfer(token: Token, to: address) {
+        // Resources can only be moved, never copied
+        let token = token;
+        move_to<Token>(to, token);
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Blockchain | Aptos, Sui, Movement |
+| DeFi | LayerZero (on Sui/Aptos) |
+| Infrastructure | Pontem Network |
+
+## Influence & Legacy
+
+**Inspired by:** Rust (ownership), Linear Logic, Solidity
+
+**Influenced:** Sui Move, Aptos Move, Movement Labs
+
+Move introduced the concept of formally verifiable smart contracts to the blockchain space. Its resource type system has inspired discussions about applying similar concepts to traditional programming languages for improved security guarantees.

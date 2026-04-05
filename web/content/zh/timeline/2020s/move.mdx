@@ -1,0 +1,97 @@
+---
+title: Move
+description: 面向资源的编程语言，用于安全、可验证的智能合约。
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Move
+
+> _"资源永远不会被复制，只能被移动。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2019 |
+| **Creator** | Facebook（Diem 协会） |
+| **Paradigm** | 面向资源、智能合约 |
+| **Type System** | 静态、强类型 |
+| **Platform** | 区块链（Move VM） |
+| **Current Version** | Language 2.0 (2023) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Move 由 Facebook 的 Novi Financial（现 Meta Financial）团队开发，于 2019 年发布，作为 Diem 区块链（原名 Libra）的编程语言。该语言由 Sam Blackshear、Mathieu Baudet 等人设计，他们此前曾从事基于 Rust 的 Move Prover 工作。
+
+Move 的核心创新是其**资源类型系统**——像代币这样的数字资产被建模为只能移动、永远不能复制或双重支出的资源。这使得 Move 程序可以形式化验证，通过数学证明可以证明某些类型的 bug（如臭名昭著的 5000 万美元以太坊 DAO 黑客攻击）不会发生。
+
+2022 年 Diem 关闭后，开源的 Move 语言在 Aptos、Sui 和 Movement 区块链中找到了新的生命。
+
+## Design Philosophy
+
+Move 将数字资产视为**一等资源**，具有严格的所有权语义。在 Solidity 中，代币余额只是映射中的一个数字，而 Move 的 `struct` 类型可以表达线性资源语义——编译器强制资源总是被消耗或转移，永远不会被复制。
+
+Move Prover (MVP) 允许开发者编写形式化规范，这些规范会自动针对代码进行验证，在部署前证明某些 bug 类别的缺失。
+
+```move
+module 0x1::Coin {
+    use std::signer;
+
+    /// A resource that holds a coin value
+    struct Coin has key {
+        value: u64
+    }
+
+    /// Publish a coin under the account's address
+    public fun publish(coin: Coin, account: &signer) {
+        move_to(account, coin);
+    }
+
+    /// Transfer the coin from one account to another
+    public fun transfer(coin: Coin, from: &signer, to: address) {
+        let addr = signer::address_of(from);
+        move_from<Coin>(addr);
+        move_to<Coin>(to, coin);
+    }
+}
+```
+
+## Code Example
+
+Move 的模块系统和资源类型：
+
+```move
+module 0x1::Token {
+    struct Token has store {
+        amount: u64
+    }
+
+    public fun mint(amount: u64): Token {
+        Token { amount }
+    }
+
+    public fun transfer(token: Token, to: address) {
+        // 资源只能被移动，永远不能被复制
+        let token = token;
+        move_to<Token>(to, token);
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| 区块链 | Aptos, Sui, Movement |
+| DeFi | LayerZero (在 Sui/Aptos 上) |
+| 基础设施 | Pontem Network |
+
+## Influence & Legacy
+
+**Inspired by:** Rust（所有权）、线性逻辑、Solidity
+
+**Influenced:** Sui Move, Aptos Move, Movement Labs
+
+Move 将形式化可验证智能合约的概念引入了区块链领域。它的资源类型系统启发了关于将类似概念应用于传统编程语言以提高安全保证的讨论。

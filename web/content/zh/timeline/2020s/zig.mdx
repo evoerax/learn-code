@@ -1,0 +1,95 @@
+---
+title: Zig
+description: 追求安全、性能和可读性的低级编程语言。
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Zig
+
+> _"简单、显式、高性能。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2016 |
+| **Creator** | Andrew Kelley（独立开发者） |
+| **Paradigm** | 低级、系统编程 |
+| **Type System** | 静态、强类型 |
+| **Platform** | 跨平台 |
+| **Current Version** | 0.13.0 (2024) |
+| **License** | MIT |
+
+## Origin Story
+
+Andrew Kelley 于 2012 年开始 Zig 项目，2016 年正式发布。Kelley 对 C++ 的复杂性以及 Go 等语言中的隐藏控制流感到沮丧，因此设计出了这门注重实用的显式系统编程语言。"Zig" 这个名字是从一个简短的、未使用的名字列表中随机选择的——它只是一个名字，不是缩写，也不是对字母 Z 的任何引用。
+
+当 Bun（一个 JavaScript 运行时）和 Ghostty（一个终端模拟器）使用 Zig 编写后，这门语言获得了大量关注，证明了它在实际生产软件中的可行性。Zig 的理念是"在每个转折点对抗复杂性"，剥离那些带来隐藏成本或隐藏行为的功能。
+
+## Design Philosophy
+
+Zig 的核心原则是**显式优于隐式**。没有隐藏的内存分配，没有隐藏的控制流，也没有神奇的宏。代码中每个函数调用、每个内存分配、每个错误路径都是可见的。
+
+该语言默认不提供构建系统——用户可以在现有解决方案中选择。这种"用多少付多少"的哲学意味着你只包含你需要的东西。Comptime（编译时执行）是一等公民特性，允许在没有宏或代码生成的情况下进行元编程。
+
+```zig
+const std = @import("std");
+
+pub fn main() void {
+    const nums = [_]i32{ 1, 2, 3, 4, 5 };
+    var sum: i32 = 0;
+
+    for (nums) |n| {
+        sum += n;
+    }
+
+    std.debug.print("Sum: {d}\n", .{sum});
+}
+```
+
+## Code Example
+
+Zig 的 comptime 特性实现了强大的零成本抽象：
+
+```zig
+fn Matrix(comptime T: type, comptime rows: usize, comptime cols: usize) type {
+    return [rows][cols]T;
+}
+
+fn transpose(comptime T: type, comptime rows: usize, comptime cols: usize, m: Matrix(T, rows, cols)) Matrix(T, cols, rows) {
+    var result: Matrix(T, cols, rows) = undefined;
+    for (m) |row, i| {
+        for (row) |val, j| {
+            result[j][i] = val;
+        }
+    }
+    return result;
+}
+
+pub fn main() void {
+    const m = Matrix(i32, 2, 3){
+        .{ 1, 2, 3 },
+        .{ 4, 5, 6 },
+    };
+    const t = transpose(i32, 2, 3, m);
+    std.debug.print("{d}\n", .{t[0][0]}); // 1
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| 运行时 | Bun, zls (Zig 语言服务器) |
+| 终端 | Ghostty |
+| 数据库 | Turso (libSQL), zed (Zed 编辑器) |
+| 游戏开发 | Dovetail (游戏引擎) |
+
+## Influence & Legacy
+
+**Inspired by:** C, C++, Go, Rust
+
+**Influenced:** V (Vlang), Carbon (部分设计元素)
+
+Zig 正在成为 C 的现代替代方案，适用于那些需要安全但不能接受垃圾回收的系统。它的 comptime 模型正在影响开发者对编译时计算的思考方式，而不需要复杂的模板系统。

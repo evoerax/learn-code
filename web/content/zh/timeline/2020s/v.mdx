@@ -1,0 +1,94 @@
+---
+title: V
+description: 受 Go 和 Rust 启发的高速、安全、简洁的编程语言，零依赖。
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# V (Vlang)
+
+> _"简单、快速、令人耳目一新。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2019 |
+| **Creator** | Alexander Medvednikov |
+| **Paradigm** | 低级、系统编程 |
+| **Type System** | 静态、强类型 |
+| **Platform** | 跨平台（转译为 C） |
+| **Current Version** | 0.4 (2023) |
+| **License** | GPL 3 或 MIT（商业用途） |
+
+## Origin Story
+
+V (Vlang) 由 Alexander Medvednikov 于 2019 年创建，是一种现代系统编程语言，结合了 Go 的简洁性和 Rust 的安全特性，同时实现了类似 C 的编译速度。该语言的名字就是"V"——不是缩写，尽管它被比作罗马数字 5（V），以及字母形状代表多功能性。
+
+Medvednikov 从零开始构建 V，目标是一种可以在一秒内编译大型代码库、没有依赖且性能可预测的语言。vlang.io 网站曾经是一个单一的 HTML 文件，整个编译器最初不到 100 万行代码，尽管此后有所增长。
+
+## Design Philosophy
+
+V 的指导原则是**简洁**、**快速编译**和**可预测性**。该语言没有隐藏状态，没有垃圾收集器停顿，也没有构建配置复杂性。转译器输出人类可读的 C 代码，允许与现有 C 代码库集成。
+
+该语言故意省略了许多功能以保持语言小型化和易于学习：没有类、没有继承、没有异常、直到最近才没有泛型。
+
+```v
+module main
+
+fn main() {
+    nums := [1, 2, 3, 4, 5]
+    mut sum := 0
+    for num in nums {
+        sum += num
+    }
+    println('Sum: ${sum}')
+}
+```
+
+## Code Example
+
+V 的简洁语法和热代码重载：
+
+```v
+module main
+
+import time
+
+struct Counter {
+mut:
+    value int
+}
+
+fn (mut c Counter) increment() {
+    c.value++
+}
+
+fn main() {
+    mut counter := Counter{value: 0}
+    
+    // 热重载演示
+    for i := 0; i < 5; i++ {
+        counter.increment()
+        println('Count: ${counter.value}')
+        time.sleep(500 * time.millisecond)
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web | vweb（V 的 Web 框架） |
+| 编辑器 | Ved（文本编辑器） |
+| 工具 | VLS（V 语言服务器） |
+| 工具 | vpm（V 包管理器） |
+
+## Influence & Legacy
+
+**Inspired by:** Go, Rust, Oberon, Pascal
+
+**Influenced:** V 的方法影响了关于简化语言设计同时保持性能可行性的讨论
+
+V 代表了在保持实用性的同时将语言设计精简到极致的实验。它的即时编译速度和简洁语法在 Go 的简洁性和 Rust 的安全保证之间的设计空间提供了另一个选择。
