@@ -1,0 +1,105 @@
+---
+title: Scala
+description: 运行在 JVM 上的语言，融合面向对象与函数式编程
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Scala
+
+> _"JVM 从一开始就应该为函数式编程而设计。如果当初是的话，Scala 就是那个结果。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2004 |
+| **Creator** | Martin Odersky (EPFL) |
+| **Paradigm** | 面向对象、函数式 |
+| **Type System** | 静态类型、强类型、可推断 |
+| **Platform** | JVM、JavaScript、Native |
+| **Current Version** | 3.4 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Martin Odersky 是一位曾参与 Generic Java 和 Pizza 语言研究的研究者，他创建 Scala 是为了解决他认为 JVM 在函数式编程方面的根本限制。2004年在 EPFL（洛桑联邦理工学院）发布，Scala 将面向对象和函数式编程的最佳特性结合在成熟的 Java 平台上。
+
+Scala 代表"Scalable Language"（可扩展语言）——设计用来随用户需求增长。它既是一门适合简洁脚本的小型语言，也是一门适合大型企业系统的强大语言。
+
+## Design Philosophy
+
+Scala 奉行的原则是"一切皆对象"——甚至函数也是对象。它也开创了许多后来传播到主流语言的函数式概念：case 类、模式匹配、隐式参数和 Actor 模型。
+
+该语言在不牺牲类型安全的前提下优先考虑表达力和简洁性。类型推断减少了样板代码，而高级类型系统特性实现了强大的抽象。Scala 的"纯粹性"是灵活的——允许命令式和函数式风格并存。
+
+## Code Example
+
+```scala filename="Scala 示例"
+// Case 类用于不可变数据
+case class Person(name: String, age: Int)
+
+// 模式匹配
+def describe(p: Person): String = p match
+  case Person("Alice", _) => "找到了 Alice"
+  case Person(_, age) if age < 18 => "未成年人"
+  case _ => "未知"
+
+// 函数式集合操作
+val adults = people
+  .filter(_.age >= 18)
+  .sortBy(_.name)
+  .map(_.name)
+
+// 简洁的函数语法
+val add: (Int, Int) => Int = _ + _
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 大数据 | Apache Spark, Apache Kafka |
+| Web 框架 | Play Framework, Lift |
+| 金融 | Twitter (历史), Goldman Sachs |
+| 分布式系统 | Akka, Lagom |
+
+## Influence & Legacy
+
+**Inspired by:** Java, Haskell, ML, Pizza, Funcons
+
+**Influenced:** Kotlin（空安全、数据类）、Reduct、OCaml（部分特性）、JDK 8+ lambdas
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 构建工具 | sbt, Mill |
+| 包管理器 | Maven Central, Coursier |
+| 主要框架 | Akka, Play Framework, Spark |
+| 测试框架 | ScalaTest, mUnit, Specs2 |
+
+## When to Use
+
+**Good fit:**
+- 使用 Spark 进行大数据处理
+- 使用 Akka 构建分布式系统
+- 构建 DSL 和内部语言
+- 需要 JVM 生态但又需要函数式编程时
+
+**Not a good fit:**
+- 编译开销重要的简单脚本
+- 缺乏强类型系统知识的团队
+- 性能关键的底层工作（使用 Java 或原生语言）
+
+## Controversies
+
+<Callout type="warning">
+  Scala 的灵活性既是它的优势也是劣势。"Scala 黑带"可以写出极其优雅的代码，但普通开发者也能创造难以维护的混乱。该语言的复杂性导致一些公司迁移到更简单的替代方案。
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Twitter 在2010年代初将大量基础设施从 Ruby 迁移到 Scala，处理每秒数百万条推文。这个成功案例帮助 Scala 在企业界站稳了脚跟。
+</Callout>

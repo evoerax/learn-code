@@ -1,0 +1,97 @@
+---
+title: C#
+description: 微软开发的现代面向对象语言，.NET 生态的核心
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# C#
+
+> _"托管代码是未来，而 C# 正在引领潮流。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2000 |
+| **Creator** | Anders Hejlsberg (Microsoft) |
+| **Paradigm** | 面向对象、多范式 |
+| **Type System** | 静态类型、强类型、安全 |
+| **Platform** | 跨平台 (.NET) |
+| **Current Version** | 12.0 (2023) |
+| **License** | MIT |
+
+## Origin Story
+
+1990年代末，微软面临一个战略挑战。Java 以"编写一次，到处运行"的理念迅速崛起，Windows 需要一门能与之竞争的现代语言。2000年，Turbo Pascal 和 Delphi 的创造者 Anders Hejlsberg 发布了 C#（发音"C 升"），作为 .NET 计划的一部分。
+
+C# 从零开始设计，由公共语言运行时（CLR）直接支持。它借鉴了 C++、Java 和 Delphi 的最佳思想，同时引入了属性、事件和 LINQ 等创新功能。
+
+## Design Philosophy
+
+C# 的设计目标是成为一门简单、现代、面向对象的语言。微软希望创造出兼具 C++ 的强大和 Visual Basic 的简洁的语言。结果是一门强调类型安全、垃圾回收和组件化开发的语言。
+
+C# 的演进令人瞩目——从 1.0 版本的 Java-like 语言，到如今功能丰富的强大语言。每个版本都增加了重要功能：泛型 (2.0)、LINQ (3.0)、async/await (5.0)、record (9.0)、模式匹配 (8.0+)。
+
+## Code Example
+
+```csharp filename="C# 示例"
+// 现代 OOP 配合 record
+public record Person(string Name, int Age);
+
+// LINQ 查询表达式
+var adults = people
+    .Where(p => p.Age >= 18)
+    .OrderBy(p => p.Name)
+    .Select(p => p.Name);
+
+// 简洁的异步编程
+public async Task<string> FetchDataAsync(string url)
+{
+    using var client = new HttpClient();
+    return await client.GetStringAsync(url);
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 企业应用 | Azure SDK, Visual Studio, Unity |
+| 游戏开发 | Unity 游戏引擎, Godot (通过 C# 脚本) |
+| Web API | ASP.NET Core, NancyFX |
+| 桌面应用 | WPF, WinForms, Avalonia |
+
+## Influence & Legacy
+
+**Inspired by:** C++, Java, Delphi, ML
+
+**Influenced:** Java（后期版本借鉴了类似 LINQ 的特性）、Kotlin（空安全）、TypeScript、F#
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | NuGet |
+| 主要框架 | .NET 6/7/8, ASP.NET Core, MAUI |
+| 构建工具 | MSBuild, dotnet CLI |
+| 测试框架 | xUnit, NUnit, MSTest |
+
+## When to Use
+
+**Good fit:**
+- 企业应用和 Web 服务
+- 使用 Unity 开发游戏
+- 使用 .NET MAUI 的跨平台桌面应用
+- Windows 专用应用（WPF、WinForms）
+
+**Not a good fit:**
+- 需要手动内存控制的内核编程
+- 启动时间至关重要的轻量级脚本
+- 前端 Web 开发（改用 TypeScript）
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  C# 的命名灵感来自音乐记谱法，"#" 表示音符升高半音。就像 C# 比 C 高半音一样，这门语言被设计为比其前身更进一步的台阶。
+</Callout>

@@ -1,0 +1,108 @@
+---
+title: Rust
+description: Mozilla's memory-safe systems language with ownership, zero-cost abstractions
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Rust
+
+> _"The Rust language is designed to be a safe, concurrent, practical language."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2010 |
+| **Creator** | Graydon Hoare (Mozilla) |
+| **Paradigm** | Systems, Concurrent, Multi-paradigm |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Cross-platform |
+| **Current Version** | 1.77 (2024) |
+| **License** | MIT, Apache 2.0 |
+
+## Origin Story
+
+Graydon Hoare at Mozilla created Rust in 2010, named after a species of fungus known for its robustness. The project emerged from Mozilla's need for a language that could provide memory safety without garbage collection—essential for the Servo browser engine project.
+
+Rust's defining innovation is its ownership system, which enforces memory safety at compile time through a set of rules that the compiler checks. This eliminates entire categories of bugs (null dereferences, data races, memory leaks) while imposing zero runtime cost.
+
+## Design Philosophy
+
+Rust's core philosophy is "fearless concurrency"—safe systems programming without data races. The ownership system treats memory access as a resource, applying the same principles used for managing files and network connections.
+
+Zero-cost abstractions are central: higher-level constructs compile down to efficient machine code, matching hand-written C. The language offers functional features like pattern matching, iterators, and closures without runtime overhead.
+
+## Code Example
+
+```rust filename="Rust Example"
+// Ownership and borrowing
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+
+// Concurrency without data races
+use std::thread;
+
+let data = vec![1, 2, 3];
+let handle = thread::spawn(move || {
+    data.iter().map(|x| x * 2).collect::<Vec<_>>()
+});
+let result = handle.join().unwrap();
+
+// Pattern matching
+match value {
+    Some(x) if x > 0 => println!("Positive: {}", x),
+    Some(x) => println!("Non-positive: {}", x),
+    None => println!("Nothing"),
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web Browsers | Servo, Firefox (components) |
+| Blockchain | Solana, Polygon |
+| Cloud | AWS Firecracker, Cloudflare |
+| CLI | ripgrep, fd, bat |
+
+## Influence & Legacy
+
+**Inspired by:** C++, ML, Haskell, Cyclone, Erlang
+
+**Influenced:** Carbon (C++ successor), Swift (memory safety), various new languages studying ownership models
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | Cargo |
+| Web Frameworks | Axum, Actix-web, Rocket |
+| Testing | Built-in, cargo test, criterion |
+| Build | cargo build, Cargo.lock |
+
+## When to Use
+
+**Good fit:**
+- Systems programming requiring memory safety
+- Performance-critical applications
+- WebAssembly compilation
+- CLI tools with performance requirements
+
+**Not a good fit:**
+- Rapid prototyping where compile times matter
+- Teams new to systems programming
+- Simple scripts (use Python or Ruby)
+
+## Controversies
+
+<Callout type="warning">
+  Rust's learning curve is steep. The borrow checker, while brilliant, often rejects valid programs until you learn its mental model. This "fighting the compiler" phase can frustrate newcomers but pays off in bulletproof code.
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Stack Overflow's annual developer survey has ranked Rust as the "most loved programming language" for over a decade. Despite being a systems language used for browsers and operating systems, Rust has one of the most passionate developer communities in the industry.
+</Callout>

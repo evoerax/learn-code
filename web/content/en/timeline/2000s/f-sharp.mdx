@@ -1,0 +1,101 @@
+---
+title: F#
+description: The functional-first .NET language, elegant for data science and financial modeling
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# F#
+
+> _"F# is a pragmatic functional language. It runs on the .NET runtime, interoperates seamlessly with C#, and makes data processing a joy."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2005 |
+| **Creator** | Don Syme (Microsoft Research) |
+| **Paradigm** | Functional-first, Multi-paradigm |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | .NET, Mono, JavaScript |
+| **Current Version** | 8.0 (2023) |
+| **License** | MIT |
+
+## Origin Story
+
+Don Syme at Microsoft Research created F# in 2005, bringing functional programming to the .NET platform. The language was inspired by OCaml but designed specifically for the .NET ecosystem, allowing full interoperability with other .NET languages like C# and VB.NET.
+
+F# was originally an academic research project, but its practical utility quickly became apparent. It shipped as a first-class .NET language, benefiting from the entire .NET ecosystem while bringing functional programming concepts to a wider audience.
+
+## Design Philosophy
+
+F# embraces functional programming principles—immutability by default, expressions over statements, and powerful type inference—while remaining a practical language for real-world problems. It follows the "suave" principle: whatever style you're comfortable with, F# supports it.
+
+The language excels at data processing and analytical programming. Its type providers enable reading from databases, APIs, and data files with compile-time safety. F# also pioneers in domains like financial modeling where correctness matters deeply.
+
+## Code Example
+
+```fsharp filename="F# Example"
+// Immutable data structures
+type Person = { Name: string; Age: int }
+
+// Discriminated unions for domain modeling
+type Result<'T> =
+    | Success of 'T
+    | Failure of string
+
+// Pipelines and higher-order functions
+let adults = people
+    |> List.filter (fun p -> p.Age >= 18)
+    |> List.sortBy (fun p -> p.Name)
+    |> List.map (fun p -> p.Name)
+
+// Async programming
+let! data = async {
+    let! html = http.AsyncGetString(url)
+    return parse html
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Finance | Quantitative modeling, trading systems |
+| Data Science | Deedle, Math.NET |
+| Web | Giraffe, Saturn, Falco |
+| Compilers | Compiler.fs, Fable (F# to JS) |
+
+## Influence & Legacy
+
+**Inspired by:** OCaml, Haskell, C#, LINQ
+
+**Influenced:** C# (async/await, record types), Fable (F# to JavaScript transpilation)
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | NuGet |
+| Build Tools | dotnet CLI, FAKE |
+| Web Frameworks | Giraffe, Saturn |
+| Testing | xUnit, Expecto, NUnit |
+
+## When to Use
+
+**Good fit:**
+- Financial modeling and quantitative analysis
+- Data processing and ETL pipelines
+- Domain-driven design with discriminated unions
+- Scripting with strong typing
+
+**Not a good fit:**
+- Systems programming requiring manual memory control
+- Teams unfamiliar with functional concepts
+- Quick one-off scripts where F# setup overhead isn't justified
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Jane Street, the quantitative trading firm, famously uses OCaml for their trading infrastructure. F# was designed by the same person who created Delphi's type system, bringing some of that same elegance to the .NET platform.
+</Callout>

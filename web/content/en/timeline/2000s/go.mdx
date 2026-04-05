@@ -1,0 +1,110 @@
+---
+title: Go
+description: Google's practical language with goroutines, powering Docker and Kubernetes
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Go
+
+> _"Go is an attempt to combine the ease of programming of an interpreted, dynamically typed language with the efficiency and safety of a statically typed, compiled language."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2009 |
+| **Creator** | Robert Griesemer, Rob Pike, Ken Thompson (Google) |
+| **Paradigm** | Concurrent, Imperative, Multi-paradigm |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Cross-platform |
+| **Current Version** | 1.22 (2024) |
+| **License** | BSD 3-Clause |
+
+## Origin Story
+
+In 2007, Google engineers Robert Griesemer, Rob Pike, and Ken Thompson grew frustrated with the limitations of C++ for server-side development. They designed Go to address the challenges of large-scale server software: slow builds, lack of concurrency support, and dependency management nightmares.
+
+Announced in 2009 and open-sourced immediately, Go emphasized simplicity and practicality. Its mascot is the gopher, designed by Renée French. The language quickly gained traction in cloud infrastructure—Docker (2013) and Kubernetes (2014) were written in Go and revolutionized containerization.
+
+## Design Philosophy
+
+Go's design philosophy centers on simplicity. Rob Pike famously said the language should be "simple enough that a programmer can learn the whole language in a week." This means explicit error handling (no exceptions), no classes, no inheritance, and a minimal type system.
+
+Concurrency is a first-class citizen via goroutines and channels. Goroutines are lightweight threads managed by the Go runtime, making concurrent programming accessible without the complexity of traditional threading models. This design choice enabled massive concurrent systems like the ones powering Google's services.
+
+## Code Example
+
+```go filename="Go Example"
+
+// Concurrent worker pattern
+func worker(jobs <-chan int, results chan<- int) {
+    for n := range jobs {
+        results <- n * 2
+    }
+}
+
+func main() {
+    jobs := make(chan int, 100)
+    results := make(chan int, 100)
+
+    // Start workers
+    for w := 0; w < 3; w++ {
+        go worker(jobs, results)
+    }
+
+    // Send work
+    for i := 0; i < 10; i++ {
+        jobs <- i
+    }
+    close(jobs)
+
+    // Collect results
+    for a := 0; a < 10; a++ {
+        fmt.Println(<-results)
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Cloud Infrastructure | Docker, Kubernetes, Terraform |
+| Databases | CockroachDB, etcd, TiDB |
+| Web | goFiber, Echo, Gin |
+| Networking | Caddy, Traefik |
+
+## Influence & Legacy
+
+**Inspired by:** C, Pascal, Newsqueak, Limbo
+
+**Influenced:** Rust (some concepts), Go itself spawned a new wave of "simplicity-first" languages
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | go mod |
+| Web Frameworks | Gin, Echo, Fiber |
+| Testing | testing package, testify |
+| Build | go build, Make |
+
+## When to Use
+
+**Good fit:**
+- Cloud infrastructure and microservices
+- Network servers and proxies
+- CLI tools
+- Systems requiring massive concurrency
+
+**Not a good fit:**
+- Domain-driven design with complex business logic
+- Systems requiring generics-heavy abstraction (until Go 1.18+)
+- Embedded systems with tight memory constraints
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Ken Thompson, one of Go's creators, also co-created the B programming language, which inspired C. Rob Pike co-created the Plan 9 operating system and the UTF-8 encoding. Go is essentially created by the pioneers who shaped modern computing.
+</Callout>

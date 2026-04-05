@@ -1,0 +1,110 @@
+---
+title: Go
+description: 谷歌的实用语言，goroutine 驱动，支撑 Docker 和 Kubernetes
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Go
+
+> _"Go 试图将解释型、动态类型语言的编程便利性与静态类型、编译型语言的效率和安全性结合起来。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2009 |
+| **Creator** | Robert Griesemer, Rob Pike, Ken Thompson (Google) |
+| **Paradigm** | 并发、命令式、多范式 |
+| **Type System** | 静态类型、强类型、可推断 |
+| **Platform** | 跨平台 |
+| **Current Version** | 1.22 (2024) |
+| **License** | BSD 3-Clause |
+
+## Origin Story
+
+2007年，谷歌工程师 Robert Griesemer、Rob Pike 和 Ken Thompson 对 C++ 在服务器端开发方面的局限性感到沮丧。他们设计了 Go 来解决大规模服务器软件的挑战：构建缓慢、缺乏并发支持、依赖管理噩梦。
+
+2009年发布并立即开源，Go 强调简洁和实用性。其吉祥物是地鼠，由 Renée French 设计。该语言很快在云基础设施领域获得关注——Docker（2013）和 Kubernetes（2014）用 Go 编写，彻底改变了容器化技术。
+
+## Design Philosophy
+
+Go 的设计哲学以简洁为中心。Rob Pike  famously 说语言应该"简单到一个程序员一周内就能学会整个语言"。这意味着显式的错误处理（没有异常）、没有类、没有继承，以及最小的类型系统。
+
+并发是一等公民，通过 goroutine 和 channel 实现。Goroutine 是由 Go 运行时管理的轻量级线程，使并发编程变得易于访问，而无需传统线程模型的复杂性。这一设计选择使 Google 服务级别的大规模并发系统成为可能。
+
+## Code Example
+
+```go filename="Go 示例"
+
+// 并发 worker 模式
+func worker(jobs <-chan int, results chan<- int) {
+    for n := range jobs {
+        results <- n * 2
+    }
+}
+
+func main() {
+    jobs := make(chan int, 100)
+    results := make(chan int, 100)
+
+    // 启动 workers
+    for w := 0; w < 3; w++ {
+        go worker(jobs, results)
+    }
+
+    // 发送工作
+    for i := 0; i < 10; i++ {
+        jobs <- i
+    }
+    close(jobs)
+
+    // 收集结果
+    for a := 0; a < 10; a++ {
+        fmt.Println(<-results)
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 云基础设施 | Docker, Kubernetes, Terraform |
+| 数据库 | CockroachDB, etcd, TiDB |
+| Web | goFiber, Echo, Gin |
+| 网络 | Caddy, Traefik |
+
+## Influence & Legacy
+
+**Inspired by:** C, Pascal, Newsqueak, Limbo
+
+**Influenced:** Rust（部分概念）、Go 本身催生了一波"简洁优先"语言
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | go mod |
+| Web 框架 | Gin, Echo, Fiber |
+| 测试 | testing package, testify |
+| 构建 | go build, Make |
+
+## When to Use
+
+**Good fit:**
+- 云基础设施和微服务
+- 网络服务器和代理
+- CLI 工具
+- 需要大规模并发的系统
+
+**Not a good fit:**
+- 具有复杂业务逻辑的领域驱动设计
+- 需要大量泛型抽象的系统（直到 Go 1.18+）
+- 内存限制严格的嵌入式系统
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Ken Thompson，Go 的创造者之一，也共同创造了 B 编程语言，这启发了 C。Rob Pike 共同创造了 Plan 9 操作系统和 UTF-8 编码。Go 本质上是由塑造现代计算的先驱们创造的。
+</Callout>

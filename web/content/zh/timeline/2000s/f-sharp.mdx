@@ -1,0 +1,101 @@
+---
+title: F#
+description: 面向函数的 .NET 语言，数据科学和金融建模的优雅选择
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# F#
+
+> _"F# 是一门务实的函数式语言。它运行在 .NET 运行时上，与 C# 无缝互操作，让数据处理成为一种享受。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2005 |
+| **Creator** | Don Syme (Microsoft Research) |
+| **Paradigm** | 函数优先、多范式 |
+| **Type System** | 静态类型、强类型、可推断 |
+| **Platform** | .NET, Mono, JavaScript |
+| **Current Version** | 8.0 (2023) |
+| **License** | MIT |
+
+## Origin Story
+
+微软研究院的 Don Syme 于2005年创建了 F#，将函数式编程带到了 .NET 平台。该语言受 OCaml 启发，但专门为 .NET 生态系统设计，允许与 C# 和 VB.NET 等其他 .NET 语言完全互操作。
+
+F# 最初是一个学术研究项目，但其实用价值很快显现出来。作为一流的 .NET 语言，它受益于整个 .NET 生态系统，同时将函数式编程概念带给了更广泛的受众。
+
+## Design Philosophy
+
+F# 拥抱函数式编程原则——默认不可变、表达式优于语句、强大的类型推断——同时仍是一门解决现实问题的实用语言。它遵循"suave"原则：无论你习惯什么风格，F# 都支持。
+
+该语言擅长数据处理和分析编程。其类型提供程序能够以编译时类型安全的方式读取数据库、API 和数据文件。F# 在金融建模等领域也是先驱，这些领域对正确性要求很高。
+
+## Code Example
+
+```fsharp filename="F# 示例"
+// 不可变数据结构
+type Person = { Name: string; Age: int }
+
+// 区分联合用于领域建模
+type Result<'T> =
+    | Success of 'T
+    | Failure of string
+
+// 管道和高级函数
+let adults = people
+    |> List.filter (fun p -> p.Age >= 18)
+    |> List.sortBy (fun p -> p.Name)
+    |> List.map (fun p -> p.Name)
+
+// 异步编程
+let! data = async {
+    let! html = http.AsyncGetString(url)
+    return parse html
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 金融 | 量化建模、交易系统 |
+| 数据科学 | Deedle, Math.NET |
+| Web | Giraffe, Saturn, Falco |
+| 编译器 | Compiler.fs, Fable (F# to JS) |
+
+## Influence & Legacy
+
+**Inspired by:** OCaml, Haskell, C#, LINQ
+
+**Influenced:** C#（async/await、record 类型）、Fable（F# 到 JavaScript 转译器）
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | NuGet |
+| 构建工具 | dotnet CLI, FAKE |
+| Web 框架 | Giraffe, Saturn |
+| 测试框架 | xUnit, Expecto, NUnit |
+
+## When to Use
+
+**Good fit:**
+- 金融建模和量化分析
+- 数据处理和 ETL 管道
+- 使用区分联合的领域驱动设计
+- 带强类型的脚本编写
+
+**Not a good fit:**
+- 需要手动内存控制的系统编程
+- 不熟悉函数式概念的团队
+- 一次性快速脚本，F# 的设置开销不划算
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Jane Street 这家量化交易公司以在交易基础设施中使用 OCaml 而闻名。F# 由创建 Delphi 类型系统的同一人设计，将同样的优雅带到了 .NET 平台。
+</Callout>

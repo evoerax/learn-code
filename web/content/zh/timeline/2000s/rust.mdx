@@ -1,0 +1,109 @@
+---
+title: Rust
+description: Mozilla 的内存安全系统语言，所有权系统，零成本抽象
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Rust
+
+> _"Rust 语言被设计为一门安全、并发、实用的语言。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2010 |
+| **Creator** | Graydon Hoare (Mozilla) |
+| **Paradigm** | 系统编程、并发、多范式 |
+| **Type System** | 静态类型、强类型、可推断 |
+| **Platform** | 跨平台 |
+| **Current Version** | 1.77 (2024) |
+| **License** | MIT, Apache 2.0 |
+
+## Origin Story
+
+Mozilla 的 Graydon Hoare 于2010年创建了 Rust，以一种以坚韧著称的真菌命名。该项目源于 Mozilla 需要一种不需要垃圾回收就能提供内存安全的语言——这对于 Servo 浏览器引擎项目至关重要。
+
+Rust 的定义性创新是其所有权系统，通过编译器检查的一组规则在编译时强制内存安全。这消除了整类 bug（空指针解引用、数据竞争、内存泄漏），同时不产生运行时成本。
+
+## Design Philosophy
+
+Rust 的核心哲学是"无畏并发"——无数据竞争的安全系统编程。所有权系统将内存访问视为资源，应用与管理文件和网络连接相同的原则。
+
+零成本抽象是核心：高级构造编译成高效机器码，与手写 C 代码不相上下。该语言提供函数式特性如模式匹配、迭代器和闭包，且没有运行时开销。
+
+## Code Example
+
+```rust filename="Rust 示例"
+
+// 所有权和借用
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+
+// 无数据竞争的并发
+use std::thread;
+
+let data = vec![1, 2, 3];
+let handle = thread::spawn(move || {
+    data.iter().map(|x| x * 2).collect::<Vec<_>>()
+});
+let result = handle.join().unwrap();
+
+// 模式匹配
+match value {
+    Some(x) if x > 0 => println!("正数: {}", x),
+    Some(x) => println!("非正数: {}", x),
+    None => println!("空值"),
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web 浏览器 | Servo, Firefox (组件) |
+| 区块链 | Solana, Polygon |
+| 云 | AWS Firecracker, Cloudflare |
+| CLI | ripgrep, fd, bat |
+
+## Influence & Legacy
+
+**Inspired by:** C++, ML, Haskell, Cyclone, Erlang
+
+**Influenced:** Carbon（C++ 继承者）、Swift（内存安全）、各种研究所有权模型的新语言
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | Cargo |
+| Web 框架 | Axum, Actix-web, Rocket |
+| 测试 | 内置, cargo test, criterion |
+| 构建 | cargo build, Cargo.lock |
+
+## When to Use
+
+**Good fit:**
+- 需要内存安全的系统编程
+- 性能关键的应用
+- WebAssembly 编译
+- 有性能要求的 CLI 工具
+
+**Not a good fit:**
+- 编译时间重要的快速原型开发
+- 系统编程新手团队
+- 简单脚本（使用 Python 或 Ruby）
+
+## Controversies
+
+<Callout type="warning">
+  Rust 的学习曲线陡峭。借用检查器虽然出色，但通常会拒绝有效程序，直到你学会它的心智模型。这种"与编译器斗争"的阶段可能会让新手沮丧，但最终会得到无bug的代码。
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Stack Overflow 年度开发者调查已连续十多年将 Rust 评为"最受喜爱的编程语言"。尽管是一门用于浏览器和操作系统的系统语言，Rust 拥有业界最热情的开发者社区之一。
+</Callout>

@@ -1,0 +1,97 @@
+---
+title: C#
+description: Modern object-oriented language from Microsoft, core of the .NET ecosystem
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# C#
+
+> _"Managed code is the future, and C# is leading the charge."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2000 |
+| **Creator** | Anders Hejlsberg (Microsoft) |
+| **Paradigm** | Object-oriented, Multi-paradigm |
+| **Type System** | Static, Strong, Safe |
+| **Platform** | Cross-platform (.NET) |
+| **Current Version** | 12.0 (2023) |
+| **License** | MIT |
+
+## Origin Story
+
+In the late 1990s, Microsoft faced a strategic challenge. Java was gaining popularity with its "Write Once, Run Anywhere" promise, and Windows needed a modern language that could compete. In 2000, Anders Hejlsberg—creator of Turbo Pascal and Delphi—unveiled C# (pronounced "C sharp") as part of the .NET initiative.
+
+The language was designed from scratch to be safe, modern, and directly supported by the Common Language Runtime (CLR). It borrowed the best ideas from C++, Java, and Delphi while introducing innovative features like properties, events, and LINQ.
+
+## Design Philosophy
+
+C# was designed to be a simple, modern, object-oriented language. Microsoft aimed to create something that combined the power of C++ with the simplicity of Visual Basic. The result was a language that emphasized type safety, garbage collection, and component-oriented development.
+
+The evolution of C# has been remarkable—from a Java-like language in 1.0 to a feature-rich powerhouse. Each version added significant capabilities: generics (2.0), LINQ (3.0), async/await (5.0), records (9.0), and pattern matching (8.0+).
+
+## Code Example
+
+```csharp filename="C# Example"
+// Classic OOP with modern features
+public record Person(string Name, int Age);
+
+// LINQ query expression
+var adults = people
+    .Where(p => p.Age >= 18)
+    .OrderBy(p => p.Name)
+    .Select(p => p.Name);
+
+// Async programming made simple
+public async Task<string> FetchDataAsync(string url)
+{
+    using var client = new HttpClient();
+    return await client.GetStringAsync(url);
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Enterprise | Azure SDK, Visual Studio, Unity |
+| Game Development | Unity Game Engine, Godot (via C# scripting) |
+| Web APIs | ASP.NET Core, NancyFX |
+| Desktop | WPF, WinForms, Avalonia |
+
+## Influence & Legacy
+
+**Inspired by:** C++, Java, Delphi, ML
+
+**Influenced:** Java (later versions borrowed LINQ-like features), Kotlin (null safety), TypeScript, F#
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | NuGet |
+| Major Frameworks | .NET 6/7/8, ASP.NET Core, MAUI |
+| Build Tools | MSBuild, dotnet CLI |
+| Testing | xUnit, NUnit, MSTest |
+
+## When to Use
+
+**Good fit:**
+- Enterprise applications and web services
+- Game development with Unity
+- Cross-platform desktop apps with .NET MAUI
+- Windows-specific applications (WPF, WinForms)
+
+**Not a good fit:**
+- Systems programming where you need manual memory control
+- Very lightweight scripts where startup time matters
+- Frontend web development (use TypeScript instead)
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  The name "C#" was inspired by musical notation, where "#" indicates a note is one semitone higher. Just as C# is one step above C, the language was designed to be a step above its predecessors.
+</Callout>

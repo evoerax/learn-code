@@ -1,0 +1,105 @@
+---
+title: Scala
+description: The language that runs on the JVM, combining object-oriented and functional programming
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Scala
+
+> _"The JVM should have been designed for functional programming from the start. Scala is what would have happened if it had been."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2004 |
+| **Creator** | Martin Odersky (EPFL) |
+| **Paradigm** | Object-oriented, Functional |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | JVM, JavaScript, Native |
+| **Current Version** | 3.4 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Martin Odersky, a researcher who had worked on Generic Java and the Pizza language, created Scala to address what he saw as fundamental limitations in the JVM for functional programming. Released in 2004 at EPFL (École Polytechnique Fédérale de Lausanne), Scala combined the best of object-oriented and functional programming on the established Java platform.
+
+Scala's name stands for "Scalable Language"—designed to grow with the demands of its users. It was built to be both a small language for concise scripting and a powerful language for large-scale enterprise systems.
+
+## Design Philosophy
+
+Scala embraces the principle that "everything is an object"—even functions are objects. It also pioneered many functional concepts that have since spread to mainstream languages: case classes, pattern matching, implicit parameters, and the actor model.
+
+The language prioritizes expressiveness and conciseness without sacrificing type safety. Type inference reduces boilerplate, while advanced type system features enable powerful abstractions. The "purity" of Scala is flexible—allowing both imperative and functional styles.
+
+## Code Example
+
+```scala filename="Scala Example"
+// Case classes for immutable data
+case class Person(name: String, age: Int)
+
+// Pattern matching
+def describe(p: Person): String = p match
+  case Person("Alice", _) => "Found Alice"
+  case Person(_, age) if age < 18 => "Minor"
+  case _ => "Unknown"
+
+// Functional collection operations
+val adults = people
+  .filter(_.age >= 18)
+  .sortBy(_.name)
+  .map(_.name)
+
+// Concise function syntax
+val add: (Int, Int) => Int = _ + _
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Big Data | Apache Spark, Apache Kafka |
+| Web Frameworks | Play Framework, Lift |
+| Finance | Twitter (historical), Goldman Sachs |
+| Distributed Systems | Akka, Lagom |
+
+## Influence & Legacy
+
+**Inspired by:** Java, Haskell, ML, Pizza, Funcons
+
+**Influenced:** Kotlin (null safety, data classes), Reduct, OCaml (some features), JDK 8+ lambdas
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Build Tool | sbt, Mill |
+| Package Manager | Maven Central, Coursier |
+| Major Frameworks | Akka, Play Framework, Spark |
+| Testing | ScalaTest, mUnit, Specs2 |
+
+## When to Use
+
+**Good fit:**
+- Big data processing with Spark
+- Distributed systems using Akka
+- Building DSLs and internal languages
+- When you need the JVM ecosystem with functional programming
+
+**Not a good fit:**
+- Simple scripts where compilation overhead matters
+- Teams without strong type system knowledge
+- Performance-critical low-level work (use Java or native)
+
+## Controversies
+
+<Callout type="warning">
+  Scala's flexibility is both its strength and weakness. "Scala black belts" can write incredibly elegant code, but average developers can create unmaintainable messes. The language's complexity has led some companies to migrate to simpler alternatives.
+</Callout>
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Twitter migrated much of their infrastructure from Ruby to Scala in the early 2010s, handling millions of tweets per second. This success story helped establish Scala in the enterprise world.
+</Callout>
