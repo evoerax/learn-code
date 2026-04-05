@@ -1,7 +1,57 @@
 ---
-title: 2000s
+title: 2000s — 多元化与 Web 平台
 ---
 
-# 2000s
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# 2000s — 多元化与 Web 平台
+
+互联网泡沫破裂之后，一场更安静的革命开始了。2000 年代产生了一批异常多样化的新语言——JVM 上的函数式语言（Scala、Clojure）、具有现代特性的系统语言（D）、大型科技公司开发的并发语言（Go），以及将教会一代儿童编程的教育语言（Scratch）。这个十年确立了没有单一语言能满足所有需求的事实。
+
+## 背景
+
+| | |
+|---|---|
+| **时代特征** | Web 2.0、云计算初现、移动设备兴起 |
+| **重要事件** | 互联网泡沫破裂（2000–2002）、谷歌上市（2004）、iPhone（2007）、AWS S3/EC2（2006） |
+| **里程碑** | 谷歌发布 Go（2009）；云基础设施语言出现 |
+| **核心挑战** | 将 Web 服务扩展到数百万用户；并发编程 |
+
+<Callout type="info">
+  Go 于 2007 年由 Ken Thompson、Rob Pike 和 Robert Griesemer 在谷歌设计，彼时他们正在等待一个 C++ 程序编译完成。他们想要一种编译速度快、安全、并发简单的语言——与 C++ 相反。
+</Callout>
+
+## 2000 年代的语言
+
+| 语言 | 年份 | 创造者 | 意义 |
+|------|------|--------|------|
+| C# | 2000 | Anders Hejlsberg（微软） | .NET 的 Java 替代品；LINQ、async/await、现代类型系统 |
+| ActionScript | 2000 | Macromedia | Flash 脚本；HTML5 之前的 Web 交互性 |
+| Groovy | 2003 | James Strachan | 动态 JVM 语言；Gradle 构建工具 |
+| Scala | 2004 | Martin Odersky（EPFL） | JVM 上的 OOP + 函数式；类型系统强大 |
+| F# | 2005 | Don Syme（微软研究院） | .NET 的 ML 家族函数式语言 |
+| D | 2001 | Walter Bright | C++ 替代品；现代系统语言 |
+| Haxe | 2005 | Nicolas Cannasse | 跨平台编译目标 |
+| Processing | 2001 | Reas & Fry（MIT） | 视觉艺术和创意编程 |
+| Scratch | 2003 | MIT 媒体实验室 | 面向儿童的积木式编程 |
+| PowerShell | 2006 | 微软（Snover） | Windows 的面向对象 Shell 脚本 |
+| Clojure | 2007 | Rich Hickey | JVM 上的 Lisp；不可变数据；并发 |
+| Go | 2009 | 谷歌（Thompson、Pike、Griesemer） | 编译速度快、有垃圾回收、内置并发 |
+| CoffeeScript | 2009 | Jeremy Ashkenas | JavaScript 的语法糖 |
+| Nim | 2008 | Andreas Rumpf | 具有 Python 式语法的系统语言 |
+
+## 核心主题
+
+**JVM 作为平台。** Scala 和 Clojure 证明了 JVM 是具有截然不同哲学的语言的良好目标。Scala 从学术界带来了类型级编程和模式匹配。Clojure 带来了 Lisp 的宏系统和对不可变性的彻底承诺。两者都能无缝调用 Java 库，使 JVM 成为一个开放的生态系统，而非 Java 的私有领地。
+
+**微软的文艺复兴。** C# 最初是 Java 的克隆，但很快在语言特性上超越了 Java。LINQ（2007）将类似 SQL 的查询引入对象和集合。Async/await（2012）后来革命性地改变了多种语言中的异步编程。F# 将 ML 风格的函数式编程带入 .NET。微软正在进行严肃的语言研究。
+
+**Go 的刻意简洁。** 谷歌需要一种能够编写可靠、大规模并发服务器的语言。Go 的答案是极度克制：没有泛型（直到 2022 年）、没有继承、没有异常——但有 goroutine 和 channel 来处理并发，快速编译器，以及单一强制执行的代码风格。Go 迅速在后端和基础设施团队中传播开来。
+
+**创意与教育计算。** Processing 让设计师也能进行可视化艺术编程。Scratch 用拖放积木让数百万儿童学习了编程逻辑，而无需面对语法错误。这些不是"玩具"语言——它们向那些永远不会触碰终端的人介绍了编程概念。
+
+**函数式编程走向成熟。** Clojure 的持久化数据结构和 Scala 的 case class 将函数式模式带入了生产 JVM 代码。这传达了一个信息：不可变性和一等函数不只是学术练习——它们让并发代码更安全、更简单。
+
+## 展望未来
+
+2000 年代确立了多元化作为常态——不同领域用不同语言。2010 年代将加速这一趋势：语言将在内存安全、类型表达能力和编译时保证上展开竞争，反映出一个从二十年生产故障中汲取教训的行业。

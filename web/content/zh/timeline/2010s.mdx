@@ -1,7 +1,59 @@
 ---
-title: 2010s
+title: 2010s — 安全性、类型与现代工具
 ---
 
-# 2010s
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# 2010s — 安全性、类型与现代工具
+
+2010 年代是对前几十年失败的回应。缓冲区溢出、空指针异常、竞争条件和价值数十亿美元的漏洞，驱使一代语言设计者追问：如果类型系统能在编译时*阻止*这些错误会怎样？Rust 在没有垃圾回收的情况下消除了内存安全漏洞。TypeScript 使大型 JavaScript 代码库变得可管理。Swift 和 Kotlin 用更安全、更具表达力的替代品取代了 Objective-C 和 Java。
+
+## 背景
+
+| | |
+|---|---|
+| **时代特征** | 移动优先、云原生、开源巨头 |
+| **重要事件** | iOS/Android 成熟、Docker（2013）、Kubernetes（2014）、WebAssembly 规范（2017） |
+| **里程碑** | Rust 1.0（2015）——无 GC 的内存安全在规模上得到验证 |
+| **核心挑战** | 内存安全、空值安全、并发，以及大型代码库的类型安全 |
+
+<Callout type="info">
+  Rust 的所有权系统是这十年最重要的编程语言创新。它在编译时强制保证内存安全——没有释放后使用、没有数据竞争、没有空指针解引用——而无需垃圾回收器。Mozilla 用它重写了 Firefox 的渲染引擎。
+</Callout>
+
+## 2010 年代的语言
+
+| 语言 | 年份 | 创造者 | 意义 |
+|------|------|--------|------|
+| Rust | 2010 | Graydon Hoare（Mozilla） | 无 GC 的内存安全；所有权/借用系统 |
+| Kotlin | 2011 | JetBrains | 空值安全的 Java 替代品；官方 Android 语言 |
+| Elixir | 2011 | José Valim | Ruby 式语法运行在 Erlang VM 上；分布式容错系统 |
+| Dart | 2011 | 谷歌 | Flutter 的语言；AOT 和 JIT 编译 |
+| Elm | 2012 | Evan Czaplicki | 纯函数式前端；无运行时错误 |
+| TypeScript | 2012 | Anders Hejlsberg（微软） | JavaScript 的类型超集；大型代码库管理 |
+| Julia | 2012 | MIT 团队 | 高性能科学计算；多重分派 |
+| Hack | 2014 | Facebook | 渐进类型的 PHP；驱动 Meta 的基础设施 |
+| Swift | 2014 | Chris Lattner（苹果） | 安全、快速的 Objective-C 替代品，用于苹果平台 |
+| Crystal | 2014 | Manas Technology | Ruby 语法，C 级性能，静态类型 |
+| PureScript | 2013 | Phil Freeman | 受 Haskell 启发的语言，编译为 JavaScript |
+| ReScript | 2010 | Facebook | 基于 OCaml，编译为 JavaScript |
+| Ballerina | 2017 | WSO2 | 网络感知语言，用于集成服务 |
+| Pony | 2015 | Sylvan Clebsch | 具有引用能力的 Actor 模型；无数据竞争 |
+| Solidity | 2014 | 以太坊基金会 | 以太坊区块链的智能合约语言 |
+| Cairo | 2019 | StarkWare | 用于 STARK 系统的零知识证明语言 |
+
+## 核心主题
+
+**内存安全成为优先事项。** Rust 的所有权和借用系统是一次理论突破的实践化。核心洞见：所有权可以静态追踪，无需运行时开销。一个值只有一个所有者；引用必须有效；数据竞争是不可能的。Rust 编译器拒绝违反这些规则的程序——在运行之前。
+
+**空值安全走向主流。** "十亿美元的错误"——Tony Hoare 对自己在 1965 年发明空引用的称谓——终于开始被纠正。Kotlin 的可空类型、Swift 的 Optional 和 Rust 的 `Option<T>` 都要求程序员明确处理值缺失的情况。空指针异常变得可以预防。
+
+**TypeScript 拯救了 JavaScript。** 随着 JavaScript 代码库增长到数百万行，缺乏类型成为一个严重的工程问题。TypeScript 的渐进类型系统可以逐步采用——你可以一次一个文件地为现有 JavaScript 添加类型。到 2020 年，TypeScript 的使用量可以说已经超过了 JavaScript 本身。
+
+**函数式语言进入移动端。** Elm 证明了纯函数式编程可以使前端开发更可靠——Elm 架构影响了 React 的设计。ReScript 和 PureScript 将类型安全带入了 JavaScript 互操作。Elixir 将 Erlang 久经考验的并发模型带给了那些觉得 Erlang 语法令人生畏的开发者。
+
+**区块链创造了新需求。** Solidity 引入了一类新的正确性问题：智能合约部署后无法修补，漏洞可能损失数百万美元。这推动了对形式验证和能够证明合约属性的类型系统的强烈兴趣。
+
+## 展望未来
+
+2010 年代结束时，内存安全和类型安全已稳固进入主流编程的议题窗口。2020 年代将延续这一趋势——来自谷歌、苹果和开源社区的新语言将使安全性成为默认值，而非可选项。
