@@ -1,0 +1,80 @@
+---
+title: FLOW-MATIC
+description: The first business-oriented programming language with English-like syntax
+---
+
+import { Callout } from 'nextra/components'
+
+# FLOW-MATIC
+
+> _The language that brought English to business computing._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1955 |
+| **Creator** | Grace Hopper (Remington Rand UNIVAC) |
+| **Paradigm** | Imperative, Domain-specific |
+| **Type System** | Dynamic, Weak |
+| **Platform** | UNIVAC I |
+| **Current Version** | FLOW-MATIC (1960) |
+| **License** | Proprietary |
+
+## Origin Story
+
+FLOW-MATIC was developed by Grace Hopper and her team at Remington Rand UNIVAC in 1955. It was the first programming language designed specifically for business data processing, and it introduced a revolutionary concept: programs written in English-like syntax instead of cryptic mathematical notation.
+
+Before FLOW-MATIC, business computers required programmers to write applications in machine code or assembly. This created a significant barrier for non-technical business professionals who understood the data but not programming. Hopper envisioned a language that business people could read and understand directly.
+
+The project began when Hopper argued that English should be used in programming. Her colleagues reportedly laughed—at the time, using English in programming was considered absurd. But Hopper persisted, and by 1959, FLOW-MATIC had evolved into something that non-programmers could actually use.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The business world would not wait for scientists to simplify computer programming. They needed someone to speak to them in their own language." — Grace Hopper
+</Callout>
+
+FLOW-MATIC's revolutionary design principles:
+- English-like syntax: READ, WRITE, IF, STOP
+- Program statements that resembled business documents
+- Separation of data descriptions from program logic
+- Built-in file handling capabilities
+- No mathematical symbols required
+
+## Code Example
+
+```flowmatic
+ BEGIN PROGRAM DESCRIPTION
+   INPUT FILE INVENTORY FILE(INVENT)
+   OUTPUT FILE REPORT FILE(REPT)
+
+   MOVE CORRESPONDING INVENT TO WS-RECORD
+   IF WS-QUANTITY < WS-REORDER-POINT THEN
+     WRITE REPORT-LINE FROM WS-RECORD
+   END IF
+ END PROGRAM
+```
+
+This example shows FLOW-MATIC's English-dominant syntax, designed to be readable by non-programmers. The `MOVE CORRESPONDING` statement was revolutionary for handling structured business data.
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Defense | US Army payroll systems |
+| Business | Early inventory management |
+| Insurance | Policy processing systems |
+| Government | Census data processing |
+
+## Influence & Legacy
+
+**Inspired by:** Machine code, business data processing needs
+
+**Influenced:** COBOL, COMTRAN, RPG
+
+FLOW-MATIC's most significant contribution was directly inspiring COBOL (Common Business-Oriented Language) in 1959. When the DoD convened a conference to standardize business languages, Hopper's FLOW-MATIC became the foundation.
+
+COBOL inherited FLOW-MATIC's English-like syntax, its separation of data and code, and its focus on business file processing. Today, billions of lines of COBOL still run in government agencies and banks worldwide—all ultimately descended from FLOW-MATIC.
+
+Grace Hopper's vision of making computers accessible to non-programmers was decades ahead of its time, yet its influence persists in every business application today.

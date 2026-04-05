@@ -1,0 +1,77 @@
+---
+title: Autocode
+description: The earliest high-level programming language from University of Manchester
+---
+
+import { Callout } from 'nextra/components'
+
+# Autocode
+
+> _The pioneer that proved high-level languages were possible._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1952 |
+| **Creator** | Alick Glennie (University of Manchester) |
+| **Paradigm** | Imperative, Compiled |
+| **Type System** | Static, Weak |
+| **Platform** | Manchester Mark 1 |
+| **Current Version** | Autocode 2 (1961) |
+| **License** | Academic |
+
+## Origin Story
+
+Autocode was developed by Alick Glennie at the University of Manchester in 1952, making it one of the earliest high-level programming languages ever created. It was specifically designed for the Manchester Mark 1 computer, one of the world's first stored-program computers.
+
+Before Autocode, programmers had to write their programs in machine code or assembly language, which was tedious, error-prone, and required deep knowledge of the hardware. Glennie sought to create a language that would allow programmers to express algorithms in a more natural, mathematical notation while still producing efficient code.
+
+The name "Autocode" was literal: it was code that could generate code automatically through compilation.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  Autocode introduced the revolutionary concept that a compiler could translate high-level mathematical notation into efficient machine code, paving the way for all future programming languages.
+</Callout>
+
+Key innovations of Autocode:
+- Algebraic syntax that resembled mathematical notation
+- Use of subroutine calls for code reuse
+- Support for arrays (called "vectors")
+- Automatic register allocation
+- One of the first languages to use a compiler rather than an interpreter
+
+## Code Example
+
+```autocode
+ PROGRAM FACTORIAL
+ INTEGER N, F
+ READ N
+ F := 1
+ FOR I := 1 TO N DO
+   F := F * I
+ ENDFOR
+ PRINT F
+ END
+```
+
+This factorial program demonstrates Autocode's algebraic syntax and control structures. Note how the := operator for assignment and the mathematical notation influenced later language designs.
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Academic | Manchester Mark 1 research |
+| Mathematics | Early numerical algorithms |
+| Computing | Foundation for CPL (Cambridge Programming Language) |
+
+## Influence & Legacy
+
+**Inspired by:** Machine code, mathematical notation
+
+**Influenced:** CPL, ALGOL 58, FORTRAN
+
+Autocode's significance lies in its proof-of-concept: it demonstrated that high-level languages could work in practice. Its algebraic syntax directly influenced ALGOL 58, which in turn influenced Pascal, C, and ultimately most modern programming languages.
+
+The concept of a compiler—translating human-readable code into machine code—was solidified by Autocode's success. Without Autocode, the development of FORTRAN and ALGOL might have been delayed significantly.

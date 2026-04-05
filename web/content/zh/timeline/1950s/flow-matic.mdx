@@ -1,0 +1,80 @@
+---
+title: FLOW-MATIC
+description: 首个使用类英语语法的商业数据处理编程语言
+---
+
+import { Callout } from 'nextra/components'
+
+# FLOW-MATIC
+
+> _将英语带入商业计算领域的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **诞生时间** | 1955 |
+| **创始人** | 格蕾丝·霍珀（Remington Rand UNIVAC） |
+| **范式** | 命令式、领域特定 |
+| **类型系统** | 动态、弱类型 |
+| **平台** | UNIVAC I |
+| **当前版本** | FLOW-MATIC (1960) |
+| **许可协议** | 专有软件 |
+
+## 诞生背景
+
+FLOW-MATIC 由格蕾丝·霍珀（Grace Hopper）和她在 Remington Rand UNIVAC 的团队于 1955 年开发。它是第一门专门为商业数据处理设计的编程语言，引入了一个革命性的概念：用类英语语法编写程序，而不是使用晦涩的数学符号。
+
+在 FLOW-MATIC 出现之前，商务计算机需要程序员用机器码或汇编语言编写应用程序。这对非技术性的商务专业人员造成了巨大的障碍——他们懂数据，却不懂编程。霍珀设想了一种商务人士能够直接阅读和理解的编程语言。
+
+这个项目始于霍珀主张编程应该使用英语。据说她的同事们当时笑了——在那个时代，在编程中使用英语被认为是荒谬的。但霍珀坚持不懈，到 1959 年，FLOW-MATIC 已经演变成非程序员实际上能够使用的语言。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "商界不会等待科学家简化计算机编程。他们需要有人用他们自己的语言与他们交流。"——格蕾丝·霍珀
+</Callout>
+
+FLOW-MATIC 的革命性设计原则：
+- 类英语语法：READ、WRITE、IF、STOP
+- 类似商业文档的程序语句
+- 数据描述与程序逻辑分离
+- 内置文件处理能力
+- 不需要数学符号
+
+## 代码示例
+
+```flowmatic
+ BEGIN PROGRAM DESCRIPTION
+   INPUT FILE INVENTORY FILE(INVENT)
+   OUTPUT FILE REPORT FILE(REPT)
+
+   MOVE CORRESPONDING INVENT TO WS-RECORD
+   IF WS-QUANTITY < WS-REORDER-POINT THEN
+     WRITE REPORT-LINE FROM WS-RECORD
+   END IF
+ END PROGRAM
+```
+
+这个例子展示了 FLOW-MATIC 以英语为主的语法，设计目的是让非程序员也能阅读。`MOVE CORRESPONDING` 语句用于处理结构化商业数据，这在当时是革命性的。
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 国防 | 美国陆军工资系统 |
+| 商业 | 早期库存管理系统 |
+| 保险 | 保单处理系统 |
+| 政府 | 人口普查数据处理 |
+
+## 影响与遗产
+
+**灵感来源：** 机器码、商业数据处理需求
+
+**影响语言：** COBOL、COMTRAN、RPG
+
+FLOW-MATIC 最重要的贡献是直接启发了 1959 年的 COBOL（面向商业的通用语言）。当美国国防部召开会议标准化商业语言时，霍珀的 FLOW-MATIC 成为了基础。
+
+COBOL 继承了 FLOW-MATIC 的类英语语法、数据与代码分离的概念，以及对商业文件处理的关注。如今，全球政府和银行中仍有数十亿行 COBOL 代码在运行——它们都最终源于 FLOW-MATIC。
+
+格蕾丝·霍珀让非程序员也能使用计算机的愿景领先于她的时代数十年，但她的影响力在当今每一个商业应用中依然存在。
