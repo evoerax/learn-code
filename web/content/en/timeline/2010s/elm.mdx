@@ -1,0 +1,117 @@
+---
+title: Elm
+description: Evan Czaplicki's pure functional language compiling to JavaScript, pioneering The Elm Architecture
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Elm
+
+> _"The Elm Architecture is the secret sauce behind reliable web applications."_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2012 |
+| **Creator** | Evan Czaplicki |
+| **Paradigm** | Pure Functional, Reactive |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Cross-platform (compiles to HTML/CSS/JS) |
+| **Current Version** | 0.19.1 (2019) |
+| **License** | BSD 3-Clause |
+
+## Origin Story
+
+Evan Czaplicki created Elm in 2012 as his thesis project at Pre哈佛大学. Unlike traditional web development where JavaScript dominates, Elm proposed a completely different approach: a pure functional language that compiles to JavaScript, with emphasis on reliability and maintainability.
+
+Elm's defining moment came when it demonstrated that web applications could have zero runtime errors in practice. Through its strict type system and pure functions, Elm makes entire categories of bugs impossible. Companies like Elm活用 and NoRedInk reported dramatic reductions in production errors after adopting Elm.
+
+The Elm Architecture (TEA) — unidirectional data flow with Model-Update-View pattern — later influenced Redux and many other state management libraries in JavaScript ecosystems.
+
+## Design Philosophy
+
+Elm is radically simple. There are no runtime exceptions, no `null` checks needed, no type coercion surprises. The type system is inferred but explicit when you want it. Every function is pure unless explicitly marked as a "command" or "subscription."
+
+The architecture enforces a strict unidirectional data flow: User → Messages → Update → Model → View. This predictability makes debugging systematic rather than mystical.
+
+<Callout type="default" emoji="💡">
+  Elm's famous "You are not allowed to run this code" error message pioneered a new era of helpful compiler error messages that now influences Rust, TypeScript, and many other languages.
+</Callout>
+
+## Code Example
+
+```elm filename="Elm Example.elm"
+-- The Elm Architecture: Model, Update, View
+
+-- Model: the application's state
+type alias Model =
+    { count : Int
+    , message : String
+    }
+
+initialModel : Model
+initialModel =
+    { count = 0
+    , message = "Click to increment"
+    }
+
+-- Messages: user actions that trigger updates
+type Msg
+    = Increment
+    | Decrement
+    | Reset
+
+-- Update: pure function transforming model based on message
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Increment ->
+            { model | count = model.count + 1 }
+        
+        Decrement ->
+            { model | count = model.count - 1 }
+        
+        Reset ->
+            { model | count = 0 }
+
+-- View: declarative HTML rendering
+view : Model -> Html Msg
+view model =
+    div []
+        [ button [ onClick Decrement ] [ text "-" ]
+        , span [] [ text (String.fromInt model.count) ]
+        , button [ onClick Increment ] [ text "+" ]
+        , p [] [ text model.message ]
+        ]
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Education | NoRedInk (writing platform), Puzzle ( Elm tutorial) |
+| Finance | Carl, Motherfunc |
+| Healthcare | Carecentive |
+| Developer Tools | Elm-format, Elm-analyse |
+
+## Influence & Legacy
+
+**Inspired by:** Haskell, Standard ML, F# (type inference), Oz (effects)
+
+**Influenced:** Redux, Vuex, MobX, The Elm Architecture pattern, create-elm-app
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Registry | package.elm-lang.org |
+| Build Tools | elm make, elm-live, create-elm-app |
+| Editor Support | elm-format, elmLS (VS Code) |
+| Testing | elm-test |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Elm's compiler is famously helpful. When you make a mistake, the compiler doesn't just tell you what went wrong — it often tells you exactly how to fix it. Evan Czaplicki called this "A Compiler You Can Trust." This philosophy of helpful error messages influenced Rust's compiler messages and TypeScript's error reporting.
+</Callout>

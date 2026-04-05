@@ -6,5 +6,6 @@ export default {
   dart: { title: 'Dart' },
   julia: { title: 'Julia' },
   elixir: { title: 'Elixir' },
+  elm: { title: 'Elm' },
   solidity: { title: 'Solidity' },
 }

@@ -1,0 +1,101 @@
+---
+title: CoffeeScript
+description: Jeremy Ashkenas 的 JavaScript 替代方案，以 expressive 语法编译为可读的 JS
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# CoffeeScript
+
+> _"It's just JavaScript" — 这门语言证明了语法糖可以重塑我们编写代码的方式。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2009 |
+| **Creator** | Jeremy Ashkenas |
+| **Paradigm** | 函数式、面向对象、编译型 |
+| **Type System** | 动态类型（后期加入可选类型注解） |
+| **Platform** | 跨平台（编译为 JavaScript） |
+| **Current Version** | 2.7.2 (2023) |
+| **License** | MIT |
+
+## Origin Story
+
+2009年12月，Jeremy Ashkenas 发布 CoffeeScript 作为一项实验：如果 JavaScript 可以用更简洁、更 Python 化的语法来编写会怎样？该语言编译为可读的 JavaScript，使调试成为可能，同时提供了显著的语法改进。
+
+Ashkenas 之前创建了 Backbone.js，他设计 CoffeeScript 是为了利用他所说的"完全有意的透明谎言"——一种语言可以既是自己的语法又是编译目标的想法。CoffeeScript 的列表推导式、重要空白（significant indentation）和箭头函数影响了 JavaScript 本身，当 ES6 采用了许多这些特性时。
+
+## Design Philosophy
+
+CoffeeScript 的哲学最好用其标语来概括："It's just JavaScript"。每个 CoffeeScript 表达式都可以预测地映射到 JavaScript。该语言推崇语法糖而非新语义——当你在 CoffeeScript 中写 `x = y` 时，你得到的正是你期望的 `var x = y` 或 `let x = y`。
+
+设计强调简洁和可读性。重要空白（像 Python 一样）消除了大括号。箭头函数（`=>`）早于 ES6。模式匹配和解构赋值在 JavaScript 采用它们之前就存在了。
+
+<Callout type="default" emoji="💡">
+  CoffeeScript 的影响是永久的：`=>` 箭头函数、`class` 关键字、扩展运算符（`...`）和模板字符串都通过 CoffeeScript 的开创性引入了 JavaScript。
+</Callout>
+
+## Code Example
+
+```coffeescript filename="coffee-example.coffee"
+# 列表推导式 - CoffeeScript 的核心特性
+squares = (x * x for x in [1..10])
+evens = (n for n in squares when n % 2 is 0)
+
+# 箭头函数早于 ES6
+greet = (name, greeting = "Hello") ->
+  "#{greeting}, #{name}!"
+
+# 解构赋值
+{name, age, city: { country }} =
+  { name: "Alice", age: 30, city: { country: "Japan", city: "Tokyo" } }
+
+# 类与继承
+class Animal
+  constructor: (@name) ->
+  speak: -> "#{@name} makes a sound."
+
+class Dog extends Animal
+  speak: ->
+    super() + " Woof! Woof!"
+
+# Promise 异步
+fetchData = (url) ->
+  new Promise (resolve, reject) ->
+    resolve({ data: "result" })
+
+result = await fetchData("/api").catch (err) ->
+  console.error "Failed:", err
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web 应用 | GitHub 早期 UI, Dropbox (部分), Airbnb (历史) |
+| Node.js | 许多 npm 包用 CoffeeScript 发布 |
+| 游戏 | Starmele (浏览器游戏) |
+| 文档 | Stripe API 文档历史使用 CoffeeScript 示例 |
+
+## Influence & Legacy
+
+**Inspired by:** Python, Ruby, Haskell, JavaScript
+
+**Influenced:** TypeScript, ES6（箭头函数、类、解构）, LiveScript, Coco
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | npm |
+| 编译器 | coffee-script (npm), CoffeeScript Redux |
+| 编辑器 | VS Code CoffeeScript 插件, IntelliJ |
+| 构建工具 | grunt-contrib-coffeescript, webpack coffee-loader |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  CoffeeScript 是第一个流行的编译为 JavaScript 的语言，帮助确立了"转译"作为主流实践。在 CoffeeScript 之前，写一种语言然后编译成另一种语言以实现浏览器兼容性的想法看起来很不寻常。今天，TypeScript、Babel 和许多其他工具都遵循 CoffeeScript 开创的道路。
+</Callout>

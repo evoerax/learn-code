@@ -1,0 +1,117 @@
+---
+title: Elm
+description: Evan Czaplicki 的纯函数式语言，编译为 JavaScript，开创 The Elm Architecture
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Elm
+
+> _"The Elm Architecture 是可靠 Web 应用的秘密武器。"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2012 |
+| **Creator** | Evan Czaplicki |
+| **Paradigm** | 纯函数式、响应式 |
+| **Type System** | 静态类型、强类型、可推断 |
+| **Platform** | 跨平台（编译为 HTML/CSS/JS） |
+| **Current Version** | 0.19.1 (2019) |
+| **License** | BSD 3-Clause |
+
+## Origin Story
+
+Evan Czaplicki 于2012年在普林斯顿大学作为论文项目创建了 Elm。与传统 JavaScript Web 开发不同，Elm 提出了一种完全不同的方法：一种编译为 JavaScript 的纯函数式语言，强调可靠性和可维护性。
+
+Elm 的决定性时刻是它证明了 Web 应用程序实际上可以拥有零运行时错误。通过其严格的类型系统和纯函数，Elm 使整类 bug 不可能发生。像 NoRedInk 和 Puppet 这样的公司在采用 Elm 后报告了生产错误的显著减少。
+
+Elm 架构 (TEA) — 通过 Model-Update-View 模式的单向数据流 — 之后影响了 Redux 和 JavaScript 生态系统中的许多其他状态管理库。
+
+## Design Philosophy
+
+Elm 极度简单。没有运行时异常，不需要 null 检查，没有类型转换陷阱。类型系统是可推断的，但在需要时是显式的。每个函数都是纯的，除非明确标记为"命令"或"订阅"。
+
+架构强制执行严格的单向数据流：用户 → 消息 → 更新 → 模型 → 视图。这种可预测性使调试变得系统化而非神秘化。
+
+<Callout type="default" emoji="💡">
+  Elm 著名的"你不允许运行这段代码"错误消息开创了新一代有用的编译器错误消息，现在影响了 Rust、TypeScript 和许多其他语言。
+</Callout>
+
+## Code Example
+
+```elm filename="Elm 示例.elm"
+-- Elm 架构：Model, Update, View
+
+-- Model: 应用程序的状态
+type alias Model =
+    { count : Int
+    , message : String
+    }
+
+initialModel : Model
+initialModel =
+    { count = 0
+    , message = "点击增加计数"
+    }
+
+-- Messages: 触发更新的用户操作
+type Msg
+    = Increment
+    | Decrement
+    | Reset
+
+-- Update: 基于消息转换模型的纯函数
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Increment ->
+            { model | count = model.count + 1 }
+        
+        Decrement ->
+            { model | count = model.count - 1 }
+        
+        Reset ->
+            { model | count = 0 }
+
+-- View: 声明式 HTML 渲染
+view : Model -> Html Msg
+view model =
+    div []
+        [ button [ onClick Decrement ] [ text "-" ]
+        , span [] [ text (String.fromInt model.count) ]
+        , button [ onClick Increment ] [ text "+" ]
+        , p [] [ text model.message ]
+        ]
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 教育 | NoRedInk (写作平台), Puzzle (Elm 教程) |
+| 金融 | Carl, Motherfunc |
+| 医疗 | Carecentive |
+| 开发者工具 | Elm-format, Elm-analyse |
+
+## Influence & Legacy
+
+**Inspired by:** Haskell, Standard ML, F# (类型推断), Oz (副作用)
+
+**Influenced:** Redux, Vuex, MobX, The Elm Architecture 模式, create-elm-app
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包注册表 | package.elm-lang.org |
+| 构建工具 | elm make, elm-live, create-elm-app |
+| 编辑器支持 | elm-format, elmLS (VS Code) |
+| 测试 | elm-test |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Elm 的编译器以乐于助人著称。当你犯错时，编译器不只是告诉你哪里出错了——它经常准确地告诉你如何修复它。Evan Czaplicki 称这为"你可以信任的编译器"。这种有用的错误消息哲学影响了 Rust 的编译器消息和 TypeScript 的错误报告。
+</Callout>

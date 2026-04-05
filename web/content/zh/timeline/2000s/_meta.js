@@ -13,5 +13,6 @@ export default {
   clojure: { title: 'Clojure' },
   nim: { title: 'Nim' },
   go: { title: 'Go' },
+  coffeescript: { title: 'CoffeeScript' },
   rust: { title: 'Rust' },
 }

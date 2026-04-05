@@ -1,0 +1,102 @@
+---
+title: CoffeeScript
+description: Jeremy Ashkenas's JavaScript alternative with expressive syntax, compiling to readable JS
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# CoffeeScript
+
+> _"It's just JavaScript" — the language that proved syntactic sugar could reshape how we write code._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2009 |
+| **Creator** | Jeremy Ashkenas |
+| **Paradigm** | Functional, Object-oriented, Compiled |
+| **Type System** | Dynamic (with optional type annotations later) |
+| **Platform** | Cross-platform (compiles to JavaScript) |
+| **Current Version** | 2.7.2 (2023) |
+| **License** | MIT |
+
+## Origin Story
+
+In December 2009, Jeremy Ashkenas released CoffeeScript as an experiment: what if JavaScript could be written with a cleaner, more Pythonic syntax? The language compiles to readable JavaScript, making debugging possible while offering significant syntactic improvements.
+
+Ashkenas, who had previously created Backbone.js, designed CoffeeScript to exploit what he called "the wholly intentional lie of transparency" — the idea that a language can be both its own syntax and a compilation target. CoffeeScript's list comprehensions, significant indentation, and arrow functions influenced JavaScript itself when ES6 adopted many of these features.
+
+## Design Philosophy
+
+CoffeeScript's philosophy is best summarized by its tagline: "It's just JavaScript." Every CoffeeScript expression maps predictably to JavaScript. The language embraces syntactic sugar over new semantics — when you write `x = y` in CoffeeScript, you get exactly the `var x = y` or `let x = y` you'd expect.
+
+The design emphasizes brevity and readability. Significant whitespace (like Python) eliminates braces. Arrow functions (`=>`) predate ES6. Pattern matching and destructuring assignment came years before JavaScript adopted them.
+
+<Callout type="default" emoji="💡">
+  CoffeeScript's influence is permanent: the `=>` arrow function, `class` keyword, spread operator (`...`), and template literals all entered JavaScript via CoffeeScript's pioneering.
+</Callout>
+
+## Code Example
+
+```coffeescript filename="coffee-example.coffee"
+# List comprehensions - a core CoffeeScript feature
+squares = (x * x for x in [1..10])
+evens = (n for n in squares when n % 2 is 0)
+
+# Arrow functions predate ES6
+greet = (name, greeting = "Hello") ->
+  "#{greeting}, #{name}!"
+
+# Destructuring assignment
+{name, age, city: { country }} =
+  { name: "Alice", age: 30, city: { country: "Japan", city: "Tokyo" } }
+
+# Classes with inheritance
+class Animal
+  constructor: (@name) ->
+  speak: -> "#{@name} makes a sound."
+
+class Dog extends Animal
+  speak: ->
+    super() + " Woof! Woof!"
+
+# Async with promises
+fetchData = (url) ->
+  new Promise (resolve, reject) ->
+    # Simulated fetch
+    resolve({ data: "result" })
+
+result = await fetchData("/api").catch (err) ->
+  console.error "Failed:", err
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web Applications | GitHub's early UI, Dropbox (parts), Airbnb (historically) |
+| Node.js | Many npm packages published in CoffeeScript |
+| Games | Starmele (browser game), DOM игр |
+| Documentation | Stripe's API docs historically used CoffeeScript examples |
+
+## Influence & Legacy
+
+**Inspired by:** Python, Ruby, Haskell, JavaScript
+
+**Influenced:** TypeScript, ES6 (arrow functions, classes, destructuring), LiveScript, Coco
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | npm |
+| Compilers | coffee-script (npm), CoffeeScript Redux |
+| Editors | VS Code CoffeeScript plugin, IntelliJ |
+| Build Tools | grunt-contrib-coffeescript, webpack coffee-loader |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  CoffeeScript was the first popular language to compile to JavaScript and helped establish "transpilation" as a mainstream practice. Before CoffeeScript, the idea of writing one language that compiles to another for browser compatibility seemed unusual. Today, TypeScript, Babel, and many other tools follow this path that CoffeeScript pioneered.
+</Callout>
