@@ -1,0 +1,65 @@
+---
+title: PL/SQL
+description: Oracle 数据库的 SQL 过程扩展，存储过程与触发器的工业标准
+---
+
+# PL/SQL
+
+| | |
+|---|---|
+| **诞生时间** | 1991 |
+| **开发者** | Oracle Corporation |
+| **范式** | 过程式、SQL 扩展 |
+| **当前版本** | Oracle Database 23c |
+
+## 诞生背景
+
+PL/SQL（Procedural Language/SQL）由 Oracle Corporation 于 1991 年推出，作为 Oracle 数据库的扩展语言。它让开发者能在 SQL 中编写过程逻辑，解决了纯 SQL 无法处理复杂业务逻辑的问题。
+
+在 PL/SQL 之前，数据库应用需要在客户端代码和 SQL 之间来回切换，性能和可维护性都很差。
+
+## 设计初衷
+
+- 在数据库内部执行复杂业务逻辑
+- 减少客户端和数据库之间的网络往返
+- 提供事务控制的原子性保证
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 企业应用 | Oracle E-Business Suite |
+| 金融系统 | 银行核心交易系统 |
+| ERP | SAP ERP 数据库层 |
+
+## 代码示例
+
+```sql
+-- PL/SQL: 在数据库内部执行业务逻辑
+CREATE OR REPLACE PROCEDURE calc_bonus (
+    p_emp_id IN employees.employee_id%TYPE,
+    p_bonus OUT NUMBER
+) AS
+    v_salary employees.salary%TYPE;
+    v_dept VARCHAR2(50);
+BEGIN
+    SELECT salary, department_name
+    INTO v_salary, v_dept
+    FROM employees e
+    JOIN departments d ON e.department_id = d.department_id
+    WHERE employee_id = p_emp_id;
+
+    IF v_dept = 'SALES' THEN
+        p_bonus := v_salary * 0.15;
+    ELSE
+        p_bonus := v_salary * 0.10;
+    END IF;
+END;
+/
+```
+
+## 影响与遗产
+
+**受以下影响：** Ada（Oracle 创始人 Larry Ellison 曾考虑 Ada）、SQL
+
+**启发了：** T-SQL（Microsoft SQL Server）、PostgreSQL PL/pgSQL

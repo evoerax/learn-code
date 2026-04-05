@@ -11,4 +11,7 @@ export default {
   php: { title: 'PHP' },
   ruby: { title: 'Ruby' },
   ocaml: { title: 'OCaml' },
+  'wolfram-language': { title: 'Wolfram Language' },
+  'pl-sql': { title: 'PL/SQL' },
+  't-sql': { title: 'T-SQL' },
 }

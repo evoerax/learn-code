@@ -1,0 +1,59 @@
+---
+title: PL/SQL
+description: Oracle 数据库的 SQL 过程扩展，企业数据库开发的主流语言
+---
+
+# PL/SQL
+
+| | |
+|---|---|
+| **诞生时间** | 1991 |
+| **开发者** | Oracle Corporation |
+| **范式** | 过程式、SQL 扩展 |
+| **当前版本** | Oracle Database 23c |
+
+## 诞生背景
+
+PL/SQL（Procedural Language/SQL）由 Oracle 公司于 1991 年推出，作为 Oracle 数据库的过程化扩展。它让 SQL 具备了编写复杂业务逻辑的能力，是企业级数据库开发的基础语言。
+
+在 PL/SQL 诞生之前，数据库操作必须依赖纯 SQL，开发者在应用层和数据库层之间频繁切换，效率低下。
+
+## 设计初衷
+
+- 在数据库服务器内部执行业务逻辑
+- 减少网络往返，提升性能
+- 支持事务的原子性操作
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 企业应用 | Oracle E-Business Suite |
+| 电信计费 | 运营商核心系统 |
+| 金融 | 银行交易处理系统 |
+
+## 代码示例
+
+```sql
+-- PL/SQL: 数据库内执行的业务逻辑
+CREATE OR REPLACE PROCEDURE transfer_funds (
+    p_from_acc IN NUMBER,
+    p_to_acc IN NUMBER,
+    p_amount IN NUMBER
+) AS
+BEGIN
+    UPDATE accounts
+    SET balance = balance - p_amount
+    WHERE account_id = p_from_acc;
+
+    UPDATE accounts
+    SET balance = balance + p_amount
+    WHERE account_id = p_to_acc;
+
+    COMMIT;
+END;
+```
+
+## 影响与遗产
+
+**启发了：** T-SQL、PostgreSQL PL/pgSQL、SQL Server 存储过程

@@ -1,0 +1,66 @@
+---
+title: T-SQL
+description: Microsoft SQL Server 的 SQL 扩展，Windows 企业生态的核心数据库语言
+---
+
+# T-SQL
+
+| | |
+|---|---|
+| **诞生时间** | 1989 |
+| **开发者** | Microsoft / Sybase |
+| **范式** | 过程式、SQL 扩展 |
+| **当前版本** | SQL Server 2022 |
+
+## 诞生背景
+
+T-SQL（Transact-SQL）由 Microsoft 和 Sybase 于 1989 年共同开发，最初作为 SQL Server 的扩展语言。后来 Sybase 被 SAP 收购，而 Microsoft 继续独立发展 T-SQL 成为 SQL Server 的核心。
+
+T-SQL 是 Microsoft 企业技术栈的关键组成部分，全球数百万企业依赖它管理数据。
+
+## 设计初衷
+
+- 为 SQL Server 提供过程化编程能力
+- 支持本地变量、流程控制、错误处理
+- 与 Microsoft 技术栈深度集成
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 企业软件 | Microsoft Dynamics |
+| 电商 | 小型企业 ERP |
+| Web 应用 | 大量 ASP.NET 应用的后端 |
+
+## 代码示例
+
+```sql
+-- T-SQL: Microsoft SQL Server 的过程扩展
+CREATE PROCEDURE GetEmployeeBonus
+    @EmployeeID INT,
+    @Bonus DECIMAL(10,2) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Salary DECIMAL(10,2);
+    DECLARE @Dept VARCHAR(50);
+
+    SELECT @Salary = salary,
+           @Dept = d.name
+    FROM Employees e
+    JOIN Departments d ON e.DeptID = d.ID
+    WHERE e.EmployeeID = @EmployeeID;
+
+    IF @Dept = 'Engineering'
+        SET @Bonus = @Salary * 0.20;
+    ELSE
+        SET @Bonus = @Salary * 0.10;
+END;
+```
+
+## 影响与遗产
+
+**受以下影响：** SQL、PL/SQL（竞争关系中的相互借鉴）
+
+**启发了：** Azure SQL Database、SQL Server 的云原生版本

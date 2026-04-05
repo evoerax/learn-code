@@ -1,0 +1,67 @@
+---
+title: T-SQL
+description: Microsoft SQL Server 的 SQL 扩展，Windows 企业生态的核心数据库语言
+---
+
+# T-SQL
+
+| | |
+|---|---|
+| **诞生时间** | 1989 |
+| **开发者** | Microsoft / Sybase |
+| **范式** | 过程式、SQL 扩展 |
+| **当前版本** | SQL Server 2022 |
+
+## 诞生背景
+
+T-SQL（Transact-SQL）由 Microsoft 和 Sybase 于 1989 年联合开发，最初为 SQL Server 提供过程化扩展。Sybase 后来被 SAP 收购，而 Microsoft 继续独立发展 T-SQL，使其成为 SQL Server 的核心语言。
+
+T-SQL 是微软技术栈的数据库基石，从中小企业到大型企业都有广泛应用。
+
+## 设计初衷
+
+- 在数据库层面实现复杂业务逻辑
+- 提供完整的错误处理和事务控制
+- 与 .NET 技术栈无缝集成
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 企业应用 | Microsoft Dynamics ERP |
+| 医疗系统 | 医院信息管理系统 |
+| 零售 | POS 系统数据库层 |
+
+## 代码示例
+
+```sql
+-- T-SQL: SQL Server 的过程扩展
+CREATE PROCEDURE sp_UpdateInventory
+    @ProductID INT,
+    @Quantity INT,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    UPDATE Products
+    SET Stock = Stock - @Quantity
+    WHERE ProductID = @ProductID;
+
+    IF @@ROWCOUNT = 0
+    BEGIN
+        SET @Result = 0;
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+    SET @Result = 1;
+    COMMIT TRANSACTION;
+END;
+```
+
+## 影响与遗产
+
+**启发了：** Azure SQL Database、Entity Framework 的 SQL 生成

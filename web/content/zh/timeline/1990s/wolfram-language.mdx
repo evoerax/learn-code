@@ -1,0 +1,54 @@
+---
+title: Wolfram Language
+description: 符号计算和知识引擎语言，Mathematica 和 Wolfram Alpha 的核心
+---
+
+# Wolfram Language
+
+| | |
+|---|---|
+| **诞生时间** | 1988 |
+| **创始人** | Stephen Wolfram |
+| **范式** | 多范式（符号计算、函数式、规则驱动） |
+| **当前版本** | 14.0 (2024) |
+
+## 诞生背景
+
+Wolfram Language 由 Stephen Wolfram 于 1988 年推出，作为 Mathematica 平台的核心理论。2013 年 Wolfram Alpha 公共 API 发布后开始独立发展。
+
+Stephen Wolfram 是著名理论物理学家，17 岁进入牛津大学，20 岁获得加州理工博士学位。他创立的 Wolfram Research 致力于用计算重新组织人类知识。
+
+## 设计初衷
+
+- 构建可计算的知识库
+- 用符号规则替代传统算法
+- 统一所有领域的计算模型
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 符号计算 | Mathematica |
+| 知识引擎 | Wolfram Alpha |
+| 复杂系统 | 早期元胞自动机研究 |
+
+## 代码示例
+
+```mathematica
+(* 符号积分 *)
+ Integrate[Sin[x], x]
+ (* 结果: -Cos[x] *)
+
+ (* 自然语言查询 *)
+ WolframAlpha["distance from Earth to Mars"]
+
+ (* 模式匹配替换 *)
+ {1, 2, 3, 4} /. x_Integer /; x > 2 -> x^2
+ (* 结果: {1, 2, 9, 16} *)
+```
+
+## 影响与遗产
+
+**受以下影响：** LISP 的符号处理传统
+
+**启发了：** Jupyter 笔记本交互概念、现代知识图谱技术
