@@ -1,0 +1,79 @@
+---
+title: BCPL
+description: The language that pioneered curly braces and influenced C
+---
+
+import { Callout } from 'nextra/components'
+
+# BCPL
+
+> _The brace-age language that planted the seed for C._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1967 |
+| **Creator** | Martin Richards (Cambridge University) |
+| **Paradigm** | Imperative, Structured |
+| **Type System** | Static, Weak |
+| **Platform** | Cross-platform |
+| **Current Version** | BCPL (originally 1967) |
+| **License** | MIT |
+
+## Origin Story
+
+BCPL (Basic Combined Programming Language) was designed by Martin Richards at Cambridge University in 1967. It emerged from his work on a compiler writing project, and quickly became the language of choice for systems programming on early minicomputers.
+
+The language was notably used to write the early versions of the Xerox Alto operating system and other research operating systems at Cambridge and MIT. Most famously, Ken Thompson used BCPL as the inspiration and starting point when he created the B language at Bell Labs, which eventually evolved into C.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "BCPL was designed to be a lean, expressive systems programming language that could compile quickly."
+</Callout>
+
+Key design features:
+
+- **Curly brace delimiters**: The `{` and `}` characters that C inherited from BCPL became ubiquitous in programming syntax
+- **Single type system**: BCPL used a single type (the machine word), with type checking delegated to runtime or programmer discipline
+- **Expression-based**: Almost everything in BCPL is an expression, returning values
+- **Minimal syntax**: No semicolons required—statements are separated by whitespace and context
+- **Pointers as integers**: Memory addresses were treated as integers, giving programmers low-level control
+
+## Code Example
+
+```bcpl
+GET "LIBHDR"
+
+LET START() = VALOF
+{
+    FOR I := 1 TO 10 DO
+        WRITEF("Hello, World!*N")
+    RESULTIS 0
+}
+
+LET FACTORIAL(N) = VALOF
+{
+    IF N <= 1 THEN RESULTIS 1
+    RESULTIS N * FACTORIAL(N - 1)
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Operating Systems | Xerox Alto OS, TRIPOS, AmigaOS (early) |
+| Compilers | Early C compilers were written in BCPL |
+| Research | Cambridge University systems research |
+
+## Influence & Legacy
+
+**Inspired by:** CPL (Combined Programming Language, 1963)
+
+**Influenced:** B, C, JavaScript, Java, and virtually all curly-brace languages
+
+BCPL's most enduring contribution to computing history is its syntax. The curly braces `{` and `}` that C popularized—and that virtually every modern language supports—originated in BCPL. When Ken Thompson created B in 1969, he stripped BCPL down to its essentials, and Dennis Ritchie later built C on B's foundation.
+
+Without BCPL, the C family of languages would have a very different syntax, and JavaScript, Java, C++, and countless others would not exist in their current form.

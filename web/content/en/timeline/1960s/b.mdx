@@ -1,0 +1,77 @@
+---
+title: B
+description: The minimalist language that bridged BCPL and C
+---
+
+import { Callout } from 'nextra/components'
+
+# B
+
+> _The stripped-down interpreter that led to C's power._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1969 |
+| **Creator** | Ken Thompson (Bell Labs) |
+| **Paradigm** | Imperative, Structured |
+| **Type System** | Dynamic, Weak |
+| **Platform** | PDP-11, Early UNIX |
+| **Current Version** | B (originally 1969) |
+| **License** | AT&T |
+
+## Origin Story
+
+B was created by Ken Thompson at Bell Labs in 1969, initially for the newly developed PDP-11 minicomputer. Thompson had been using BCPL on the PDP-7 and wanted a similar but simpler language for the new hardware. He stripped BCPL down to its essentials and created B.
+
+The name itself was a logical progression: BCPL came before B, and B was the second letter in the alphabet—though some joke it stood for "Basic" or was simply the letter before C. B was heavily used in early UNIX development at Bell Labs, particularly for writing the UNIX operating system itself and its utilities.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "B was BCPL stripped down to the bare minimum, designed to fit in the limited memory of the PDP-11."
+</Callout>
+
+Key characteristics:
+
+- **Minimalism**: Thompson removed features to make it fit in tight memory
+- **Integer-only types**: Like BCPL, B used a single type for all data
+- **Memory efficiency**: Programs were compact, suitable for the 24KB PDP-11
+- **Interpreted execution**: Early B was interpreted, not compiled
+- **Simple syntax**: Carried forward BCPL's expression-based, brace-delimited style
+
+## Code Example
+
+```b
+/* B language - factorial */
+main()
+{
+    auto i, r;
+    i = 1;
+    r = 1;
+    while(i <= 10) {
+        r = r * i;
+        i = i + 1;
+    }
+    putchar(r);
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Operating Systems | Early UNIX editions |
+| Tools | UNIX utilities, shells |
+| Language Development | Transition point to C |
+
+## Influence & Legacy
+
+**Inspired by:** BCPL
+
+**Influenced:** C, early UNIX ecosystem
+
+B's significance lies primarily in what it led to. Dennis Ritchie took B and evolved it into C in the early 1970s, adding struct types, better type safety, and compiled execution. C went on to become one of the most important languages in computing history, used for operating systems, embedded systems, and countless applications.
+
+B also directly influenced the development of the UNIX operating system. Early UNIX was written in B and assembly, and the combination of UNIX written in C and C written on UNIX created a bootstrapping ecosystem that shaped modern computing.

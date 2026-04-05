@@ -1,0 +1,88 @@
+---
+title: COBOL 61
+description: 标准化的版本确立了COBOL在商业计算领域的主导地位
+---
+
+import { Callout } from 'nextra/components'
+
+# COBOL 61
+
+> _那个将 COBOL 从实验性语言转变为行业标准的版本。_
+
+## 概览
+
+| | |
+|---|---|
+| **诞生时间** | 1961 |
+| **创始人** | CODASYL 委员会 |
+| **范式** | 命令式、过程式 |
+| **类型系统** | 静态、强类型 |
+| **平台** | 跨平台 |
+| **当前版本** | COBOL 61（随后扩展为 COBOL 61 Full） |
+| **许可协议** | ANSI/ISO |
+
+## 诞生背景
+
+COBOL 61 于 1961 年发布，是对 1959 年原始 COBOL 规范的完善和标准化。1960 年的 CODASYL 委员会认识到需要更严谨、更一致的语言，于是着手解决最初实现中出现的歧义和不一致。
+
+这个版本引入了几个后来成为 COBOL 语言永久组成部分的重要特性：用于代码重用的 COPY 语句、改进的文件处理能力，以及更好的批处理支持。它还确立了基本结构——IDENTIFICATION、ENVIRONMENT、DATA 和 PROCEDURE 四个分部——这一结构至今仍定义着 COBOL 程序。
+
+## 设计理念
+
+<Callout type="default" emoji="💡">
+  "COBOL 61 代表了委员会创建真正标准化商业语言的努力，他们从 COBOL 1959 的实际问题中汲取了经验教训。"
+</Callout>
+
+相对于 COBOL 1959 的关键改进：
+
+- **COPY 语句**：实现代码重用和标准化库管理
+- **更好的文件组织**：改进了顺序文件和索引文件的处理支持
+- **表处理**：通过 OCCURS 子句实现更复杂的数组能力
+- **标准化语法**：解决了原始规范中发现的歧义
+- **改进调试**：更好的错误报告和诊断能力
+
+## 代码示例
+
+```cobol
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PAYROLL-61.
+       
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT EMP-FILE ASSIGN TO 'EMPLOYEES.DAT'
+           ORGANIZATION IS INDEXED
+           ACCESS MODE IS RANDOM
+           RECORD KEY IS EMP-ID.
+       
+       DATA DIVISION.
+       FILE SECTION.
+       FD  EMP-FILE.
+       01  EMP-RECORD.
+           05 EMP-ID       PIC 9(6).
+           05 EMP-NAME     PIC X(30).
+           05 EMP-SALARY   PIC 9(7)V99.
+           05 EMP-DEPT     PIC X(10).
+       
+       WORKING-STORAGE SECTION.
+       01  WS-TOTAL-PAY   PIC 9(9)V99.
+```
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 银行业 | 核心银行系统现代化 |
+| 政府 | 联邦机构批处理系统 |
+| 保险 | 保费计算系统 |
+| 零售 | 大规模库存管理 |
+
+## 影响与遗产
+
+**灵感来源：** COBOL 1959、FLOW-MATIC
+
+**影响语言：** COBOL 68、COBOL 74、COBOL 85、全球企业系统
+
+COBOL 61 最大的成就就是确立了 COBOL 作为严肃的、标准化企业语言的地位。1961 年的标准化——由 ANSI 支持——给了各组织信心，使他们的 COBOL 技能和代码能够长期保持可用。正是这种标准化，使得 1960 年代编写的 COBOL 代码至今仍在现代大型机上运行。
+
+仅 COPY 语句一项就彻底改变了大型 COBOL 程序的编写和维护方式，允许程序模块的独立编译和标准化代码库——这是一种早在"软件工程"成为正式学科之前就存在的模块化形式。

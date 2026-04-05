@@ -1,0 +1,88 @@
+---
+title: COBOL 61
+description: The standardized version that cemented COBOL's dominance in business computing
+---
+
+import { Callout } from 'nextra/components'
+
+# COBOL 61
+
+> _The version that turned COBOL from an experiment into an industry standard._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1961 |
+| **Creator** | CODASYL Committee |
+| **Paradigm** | Imperative, Procedural |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | COBOL 61 (subsequently COBOL 61 Full) |
+| **License** | ANSI/ISO |
+
+## Origin Story
+
+COBOL 61 was published in 1961 as a refinement and standardization of the original COBOL 1959 specification. The 1960 CODASYL committee, recognizing the need for a more rigorous and consistent language, worked to address the ambiguities and inconsistencies that had emerged in the initial implementation.
+
+This version introduced several important features that became permanent parts of the COBOL language: the COPY statement for code reuse, improved file handling capabilities, and better support for batch processing. It also established the basic structure—IDENTIFICATION, ENVIRONMENT, DATA, and PROCEDURE divisions—that still defines COBOL programs today.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "COBOL 61 represented the committee's effort to create a truly standardized business language, learning from the practical problems encountered in COBOL 1959."
+</Callout>
+
+Key improvements over COBOL 1959:
+
+- **COPY statement**: Enabled code reuse and standardized library management
+- **Better file organization**: Improved support for sequential and indexed file processing
+- **Table handling**: More sophisticated array capabilities with the OCCURS clause
+- **Standardized syntax**: Resolved ambiguities identified in the original specification
+- **Improved debugging**: Better error reporting and diagnostic capabilities
+
+## Code Example
+
+```cobol
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PAYROLL-61.
+       
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT EMP-FILE ASSIGN TO 'EMPLOYEES.DAT'
+           ORGANIZATION IS INDEXED
+           ACCESS MODE IS RANDOM
+           RECORD KEY IS EMP-ID.
+       
+       DATA DIVISION.
+       FILE SECTION.
+       FD  EMP-FILE.
+       01  EMP-RECORD.
+           05 EMP-ID       PIC 9(6).
+           05 EMP-NAME     PIC X(30).
+           05 EMP-SALARY   PIC 9(7)V99.
+           05 EMP-DEPT     PIC X(10).
+       
+       WORKING-STORAGE SECTION.
+       01  WS-TOTAL-PAY   PIC 9(9)V99.
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Banking | Core banking system modernization |
+| Government | Federal agency batch processing systems |
+| Insurance | Premium calculation systems |
+| Retail | Inventory management at scale |
+
+## Influence & Legacy
+
+**Inspired by:** COBOL 1959, FLOW-MATIC
+
+**Influenced:** COBOL 68, COBOL 74, COBOL 85, enterprise systems worldwide
+
+COBOL 61's greatest achievement was establishing COBOL as a serious, standardized enterprise language. The 1961 standardization—backed by ANSI—gave organizations confidence that COBOL skills and code would remain viable over time. This standardization is why COBOL code written in the 1960s still runs on modern mainframes today.
+
+The COPY statement alone revolutionized how large COBOL programs were written and maintained, allowing separate compilation of program modules and standardized code libraries—a form of modularity decades before "software engineering" was a formal discipline.
