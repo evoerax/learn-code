@@ -1,0 +1,82 @@
+---
+title: RPG
+description: IBM's Report Program Generator for business data processing
+---
+
+import { Callout } from 'nextra/components'
+
+# RPG
+
+> _The language that speaks business in its own terms._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1964 |
+| **Creator** | IBM |
+| **Paradigm** | Imperative, Report-oriented |
+| **Type System** | Static, Fixed-format |
+| **Platform** | IBM i (AS/400) |
+| **Current Version** | RPG IV (ILE RPG) |
+| **License** | Proprietary (IBM) |
+
+## Origin Story
+
+RPG (Report Program Generator) was created by IBM in 1964 as a replacement for the tedious process of writing reports on punched cards. It was designed specifically for data processing tasks common in business environments: reading files, performing calculations, and producing formatted reports.
+
+The language used a fixed-format syntax that reflected its card-based origins. Each column had a specific meaning, making programs highly readable but also quite rigid.
+
+Unlike most languages that try to be general-purpose, RPG stayed true to its original mission: business data processing. This focus allowed it to survive and thrive in its niche for over 60 years.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "RPG was designed to generate business reports from sequential files with minimal programmer intervention."
+</Callout>
+
+RPG's defining characteristic is its **cycle-based** execution model:
+- Automatic header and detail line processing
+- Built-in file handling
+- Calculated fields computed automatically
+- Exception handling for edge cases
+
+## Code Example
+
+```rpg
+     H
+     D CustName        S             35A
+     D Balance         S              9P 2
+     D Interest         S              9P 2
+     D NewBalance       S              9P 2
+     C                   READ        CUSTOMER
+     C     *INLR         DOWEQ      *OFF
+     C                   IF          Balance > 1000
+     C     Balance       MULT       0.15       Interest
+     C     Balance +     ADD        Interest   NewBalance
+     C                   ENDIF
+     C                   READ        CUSTOMER
+     C                   ENDDO
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Banking | Core banking systems worldwide |
+| Manufacturing | ERP systems on IBM i |
+| Government | State and federal agencies |
+| Healthcare | Medical records systems |
+
+## Influence & Legacy
+
+**Inspired by:** Punched card processing, early report generators
+
+**Influenced:** RPG IV, CL (Control Language)
+
+RPG is one of the most successful niche languages in history. While it never escaped the IBM ecosystem, it continues to power critical business applications:
+- Many mid-size businesses still run RPG programs written in the 1980s
+- Modern RPG IV is fully integrated with modern APIs and web services
+- The IBM i platform remains popular in specific industries
+
+The lesson of RPG: a language doesn't need to be general-purpose to be enduring. Being the best at one thing can outlast being good at many things.

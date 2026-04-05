@@ -1,0 +1,82 @@
+---
+title: PL/I
+description: IBM's multiparadigm language that unified science and business computing
+---
+
+import { Callout } from 'nextra/components'
+
+# PL/I
+
+> _IBM's ambitious attempt to create one language for all purposes._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1964 |
+| **Creator** | IBM |
+| **Paradigm** | Imperative, Procedural, Object-oriented (later) |
+| **Type System** | Static, Strong |
+| **Platform** | IBM Mainframes |
+| **Current Version** | PL/I for z/OS |
+| **License** | Proprietary (IBM) |
+
+## Origin Story
+
+In the early 1960s, IBM faced a problem: they had two distinct computing environments. Scientific computers used FORTRAN for mathematical work, while business computers used COBOL for data processing. Maintaining two languages was expensive and inefficient.
+
+IBM решил создать единый язык, который мог бы работать как для научных, так и для коммерческих приложений. Так родился PL/I (Programming Language One).
+
+Despite its ambitions, PL/I never achieved the widespread adoption IBM hoped for. It remained primarily an IBM mainframe language, though it did introduce many innovative features.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "PL/I was designed to be all things to all people—a single language for scientific, commercial, and systems programming."
+</Callout>
+
+Key features:
+- **Exception handling**: First major language with structured error handling
+- **Recursion**: Full support for recursive procedures
+- **Pointers**: Direct memory addressing capabilities
+- ** multitasking**: Built-in support for concurrent execution
+- **Strings**: Both fixed-length and varying-length strings
+
+## Code Example
+
+```pl1
+/* Factorial procedure with exception handling */
+FACTORIAL: PROCEDURE (N) RETURNS (FIXED BINARY(31));
+    DCL N FIXED BINARY(31);
+    DCL RESULT FIXED BINARY(31);
+    ON ERROR BEGIN;
+        PUT SKIP LIST('Error occurred in FACTORIAL');
+        RETURN 1;
+    END;
+
+    IF N <= 1 THEN
+        RESULT = 1;
+    ELSE
+        RESULT = N * FACTORIAL(N - 1);
+
+    RETURN RESULT;
+END FACTORIAL;
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| IBM Mainframes | Legacy banking systems |
+| NASA | Space shuttle flight software (partial) |
+| Academia | Programming language research |
+
+## Influence & Legacy
+
+**Inspired by:** FORTRAN, COBOL, ALGOL
+
+**Influenced:** C (exception handling concepts), Ada (tasking/exception model)
+
+PL/I's exception handling model influenced how later languages approached error management. Its multitasking features were ahead of their time but remained underutilized due to the complexity of the language.
+
+The language demonstrated that trying to be everything to everyone often results in a language that excels at nothing in particular.

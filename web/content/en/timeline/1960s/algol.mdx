@@ -1,0 +1,81 @@
+---
+title: ALGOL
+description: The international algorithm language that shaped modern programming
+---
+
+import { Callout } from 'nextra/components'
+
+# ALGOL
+
+> _The language that taught the world how to describe algorithms precisely._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1958 |
+| **Creator** | ACM and GI (International Committee) |
+| **Paradigm** | Imperative, Structured, Block-structured |
+| **Type System** | Static, Strong |
+| **Platform** | Cross-platform (Academic/Research) |
+| **Current Version** | ALGOL 68 (revised) |
+| **License** | None (Academic specification) |
+
+## Origin Story
+
+ALGOL (ALGOrithmic Language) was born from a 1958 meeting of computer scientists in Zurich, Switzerland. The goal was to create a universal programming language that could be used internationally for describing algorithms.
+
+The language was designed by committee—a collaboration between ACM in America and the German informatics society (GI) in Europe. This made ALGOL the first truly international programming language.
+
+ALGOL introduced the concept of **block structure** to programming, allowing code to be organized in nested scopes with local variables. This innovation profoundly influenced all subsequent procedural languages.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "ALGOL was designed to express algorithms in a way that was independent of any particular machine architecture."
+</Callout>
+
+Key innovations:
+- **Block structure**: Code organized in nested scopes with local variables
+- **Bnf notation**: Formal syntax description that became standard
+- **Nested functions**: Functions could be defined inside other functions
+- **Proper parameter passing**: Value semantics for parameters
+- **Structured control flow**: if-then-else, while, for loops
+
+## Code Example
+
+```algol
+BEGIN
+  INTEGER PROCEDURE FACTORIAL(N);
+    INTEGER N;
+    BEGIN
+      IF N <= 1 THEN
+        FACTORIAL := 1
+      ELSE
+        FACTORIAL := N * FACTORIAL(N - 1);
+    END;
+
+  PRINT(FACTORIAL(10));
+END
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Academia | Compiler design research |
+| Algorithm Description | Published algorithms in textbooks |
+| Language Design | Reference for C, Pascal, Ada |
+
+## Influence & Legacy
+
+**Inspired by:** FORTRAN, IPL
+
+**Influenced:** ALGOL 60, Pascal, C, Ada, Simula, all block-structured languages
+
+ALGOL's influence is enormous. Every modern structured programming language owes something to ALGOL:
+- C's syntax and block structure
+- Pascal's entire design
+- Ada's structured programming approach
+
+The BNF notation developed for ALGOL's syntax description became the universal standard for describing programming language syntax.
