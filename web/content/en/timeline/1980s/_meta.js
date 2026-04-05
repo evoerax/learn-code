@@ -4,6 +4,7 @@ export default {
   'c++': { title: 'C++' },
   'objective-c': { title: 'Objective-C' },
   abap: { title: 'ABAP' },
+  vhdl: { title: 'VHDL' },
   'common-lisp': { title: 'Common Lisp' },
   matlab: { title: 'MATLAB' },
   eiffel: { title: 'Eiffel' },
@@ -11,5 +12,4 @@ export default {
   perl: { title: 'Perl' },
   tcl: { title: 'Tcl' },
   bash: { title: 'Bash' },
-  vhdl: { title: 'VHDL' },
 }
