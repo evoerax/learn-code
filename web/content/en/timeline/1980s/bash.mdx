@@ -1,0 +1,103 @@
+---
+title: Bash
+description: The Unix shell that became Linux's default scripting language
+---
+
+import { Callout } from 'nextra/components'
+
+# Bash
+
+> _The GNU Bourne Again Shell._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1989 |
+| **Creator** | Brian Fox (GNU Project) |
+| **Paradigm** | Procedural, Scripting |
+| **Type System** | Dynamic |
+| **Platform** | Cross-platform (Unix/Linux/macOS/Windows) |
+| **Current Version** | 5.2 (2022) |
+| **License** | GPL v3 |
+
+## Origin Story
+
+Bash was created in 1989 by Brian Fox for the GNU Project, as a free software replacement for the Bourne shell (sh). The name is a pun: "Bourne Again SHell" referencing both its origin as a replacement for the Bourne shell and the concept of being "born again."
+
+Fox designed Bash to be a fully functional POSIX shell, incorporating features from csh, ksh, and the original Bourne shell. It became the default login shell for most Linux distributions and macOS, making it arguably the most widely deployed scripting language in the world.
+
+Bash's journey from GNU project to global dominance was propelled by Linux. When Linus Torvalds released Linux in 1991, Bash was the natural shell choice, and as Linux grew to run everything from servers to smartphones to embedded devices, Bash followed.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Providing a tool that lets you do your work efficiently is the primary goal." — Brian Fox
+</Callout>
+
+Bash's design embodies the UNIX philosophy:
+
+- Everything is a text stream
+- Programs should do one thing well
+- Programs should compose together
+- Configuration over convention
+
+Unlike languages designed for application development, Bash was built specifically for controlling the operating system—invoking programs, managing files, and automating system tasks.
+
+## Code Example
+
+```bash filename="deploy.sh"
+#!/bin/bash
+set -euo pipefail
+
+# Color output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+log() { echo -e "${GREEN}[deploy]${NC} $1"; }
+error() { echo -e "${RED}[error]${NC} $1" >&2; exit 1; }
+
+# Environment
+APP_NAME="myapp"
+DEPLOY_DIR="/opt/$APP_NAME"
+BACKUP_DIR="/opt/backups"
+
+# Build
+log "Building application..."
+npm run build || error "Build failed"
+
+# Backup old version
+if [ -d "$DEPLOY_DIR" ]; then
+    BACKUP_NAME="${APP_NAME}-$(date +%Y%m%d-%H%M%S)"
+    log "Backing up to $BACKUP_NAME"
+    cp -r "$DEPLOY_DIR" "$BACKUP_DIR/$BACKUP_NAME"
+fi
+
+# Deploy
+log "Deploying to $DEPLOY_DIR"
+rsync -av --delete dist/ "$DEPLOY_DIR/"
+systemctl restart "$APP_NAME"
+
+log "Deployment complete!"
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| DevOps | CI/CD pipelines (GitHub Actions, GitLab CI) |
+| Cloud | AWS CLI, Azure CLI, GCP SDK |
+| Linux Config | systemd units, init scripts |
+| Docker | Dockerfile RUN commands |
+| Embedded | BusyBox, OpenWrt |
+
+## Influence & Legacy
+
+**Inspired by:** Bourne Shell (sh), C Shell (csh), KornShell (ksh)
+
+**Influenced:** Zsh, Fish Shell, PowerShell
+
+Bash normalized shell scripting as a core developer skill. Git's porcelain commands are designed to compose with Bash pipelines. Docker's Dockerfile instructions are essentially Bash commands. Even JavaScript's Node.js adoption of shell-like pipeline thinking shows Bash's influence.
+
+The practical impact is staggering: virtually every server, container, and CI/CD pipeline in the world executes Bash scripts. It is the glue that holds the modern computing infrastructure together.

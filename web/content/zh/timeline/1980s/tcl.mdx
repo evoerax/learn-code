@@ -1,0 +1,108 @@
+---
+title: Tcl
+description: 开创嵌入式脚本和Tk GUI工具包的命令语言
+---
+
+import { Callout } from 'nextra/components'
+
+# Tcl (Tool Command Language)
+
+> _一切皆为字符串。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1988 |
+| **创造者** | John Ousterhout |
+| **范式** | 过程式、脚本 |
+| **类型系统** | 动态类型 |
+| **平台** | 跨平台 |
+| **当前版本** | 8.6.14 (2023) |
+| **许可证** | TCL License |
+
+## 起源故事
+
+John Ousterhout于1988年在加州大学伯克利分校工作期间创建了Tcl。当时他正在为电子电路设计开发CAD工具，需要一种小巧、可嵌入的脚本语言来定制和扩展应用程序，而无需重新编译。
+
+他的设计理念优雅而简洁：创造一种一切——命令、变量、控制结构——都统一用字符串表示的语言。这种简单性使Tcl极易嵌入，而且整个解释器可以用最小的开销编译到任何应用程序中。
+
+配套工具包Tk由Ousterhout的学生John Lawson创建，增加了GUI功能。Tk成为创建图形界面最快的方式——简单到可以用于原型，强大到可以用于生产应用程序。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "Tcl中一切事物的接口都是命令，每个命令的形式为：command arg1 arg2 arg3..." — John Ousterhout
+</Callout>
+
+Tcl的核心原则：
+
+- 一切皆为字符串——命令、数据、代码看起来都一样
+- 极致简单：通过命令扩展的小型核心
+- 易于嵌入C应用程序
+- 统一的命令语法：`command arg1 arg2 ...`
+- 内置事件驱动编程
+
+这种一致性意味着Tcl脚本可以在运行时生成和执行其他Tcl代码——一种强大的元编程能力，不需要任何特殊语法。
+
+## 代码示例
+
+```tcl filename="gui_demo.tcl"
+#!/usr/bin/env wish
+
+# Simple GUI calculator
+proc calc {op a b} {
+    switch $op {
+        + { return [expr {$a + $b}] }
+        - { return [expr {$a - $b}] }
+        * { return [expr {$a * $b}] }
+        / { return [expr {$a / $b}] }
+    }
+}
+
+# Build the UI
+frame .entry
+entry .entry.a -width 10
+entry .entry.b -width 10
+entry .entry.result -width 10 -state readonly
+
+foreach w [list .entry.a .entry.b .entry.result] {
+    pack $w -side left -padx 2
+}
+
+frame .buttons
+foreach op {+ - * /} {
+    button .buttons.$op -text $op -command {
+        set a [.entry.a get]
+        set b [.entry.b get]
+        .entry.result configure -text [calc $op $a $b]
+    }
+    pack .buttons.$op -side left -padx 2
+}
+
+pack .entry .buttons -pady 5
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| EDA/电子 | 电子CAD工具、电路仿真 |
+| 网络 | expect（自动化交互）、网络测试 |
+| 图形 | Tk工具包、ActiveTcl发行版 |
+| 测试 | Oracle安装程序、AOLserver |
+| 音频 | Max/MSP控制界面 |
+
+## 影响与遗产
+
+**启发自：** LISP（列表处理）、C（命令语法）
+
+**影响：** Python（导入理念）、Ruby（一切皆对象）、PHP
+
+Tcl开创了几个后来成为主流的理念：
+
+- 在更大应用程序中嵌入脚本语言
+- 通过配套工具包创建GUI（ Tk启发了Python的Tkinter）
+- " batteries included"发行版，包含全面的库
+
+`expect`工具，使用Tcl构建，引入了自动化交互式程序的概念，并成为DevOps的主力工具。回顾来看，Tcl对Python嵌入模型和Ruby设计的 影响表明Ousterhout的架构是多么超前。

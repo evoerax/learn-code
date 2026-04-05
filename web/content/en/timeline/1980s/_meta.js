@@ -9,5 +9,7 @@ export default {
   eiffel: { title: 'Eiffel' },
   erlang: { title: 'Erlang' },
   perl: { title: 'Perl' },
+  tcl: { title: 'Tcl' },
+  bash: { title: 'Bash' },
   vhdl: { title: 'VHDL' },
 }

@@ -1,0 +1,108 @@
+---
+title: Tcl
+description: The Tool Command Language that pioneered embedded scripting and Tk GUI toolkit
+---
+
+import { Callout } from 'nextra/components'
+
+# Tcl (Tool Command Language)
+
+> _Everything is a string._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1988 |
+| **Creator** | John Ousterhout |
+| **Paradigm** | Procedural, Scripting |
+| **Type System** | Dynamic |
+| **Platform** | Cross-platform |
+| **Current Version** | 8.6.14 (2023) |
+| **License** | TCL License |
+
+## Origin Story
+
+John Ousterhout created Tcl in 1988 while at UC Berkeley. He was working on CAD tools for electronic circuit design and needed a small, embeddable scripting language that could be used to customize and extend applications without recompiling.
+
+His insight was elegant: create a language where everything—commands, variables, control structures—is represented uniformly as strings. This simplicity made Tcl incredibly easy to embed, and the entire interpreter could be compiled into any application with minimal overhead.
+
+The companion toolkit Tk, created by Ousterhout's student John Lawson, added GUI capabilities. Tk became the fastest way to create graphical interfaces—simple enough for prototypes, powerful enough for production applications.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The interface to everything in Tcl is a command, and every command takes the form: command arg1 arg2 arg3..." — John Ousterhout
+</Callout>
+
+Tcl's core principles:
+
+- Everything is a string—commands, data, code all look the same
+- Extreme simplicity: tiny core with extensibility through commands
+- Easy to embed in C applications
+- Uniform command syntax: `command arg1 arg2 ...`
+- Event-driven programming built in
+
+This uniformity meant Tcl scripts could generate and execute other Tcl code at runtime—a powerful metaprogramming capability that required no special syntax.
+
+## Code Example
+
+```tcl filename="gui_demo.tcl"
+#!/usr/bin/env wish
+
+# Simple GUI calculator
+proc calc {op a b} {
+    switch $op {
+        + { return [expr {$a + $b}] }
+        - { return [expr {$a - $b}] }
+        * { return [expr {$a * $b}] }
+        / { return [expr {$a / $b}] }
+    }
+}
+
+# Build the UI
+frame .entry
+entry .entry.a -width 10
+entry .entry.b -width 10
+entry .entry.result -width 10 -state readonly
+
+foreach w [list .entry.a .entry.b .entry.result] {
+    pack $w -side left -padx 2
+}
+
+frame .buttons
+foreach op {+ - * /} {
+    button .buttons.$op -text $op -command {
+        set a [.entry.a get]
+        set b [.entry.b get]
+        .entry.result configure -text [calc $op $a $b]
+    }
+    pack .buttons.$op -side left -padx 2
+}
+
+pack .entry .buttons -pady 5
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| EDA/Electronics | Electronic CAD tools, circuit simulation |
+| Networking | expect (automated interaction), network testing |
+| Graphics | Tk toolkit, ActiveTcl distributions |
+| Testing | Oracle installer, AOLserver |
+| Audio | Max/MSP control surface |
+
+## Influence & Legacy
+
+**Inspired by:** LISP (list processing), C (command syntax)
+
+**Influenced:** Python (import philosophy), Ruby (everything is an object), PHP
+
+Tcl pioneered several ideas that became mainstream:
+
+- Embedding a scripting language in larger applications
+- GUI creation through a companion toolkit (Tk inspired Tkinter in Python)
+- "Batteries included" distribution with comprehensive library
+
+The `expect` tool, built with Tcl, introduced the concept of automating interactive programs and became a DevOps staple. Tcl's influence on Python's embedding model and Ruby's design shows in retrospect how ahead of its time Ousterhout's architecture was.

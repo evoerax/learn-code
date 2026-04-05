@@ -1,0 +1,103 @@
+---
+title: Bash
+description: 成为Linux默认脚本语言的Unix shell
+---
+
+import { Callout } from 'nextra/components'
+
+# Bash
+
+> _GNU Bourne Again Shell。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 1989 |
+| **创造者** | Brian Fox (GNU项目) |
+| **范式** | 过程式、脚本 |
+| **类型系统** | 动态类型 |
+| **平台** | 跨平台 (Unix/Linux/macOS/Windows) |
+| **当前版本** | 5.2 (2022) |
+| **许可证** | GPL v3 |
+
+## 起源故事
+
+Brian Fox 于1989年为GNU项目创建了Bash，作为Bourne shell (sh)的自由软件替代品。名称是一个双关语："Bourne Again SHell"既指它作为Bourne shell的替代品，也暗含"重生"的含义。
+
+Fox设计Bash为功能完整的POSIX shell，融合了csh、ksh和原始Bourne shell的特性。它成为大多数Linux发行版和macOS的默认登录shell，使其成为世界上部署最广泛的脚本语言。
+
+Bash从GNU项目到全球主导地位的旅程是由Linux推动的。当Linus Torvalds于1991年发布Linux时，Bash是自然的选择，而随着Linux扩展到运行从服务器到智能手机再到嵌入式设备的一切，Bash也随之而来。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "提供一款能让你高效工作的工具是首要目标。" — Brian Fox
+</Callout>
+
+Bash的设计体现了UNIX哲学：
+
+- 一切都是文本流
+- 程序应该做好一件事
+- 程序应该可以组合使用
+- 配置优于约定
+
+与为应用程序开发设计的语言不同，Bash专门为控制操作系统而构建——调用程序、管理文件和自动化系统任务。
+
+## 代码示例
+
+```bash filename="deploy.sh"
+#!/bin/bash
+set -euo pipefail
+
+# Color output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+log() { echo -e "${GREEN}[deploy]${NC} $1"; }
+error() { echo -e "${RED}[error]${NC} $1" >&2; exit 1; }
+
+# Environment
+APP_NAME="myapp"
+DEPLOY_DIR="/opt/$APP_NAME"
+BACKUP_DIR="/opt/backups"
+
+# Build
+log "Building application..."
+npm run build || error "Build failed"
+
+# Backup old version
+if [ -d "$DEPLOY_DIR" ]; then
+    BACKUP_NAME="${APP_NAME}-$(date +%Y%m%d-%H%M%S)"
+    log "Backing up to $BACKUP_NAME"
+    cp -r "$DEPLOY_DIR" "$BACKUP_DIR/$BACKUP_NAME"
+fi
+
+# Deploy
+log "Deploying to $DEPLOY_DIR"
+rsync -av --delete dist/ "$DEPLOY_DIR/"
+systemctl restart "$APP_NAME"
+
+log "Deployment complete!"
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| DevOps | CI/CD流水线 (GitHub Actions, GitLab CI) |
+| 云 | AWS CLI, Azure CLI, GCP SDK |
+| Linux配置 | systemd单元、init脚本 |
+| Docker | Dockerfile RUN指令 |
+| 嵌入式 | BusyBox、OpenWrt |
+
+## 影响与遗产
+
+**启发自：** Bourne Shell (sh)、C Shell (csh)、KornShell (ksh)
+
+**影响：** Zsh、Fish Shell、PowerShell
+
+Bash将shell脚本规范化为核心开发者技能。Git的porcelain命令被设计为可与Bash管道组合。Docker的Dockerfile指令本质上是Bash命令。即使是JavaScript的Node.js采用类似shell的管道思维也显示了Bash的影响。
+
+实际影响是惊人的：世界上几乎每台服务器、容器和CI/CD流水线都执行Bash脚本。它是将现代计算基础设施粘合在一起的胶水。
