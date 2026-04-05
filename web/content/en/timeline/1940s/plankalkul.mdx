@@ -1,0 +1,80 @@
+---
+title: Plankalkül
+description: The first theoretical high-level programming language
+---
+
+import { Callout } from 'nextra/components'
+
+# Plankalkül
+
+> _The first theoretical design for a high-level programming language._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1943-1948 |
+| **Creator** | Konrad Zuse |
+| **Paradigm** | Imperative, Structured |
+| **Type System** | Static, Strong |
+| **Platform** | Theoretical (Zuse's Z4 computer) |
+| **Current Version** | N/A (theoretical design) |
+| **License** | N/A |
+
+## Origin Story
+
+Plankalkül was designed by Konrad Zuse between 1943 and 1948 in Berlin, Germany, during and after World War II. Zuse, a German engineer, created this language while working on his Z3 and Z4 computers—the world's first working programmable computers.
+
+Unlike ENIAC Short Code, which was developed in America around the same time, Plankalkül remained purely theoretical. Zuse wrote a comprehensive 100-page manuscript describing the language, but there was no computer capable of executing his programs during the war years due to the destruction and technological limitations in post-war Germany.
+
+The name "Plankalkül" comes from German: "Plan" (plan) and "Kalkül" (calculus), essentially meaning "planning calculus" or "formal system for planning."
+
+## Design Philosophy
+
+Plankalkül introduced concepts that wouldn't appear in mainstream languages until decades later. The language featured:
+
+- **Structured data types**: Records (called "Structures"), arrays, and nested data structures
+- **Operations on complex data**: Not just scalar values, but operations on entire arrays
+- **Subroutines and functions**: Early concepts of reusable code blocks
+- **Formal semantics**: Zuse attempted to give his language a rigorous mathematical foundation
+
+<Callout type="default" emoji="💡">
+  Plankalkül included a graphics output component for displaying algorithmic results, envisioning programming as both computation and visualization.
+</Callout>
+
+The language was remarkably advanced for its time, incorporating ideas about data abstraction and algorithm verification that wouldn't become mainstream until the 1970s and 1980s.
+
+## Code Example
+
+```plankalkul
+P1 × C[5:5] → C[5:5]
+R1 := R2 × R1 + R3
+R1.0 := R2.0 ⊗ R3.0
+```
+
+This example (from Zuse's original notation) demonstrates:
+- `P1` defines a program taking a 5×5 array of complex numbers (`C[5:5]`)
+- `R1 := R2 × R1 + R3` shows arithmetic operations on registers
+- `R1.0 := R2.0 ⊗ R3.0` shows element-wise operations on array components
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Theoretical Work | Zuse's 100-page language specification (1948) |
+| Post-War Implementation | Z4 computer implementation attempts (1950s) |
+| Research Revival | Beepers' partial implementation (1975) |
+
+## Influence & Legacy
+
+**Inspired by:** Mathematical notation, Hilbert's formal systems, Zuse's work on Z1/Z2/Z3 computers
+
+**Influenced:** ALGOL, Pascal, Ada, modern structured programming
+
+Plankalkül's influence on subsequent languages is more inspirational than direct. When the creators of ALGOL in the late 1950s learned of Zuse's earlier work, they recognized many similarities in their design goals. The language demonstrated that:
+
+1. High-level programming concepts could be formalized mathematically
+2. Data structures could be designed independently of machine representation
+3. Algorithms could be expressed in a machine-independent notation
+
+Plankalkül wasn't implemented until the 1970s, when Heinz Rutishauser's team at ETH Zurich created a working interpreter based on Zuse's specifications. By then, many of its innovations had been independently rediscovered by other language designers.

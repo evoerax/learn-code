@@ -1,0 +1,106 @@
+---
+title: Simula
+description: 世界上第一门面向对象编程语言
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Simula
+
+> _发明了面向对象编程的语言。_
+
+## 概览
+
+| | |
+|---|---|
+| **诞生时间** | 1967 |
+| **创始人** | 奥利-约翰·达尔、克里斯汀·尼加德（挪威计算中心） |
+| **范式** | 面向对象、命令式 |
+| **类型系统** | 静态、强类型 |
+| **平台** | 大型计算机（UNIVAC、IBM） |
+| **当前版本** | Simula 67 |
+| **许可协议** | 公共领域 |
+
+## 诞生背景
+
+Simula 由奥利-约翰·达尔（Ole-Johan Dahl）和克里斯汀·尼加德（Kristen Nygaard）于 1962 年至 1967 年间在挪威奥斯陆的挪威计算中心（Norsk Regnesentralentral）开发。他们的目标是创建一种用于模拟和建模的语言——在这个过程中，他们发明了类、对象、继承和多态等概念，这些概念定义了面向对象编程。
+
+这门语言经历了两个主要版本：Simula I（1962）主要是基于 ALGOL 60 的模拟语言，而 Simula 67（1967）引入了革命性的面向对象特性，这些特性影响了此后所有主要的 OO 语言。
+
+达尔和尼加德是最早认识到软件可以通过具有状态和行为的离散实体（对象）来模拟真实世界系统的先驱——这一概念性飞跃改变了我们对编程的思考方式。
+
+## 设计理念
+
+Simula 引入了**类**作为创建对象模板的概念——每个类可以定义属性（数据）和方法（过程）。从类创建的对象是具有自己状态的实例。
+
+关键创新包括：
+
+- **类和对象**：首个基于类的面向对象实现
+- **继承**：子类可以继承和扩展父类行为
+- **虚方法**：动态分派的早期概念
+- **协程**：用于模拟事件调度
+- **块结构**：来自 ALGOL 传统
+
+<Callout type="default" emoji="💡">
+  "面向对象编程"这个术语是由 Smalltalk 的艾伦·凯创造的，但面向对象的概念本身是在 Simula 67 中首次实现的。
+</Callout>
+
+Simula 还开创了**虚过程**的概念——可以被子类覆盖的方法，实现了真正的多态行为——这比它成为主流早了数十年。
+
+## 代码示例
+
+```simula
+CLASS Library;
+BEGIN
+   CLASS Book(Title, Author, Year);
+   TEXT Title, Author;
+   INTEGER Year;
+   BEGIN
+   END;
+
+   REF(Book) ARRAY Books(1:100);
+   INTEGER BookCount;
+
+   PROCEDURE AddBook(T, A, Y);
+   TEXT T, A; INTEGER Y;
+   BEGIN
+      BookCount := BookCount + 1;
+      Books(BookCount) :- NEW Book(T, A, Y);
+   END;
+END;
+```
+
+这个例子展示了 Simula 的类系统：
+- `CLASS Book` 定义了带有属性的数据结构
+- `REF(Book)` 用于对象处理的引用
+- 类似构造函数的 `NEW Book(...)` 实例化
+
+## 代表项目
+
+| 领域 | 项目 |
+|------|------|
+| 模拟 | GPSS/Simula 离散事件模拟 |
+| 研究 | 编程语言研究平台 |
+| 教育 | 向几代人传授面向对象概念 |
+| 工业 | 银行和电信建模 |
+
+## 影响与遗产
+
+**灵感来源：** ALGOL 60、模拟概念、建模理论
+
+**影响语言：** Smalltalk、C++、Objective-C、Java、Python、Ruby、JavaScript
+
+Simula 对软件工程的影响怎么说都不为过。它奠定了以下基础：
+
+1. 程序可以被建模为交互对象的集合
+2. 类可以形成具有继承关系的层级分类体系
+3. 代码可以围绕数据结构而非过程来组织
+4. 虚方法支持的多态性使系统更具扩展性
+
+<Cards num={3}>
+  <Cards.Card title="Smalltalk" href="/timeline/1970s/smalltalk" arrow />
+  <Cards.Card title="C++" href="/timeline/1980s/c++" arrow />
+  <Cards.Card title="Java" href="/timeline/1990s/java" arrow />
+</Cards>
+
+Simula 开创的面向对象范式在此后的五十年中成为主导编程模型，影响了从 Java 企业系统到 JavaScript 框架的一切。

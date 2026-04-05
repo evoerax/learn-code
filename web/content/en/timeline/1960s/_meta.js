@@ -3,4 +3,5 @@ export default {
   algol: { title: 'ALGOL' },
   'pl-i': { title: 'PL/I' },
   rpg: { title: 'RPG' },
+  simula: { title: 'Simula' },
 }

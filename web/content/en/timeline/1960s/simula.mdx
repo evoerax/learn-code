@@ -1,0 +1,106 @@
+---
+title: Simula
+description: The world's first object-oriented programming language
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Simula
+
+> _The language that invented object-oriented programming._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1967 |
+| **Creator** | Ole-Johan Dahl, Kristen Nygaard (Norwegian Computing Centre) |
+| **Paradigm** | Object-Oriented, Imperative |
+| **Type System** | Static, Strong |
+| **Platform** | Mainframe computers (UNIVAC, IBM) |
+| **Current Version** | Simula 67 |
+| **License** | Public Domain |
+
+## Origin Story
+
+Simula was developed at the Norwegian Computing Centre (Norsk Regnesentralentral) in Oslo between 1962 and 1967 by Ole-Johan Dahl and Kristen Nygaard. Their goal was to create a language for simulation and modeling—and in doing so, they invented the class, object, inheritance, and polymorphic concepts that define object-oriented programming.
+
+The language evolved through two major versions: Simula I (1962) was primarily a simulation language based on ALGOL 60, while Simula 67 (1967) introduced the revolutionary object-oriented features that would influence every major OO language that followed.
+
+Dahl and Nygaard were pioneers in recognizing that software could model real-world systems through discrete entities (objects) with state and behavior, a conceptual leap that changed how we think about programming.
+
+## Design Philosophy
+
+Simula introduced the concept of **classes** as templates for creating objects—each class could define attributes (data) and methods (procedures). Objects created from classes would be instances with their own state.
+
+Key innovations included:
+
+- **Classes and Objects**: The first implementation of class-based object orientation
+- **Inheritance**: Subclasses could inherit and extend parent class behavior
+- **Virtual Methods**: Early concept of dynamic dispatch
+- **Coroutines**: For simulation event scheduling
+- **Block Structure**: From ALGOL heritage
+
+<Callout type="default" emoji="💡">
+  The term "object-oriented programming" was coined by Alan Kay in Smalltalk, but the concepts themselves were first implemented in Simula 67.
+</Callout>
+
+Simula also pioneered the concept of **virtual procedures**—methods that could be overridden by subclasses, enabling true polymorphic behavior decades before it became mainstream.
+
+## Code Example
+
+```simula
+CLASS Library;
+BEGIN
+   CLASS Book(Title, Author, Year);
+   TEXT Title, Author;
+   INTEGER Year;
+   BEGIN
+   END;
+
+   REF(Book) ARRAY Books(1:100);
+   INTEGER BookCount;
+
+   PROCEDURE AddBook(T, A, Y);
+   TEXT T, A; INTEGER Y;
+   BEGIN
+      BookCount := BookCount + 1;
+      Books(BookCount) :- NEW Book(T, A, Y);
+   END;
+END;
+```
+
+This example demonstrates Simula's class system with:
+- `CLASS Book` defining a data structure with attributes
+- `REF(Book)` references for object handling
+- Constructor-like `NEW Book(...)` instantiation
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Simulation | GPSS/Simula for discrete-event simulation |
+| Research | Programming language research platform |
+| Education | Taught object-oriented concepts to generations |
+| Industry | Banking and telecommunications modeling |
+
+## Influence & Legacy
+
+**Inspired by:** ALGOL 60, simulation concepts, modeling theory
+
+**Influenced:** Smalltalk, C++, Objective-C, Java, Python, Ruby, JavaScript
+
+Simula's influence on software engineering cannot be overstated. It established that:
+
+1. Programs could be modeled as collections of interacting objects
+2. Classes could form hierarchical taxonomies with inheritance
+3. Code could be organized around data structures rather than procedures
+4. Polymorphism through virtual methods enabled extensible systems
+
+<Cards num={3}>
+  <Cards.Card title="Smalltalk" href="/timeline/1970s/smalltalk" arrow />
+  <Cards.Card title="C++" href="/timeline/1980s/c++" arrow />
+  <Cards.Card title="Java" href="/timeline/1990s/java" arrow />
+</Cards>
+
+The object-oriented paradigm Simula pioneered became the dominant programming model for the next five decades, influencing everything from Java enterprise systems to JavaScript frameworks.
