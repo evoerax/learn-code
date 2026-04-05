@@ -1,7 +1,55 @@
 ---
-title: 1980s
+title: 1980s — The Object-Oriented Revolution
 ---
 
-# 1980s
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# 1980s — The Object-Oriented Revolution
+
+The 1980s took object-oriented programming from research laboratories to production codebases. C++ added objects to the world's most popular systems language. Objective-C did the same for Smalltalk-style messaging. Meanwhile, functional programming matured, logic programming reached mainstream, and the personal computer revolution created an entire new class of software — and programmers.
+
+## Context
+
+| | |
+|---|---|
+| **Era** | OOP adoption, personal computing, workstations |
+| **Key hardware** | IBM PC (1981), Apple Macintosh (1984), Sun workstations |
+| **Milestone** | Smalltalk-80 released publicly; C++ first described (1979–1983) |
+| **Key challenge** | Managing million-line codebases; GUI programming; real-time systems |
+
+<Callout type="info">
+  Bjarne Stroustrup created "C with Classes" in 1979 while writing his PhD thesis at Cambridge. He needed Simula's abstractions for a simulation program, but couldn't afford Simula's performance overhead. The result was C++.
+</Callout>
+
+## Languages of the 1980s
+
+| Language | Year | Creator | Significance |
+|----------|------|---------|--------------|
+| Ada | 1980 | CII Honeywell Bull (DoD contract) | Safety-critical systems; strong typing; still used in aerospace/defense |
+| C++ | 1983 | Bjarne Stroustrup (Bell Labs) | OOP + C performance; most influential systems language of the decade |
+| Objective-C | 1984 | Cox & Love | Smalltalk messaging + C; became foundation of macOS and iOS |
+| Common Lisp | 1984 | ANSI committee | Standardized Lisp dialect; powerful macro system |
+| Eiffel | 1985 | Bertrand Meyer | Design by Contract; rigorous OOP methodology |
+| Erlang | 1986 | Ericsson (Armstrong, Virding, Williams) | Actor model; fault-tolerant distributed systems; telecom |
+| ABAP | 1983 | SAP | Enterprise business applications on SAP platforms |
+| Bash | 1989 | Brian Fox (GNU) | Shell scripting; Unix automation standard |
+| Perl | 1987 | Larry Wall | Text processing, system administration; "there's more than one way to do it" |
+| MATLAB | 1984 | Cleve Moler | Numerical computing and matrix operations for engineers |
+| Tcl | 1988 | John Ousterhout | Embeddable scripting; Tk GUI toolkit |
+| VHDL | 1983 | US DoD | Hardware description language; FPGA and ASIC design |
+
+## Key Themes
+
+**OOP goes mainstream.** C++ was controversial at first — "C with classes" felt like a compromise to purists. But it solved the real problem: large teams needed to organize code around data and behavior, and C++ let them do that without abandoning C's performance. By 1990, OOP was the dominant paradigm for new systems software.
+
+**Reliability as a design goal.** Ada was designed for the U.S. Department of Defense to address software failures in military systems. Strong static typing, range-checked arrays, exception handling, and concurrency primitives were mandatory, not optional. Ada influenced the entire field's thinking about what "correct" software meant.
+
+**Erlang's quiet revolution.** Ericsson needed software that could never go down — telephone switches can't reboot. Erlang's answer: lightweight processes (actors) that communicate by message passing, supervisor trees that restart failed processes, and hot code loading so you can update a running system without stopping it. This "let it crash" philosophy would resurface in 2010s cloud computing.
+
+**Scripting fills the gaps.** Perl arrived with the motto "easy things should be easy, hard things should be possible." For system administrators needing to process text files and automate Unix tasks, Perl was a revelation — powerful regular expressions, flexible data structures, and no insistence on type declarations. It birthed the modern scripting language category.
+
+**Personal computing creates new users.** The Apple Macintosh's GUI demanded event-driven programming. HyperCard (1987) let non-programmers create interactive applications. The distinction between "programmer" and "user" began to blur.
+
+## Looking Forward
+
+The 1980s ended with OOP firmly established and functional programming still largely academic. The 1990s would bring the internet, which would force every language to handle networking, concurrency, and web content — and would elevate interpreted scripting languages to equal status with compiled systems languages.

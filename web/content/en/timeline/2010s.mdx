@@ -1,7 +1,59 @@
 ---
-title: 2010s
+title: 2010s — Safety, Types, and Modern Tooling
 ---
 
-# 2010s
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# 2010s — Safety, Types, and Modern Tooling
+
+The 2010s responded to the failures of the previous decades. Buffer overflows, null pointer exceptions, race conditions, and billion-dollar bugs drove a generation of language designers to ask: what if the type system could *prevent* these errors at compile time? Rust eliminated memory safety bugs without garbage collection. TypeScript made large JavaScript codebases manageable. Swift and Kotlin replaced Objective-C and Java with safer, more expressive alternatives.
+
+## Context
+
+| | |
+|---|---|
+| **Era** | Mobile-first, cloud-native, open source giants |
+| **Key events** | iOS/Android maturation, Docker (2013), Kubernetes (2014), WebAssembly spec (2017) |
+| **Milestone** | Rust 1.0 (2015) — memory safety without GC proven at scale |
+| **Key challenge** | Memory safety, null safety, concurrency, and type-safe large codebases |
+
+<Callout type="info">
+  Rust's ownership system was the decade's most significant programming language innovation. It enforces memory safety at compile time — no use-after-free, no data races, no null dereferencing — without needing a garbage collector. Mozilla used it to rewrite Firefox's rendering engine.
+</Callout>
+
+## Languages of the 2010s
+
+| Language | Year | Creator | Significance |
+|----------|------|---------|--------------|
+| Rust | 2010 | Graydon Hoare (Mozilla) | Memory safety without GC; ownership/borrowing system |
+| Kotlin | 2011 | JetBrains | Null-safe Java replacement; official Android language |
+| Elixir | 2011 | José Valim | Ruby-like syntax on Erlang VM; distributed fault-tolerant systems |
+| Dart | 2011 | Google | Flutter's language; AOT and JIT compiled |
+| Elm | 2012 | Evan Czaplicki | Purely functional frontend; no runtime errors |
+| TypeScript | 2012 | Anders Hejlsberg (Microsoft) | Typed superset of JavaScript; large codebase management |
+| Julia | 2012 | MIT team | High-performance scientific computing; multiple dispatch |
+| Hack | 2014 | Facebook | Gradually typed PHP; powers Meta's infrastructure |
+| Swift | 2014 | Chris Lattner (Apple) | Safe, fast replacement for Objective-C on Apple platforms |
+| Crystal | 2014 | Manas Technology | Ruby syntax with C-like performance and static types |
+| PureScript | 2013 | Phil Freeman | Haskell-inspired language compiling to JavaScript |
+| ReScript | 2010 | Facebook | OCaml-based, compiles to JavaScript |
+| Ballerina | 2017 | WSO2 | Network-aware language for integration services |
+| Pony | 2015 | Sylvan Clebsch | Actor model with reference capabilities; no data races |
+| Solidity | 2014 | Ethereum Foundation | Smart contract language for Ethereum blockchain |
+| Cairo | 2019 | StarkWare | Zero-knowledge proof language for STARK systems |
+
+## Key Themes
+
+**Memory safety becomes a priority.** Rust's ownership and borrowing system was a theoretical breakthrough made practical. The key insight: ownership can be tracked statically, without runtime overhead. A value has one owner; references must be valid; data races are impossible. The Rust compiler rejects programs that violate these rules — before they run.
+
+**Null safety goes mainstream.** The "billion-dollar mistake" — Tony Hoare's term for inventing null references in 1965 — finally started being undone. Kotlin's nullable types, Swift's Optional, and Rust's `Option<T>` all require programmers to explicitly handle the absence-of-value case. Null pointer exceptions became preventable.
+
+**TypeScript saves JavaScript.** As JavaScript codebases grew to millions of lines, the lack of types became a serious engineering problem. TypeScript's gradual type system could be adopted incrementally — you could add types to existing JavaScript a file at a time. By 2020, TypeScript was arguably more widely used than JavaScript itself.
+
+**Functional languages reach mobile.** Elm proved that purely functional programming could make frontend development more reliable — the Elm Architecture influenced React's design. ReScript and PureScript brought type safety to JavaScript interop. Elixir brought Erlang's battle-tested concurrency model to developers who found Erlang's syntax daunting.
+
+**Blockchain creates new demands.** Solidity introduced a new class of correctness concerns: smart contracts can't be patched after deployment, and bugs can cost millions. This drove intense interest in formal verification and type systems that could prove contract properties.
+
+## Looking Forward
+
+The 2010s ended with memory safety and type safety firmly in the Overton window of mainstream programming. The 2020s would continue this trend — new languages from Google, Apple, and the open-source community would make safety a default, not an optional extra.

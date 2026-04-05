@@ -1,7 +1,58 @@
 ---
-title: 2020s
+title: 2020s — Safety by Default
 ---
 
-# 2020s
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# 2020s — Safety by Default
+
+The 2020s are still being written. But the direction is clear: the languages emerging in this decade treat memory safety, type safety, and correctness as defaults — not options. Some challenge C and C++ in systems programming (Zig, Carbon, Mojo). Others bring type safety to new domains like blockchain (Move) and distributed systems (Roc). The era of accepting unsafe languages because "there's no alternative" is ending.
+
+## Context
+
+| | |
+|---|---|
+| **Era** | Post-pandemic remote work, AI boom, WebAssembly maturity |
+| **Key events** | Rust enters Linux kernel (2022), NSA/CISA memory safety advisories (2022–2023), GPT-4 (2023) |
+| **Milestone** | US government agencies recommend memory-safe languages for new code |
+| **Key challenge** | Replacing C/C++ in safety-critical systems; AI-assisted programming; blockchain correctness |
+
+<Callout type="info">
+  In 2022, the NSA issued guidance recommending that organizations transition to memory-safe programming languages and listed Rust, Go, Swift, Java, and others as preferred choices over C and C++.
+</Callout>
+
+## Languages of the 2020s
+
+| Language | Year | Creator | Significance |
+|----------|------|---------|--------------|
+| Zig | 2016/2020s | Andrew Kelley | C alternative; comptime, no hidden control flow, manual memory |
+| V | 2019/2020s | Alexander Medvednikov | Simple, compiled language; fast build times |
+| Roc | 2021 | Richard Feldman | Functional language; fast, no garbage collection pauses |
+| Gleam | 2019/2021 | Louis Pilfold | Type-safe Erlang VM language; friendly error messages |
+| Mojo | 2023 | Chris Lattner (Modular) | Python superset for AI/ML; SIMD and GPU programming |
+| Carbon | 2022 | Google | Experimental C++ successor; interop-first design |
+| Move | 2020 | Facebook/Diem | Resource-oriented blockchain language; asset safety |
+| Hare | 2022 | Drew DeVault | Minimal systems language; explicit, no hidden magic |
+
+## Key Themes
+
+**C's successors compete.** After decades of "C is unavoidable for systems programming," multiple viable alternatives exist. Rust is already in the Linux kernel. Zig offers C-level control without undefined behavior. Carbon is designed to be adopted incrementally by existing C++ codebases. Mojo extends Python with systems-level capabilities for AI workloads. The monoculture is breaking.
+
+**Comptime replaces metaprogramming.** Zig's `comptime` — computation at compile time — is a clean alternative to C preprocessor macros and C++ template metaprogramming. Code that runs at compile time uses the same language as runtime code; there's no separate macro language to learn. This pattern influenced thinking about other languages' compile-time capabilities.
+
+**AI changes how languages are used.** Large language models can write code in any language, but they work best with languages that have clear, consistent syntax and large training corpuses. This creates new pressure: language design must consider LLM readability, not just human readability. Mojo explicitly targets AI/ML workloads, bridging Python's ecosystem with systems performance.
+
+**Blockchain demands correctness.** Move was designed for the Diem (formerly Libra) blockchain with one core insight: digital assets should be treated as resources that can't be accidentally duplicated or destroyed. Move's type system enforces this at compile time. Smart contract bugs that cost millions in Solidity become compile-time errors in Move.
+
+**Simplicity as a feature.** Hare and Zig reject "magic" — implicit behavior, hidden allocations, complex metaprogramming. The philosophy: a programmer should be able to read code and understand exactly what the machine will do, without needing to know about compiler transformations. This is a reaction to the complexity that accumulated in C++ and Java.
+
+## Open Questions
+
+The 2020s programming language landscape faces questions that weren't asked in previous decades:
+
+- **AI pair programming**: Does language design need to change when your co-author is a language model?
+- **WebAssembly as universal target**: Can WASM become the new JVM — a portable, sandboxed execution environment for any language?
+- **Formal verification at scale**: Can proof assistants move from academic tools to everyday programming practice?
+- **Energy efficiency**: As data centers consume increasing power, do performance and efficiency concerns change which languages are chosen?
+
+The answers will shape the 2030s.

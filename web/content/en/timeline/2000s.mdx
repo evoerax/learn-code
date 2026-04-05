@@ -1,7 +1,57 @@
 ---
-title: 2000s
+title: 2000s — Diversity and the Web Platform
 ---
 
-# 2000s
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# 2000s — Diversity and the Web Platform
+
+After the dot-com crash, a quieter revolution began. The 2000s produced an unusually diverse set of new languages — functional languages for the JVM (Scala, Clojure), systems languages with modern features (D), concurrent languages from large tech companies (Go), and educational languages that would teach a generation of children to code (Scratch). The decade established that no single language could serve all needs.
+
+## Context
+
+| | |
+|---|---|
+| **Era** | Web 2.0, cloud computing begins, mobile emerges |
+| **Key events** | Dot-com bust (2000–2002), Google goes public (2004), iPhone (2007), AWS S3/EC2 (2006) |
+| **Milestone** | Go released by Google (2009); cloud infrastructure languages emerge |
+| **Key challenge** | Scaling web services to millions of users; concurrent programming |
+
+<Callout type="info">
+  Go was designed at Google in 2007 by Ken Thompson, Rob Pike, and Robert Griesemer while waiting for a C++ program to compile. They wanted a language that was fast to compile, safe, and made concurrency easy — the opposite of C++.
+</Callout>
+
+## Languages of the 2000s
+
+| Language | Year | Creator | Significance |
+|----------|------|---------|--------------|
+| C# | 2000 | Anders Hejlsberg (Microsoft) | Java alternative for .NET; LINQ, async/await, modern type system |
+| ActionScript | 2000 | Macromedia | Flash scripting; web interactivity before HTML5 |
+| Groovy | 2003 | James Strachan | Dynamic JVM language; Gradle build tool |
+| Scala | 2004 | Martin Odersky (EPFL) | OOP + functional on JVM; type system power |
+| F# | 2005 | Don Syme (Microsoft Research) | ML-family functional language for .NET |
+| D | 2001 | Walter Bright | C++ alternative; modern systems language |
+| Haxe | 2005 | Nicolas Cannasse | Cross-platform compilation target |
+| Processing | 2001 | Reas & Fry (MIT) | Visual arts and creative coding |
+| Scratch | 2003 | MIT Media Lab | Block-based programming for children |
+| PowerShell | 2006 | Microsoft (Snover) | Object-oriented shell scripting for Windows |
+| Clojure | 2007 | Rich Hickey | Lisp on JVM; immutable data; concurrency |
+| Go | 2009 | Google (Thompson, Pike, Griesemer) | Compiled speed, garbage collection, built-in concurrency |
+| CoffeeScript | 2009 | Jeremy Ashkenas | Syntactic sugar over JavaScript |
+| Nim | 2008 | Andreas Rumpf | Systems language with Python-like syntax |
+
+## Key Themes
+
+**The JVM as a platform.** Scala and Clojure proved that the JVM was a good target for languages with very different philosophies. Scala brought type-level programming and pattern matching from academia. Clojure brought Lisp's macro system and a radical commitment to immutability. Both could call Java libraries seamlessly, making the JVM an open ecosystem rather than Java's private property.
+
+**Microsoft's renaissance.** C# started as a Java clone but quickly surpassed Java in language features. LINQ (2007) brought SQL-style queries to objects and collections. Async/await (2012) would later revolutionize asynchronous programming across multiple languages. F# brought ML-style functional programming to .NET. Microsoft was doing serious language research.
+
+**Go's deliberate simplicity.** Google needed a language for writing reliable, concurrent servers at scale. Go's answer was extreme restraint: no generics (until 2022), no inheritance, no exceptions — but goroutines and channels for concurrency, a fast compiler, and a single enforced code style. Go spread rapidly through backend and infrastructure teams.
+
+**Creative and educational computing.** Processing made visual art programming accessible to designers. Scratch, with its drag-and-drop blocks, taught millions of children the logic of programming without syntax errors. These weren't "toy" languages — they introduced programming concepts to people who would have never touched a terminal.
+
+**Functional programming matures.** Clojure's persistent data structures and Scala's case classes brought functional patterns into production JVM code. The message: immutability and first-class functions weren't just academic exercises — they made concurrent code safer and simpler.
+
+## Looking Forward
+
+The 2000s established diversity as the norm — different languages for different domains. The 2010s would accelerate this: languages would compete on memory safety, type expressiveness, and compile-time guarantees, reflecting an industry that had learned from two decades of production failures.

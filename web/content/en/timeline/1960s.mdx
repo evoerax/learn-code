@@ -1,7 +1,53 @@
 ---
-title: 1960s
+title: 1960s — Structure and Abstraction
 ---
 
-# 1960s
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# 1960s — Structure and Abstraction
+
+The 1960s grappled with the "software crisis" — programs were becoming so complex that they couldn't be reliably built or maintained. The answer was structure: structured programming, structured data, and structured thinking. The decade invented the subroutine, the block, the object, and the interactive terminal.
+
+## Context
+
+| | |
+|---|---|
+| **Era** | Structured programming, time-sharing, software crisis |
+| **Key hardware** | IBM System/360, PDP-1, GE-265 |
+| **Milestone** | NATO Software Engineering Conference (1968) coined "software engineering" |
+| **Key challenge** | Managing complexity as programs grew from hundreds to thousands of lines |
+
+<Callout type="info">
+  Edsger Dijkstra's 1968 letter "Go To Statement Considered Harmful" sparked a revolution. The goto instruction — which let programs jump anywhere — was identified as the root cause of unreadable, unmaintainable code.
+</Callout>
+
+## Languages of the 1960s
+
+| Language | Year | Creator | Significance |
+|----------|------|---------|--------------|
+| ALGOL 60 | 1960 | International committee | Block structure, recursion, formal syntax (BNF); influenced almost every language after |
+| COBOL-61 | 1961 | CODASYL | Standardized business computing across vendors |
+| APL | 1962 | Kenneth Iverson (IBM) | Array-based mathematics; extreme conciseness |
+| SNOBOL | 1962 | Bell Labs | Pattern matching and string manipulation |
+| PL/I | 1964 | IBM & SHARE | Attempted unified language for science and business |
+| BASIC | 1964 | Kemeny & Kurtz (Dartmouth) | First language designed for non-computer-science students |
+| RPG | 1964 | IBM | Report generation for business data processing |
+| Logo | 1967 | Feurzeig, Papert, Solomon | Educational programming for children; turtle graphics |
+| Simula | 1967 | Nygaard & Dahl (Norway) | First object-oriented language; invented classes and objects |
+| BCPL | 1967 | Martin Richards | Typeless systems language; direct ancestor of C |
+| B | 1969 | Ken Thompson (Bell Labs) | BCPL simplified for UNIX development |
+| Forth | 1969 | Charles Moore | Stack-based, extensible; still used in embedded systems |
+
+## Key Themes
+
+**ALGOL's lasting influence.** ALGOL 60 was never widely used commercially, but it was the most influential language ever designed. Block structure (begin/end), lexical scoping, recursion, and the idea of a formal language grammar (Backus-Naur Form) all came from ALGOL. C, Pascal, Java, Python — virtually every modern language traces its syntax back to ALGOL.
+
+**The birth of objects.** Simula was created to simulate physical systems — ships in a harbor, molecules in a gas. The solution: objects that have state and behavior, organized into classes. Simula 67 gave us classes, objects, inheritance, and virtual methods. Smalltalk and C++ would refine these ideas, but Simula invented them.
+
+**Computing for everyone.** BASIC was radical for its time: a language simple enough for college students with no CS background. Time-sharing systems at Dartmouth let dozens of students use a single computer simultaneously. BASIC planted the seed for personal computing — a decade later, it would ship with every microcomputer.
+
+**Systems programming diverges.** BCPL and B stripped away types and abstraction to get close to hardware. This line of thinking led directly to C and Unix — a deliberate choice that performance and control mattered more than safety.
+
+## Looking Forward
+
+The 1960s left two major open questions: How do you scale software to millions of lines? And how do you make objects the *primary* abstraction, not just a simulation tool? The 1970s would answer the first with structured programming methodology. The 1980s would answer the second with the object-oriented revolution.

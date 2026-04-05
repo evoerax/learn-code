@@ -1,7 +1,52 @@
 ---
-title: 1970s
+title: 1970s — Systems and Semantics
 ---
 
-# 1970s
+import { Callout } from 'nextra/components'
 
-_内容待填充_
+# 1970s — Systems and Semantics
+
+The 1970s split into two directions that still define programming today. On one side: C and Unix, embracing low-level control and simplicity. On the other: ML, Scheme, and Smalltalk, exploring type theory, functional programming, and pure object orientation. The decade gave us the tools to build operating systems — and the theory to understand what programs mean.
+
+## Context
+
+| | |
+|---|---|
+| **Era** | Unix, structured programming, type theory |
+| **Key hardware** | PDP-11, VAX 11/780, early microprocessors |
+| **Milestone** | Unix and C co-developed at Bell Labs (1969–1973) |
+| **Key challenge** | Building reliable, portable systems software |
+
+<Callout type="info">
+  C and Unix were developed together — each shaping the other. Unix needed a portable systems language; C needed a real system to be written in. The result was an operating system that could be ported to new hardware by rewriting a small C core, not rewiring circuits.
+</Callout>
+
+## Languages of the 1970s
+
+| Language | Year | Creator | Significance |
+|----------|------|---------|--------------|
+| Pascal | 1970 | Niklaus Wirth | Clean structured language; standard teaching language for 20 years |
+| C | 1972 | Dennis Ritchie (Bell Labs) | Systems language; Unix implementation; ancestor of C++, Java, C# |
+| Prolog | 1972 | Colmerauer & Roussel | Logic programming; declarative constraint solving |
+| SQL | 1974 | Chamberlin & Boyce (IBM) | Relational database query language; still dominant today |
+| Scheme | 1975 | Steele & Sussman (MIT) | Minimalist LISP with lexical scoping and tail-call optimization |
+| Smalltalk | 1972 | Alan Kay (Xerox PARC) | Pure object orientation; everything is an object; message passing |
+| ML | 1973 | Robin Milner (Edinburgh) | Type inference, pattern matching; ancestor of Haskell, OCaml, F# |
+| AWK | 1977 | Aho, Weinberger, Kernighan | Text processing; named after its creators |
+| sed | 1974 | Lee McMahon (Bell Labs) | Stream editor; regular expressions for text transformation |
+| Modula-2 | 1978 | Niklaus Wirth | Pascal successor with modules and concurrent programming |
+| PostScript | 1976 | John Warnock | Page description language; stack-based; powers laser printing |
+
+## Key Themes
+
+**C's radical simplicity.** Dennis Ritchie designed C to be small enough that a programmer could hold the entire language in their head. No objects, no garbage collection, no exceptions — just control flow, functions, and pointers. This simplicity made C portable and fast, but also dangerous: buffer overflows, dangling pointers, and undefined behavior are C's enduring legacy.
+
+**Type theory enters practice.** ML was developed as a meta-language for theorem proving, but its type system was a revelation. Hindley-Milner type inference let the compiler deduce types without annotations — you wrote code, the type checker found errors. Parametric polymorphism (generics) was formalized here. ML's type system influenced every statically typed language built after 1980.
+
+**Objects done right.** Alan Kay's Smalltalk at Xerox PARC was the purest expression of the object-oriented idea: everything is an object, all computation is message-passing, and the runtime environment is a live, interactive system. Smalltalk invented the modern IDE with syntax highlighting, method browsers, and integrated debuggers.
+
+**Data query becomes declarative.** SQL asked a revolutionary question: what if you described *what* data you want, not *how* to retrieve it? The relational model and SQL query language decoupled application logic from storage — a separation of concerns that proved so powerful it still dominates data management today.
+
+## Looking Forward
+
+The 1970s gave programmers their most powerful tools yet. The 1980s would take object-oriented programming mainstream, add it to C, and watch the software industry transform.
