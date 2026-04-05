@@ -1,0 +1,107 @@
+---
+title: Pony
+description: Actor-based concurrency language with capabilities-based security
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Pony
+
+> _The language where data races are impossible by design._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2015 |
+| **Creator** | Sylvan Clebsch (Wetgenes) |
+| **Paradigm** | Actor-based, Concurrent, Object-oriented |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Cross-platform (Linux, macOS, Windows) |
+| **Current Version** | 0.58.0 (2024) |
+| **License** | BSD 2-Clause |
+
+## Origin Story
+
+Pony was created by Sylvan Clebsch in 2014 and released in 2015. Clebsch previously worked on the actor model in other languages and wanted to build a language where concurrency bugs were impossible by design—not just harder to write.
+
+The name "Pony" came from Clebsch's work in gaming, where he jokingly referred to his colleagues as "ponies" when they shipped features quickly. The language was built from scratch with the goal of combining the safety of actor-based concurrency with the performance of native code.
+
+What makes Pony unique is that it has no data races because its type system tracks what capabilities each actor has to access data. The compiler can prove your program is safe before it runs.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Pony is a programming language that is type-safe, race-safe, memory-managed, and fast." — ponyc documentation
+</Callout>
+
+Pony's breakthrough is the **capabilities security model**:
+
+- Every object has a capability (read, write, share, etc.) that governs what operations are allowed
+- The type system proves that if your code compiles, there are no data races
+- Actors are the unit of concurrency—each actor has its own heap and can only communicate via messages
+- The garbage collector runs per-actor, not globally, making pause-free concurrency possible
+
+This means you get actor-based concurrency with the performance of manual memory management and the safety of a garbage collector—without the usual tradeoffs.
+
+## Code Example
+
+```pony filename="pony_actors.pony"
+actor Main
+  new create(env: Env) =>
+    // Create two actors that work concurrently
+    let reader = Reader
+    let writer = Writer
+    
+    // Send messages (asynchronously)
+    reader.read()
+    writer.write("Hello from Pony!")
+    
+    // Actors process messages in their own queue
+    // No locks needed - data races are impossible
+
+actor Reader
+  var _data: String = ""
+  
+  be read() =>
+    // 'be' marks this as a behavior (async method)
+    _data = "Data loaded"
+    env.out.print("Reader got: " + _data)
+
+actor Writer
+  var _buffer: String = ""
+  
+  be write(msg: String) =>
+    _buffer = msg
+    env.out.print("Writer stored: " + _buffer)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Distributed Systems | Chatrek (distributed chat), Pony's own runtime |
+| Blockchain | Runtime verification tools |
+| IoT | Edge computing frameworks |
+| Academic | Capability security research |
+
+## Influence & Legacy
+
+**Inspired by:** Erlang (actor model), Ada (capabilities), ML (type inference), Java (object-oriented), Rust (memory safety without GC)
+
+**Influenced:** Various research languages exploring capability-based security; the actor model has gained renewed interest for distributed systems
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | Pony Corridor (pkg.corridor.net) |
+| Build Tool | ponyc (compiler), make-like build system |
+| Runtime | Custom pony runtime with per-actor GC |
+| Documentation | docs.ponylang.org |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Pony's garbage collector is stop-the-world free at the actor level—each actor pauses its own garbage collection independently, never causing global GC pauses. This makes Pony programs have consistent, predictable latency even under heavy concurrent load.
+</Callout>

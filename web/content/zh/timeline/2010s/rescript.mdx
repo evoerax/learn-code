@@ -1,0 +1,115 @@
+---
+title: ReScript
+description: 强类型函数式语言，编译为 JavaScript，OCaml 进入前端工程的重要尝试
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# ReScript
+
+> _让 JavaScript 拥有 OCaml 的类型系统。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2016（ReasonML）/ 2020（ReScript） |
+| **Creator** | Jordan Walke（Facebook） |
+| **Paradigm** | 函数式、静态类型、多范式 |
+| **Type System** | 静态、强类型、推断 |
+| **Platform** | 跨平台（编译为 JS） |
+| **Current Version** | 11.0 (2024) |
+| **License** | MIT |
+
+## Origin Story
+
+ReScript 的故事始于 2016 年，当时 Facebook 的 Jordan Walke 创建了 ReasonML——将 OCaml 的类型系统和工作流引入 JavaScript 生态。ReasonML 利用了 OCaml 久经考验的编译器，为 JavaScript 开发提供了强类型函数式编程的能力。
+
+2020 年，项目团队决定将 ReasonML 重命名为 ReScript，并进行了重大重构。新名称反映了该语言的使命：在保持 OCaml 灵魂的同时，成为最好的 JavaScript 替代品。ReScript 拥有据说是世界上最快的 JavaScript 类型检查器，其类型系统直接编译为 JavaScript，不依赖额外的运行时。
+
+今天，ReScript 被用于 Facebook 内部多个项目中，展示了强类型函数式编程在前端工程中的可行性。
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "ReScript 结合了 JavaScript 的务实性和 OCaml 的类型安全性。" — ReScript 官方文档
+</Callout>
+
+ReScript 的核心特点：
+
+- **一等的 JSX 支持**：直接在 Reason 语法中编写 React 组件
+- **OCaml 类型系统**：变体（variant）、模式匹配、多态类型一应俱全
+- **极速编译**：类型检查和编译速度极快，提升开发体验
+- **原生性能**：编译输出精简的 JavaScript，无额外运行时负担
+
+ReScript 的类型系统支持完整的 ADT（代数数据类型），让你能用类型精确表达业务逻辑。
+
+## Code Example
+
+```rescript filename="rescript_logic.res"
+// ReScript 的类型系统 - 变体与模式匹配
+
+type result<'a> =
+  | Success('a)
+  | Error(string)
+  | Loading
+
+// 完整的模式匹配
+let handle = (r: result<int>) => {
+  switch r {
+  | Success(value) => Js.log("Got: " ++ Js.Int.toString(value))
+  | Error(msg) => Js.log("Error: " ++ msg)
+  | Loading => Js.log("Loading...")
+  }
+}
+
+// Pipe 操作符让数据流更清晰
+let processed = data
+  |> Array.filter(x => x > 0)
+  |> Array.map(x => x * 2)
+  |> Array.reduce(0, (acc, x) => acc + x)
+
+// React 组件（JSX）
+@react.component
+let make = (~name: string) => {
+  let (count, setCount) = React.useState(() => 0)
+  
+  <div>
+    <h1> {React.string("Hello, " ++ name ++ "!")} </h1>
+    <button onClick={_ => setCount(c => c + 1)}>
+      {React.string("Clicked " ++ Js.Int.toString(count) ++ " times")}
+    </button>
+  </div>
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web 应用 | Facebook 内部多个项目 |
+| 前端框架 | ReScriptReact（原生 JSX 支持） |
+| 工具库 | Belt（标准库补充） |
+| 教育 | Learn ReScript（官方学习平台） |
+
+## Influence & Legacy
+
+**Inspired by:** OCaml（类型系统）、JavaScript（生态）、React（JSX）
+
+**Influenced:** TypeScript 的类型改进、F# 的语法设计、多语言编译器的设计思路
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | npm / yarn |
+| 构建工具 | ReScript 编译器（内置） |
+| 主要框架 | ReScriptReact |
+| 标准库 | Belt（Pony 标准库启发） |
+| 编辑器支持 | VS Code、OCaml Platform |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  ReScript 编译器能在毫秒级别完成类型检查，远快于 TypeScript 的大型项目检查时间。这是因为 OCaml 的类型系统设计简洁高效，编译时无需进行复杂的类型推断回溯。
+</Callout>

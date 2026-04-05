@@ -1,0 +1,107 @@
+---
+title: Pony
+description: 基于 Actor 模型的并发语言，通过能力系统实现安全性
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Pony
+
+> _数据竞争在设计上就不可能发生的语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2015 |
+| **Creator** | Sylvan Clebsch（Wetgenes） |
+| **Paradigm** | Actor 模型、并发、面向对象 |
+| **Type System** | 静态、强类型、推断 |
+| **Platform** | 跨平台（Linux、macOS、Windows） |
+| **Current Version** | 0.58.0 (2024) |
+| **License** | BSD 2-Clause |
+
+## Origin Story
+
+Pony 由 Sylvan Clebsch 于 2014 年创建，2015 年发布。Clebsch 之前在其他语言中研究过 Actor 模型，他想构建一门在设计上就能避免并发 Bug 的语言——而不是让 Bug 变得更难写。
+
+"Pony" 这个名字来自 Clebsch 在游戏行业的工作，当时他打趣地称快速交付功能的同事为"小马"（ponies）。这门语言从零开始构建，目标是结合 Actor 并发的安全性和原生代码的性能。
+
+Pony 的独特之处在于它没有数据竞争——因为它的类型系统追踪每个 Actor 对数据的访问能力。编译器可以在程序运行之前证明你的程序是安全的。
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Pony 是一门类型安全、竞争安全、内存管理且快速的编程语言。" — ponyc 文档
+</Callout>
+
+Pony 的突破性创新是**能力安全模型**：
+
+- 每个对象都有一个能力（读取、写入、共享等），决定允许什么操作
+- 类型系统证明如果你的代码能编译，就不存在数据竞争
+- Actor 是并发的基本单位——每个 Actor 有自己的堆，只能通过消息通信
+- 垃圾回收器按 Actor 运行而非全局运行，实现无暂停的并发
+
+这意味着你获得了 Actor 并发的性能优势，同时拥有手动内存管理和垃圾回收器的安全性——而无需通常的权衡。
+
+## Code Example
+
+```pony filename="pony_actors.pony"
+actor Main
+  new create(env: Env) =>
+    // 创建两个并发工作的 Actor
+    let reader = Reader
+    let writer = Writer
+    
+    // 发送消息（异步）
+    reader.read()
+    writer.write("Hello from Pony!")
+    
+    // Actor 在自己的队列中处理消息
+    // 无需锁——数据竞争不可能发生
+
+actor Reader
+  var _data: String = ""
+  
+  be read() =>
+    // 'be' 标记这是一个行为（异步方法）
+    _data = "Data loaded"
+    env.out.print("Reader got: " + _data)
+
+actor Writer
+  var _buffer: String = ""
+  
+  be write(msg: String) =>
+    _buffer = msg
+    env.out.print("Writer stored: " + _buffer)
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| 分布式系统 | Chatrek（分布式聊天）、Pony 自身运行时 |
+| 区块链 | 运行时验证工具 |
+| 物联网 | 边缘计算框架 |
+| 学术研究 | 能力安全研究 |
+
+## Influence & Legacy
+
+**Inspired by:** Erlang（Actor 模型）、Ada（能力系统）、ML（类型推断）、Java（面向对象）、Rust（无 GC 的内存安全）
+
+**Influenced:** 各种探索能力安全的研究语言；Actor 模型在分布式系统中重新获得关注
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | Pony Corridor（pkg.corridor.net） |
+| 构建工具 | ponyc（编译器）、类 make 构建系统 |
+| 运行时 | 自定义 pony 运行时，每个 Actor 有独立 GC |
+| 文档 | docs.ponylang.org |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Pony 的垃圾回收器在 Actor 级别是无 stop-the-world 的——每个 Actor 独立暂停自己的垃圾回收，不会造成全局 GC 暂停。这使得 Pony 程序即使在高并发负载下也能保持一致、可预测的延迟。
+</Callout>

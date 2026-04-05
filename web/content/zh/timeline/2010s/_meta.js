@@ -12,4 +12,7 @@ export default {
   swift: { title: 'Swift' },
   crystal: { title: 'Crystal' },
   solidity: { title: 'Solidity' },
+  pony: { title: 'Pony' },
+  rescript: { title: 'ReScript' },
+  ballerina: { title: 'Ballerina' },
 }

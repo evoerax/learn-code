@@ -1,0 +1,115 @@
+---
+title: ReScript
+description: Strongly typed functional language compiling to JavaScript, OCaml enters frontend engineering
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# ReScript
+
+> _Bringing OCaml's type system to the JavaScript ecosystem._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2016 (ReasonML) / 2020 (ReScript) |
+| **Creator** | Jordan Walke (Facebook) |
+| **Paradigm** | Functional, Statically Typed, Multi-paradigm |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Cross-platform (compiles to JS) |
+| **Current Version** | 11.0 (2024) |
+| **License** | MIT |
+
+## Origin Story
+
+ReScript's story begins in 2016 when Facebook's Jordan Walke created ReasonML—bringing OCaml's type system and workflow to the JavaScript ecosystem. ReasonML leveraged OCaml's battle-tested compiler to provide strongly typed functional programming for JavaScript developers.
+
+In 2020, the team decided to rename ReasonML to ReScript and undergo a major refactor. The new name reflected the language's mission: to be the best JavaScript alternative while keeping the OCaml soul. ReScript boasts what they claim is the world's fastest JavaScript type checker, with a type system that compiles directly to JavaScript without an additional runtime.
+
+Today, ReScript is used in multiple projects at Facebook, demonstrating the viability of strongly typed functional programming in frontend engineering.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "ReScript combines JavaScript's pragmatism with OCaml's type safety." — ReScript official docs
+</Callout>
+
+ReScript's core features:
+
+- **First-class JSX support**: Write React components directly in ReScript syntax
+- **OCaml type system**: Variants, pattern matching, polymorphic types all available
+- **Lightning-fast compilation**: Type checking and compilation are extremely fast
+- **Native performance**: Compiled output is lean JavaScript with no extra runtime
+
+ReScript's type system supports full ADTs (Algebraic Data Types), allowing you to precisely express business logic in types.
+
+## Code Example
+
+```rescript filename="rescript_logic.res"
+// ReScript's type system - variants and pattern matching
+
+type result<'a> =
+  | Success('a)
+  | Error(string)
+  | Loading
+
+// Exhaustive pattern matching
+let handle = (r: result<int>) => {
+  switch r {
+  | Success(value) => Js.log("Got: " ++ Js.Int.toString(value))
+  | Error(msg) => Js.log("Error: " ++ msg)
+  | Loading => Js.log("Loading...")
+  }
+}
+
+// Pipe operator for clearer data flow
+let processed = data
+  |> Array.filter(x => x > 0)
+  |> Array.map(x => x * 2)
+  |> Array.reduce(0, (acc, x) => acc + x)
+
+// React component (JSX)
+@react.component
+let make = (~name: string) => {
+  let (count, setCount) = React.useState(() => 0)
+  
+  <div>
+    <h1> {React.string("Hello, " ++ name ++ "!")} </h1>
+    <button onClick={_ => setCount(c => c + 1)}>
+      {React.string("Clicked " ++ Js.Int.toString(count) ++ " times")}
+    </button>
+  </div>
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web Applications | Multiple Facebook internal projects |
+| Frontend Framework | ReScriptReact (native JSX support) |
+| Utility Libraries | Belt (standard library supplement) |
+| Education | Learn ReScript (official learning platform) |
+
+## Influence & Legacy
+
+**Inspired by:** OCaml (type system), JavaScript (ecosystem), React (JSX)
+
+**Influenced:** TypeScript's type improvements, F# syntax design, multi-language compiler designs
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | npm / yarn |
+| Build Tool | ReScript compiler (built-in) |
+| Major Framework | ReScriptReact |
+| Standard Library | Belt (inspired by Pony's standard library) |
+| Editor Support | VS Code, OCaml Platform |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  ReScript's compiler can perform type checking in milliseconds, much faster than TypeScript's大型项目检查时间. This is because OCaml's type system is designed to be simple and efficient, requiring no complex type inference backtracking during compilation.
+</Callout>

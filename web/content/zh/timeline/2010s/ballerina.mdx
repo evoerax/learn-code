@@ -1,0 +1,115 @@
+---
+title: Ballerina
+description: 为云原生场景设计的编程语言，内置并发和网络原语
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Ballerina
+
+> _为集成而生的编程语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2017 |
+| **Creator** | WSO2 |
+| **Paradigm** | 并发、网络感知、分布式 |
+| **Type System** | 静态、强类型、推断 |
+| **Platform** | 跨平台（JVM、原生） |
+| **Current Version** | 2201.8 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Ballerina 由以企业集成中间件闻名的 WSO2 公司创建，于 2017 年发布。该团队观察到，尽管编程语言发展了几十年，但通过网络连接服务仍然需要大量样板代码、外部库和手动错误处理。
+
+他们的洞察是：集成——连接 API、服务、数据库和消息队列——已成为一个需要一流语言支持的核心关注点，而传统语言的设计并未考虑到这一点。Ballerina 从零开始构建，将网络原语作为语言特性，而非事后补救。
+
+该语言结合了编译型语言的性能和学习曲线的平滑性，其语法设计旨在视觉上表达集成概念，如流、端点和连接器。
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Ballerina 是一门让使用、组合和创建网络服务变得更容易的编程语言。" — ballerina.io
+</Callout>
+
+Ballerina 的云原生特性：
+
+- **网络原语作为语言特性**：HTTP、SQL、gRPC、Kafka 内置于类型系统中
+- **结构化并发**：Fiber（轻量级线程）配合自动生成的序列图
+- **XML 和 JSON 作为原生类型**：对现代数据格式的原生支持
+- **可视化执行**：语言可以从代码生成展示服务交互的序列图
+
+这意味着你可以在更高层次的抽象上编写集成逻辑，而语言会一致地处理连接管理、超时和错误处理。
+
+## Code Example
+
+```ballerina filename="ballerina_service.bal"
+// Ballerina 的网络感知语法 - 带有自动错误处理的 HTTP 服务
+
+import ballerina/http;
+
+service / on new http:Listener(8080) {
+    
+    // 资源函数处理 HTTP 请求
+    resource function get users/[int id]() returns json|error {
+        // 数据库查询是语言级操作
+        json user = check db->query(`SELECT * FROM users WHERE id = ${id}`);
+        return user;
+    }
+    
+    resource function post users(@http:Payload UserInput input) returns json|error {
+        // 验证内置于类型系统
+        if input.name.length() == 0 {
+            return error("Name is required");
+        }
+        
+        // 插入并返回生成 ID
+        int id = check db->execute(`INSERT INTO users (name) VALUES (${input.name})`);
+        return { id: id, name: input.name };
+    }
+}
+
+// 服务组合，带序列图生成
+service /integration on new http:Listener(8081) {
+    resource function get profile(int userId) returns json|error {
+        // 并行调用多个服务
+        user, repos = wait { getUser(userId), getRepos(userId) };
+        
+        return { user: user, repoCount: repos.length() };
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| API 网关 | WSO2 API Manager |
+| 企业集成 | Ballerina Integrator |
+| 云服务 | 微服务框架 |
+| 金融服务 | 支付集成平台 |
+
+## Influence & Legacy
+
+**Inspired by:** Java（企业级）、Go（并发）、Python（语法）、Erlang（Actor）、TypeScript（现代类型系统）
+
+**Influenced:** 云原生集成模式；网络即语言特性的理念影响了其他现代语言
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | Ballerina Central |
+| 构建工具 | Ballerina 编译器 |
+| 主要框架 | ballerina.io 标准库 |
+| 测试 | 内置测试框架 |
+| 文档 | Central Ballerina site |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Ballerina 可以根据你的代码自动生成序列图，展示服务在运行时如何交互。这意味着你免费获得可视化调试和文档——图表始终是最新的，因为它直接源自代码执行。
+</Callout>

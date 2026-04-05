@@ -1,0 +1,115 @@
+---
+title: Ballerina
+description: Cloud-native programming language with built-in concurrency and network primitives
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Ballerina
+
+> _The language built for integration._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2017 |
+| **Creator** | WSO2 |
+| **Paradigm** | Concurrent, Network-aware, Distributed |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Cross-platform (JVM, Native) |
+| **Current Version** | 2201.8 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Ballerina was created by WSO2, a company known for its enterprise integration middleware, and released in 2017. The team observed that despite decades of progress in programming languages, connecting services over networks still required boilerplate code, external libraries, and manual error handling.
+
+The insight was that integration—connecting APIs, services, databases, and message queues—had become a first-class concern that traditional languages weren't designed for. Ballerina was built from the ground up with network primitives as language features, not afterthoughts.
+
+The language combines the performance of compiled languages with the productivity of scripting languages, and its syntax is designed to be visually expressive of integration concepts like flows, endpoints, and connectors.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Ballerina is a programming language that makes it easier to use, combine, and create network services." — ballerina.io
+</Callout>
+
+Ballerina's unique features for cloud-native development:
+
+- **Network primitives as language features**: HTTP, SQL, gRPC, Kafka are built into the type system
+- **Structural concurrency**: Fibers (lightweight threads) with sequence diagrams generated automatically
+- **XML and JSON as primitives**: Native support for modern data formats
+- **Visual execution**: The language can generate sequence diagrams from code showing exactly how services interact
+
+This means you write integration logic at a higher level of abstraction, and the language handles connection management, timeouts, and error handling consistently.
+
+## Code Example
+
+```ballerina filename="ballerina_service.bal"
+// Ballerina's network-aware syntax - HTTP service with automatic error handling
+
+import ballerina/http;
+
+service / on new http:Listener(8080) {
+    
+    // Resource functions handle HTTP requests
+    resource function get users/[int id]() returns json|error {
+        // Database query is a language-level operation
+        json user = check db->query(`SELECT * FROM users WHERE id = ${id}`);
+        return user;
+    }
+    
+    resource function post users(@http:Payload UserInput input) returns json|error {
+        // Validation is built into the type system
+        if input.name.length() == 0 {
+            return error("Name is required");
+        }
+        
+        // Insert and return generated ID
+        int id = check db->execute(`INSERT INTO users (name) VALUES (${input.name})`);
+        return { id: id, name: input.name };
+    }
+}
+
+// Service composition with sequence diagram generation
+service /integration on new http:Listener(8081) {
+    resource function get profile(int userId) returns json|error {
+        // Parallel calls to multiple services
+        user, repos = wait { getUser(userId), getRepos(userId) };
+        
+        return { user: user, repoCount: repos.length() };
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| API Gateway | WSO2 API Manager |
+| Enterprise Integration | Ballerina Integrator |
+| Cloud Services | Microservices frameworks |
+| Financial Services | Payment integration platforms |
+
+## Influence & Legacy
+
+**Inspired by:** Java (enterprise), Go (concurrency), Python (syntax), Erlang (actors), TypeScript (modern typing)
+
+**Influenced:** Cloud-native integration patterns; the idea of network-as-language-feature has influenced other modern languages
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | Ballerina Central |
+| Build Tool | Ballerina Compiler |
+| Major Frameworks |ballerina.io standard library |
+| Testing | Built-in test framework |
+| Documentation | Central Ballerina site |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Ballerina can automatically generate a sequence diagram from your code showing exactly how your services interact at runtime. This means you get visual debugging and documentation for free—the diagram is always up to date because it's derived directly from the code execution.
+</Callout>
