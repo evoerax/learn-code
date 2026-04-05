@@ -1,0 +1,151 @@
+---
+title: Cairo
+description: A language for writing provable programs for ZK Rollups
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Cairo
+
+> _Writing programs that can prove their own correctness._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2020 |
+| **Creator** | StarkWare |
+| **Paradigm** | Smart Contract, Provable Computation |
+| **Type System** | Static, Strong |
+| **Platform** | StarkNet (Ethereum Layer 2) |
+| **Current Version** | 1.0 (2023) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+In 2020, StarkWare released Cairo (CPU Algebraic Intermediate Representation), a programming language designed specifically for writing provable programs on StarkNet, Ethereum's Layer 2 scaling solution. The name stands for "CPU Algebraic Intermediate Representation" - reflecting its foundation as a language that compiles to STARK-proofable circuits.
+
+The core innovation behind Cairo is solving a fundamental problem in blockchain scalability: how do you prove that a computation was executed correctly without requiring every node to re-execute it? Cairo enables developers to write programs where the correctness of execution can be verified mathematically through zero-knowledge proofs (STARKs), rather than requiring redundant computation by all network participants.
+
+StarkWare, founded by Eli Ben-Sasson and others from the Technion, had been working on STARK technology since 2018. Cairo was the missing piece that made this technology accessible to developers - before Cairo, writing provable programs required understanding intricate circuit design. Cairo provides an abstraction layer that feels like normal programming while generating the cryptographic proofs underneath.
+
+## Design Philosophy
+
+Cairo's design centers on **deterministic execution with provability**. Every Cairo program must be pure - given the same inputs, it will always produce the same outputs. This purity is what makes the program provable: if you claim "I ran this program and got that result," a verifier can check the proof without re-running the program.
+
+The language embraces a **register-based architecture** rather than a stack-based one like Solidity's EVM. This design choice makes it easier to construct efficient proof circuits, as register operations have more predictable memory access patterns.
+
+<Callout type="default" emoji="💡">
+  Cairo programs are essentially "programs that prove themselves" - when you run a Cairo program, it generates a cryptographic proof that any verifier can check to confirm correct execution.
+</Callout>
+
+Another key principle is **native support for cryptographic primitives**. Cairo includes built-in operations for Merkle trees, hash functions, and other essential cryptographic building blocks, making it practical to build complex DeFi protocols without implementing these from scratch.
+
+## Code Example
+
+```cairo filename="cairo/quadratic_verification.cairo"
+// A Cairo program that verifies a quadratic equation solution
+// This demonstrates Cairo's math-friendly syntax and proof generation
+
+// Define a quadratic equation: ax² + bx + c = 0
+// This example checks if a given x satisfies the equation
+
+%builtins pedersen range_check
+
+from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.math import assert_not_zero
+
+func verify_quadratic_solution{
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(a: felt, b: felt, c: felt, x: felt) -> (result: felt) {
+    // Compute ax² + bx + c
+    tempvar ax_squared = a * x * x;
+    tempvar bx = b * x;
+    tempvar result = ax_squared + bx + c;
+    
+    // The result should equal zero for a valid solution
+    // If it doesn't, the proof will fail
+    assert result = 0;
+    
+    return (result=result);
+}
+
+// Example of a simple recursive fibonacci proving correctness
+func fibonacci{pedersen_ptr: HashBuiltin*, range_check_ptr}(n: felt) -> (result: felt) {
+    if (n == 0) {
+        return (result=0);
+    }
+    
+    if (n == 1) {
+        return (result=1);
+    }
+    
+    // Recursive case: fib(n) = fib(n-1) + fib(n-2)
+    let (fib_n_1) = fibonacci(n=n - 1);
+    let (fib_n_2) = fibonacci(n=n - 2);
+    
+    return (result=fib_n_1 + fib_n_2);
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| DeFi | StarkNet DEX (dYdX on StarkNet, Sorare), Automated Market Makers |
+| Infrastructure | StarkNet Core Contracts, StarkWare's StarkNet Sequencer |
+| Gaming | Realms (Ethernal Wars), Bitmap Protocol |
+| Identity | Bright ID integration, Decentralized identity protocols |
+| NFT | StarkNet NFT marketplaces, On-chain generative art |
+
+## Influence & Legacy
+
+**Inspired by:** Rust (ownership model), Python (syntax readability), Cairo's own STARK research lineage
+
+**Influenced:** Several ZK-proof languages are emerging as Cairo proves the viability of production ZK languages. The StarkNet ecosystem has become a proving ground for ZK Rollup technology, with Cairo programs processing millions of dollars worth of transactions daily with cryptographic guarantees of correctness.
+
+Cairo represents a fundamentally different paradigm in smart contract development. While Solidity and EVM-based languages focus on execution, Cairo shifts the paradigm to proving execution. This has profound implications for blockchain scalability - a Cairo program processing a complex DeFi transaction generates a proof that can be verified in milliseconds, regardless of how complex the original computation was.
+
+The success of Cairo and StarkNet demonstrates that ZK Rollups are not just theoretical - they are production-ready. This has catalyzed development across the entire ZK ecosystem, with projects like zkSync, Polygon zkEVM, and Scroll learning from and building upon StarkWare's innovations.
+
+## Version Milestones
+
+| Version | Year | What Changed |
+|---------|------|-------------|
+| 0.1 | 2020 | Initial release, basic smart contract functionality |
+| 0.10 | 2022 | Introduction of Sierra (Safe Intermediate Representation) |
+| 1.0 | 2023 | Stable language, breaking changes finalized, full mainnet support |
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | scarb (Cairo package manager) |
+| Major Frameworks | StarkNet.js, starknet-react |
+| Build Tools | Cairo VSCode extension, Cairo 1.0 hardhat plugin |
+| Testing | pytest-starknet, StarkNet testing framework |
+| Documentation | StarkWare docs, Cairo by Example |
+
+## When to Use
+
+**Good fit:**
+- Building DeFi protocols requiring high throughput and low fees
+- Applications where cryptographic verification of correctness is critical
+- Games with on-chain state that needs to be provably correct
+- Any project on StarkNet/Ethereum wanting to leverage ZK Rollup benefits
+
+**Not a good fit:**
+- Projects requiring EVM compatibility (use Solidity instead)
+- Teams unfamiliar with ZK cryptography concepts
+- Applications where gas cost per call is not a bottleneck
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Cairo's name stands for "CPU Algebraic Intermediate Representation" - a reference to how the language models computation as algebraic circuits that STARK provers can verify.
+</Callout>
+
+The StarkNet sequencer, which processes all transactions on StarkNet, is itself written in Cairo. This means millions of dollars of DeFi transactions are being processed by code written in Cairo proving its own correctness through cryptographic proofs.
+
+Unlike EVM smart contracts where gas costs scale with computation complexity, Cairo programs pay fees based on the complexity of the proof generation - which means complex calculations can sometimes be cheaper than simple ones if they have better proof structures.

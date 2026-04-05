@@ -1,0 +1,148 @@
+---
+title: Cairo
+description: 用于编写 ZK Rollup 可验证程序的编程语言
+---
+
+import { Callout, Cards, Tabs } from 'nextra/components'
+
+# Cairo
+
+> _编写能够证明自身正确性的程序。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2020 |
+| **创造者** | StarkWare |
+| **范式** | 智能合约、可验证计算 |
+| **类型系统** | 静态、强类型 |
+| **平台** | StarkNet（以太坊二层） |
+| **当前版本** | 1.0（2023） |
+| **许可协议** | Apache 2.0 |
+
+## 起源故事
+
+2020年，StarkWare发布了Cairo（CPU代数中间表示），这是一种专门为在StarkNet上编写可证明程序而设计的编程语言。StarkNet是以太坊的二层扩展解决方案。Cairo这个名称代表"CPU Algebraic Intermediate Representation"，反映了它作为一种能够编译成STARK可证明电路的语言的本质。
+
+Cairo背后的核心创新是解决区块链可扩展性中的一个基本问题：如何证明计算正确执行，而不需要每个节点都重新执行？Cairo使开发者能够编写程序，其执行正确性可以通过零知识证明（STARK）进行数学验证，而不需要网络的所有参与者冗余执行。
+
+StarkWare由以色列理工学院的Eli Ben-Sasson等人于2018年创立，此前一直在研究STARK技术。Cairo是使这项技术对开发者变得可访问的关键——在Cairo之前，编写可证明程序需要理解复杂的电路设计。Cairo提供了一个抽象层，感觉像普通编程，但底层生成加密证明。
+
+## 设计哲学
+
+Cairo的设计围绕**确定性和可证明性执行**展开。每个Cairo程序必须是纯函数式的——给定相同的输入，总是产生相同的输出。这种纯度使得程序可证明：如果你声称"我运行了这个程序并得到了那个结果"，验证者可以在不重新运行程序的情况下检查证明。
+
+该语言采用**基于寄存器的架构**，而不是像Solidity的EVM那样基于栈的设计。这种设计选择使得构建高效的证明电路更容易，因为寄存器操作具有更可预测的内存访问模式。
+
+<Callout type="default" emoji="💡">
+  Cairo程序本质上是"能自我证明的程序"——当你运行一个Cairo程序时，它会生成一个加密证明，任何验证者都可以检查它来确认正确执行。
+</Callout>
+
+另一个关键原则是**对密码学原语的本机支持**。Cairo包含内置的Merkle树、哈希函数和其他基本密码学构建块的操作，使构建复杂的DeFi协议变得实际可行，而不需要从头实现这些功能。
+
+## 代码示例
+
+```cairo filename="cairo/quadratic_verification.cairo"
+// 一个验证二次方程解的Cairo程序
+// 展示了Cairo的数学友好语法和证明生成
+
+%builtins pedersen range_check
+
+from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.math import assert_not_zero
+
+func verify_quadratic_solution{
+    pedersen_ptr: HashBuiltin*,
+    range_check_ptr
+}(a: felt, b: felt, c: felt, x: felt) -> (result: felt) {
+    // 计算 ax² + bx + c
+    tempvar ax_squared = a * x * x;
+    tempvar bx = b * x;
+    tempvar result = ax_squared + bx + c;
+    
+    // 结果应该为零才是有效解
+    // 如果不是，证明将失败
+    assert result = 0;
+    
+    return (result=result);
+}
+
+// 简单的递归斐波那契数列证明正确性示例
+func fibonacci{pedersen_ptr: HashBuiltin*, range_check_ptr}(n: felt) -> (result: felt) {
+    if (n == 0) {
+        return (result=0);
+    }
+    
+    if (n == 1) {
+        return (result=1);
+    }
+    
+    // 递归情况：fib(n) = fib(n-1) + fib(n-2)
+    let (fib_n_1) = fibonacci(n=n - 1);
+    let (fib_n_2) = fibonacci(n=n - 2);
+    
+    return (result=fib_n_1 + fib_n_2);
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|---------|
+| DeFi | StarkNet DEX（dYdX on StarkNet, Sorare）、自动做市商 |
+| 基础设施 | StarkNet核心合约、StarkWare的StarkNet排序器 |
+| 游戏 | Realms（Ethernal Wars）、Bitmap Protocol |
+| 身份 | Bright ID集成、去中心化身份协议 |
+| NFT | StarkNet NFT市场、链上生成艺术 |
+
+## 影响与遗产
+
+**受启发于：** Rust（所有权模型）、Python（语法可读性）、Cairo自身的STARK研究传统
+
+**影响：** 多个ZK证明语言正在兴起，因为Cairo证明了生产级ZK语言的可行性。StarkNet生态系统已成为ZK Rollup技术的试验场，Cairo程序每天处理数百万美元的交易，并具有正确性的密码学保证。
+
+Cairo代表了智能合约开发的根本性范式转变。Solidity和基于EVM的语言专注于执行，而Cairo则将范式转向证明执行。这对区块链可扩展性具有深远影响——处理复杂DeFi交易的Cairo程序可以生成在毫秒内验证的证明，无论原始计算有多复杂。
+
+Cairo和StarkNet的成功表明ZK Rollup不仅是理论上的——它们已投入生产。这催化了整个ZK生态系统的开发，zkSync、Polygon zkEVM和Scroll等项目都在学习和借鉴StarkWare的创新。
+
+## 版本里程碑
+
+| 版本 | 年份 | 变更内容 |
+|---------|------|-------------|
+| 0.1 | 2020 | 初始发布，基本智能合约功能 |
+| 0.10 | 2022 | 引入Sierra（安全中间表示） |
+| 1.0 | 2023 | 稳定语言，重大变更最终确定，全面主网支持 |
+
+## 生态系统
+
+| 类别 | 工具 |
+|----------|-------|
+| 包管理器 | scarb（Cairo包管理器） |
+| 主要框架 | StarkNet.js, starknet-react |
+| 构建工具 | Cairo VSCode扩展, Cairo 1.0 hardhat插件 |
+| 测试 | pytest-starknet, StarkNet测试框架 |
+| 文档 | StarkWare文档, Cairo by Example |
+
+## 何时使用
+
+**适合的场景：**
+- 构建需要高吞吐量和低费用的DeFi协议
+- 需要密码学正确性验证的关键应用
+- 具有需要可证明正确性的链上状态的游戏
+- 任何想要利用ZK Rollup优势的在StarkNet/以太坊上的项目
+
+**不适合的场景：**
+- 需要EVM兼容性的项目（使用Solidity）
+- 不熟悉ZK密码学概念的团队
+- 每次调用gas成本不是瓶颈的应用
+
+## 你知道吗？
+
+<Callout type="info" emoji="🤔">
+  Cairo的名称代表"CPU代数中间表示"——这是一种语言如何将计算建模为STARK证明者可以验证的代数电路的参考。
+</Callout>
+
+StarkNet的排序器——处理StarkNet上所有交易的组件——本身也是用Cairo编写的。这意味着数百万美元的DeFi交易正在由用Cairo编写的代码处理，通过加密证明证明其自身的正确性。
+
+与EVM智能合约不同，EVM中gas成本随计算复杂性缩放，Cairo程序的费用基于证明生成的复杂性——这意味着复杂的计算如果具有更好的证明结构，有时可能比简单的计算便宜。

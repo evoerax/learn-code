@@ -15,4 +15,5 @@ export default {
   pony: { title: 'Pony' },
   rescript: { title: 'ReScript' },
   ballerina: { title: 'Ballerina' },
+  cairo: { title: 'Cairo' },
 }
