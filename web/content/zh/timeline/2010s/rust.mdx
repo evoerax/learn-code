@@ -1,0 +1,112 @@
+---
+title: Rust
+description: Mozilla开发的系统编程语言，通过所有权系统实现内存安全
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Rust
+
+> _让并发编程变得安全的语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2010 |
+| **Creator** | Graydon Hoare（Mozilla Research） |
+| **Paradigm** | 系统编程、并发、多范式 |
+| **Type System** | 静态、强类型、推断 |
+| **Platform** | 跨平台 |
+| **Current Version** | 1.78 (2024) |
+| **License** | MIT / Apache 2.0 |
+
+## Origin Story
+
+Graydon Hoare 于 2006 年在 Mozilla Research 工作时创建了 Rust，以 "rustust" 真菌命名——象征其能在恶劣条件下生存的能力。Mozilla 于 2009 年正式开始赞助该项目，首个稳定版本于 2010 年发布。
+
+Rust 诞生于一个实际问题：如何在没有 C 和 C++ 中那些内存 bug 的情况下编写底层系统代码。悬空指针、缓冲区溢出和数据竞争等经典问题曾让整个行业损失数十亿美元用于修复安全漏洞和崩溃。
+
+突破在于所有权系统——一组编译器在编译时强制执行的规则，在没有垃圾回收的情况下消除整类 bug。程序可以获得确定性的性能（无 GC 停顿），同时保持内存安全。
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Rust 的目标是给予程序员所需的底层控制能力，同时避免底层控制历来引入的 bug。" — Graydon Hoare
+</Callout>
+
+Rust 的核心创新是所有权和借用系统：
+
+- **所有权**：每个值有且只有一个所有者；当所有者离开作用域时，值被释放
+- **借用**：你可以引用值而不取得所有权，编译器强制执行"多个不可变引用或一个可变引用"的规则（两者不能同时存在）
+- **生命周期注解**：编译器追踪引用的有效期限，防止悬空指针
+
+这意味着 Rust 可以在编译时捕获使用后释放、双重释放和数据竞争——在程序运行之前。
+
+## Code Example
+
+```rust filename="rust_ownership.rs"
+// Rust 的所有权系统在编译时防止内存 bug
+
+fn main() {
+    // 所有权转移（移动语义）
+    let s1 = String::from("hello");
+    let s2 = s1; // s1 被移动到 s2，s1 不再有效
+    // println!("{}", s1); // 错误：移动后借用值
+    
+    // 借用（引用）
+    let s3 = String::from("world");
+    let len = calculate_length(&s3); // 传递引用而非所有权
+    println!("{} 有 {} 个字符", s3, len); // s3 仍然有效
+    
+    // 可变借用
+    let mut counter = 0;
+    let inc = &mut counter;
+    *inc += 1;
+    // 当 inc 存活时不能有其他可变引用
+    
+    // 带所有权的模式匹配
+    let data = Some(vec![1, 2, 3]);
+    match data {
+        Some(vec) if vec.len() > 2 => println!("获取了 {} 项", vec.len()),
+        _ => println!("数据不足"),
+    }
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len() // 借用 s，不取得所有权
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web 浏览器 | Firefox（CSS 引擎 Servo）、Chromium（部分组件） |
+| 开发者工具 | Cargo（Rust 包管理器）、ripgrep、fd |
+| 区块链 | Solana、Substrate（Polkadot）、StarkNet（Cairo） |
+| 云基础设施 | AWS Firecracker（无服务器）、Cloudflare 的 Pingora |
+| 游戏 | Dota 2、Discord、Steam 新功能 |
+| 操作系统开发 | Linux 内核模块、Redox OS |
+
+## Influence & Legacy
+
+**Inspired by:** C++（零成本抽象）、ML（类型推断）、Haskell（纯函数）、Erlang（消息传递）、Cyclone（仿射类型）
+
+**Influenced:** 现代 C++（受 Rust 启发的安全特性）、Swift（所有权概念）、Verilog（安全性改进）、众多区块链语言
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| 包管理器 | Cargo（内置） |
+| 构建工具 | Cargo（也用于测试、文档、发布） |
+| 主要框架 | Actix-web、Rock、Axum（Web）；Tokio（异步运行时） |
+| 测试 | 内置 cargo test、rstest、proptest |
+| 包仓库 | crates.io（50,000+ 个 crate） |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Rust 自 2016 年以来每年都赢得 Stack Overflow "最受喜爱语言"调查——开发者一致将其评为最想继续使用的语言。尽管学习曲线陡峭，但"如果能编译，就能工作"的信心给程序员带来了深深的满足感。
+</Callout>

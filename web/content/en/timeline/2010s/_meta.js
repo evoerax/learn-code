@@ -1,5 +1,6 @@
 export default {
   index: { title: 'Overview' },
+  rust: { title: 'Rust' },
   typescript: { title: 'TypeScript' },
   kotlin: { title: 'Kotlin' },
   swift: { title: 'Swift' },

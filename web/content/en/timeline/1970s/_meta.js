@@ -10,4 +10,5 @@ export default {
   scheme: { title: 'Scheme' },
   awk: { title: 'AWK' },
   'modula-2': { title: 'Modula-2' },
+  postscript: { title: 'PostScript' },
 }

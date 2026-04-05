@@ -1,0 +1,112 @@
+---
+title: Rust
+description: Mozilla's systems programming language with ownership-based memory safety
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Rust
+
+> _The language that makes parallel programming safe._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2010 |
+| **Creator** | Graydon Hoare (Mozilla Research) |
+| **Paradigm** | Systems Programming, Concurrent, Multi-paradigm |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Cross-platform |
+| **Current Version** | 1.78 (2024) |
+| **License** | MIT / Apache 2.0 |
+
+## Origin Story
+
+Graydon Hoare created Rust in 2006 while working at Mozilla Research, naming it after the robustust fungus—a tribute to its ability to survive harsh conditions. The language was officially sponsored by Mozilla beginning in 2009 and the first stable release came in 2010.
+
+Rust was born from a practical problem: how to write low-level systems code without the memory bugs that plague C and C++. Classic issues like dangling pointers, buffer overflows, and data races were costing the industry billions in security vulnerabilities and crashes.
+
+The breakthrough was the ownership system—a set of rules the compiler enforces at compile time, eliminating entire categories of bugs without garbage collection. Programs can run with deterministic performance (no GC pauses) while being memory-safe.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "The goal of Rust is to give programmers the low-level control they need, while preventing the bugs that low-level control historically introduces." — Graydon Hoare
+</Callout>
+
+Rust's core innovation is the ownership and borrowing system:
+
+- **Ownership**: Every value has exactly one owner; when the owner goes out of scope, the value is freed
+- **Borrowing**: You can reference values without taking ownership, with the compiler enforcing that either multiple immutable references OR one mutable reference exist (never both)
+- **Lifetime annotations**: The compiler tracks how long references are valid, preventing dangling pointers
+
+This means Rust can catch use-after-free, double-free, and data races at compile time—before the program ever runs.
+
+## Code Example
+
+```rust filename="rust_ownership.rs"
+// Rust's ownership system prevents memory bugs at compile time
+
+fn main() {
+    // Ownership transfer (move semantics)
+    let s1 = String::from("hello");
+    let s2 = s1; // s1 is moved to s2, s1 no longer valid
+    // println!("{}", s1); // ERROR: value borrowed after move
+    
+    // Borrowing (reference)
+    let s3 = String::from("world");
+    let len = calculate_length(&s3); // pass reference, not ownership
+    println!("{} has {} characters", s3, len); // s3 still valid
+    
+    // Mutable borrowing
+    let mut counter = 0;
+    let inc = &mut counter;
+    *inc += 1;
+    // Can't have another mutable reference while inc is live
+    
+    // Pattern matching with ownership
+    let data = Some(vec![1, 2, 3]);
+    match data {
+        Some(vec) if vec.len() > 2 => println!("Got {} items", vec.len()),
+        _ => println!("Not enough data"),
+    }
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len() // borrow s, don't take ownership
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Web Browsers | Firefox (CSS engine Servo), Chromium (parts) |
+| Developer Tools | Cargo (Rust's package manager), ripgrep, fd |
+| Blockchain | Solana, Substrate (Polkadot), StarkNet (Cairo) |
+| Cloud Infrastructure | AWS Firecracker (serverless), Cloudflare's Pingora |
+| Gaming | Dota 2, Discord, Steam's new features |
+| OS Development | Linux kernel modules, Redox OS |
+
+## Influence & Legacy
+
+**Inspired by:** C++ (zero-cost abstractions), ML (type inference), Haskell (pure functions), Erlang (message passing), Cyclone (affine types)
+
+**Influenced:** Modern C++ (Rust-inspired safety features), Swift (ownership ideas), Verilog (safety improvements), numerous blockchain languages
+
+## Ecosystem
+
+| Category | Tools |
+|----------|-------|
+| Package Manager | Cargo (built-in) |
+| Build Tool | Cargo (also test, doc, publish) |
+| Major Frameworks | Actix-web, Rocket, Axum (web); Tokio (async runtime) |
+| Testing | Built-in cargo test, rstest, proptest |
+| Package Registry | crates.io (50,000+ crates) |
+
+## Did You Know?
+
+<Callout type="info" emoji="🤔">
+  Rust has won Stack Overflow's "most loved language" survey every year since 2016—developers consistently rank it as the language they most want to continue using. Despite its steep learning curve, the ownership system creates a sense of "if it compiles, it works" confidence that programmers find deeply satisfying.
+</Callout>

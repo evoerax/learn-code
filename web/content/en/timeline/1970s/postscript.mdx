@@ -1,0 +1,94 @@
+---
+title: PostScript
+description: The page description language that powered publishing and printing for decades
+---
+
+import { Callout } from 'nextra/components'
+
+# PostScript
+
+> _The language that told printers how to draw pages._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1982 |
+| **Creator** | John Warnock, Charles Geschke (Adobe) |
+| **Paradigm** | Concatenative, Stack-based |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform (printers, PDFs) |
+| **Current Version** | PostScript 3 (1997) |
+| **License** | Proprietary (Adobe) |
+
+## Origin Story
+
+In 1982, John Warnock and Charles Geschke left Xerox PARC to found Adobe Systems. At PARC, they had been working on an ambitious project called Interpress—a page description language for controlling laser printers. But Interpress was too complex for widespread adoption.
+
+Warnock had a breakthrough idea: create a simpler language that described pages using everyday concepts—circles, lines, text blocks—and let a RIP (Raster Image Processor) in the printer convert these descriptions into dots on paper. This became PostScript.
+
+The first PostScript-powered printer was the Apple LaserWriter (1985), which, combined with MacDraw and later Aldus PageMaker, launched the desktop publishing revolution. For the first time, designers could see their layouts on screen and print professional-quality output without phototypesetting.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "PostScript is a programming language... that draws." — Adobe Documentation
+</Callout>
+
+PostScript is a stack-based concatenative language where every operator consumes arguments from and pushes results onto a stack. This model, borrowed from Forth, makes the language surprisingly elegant:
+
+- **Reverse Polish Notation** — `3 4 add` pushes 3, pushes 4, adds them
+- **Graphics state stack** — Save/restore context for isolated transformations
+- **Device independence** — The same program renders identically on any PostScript device
+- **Resolution independence** — Vector graphics scale without quality loss
+
+PostScript programs are essentially recipes for drawing: describe shapes, set colors, place text, then output page.
+
+## Code Example
+
+```postscript filename="hello.ps"
+%!PS
+% A simple PostScript program demonstrating the stack model
+
+% Define a procedure (no parameters, just pushes values)
+/show-message {
+    /Helvetica findfont 24 scalefont setfont
+    100 700 moveto
+    (Hello, PostScript!) show
+} def
+
+% Draw a blue circle
+0.2 0.4 0.8 setrgbcolor  % RGB for blue
+72 500 50 arc            % circle: center at (72,500), radius 50
+fill                     % fill the circle
+
+% Draw with red outline
+0.8 0.2 0.2 setrgbcolor  % RGB for red
+0 setlinewidth
+stroke
+
+% Now show the text
+show-message
+
+% Output the page
+showpage
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| Desktop Publishing | Adobe InDesign, QuarkXPress, PageMaker |
+| PDF Evolution | PostScript → PDF became the universal document format |
+| Printer Industry | HP LaserJet, Apple LaserWriter, virtually all PostScript printers |
+| Graphic Design | Professional typography and pre-press workflows |
+
+## Influence & Legacy
+
+**Inspired by:** Forth (stack model), Interpress (page description concept)
+
+**Influenced:** PDF (Portable Document Format), Java's Graphics2D, SVG, PCL (Printer Command Language)
+
+PostScript's greatest achievement was enabling desktop publishing. But its lasting technical legacy is the PDF format it spawned—still the world's preferred document exchange format after 30 years. When you view a PDF, you're running a streamlined PostScript interpreter.
+
+The language also influenced Adobe's decision to create the PostScript interpreter in hardware (the RIP), a concept that lives on in modern print workflows. Today, while PostScript itself is largely hidden from end users, its concepts underpin how we think about device-independent graphics.

@@ -1,0 +1,94 @@
+---
+title: PostScript
+description: 驱动全球出版和印刷行业的页面描述语言
+---
+
+import { Callout } from 'nextra/components'
+
+# PostScript
+
+> _一门告诉打印机如何绘制页面的语言。_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1982 |
+| **Creator** | John Warnock, Charles Geschke（Adobe） |
+| **Paradigm** | 连接式、基于栈 |
+| **Type System** | 动态、强类型 |
+| **Platform** | 跨平台（打印机、PDF） |
+| **Current Version** | PostScript 3 (1997) |
+| **License** | 专有（Adobe） |
+
+## Origin Story
+
+1982年，John Warnock 和 Charles Geschke 离开施乐帕洛阿尔托研究中心，创立了 Adobe 系统公司。他们在 PARC 时曾致力于一个名为 Interpress 的页面描述语言项目——用于控制激光打印机。但 Interpress 太过复杂，难以广泛推广。
+
+Warnock 有一个突破性想法：创造一门更简单的语言，用日常概念描述页面——圆形、直线、文本块——让打印机内的 RIP（栅格图像处理器）将这些描述转换为纸上的墨点。这就是 PostScript。
+
+第一台支持 PostScript 的打印机是苹果 LaserWriter（1985），配合 MacDraw 以及后来的 Aldus PageMaker，掀起了桌面出版革命。设计师第一次可以在屏幕上看到版式效果，并打印出专业品质的输出，而无需照排制版。
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "PostScript 是一门用于绘图的编程语言。" — Adobe 文档
+</Callout>
+
+PostScript 是一门基于栈的连接式语言，每个操作符从栈中消耗参数并把结果推回栈中。这个模型借鉴自 Forth，使语言出奇地优雅：
+
+- **逆波兰表示法** — `3 4 add` 先压入 3，再压入 4，然后相加
+- **图形状态栈** — 保存/恢复上下文以进行隔离的变换
+- **设备独立性** — 同一程序在任何 PostScript 设备上渲染结果完全相同
+- **分辨率独立性** — 矢量图形缩放无质量损失
+
+PostScript 程序本质上是绘图的配方：描述形状、设置颜色、放置文本，然后输出页面。
+
+## Code Example
+
+```postscript filename="hello.ps"
+%!PS
+% 简单的 PostScript 程序，展示栈模型
+
+% 定义一个过程（无参数，只是压入值）
+/show-message {
+    /Helvetica findfont 24 scalefont setfont
+    100 700 moveto
+    (Hello, PostScript!) show
+} def
+
+% 绘制蓝色圆形
+0.2 0.4 0.8 setrgbcolor  % 蓝色的 RGB
+72 500 50 arc             % 圆：圆心(72,500)，半径50
+fill                      % 填充圆形
+
+% 用红色轮廓
+0.8 0.2 0.2 setrgbcolor  % 红色的 RGB
+0 setlinewidth
+stroke
+
+% 显示文本
+show-message
+
+% 输出页面
+showpage
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|---------|
+| 桌面出版 | Adobe InDesign, QuarkXPress, PageMaker |
+| PDF 演进 | PostScript → PDF 成为通用文档格式 |
+| 打印行业 | HP LaserJet, Apple LaserWriter，几乎所有 PostScript 打印机 |
+| 平面设计 | 专业排版和印前工作流 |
+
+## Influence & Legacy
+
+**Inspired by:** Forth（栈模型）、Interpress（页面描述概念）
+
+**Influenced:** PDF（便携文档格式）、Java 的 Graphics2D、SVG、PCL（打印机命令语言）
+
+PostScript 最大的成就是使桌面出版成为可能。但它持久的技术遗产是它衍生的 PDF 格式——30 年后仍是全球首选的文档交换格式。当你查看 PDF 时，实际上是在运行一个精简的 PostScript 解释器。
+
+该语言还影响了 Adobe 在硬件（RIP）中实现 PostScript 解释器的决定，这个概念在现代打印工作流中仍然存在。今天，虽然 PostScript 本身对最终用户基本隐藏，但它催生的概念奠定了我们对设备无关图形的基础理解。
