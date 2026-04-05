@@ -1,0 +1,89 @@
+---
+title: APL
+description: Array-processing language with mathematical notation
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# APL
+
+> _Where mathematics meets programming in a sea of symbols._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1966 |
+| **Creator** | Kenneth Iverson (Harvard University, IBM) |
+| **Paradigm** | Array-oriented, Functional |
+| **Type System** | Dynamic, Strong |
+| **Platform** | Cross-platform |
+| **Current Version** | APL2 (1984) |
+| **License** | Proprietary (IBM) / Open-source alternatives exist |
+
+## Origin Story
+
+APL (A Programming Language) was created by Kenneth Iverson at Harvard University in 1962, originally as a notation for describing and analyzing computer architecture. When IBM made it into a programming language in 1966, it introduced a revolutionary way of thinking about computation: treating entire arrays as first-class values that could be manipulated with single, powerful operators.
+
+The most striking feature was Iverson's use of special mathematical symbols—many borrowed from traditional algebra and his own innovations—that allowed complex operations to be expressed in a single character. What would take multiple lines in other languages could often be written as one elegant expression.
+
+## Design Philosophy
+
+APL's core innovation was the **array as a primitive type**. Operations that would require loops in traditional languages could be expressed as single operations on entire arrays.
+
+Key principles:
+
+- **Functional Style**: Functions map arrays to arrays without explicit loops
+- **Conciseness**: One line of APL often equals pages of code in other languages  
+- **Right-to-Left Evaluation**: Expressions are evaluated right-to-left, not left-to-right
+- **Operator Overloading**: Same symbol means different things with different argument types
+
+<Callout type="default" emoji="💡">
+  "The purpose of a language is to make complex ideas clear and exact." — Kenneth Iverson
+</Callout>
+
+The language showed that programming could be mathematical—expressing algorithms through operators rather than step-by-step instructions.
+
+## Code Example
+
+```apl
+* Matrix multiplication in APL
+A ← 3 3 ⍴ ⍳9           ⍝ Create 3×3 matrix with values 1-9
+B ← 3 3 ⍴ 9 ↓ ⍳18       ⍝ Create another 3×3 matrix
+
+A + B                   ⍝ Element-wise addition
+A × B                   ⍝ Element-wise multiplication
+A ∘.× B                 ⍝ Outer product (all pairwise products)
+
+* Find prime numbers using sieve
+R ← 2 ≥/ ○/ ~R ∊ R ∘.× R ← 1 ↓ ⍳R
+```
+
+This demonstrates APL's:
+- Greek letters and special symbols for operations
+- Array primitives like `⍴` (reshape) and `⍳` (index generator)
+- Whole-array operations without explicit loops
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Finance | Quantitative modeling, trading systems |
+| Research | Mathematical simulation, algorithm development |
+| Education | Teaching linear algebra concepts |
+| Data Analysis | Array-based data manipulation |
+| Legacy Systems | IBM mainframe applications |
+
+## Influence & Legacy
+
+**Inspired by:** Mathematical notation, Iverson's notation for computing
+
+**Influenced:** J, K, Q (array languages), MATLAB, Mathematica, NumPy (array programming concepts)
+
+APL spawned a family of array languages. J (by Ken Iverson and Roger Hui) created a modern descendant using ASCII only. K (by Arthur Whitney) influenced the financial industry—Kdb+, a time-series database built on K, powers trading systems worldwide.
+
+<Cards num={3}>
+  <Cards.Card title="MATLAB" href="/timeline/1980s/matlab" arrow />
+  <Cards.Card title="K" href="/timeline/1990s/k" arrow />
+  <Cards.Card title="NumPy" href="/timeline/1990s/python" arrow />
+</Cards>

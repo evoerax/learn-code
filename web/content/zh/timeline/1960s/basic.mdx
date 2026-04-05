@@ -1,0 +1,92 @@
+---
+title: BASIC
+description: 让编程民主化的初学者语言
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# BASIC
+
+> _把编程带给普通人的语言。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 1964 |
+| **创造者** | John Kemeny, Thomas Kurtz (达特茅斯学院) |
+| **范式** | 过程式、命令式 |
+| **类型系统** | 动态，初期无类型 |
+| **平台** | 跨平台（最初是达特茅斯分时系统） |
+| **当前版本** | ANSI 标准 BASIC（多种实现） |
+| **许可** | 开放标准 |
+
+## 起源故事
+
+BASIC（Beginner's All-purpose Symbolic Instruction Code，初学者通用符号指令代码）由 John Kemeny 和 Thomas Kurtz 于1964年在达特茅斯学院创建。他们的目标雄心勃勃：创造一种足够简单让任何人都能学习，同时足够强大可以完成实际工作的编程语言。这在当时编程仅限于拥有昂贵大型机访问权限的专业人士的时代，是一个根本性的突破。
+
+达特茅斯分时系统（DTSS）让 BASIC 更加革命性——学生可以直接与计算机互动，键入命令并立即看到结果。编程从需要专业知识的批处理过程转变为交互式对话。
+
+这门语言迅速传播到其他机构。当微型计算机在1970年代末出现时，BASIC 成为默认语言——每台 Apple II、Commodore 和 IBM PC 都内置了 BASIC。微软的创立本身就是建立在 Altair BASIC 之上的。
+
+## 设计理念
+
+BASIC 明确设计为：
+- **易于学习**：简单的类英语语法，规则最少
+- **交互式**：以会话风格立即执行命令
+- **宽容**：无严格类型要求，自动内存管理
+- **可扩展**：用户可以添加自己的函数
+
+<Callout type="default" emoji="💡">
+  "我们的目标是让每个学生都能使用计算机。" — John Kemeny
+</Callout>
+
+设计选择优先考虑可访问性而非优雅性。行号、GOTO 语句和简单的变量名使它对初学者很友好，尽管这种简单性后来受到结构化编程倡导者的批评。
+
+## 代码示例
+
+```basic
+10 REM Guess the Number Game
+20 LET NUMBER = INT(RND * 100) + 1
+30 LET GUESSES = 0
+40 PRINT "I'm thinking of a number between 1 and 100."
+50 INPUT "Your guess: ", GUESS
+60 LET GUESSES = GUESSES + 1
+70 IF GUESS < NUMBER THEN PRINT "Too low!" : GOTO 50
+80 IF GUESS > NUMBER THEN PRINT "Too high!" : GOTO 50
+90 PRINT "Correct! You got it in "; GUESSES; " guesses."
+100 END
+```
+
+这个经典示例展示了 BASIC 的：
+- 带行号的源代码
+- 使用 LET 的简单变量赋值
+- GOTO 控制流
+- PRINT 和 INPUT 用于输入输出
+- 自文档化的代码结构
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|----------|
+| 教育 | 数百万学生的第一门编程课程 |
+| 微型计算机 | Altair BASIC、Commodore BASIC、Microsoft BASIC |
+| 商业 | 个人计算机上的早期商业应用 |
+| 游戏 | Zork (infocom)、早期文字冒险游戏 |
+| 微软 | 公司第一个产品的基础 |
+
+## 影响与遗产
+
+**受启发于：** FORTRAN、ALGOL、JOSS
+
+**影响了：** Visual Basic、VBScript、COMAL、PowerBuilder
+
+BASIC 的影响远远超出其技术价值。它创造了第一批不一定是科学家或数学家的程序员。微型计算机革命——家用电脑、PC 游戏、微软——建立在 BASIC 之上。
+
+Visual Basic（1991）将 BASIC 带入 Windows 时代，VBScript 使其在 Web 开发中保持相关性。即使在今天，微软在最一开始就拥抱 BASIC，塑造了整个个人计算的发展轨迹。
+
+<Cards num={3}>
+  <Cards.Card title="Visual Basic" href="/timeline/1990s/visual-basic" arrow />
+  <Cards.Card title="VBScript" href="/timeline/1990s/vbscript" arrow />
+  <Cards.Card title="Microsoft" href="/timeline/1990s/microsoft" arrow />
+</Cards>

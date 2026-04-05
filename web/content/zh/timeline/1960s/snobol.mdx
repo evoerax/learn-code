@@ -1,0 +1,91 @@
+---
+title: SNOBOL
+description: 开创性的模式匹配字符串处理语言
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# SNOBOL
+
+> _让模式匹配成为语言头等公民的语言。_
+
+## 一览
+
+| | |
+|---|---|
+| **年份** | 1962 |
+| **创造者** | David Farber, Ralph Griswold, Ivan Polonsky (贝尔实验室) |
+| **范式** | 过程式、字符串导向 |
+| **类型系统** | 动态、无类型 |
+| **平台** | 大型机 (IBM 7094 等) |
+| **最新版本** | SNOBOL4 |
+| **许可** | 公共领域 |
+
+## 起源故事
+
+SNOBOL（StriNg Oriented and symBOlic Language，发音为"snowball"）由贝尔实验室的大卫·法伯、拉尔夫·格里斯沃尔德和伊万·波隆斯基于1962年开发。它诞生于一个探索非常规字符串处理和文本分析方法的项目，因为现有语言无法优雅地处理这些任务。
+
+SNOBOL的革命性在于将字符串作为基本数据类型，并内置强大的模式匹配和操作功能。其他语言处理文本需要复杂的子程序，而SNOBOL让这一切变得自然且富有表现力。
+
+该语言经历了多个版本，其中SNOBOL4（1967）是最完整的实现，增加了用户定义数据类型和更强大的模式匹配引擎等功能。
+
+## 设计理念
+
+SNOBOL引入了几个开创性概念：
+
+- **模式匹配作为语言特性**：字符串模式可以包含字面文本、变量和强大的元操作符（用于重复和交替）
+- **延迟执行**：模式可以存储在变量中稍后执行
+- **成功/失败分支**：基于操作成功或失败来决定控制流
+- **字符串与代码统一**：程序可以动态构造和执行代码
+
+<Callout type="default" emoji="💡">
+  SNOBOL的模式语言如此强大，实际上发明了我们今天所熟知的正则表达式，比Perl将其普及早了数十年。
+</Callout>
+
+其语法不同寻常但符合逻辑：操作被写成模式与字符串的匹配，成功或失败决定下一行代码的执行。
+
+## 代码示例
+
+```snobol
+* 提取并转换姓名
+NAMES = "JOHN SMITH, JANE DOE, BOB WILSON"
+COUNT = 0
+
+LOOP    NAMES ARB . FIRST SPAN('A-Z') . LAST REM . NAMES
+        COUNT = COUNT + 1
+        OUTPUT = COUNT ": " FIRST " " LAST
+        NAMES LEN(0)                        :S(LOOP)F(DONE)
+
+DONE    OUTPUT = "Total: " COUNT " names found"
+END
+```
+
+此示例展示了：
+- `ARB` 用于匹配任意长度内容
+- `SPAN` 用于字符类匹配
+- `REM` 用于捕获剩余部分
+- `:S(LOOP)F(DONE)` 用于成功/失败分支
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|----------|
+| 文本处理 | 计算机诗歌生成 |
+| 语言学 | 形态分析系统 |
+| 编程研究 | 模式匹配理论 |
+| 人工智能 | 早期自然语言处理实验 |
+| 教育 | 字符串操作概念教学 |
+
+## 影响与遗产
+
+**受启发于：** COMIT、ALGOL（代码块结构）
+
+**影响了：** Perl、Ruby、Python (re.search)、Icon、Logtalk、PROSLOG
+
+SNOBOL的遗产存在于每一种处理文本的现代语言中——也就是所有使用正则表达式的语言。Perl的模式匹配语法直接借鉴了SNOBOL，Ruby的字符串操作继承的也是同样的理念：让文本处理变得富有表现力和强大。
+
+<Cards num={3}>
+  <Cards.Card title="Perl" href="/timeline/1980s/perl" arrow />
+  <Cards.Card title="Ruby" href="/timeline/1990s/ruby" arrow />
+  <Cards.Card title="Python" href="/timeline/1990s/python" arrow />
+</Cards>

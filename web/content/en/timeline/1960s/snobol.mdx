@@ -1,0 +1,91 @@
+---
+title: SNOBOL
+description: Pioneering string processing language with pattern matching
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# SNOBOL
+
+> _The language that made pattern matching a first-class citizen._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1962 |
+| **Creator** | David Farber, Ralph Griswold, Ivan Polonsky (Bell Labs) |
+| **Paradigm** | Procedural, String-oriented |
+| **Type System** | Dynamic, Untyped |
+| **Platform** | Mainframe computers (IBM 7094, etc.) |
+| **Current Version** | SNOBOL4 |
+| **License** | Public Domain |
+
+## Origin Story
+
+SNOBOL (StriNg Oriented and symBOlic Language) was developed at Bell Labs in 1962 by David Farber, Ralph Griswold, and Ivan Polonsky. It emerged from a project exploring unconventional approaches to string processing and text analysis that existing languages couldn't handle elegantly.
+
+What made SNOBOL revolutionary was its treatment of strings as a fundamental data type with built-in pattern matching and manipulation operations. Where other languages required complex subroutines for text processing, SNOBOL made it natural and expressive.
+
+The language went through several versions, with SNOBOL4 (1967) being the most complete implementation, adding features like user-defined data types and a more powerful pattern matching engine.
+
+## Design Philosophy
+
+SNOBOL introduced several groundbreaking concepts:
+
+- **Pattern Matching as a Language Feature**: String patterns could include literal text, variables, and powerful meta-operators for repetition and alternation
+- **Deferred Execution**: Patterns could be stored in variables and executed later
+- **Success/Failure Branching**: Control flow based on whether an operation succeeded or failed
+- **Unified String and Code**: Programs could construct and execute code dynamically
+
+<Callout type="default" emoji="💡">
+  SNOBOL's pattern language was so powerful that it essentially invented regular expressions as we know them, decades before Perl popularized them.
+</Callout>
+
+The syntax was unusual but logical: operations were written as patterns being matched against strings, with success or failure determining the next line of execution.
+
+## Code Example
+
+```snobol
+* Extract and transform names
+NAMES = "JOHN SMITH, JANE DOE, BOB WILSON"
+COUNT = 0
+
+LOOP    NAMES ARB . FIRST SPAN('A-Z') . LAST REM . NAMES
+        COUNT = COUNT + 1
+        OUTPUT = COUNT ": " FIRST " " LAST
+        NAMES LEN(0)                        :S(LOOP)F(DONE)
+
+DONE    OUTPUT = "Total: " COUNT " names found"
+END
+```
+
+This example demonstrates:
+- `ARB` for arbitrary-length matches
+- `SPAN` for character class matching  
+- `REM` for capturing the remainder
+- `:S(LOOP)F(DONE)` for success/failure branching
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Text Processing | Computer poetry generation |
+| Linguistics | Morphological analysis systems |
+| Programming Research | Pattern matching theory |
+| AI | Early natural language processing experiments |
+| Education | Teaching string manipulation concepts |
+
+## Influence & Legacy
+
+**Inspired by:** COMIT, ALGOL (block structure)
+
+**Influenced:** Perl, Ruby, Python (re.search), Icon, Logtalk, PROSLOG
+
+SNOBOL's legacy lives on in every modern language that handles text with regular expressions. Perl's pattern matching syntax owes a direct debt to SNOBOL, and Ruby's string operations carry forward the same philosophy of making text manipulation expressive and powerful.
+
+<Cards num={3}>
+  <Cards.Card title="Perl" href="/timeline/1980s/perl" arrow />
+  <Cards.Card title="Ruby" href="/timeline/1990s/ruby" arrow />
+  <Cards.Card title="Python" href="/timeline/1990s/python" arrow />
+</Cards>

@@ -1,0 +1,92 @@
+---
+title: BASIC
+description: The beginner's language that democratized programming
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# BASIC
+
+> _The language that brought programming to the masses._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 1964 |
+| **Creator** | John Kemeny, Thomas Kurtz (Dartmouth College) |
+| **Paradigm** | Procedural, Imperative |
+| **Type System** | Dynamic, Untyped originally |
+| **Platform** | Cross-platform (originally Dartmouth Time-Sharing System) |
+| **Current Version** | ANSI Standard BASIC (various implementations) |
+| **License** | Open standard |
+
+## Origin Story
+
+BASIC (Beginner's All-purpose Symbolic Instruction Code) was created at Dartmouth College in 1964 by John Kemeny and Thomas Kurtz. Their goal was audacious: create a programming language simple enough for anyone to learn, yet powerful enough for real work. This was a radical break from the era when programming was reserved for specialists with access to expensive mainframes.
+
+Dartmouth's Time-Sharing System (DTSS) made BASIC even more revolutionary—students could interact with computers directly, typing commands and seeing results immediately. Programming shifted from a batch process requiring specialized knowledge to an interactive dialogue.
+
+The language spread rapidly to other institutions. When microcomputers arrived in the late 1970s, BASIC became the default language—every Apple II, Commodore, and IBM PC came with BASIC built-in. Microsoft's founding itself was built on Altair BASIC.
+
+## Design Philosophy
+
+BASIC was explicitly designed to be:
+- **Easy to learn**: Simple English-like syntax with minimal rules
+- **Interactive**: Commands executed immediately in a conversational style
+- **Forgiving**: No strict typing, automatic memory management
+- **Extensible**: Users could add their own functions
+
+<Callout type="default" emoji="💡">
+  "Our goal was to enable any student to use a computer." — John Kemeny
+</Callout>
+
+The design choices prioritized accessibility over elegance. Line numbers, GOTO statements, and simple variable names made it approachable for beginners, though this simplicity would later attract criticism from structured programming advocates.
+
+## Code Example
+
+```basic
+10 REM Guess the Number Game
+20 LET NUMBER = INT(RND * 100) + 1
+30 LET GUESSES = 0
+40 PRINT "I'm thinking of a number between 1 and 100."
+50 INPUT "Your guess: ", GUESS
+60 LET GUESSES = GUESSES + 1
+70 IF GUESS < NUMBER THEN PRINT "Too low!" : GOTO 50
+80 IF GUESS > NUMBER THEN PRINT "Too high!" : GOTO 50
+90 PRINT "Correct! You got it in "; GUESSES; " guesses."
+100 END
+```
+
+This classic example demonstrates BASIC's:
+- Line-numbered source code
+- Simple variable assignment with LET
+- GOTO for flow control
+- PRINT and INPUT for I/O
+- Self-documenting code structure
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Education | First programming course for millions of students |
+| Microcomputers | Altair BASIC, Commodore BASIC, Microsoft BASIC |
+| Business | Early business applications on personal computers |
+| Games | Zork (infocom), early text adventures |
+| Microsoft | Foundation of the company's first product |
+
+## Influence & Legacy
+
+**Inspired by:** FORTRAN, ALGOL, JOSS
+
+**Influenced:** Visual Basic, VBScript, COMAL, PowerBuilder
+
+BASIC's influence extends far beyond its technical merits. It created the first generation of programmers who weren't necessarily scientists or mathematicians. The microcomputer revolution—home computers, PC gaming, Microsoft—was built on BASIC.
+
+Visual Basic (1991) carried BASIC into the Windows era, and VBScript kept it relevant in web development. Even today, Microsoft's embrace of BASIC at the very beginning shaped the entire trajectory of personal computing.
+
+<Cards num={3}>
+  <Cards.Card title="Visual Basic" href="/timeline/1990s/visual-basic" arrow />
+  <Cards.Card title="VBScript" href="/timeline/1990s/vbscript" arrow />
+  <Cards.Card title="Microsoft" href="/timeline/1990s/microsoft" arrow />
+</Cards>
