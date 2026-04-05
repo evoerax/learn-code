@@ -1,0 +1,117 @@
+---
+title: TypeScript
+description: 为 JavaScript 添加类型语法，让这门世界最普及的语言获得静态类型检查能力
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# TypeScript
+
+> _可扩展的 JavaScript。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2012 |
+| **创造者** | 微软（Anders Hejlsberg） |
+| **范式** | 多范式（面向对象、函数式） |
+| **类型系统** | 静态、强类型、渐进式 |
+| **平台** | 跨平台（编译为 JavaScript） |
+| **当前版本** | 5.4（2024） |
+| **许可证** | Apache 2.0 |
+
+## 起源故事
+
+TypeScript 诞生于一个简单的观察：JavaScript 无处不在，但大型 JavaScript 应用却难以管理。Anders Hejlsberg——Turbo Pascal 和 C# 的创作者——于 2000 年加入微软，花了十多年看着 JavaScript 成为世界主导语言，却始终从根本上不适合大型代码库。
+
+2012 年，微软以开源项目形式发布了 TypeScript。核心洞察很简单：为 JavaScript 添加可选的静态类型，编译成纯 JavaScript，让开发者能够逐步采用类型系统而不破坏现有代码。
+
+时机恰到好处。单页应用正在爆发，Node.js 正在让 JavaScript 成为服务端语言，团队们正在构建急需更好工具和类型安全的大型 Web 应用。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "TypeScript 是带有类型语法的 JavaScript。" —— 官方文档
+</Callout>
+
+TypeScript 的核心原则：
+
+- **渐进式采用**：逐步添加类型；现有 JavaScript 就是有效 TypeScript
+- **结构化类型**：类型兼容性取决于形状而非名称
+- **编译为 JavaScript**：JavaScript 能运行的地方它都能运行——浏览器、服务器、边缘
+- **工具优先**：世界级的 IDE 支持，智能提示、重构、错误检测
+
+`any` 类型既是 TypeScript 最大的灵活性，也是最具争议的特性——允许在需要时逃逸但过度使用会破坏安全性。
+
+## 代码示例
+
+```typescript filename="api.ts"
+// TypeScript 的类型系统在 API 定义和数据转换中大放异彩
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'user' | 'guest';
+  createdAt: Date;
+}
+
+type UserDTO = Omit<User, 'id' | 'createdAt'> & { id?: string };
+
+async function fetchUser(id: number): Promise<User> {
+  const response = await fetch(`/api/users/${id}`);
+  if (!response.ok) {
+    throw new Error(`获取用户失败: ${response.statusText}`);
+  }
+  return response.json() as Promise<User>;
+}
+
+function transformUser(user: User): UserDTO {
+  return {
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+}
+
+// 用于 API 响应的通用工具类型
+type ApiResponse<T> = 
+  | { success: true; data: T }
+  | { success: false; error: string };
+
+// 联合类型启用穷尽性检查
+function describeRole(role: User['role']): string {
+  switch (role) {
+    case 'admin': return '拥有完全访问权限的管理员';
+    case 'user': return '有限访问权限的标准用户';
+    case 'guest': return '只读访客访问';
+  }
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|----------|
+| Web 框架 | Angular、Vue 3、Next.js、Remix、SvelteKit |
+| 构建工具 | Vite、esbuild、swc、Parcel |
+| IDE | VS Code（本身由 TypeScript 编写） |
+| 移动端 | React Native、Expo、NativeScript |
+| 后端 | NestJS、Fastify、Deno、Fresh |
+
+## 影响与遗产
+
+**启发自：** JavaScript、C#、Java、ML
+
+**影响：** Kotlin、Swift（类型注解）、Python 类型提示、ocamlformat
+
+TypeScript 不仅为 JavaScript 添加了类型——它确立了一个语言可以既兼容现有生态系统又更加安全的范式。结果是 TypeScript 现在成为大型 JavaScript 开发的实际标准，大多数新 Web 框架默认使用它。
+
+这门语言证明了"渐进式类型"在实践中是可行的，影响了 Python、PHP 的类型讨论，甚至激发了通过"类型作为注释"提案向 JavaScript 本身添加类型的兴趣。
+
+<Cards num={3}>
+  <Cards.Card title="JavaScript" href="/timeline/1990s/javascript" arrow />
+  <Cards.Card title="Kotlin" href="/timeline/2010s/kotlin" arrow />
+  <Cards.Card title="Swift" href="/timeline/2010s/swift" arrow />
+</Cards>

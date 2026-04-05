@@ -1,0 +1,117 @@
+---
+title: TypeScript
+description: JavaScript with syntax for types, bringing static typing to the world's most ubiquitous language
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# TypeScript
+
+> _JavaScript that scales._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2012 |
+| **Creator** | Microsoft (Anders Hejlsberg) |
+| **Paradigm** | Multi-paradigm (OO, Functional) |
+| **Type System** | Static, Strong, Gradual |
+| **Platform** | Cross-platform (compiles to JavaScript) |
+| **Current Version** | 5.4 (2024) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+TypeScript was born from a simple observation: JavaScript was everywhere, but large JavaScript applications were unmanageable. Anders Hejlsberg—creator of Turbo Pascal and C#—joined Microsoft in 2000 and spent over a decade watching JavaScript become the world's dominant language while remaining fundamentally unsuited for large codebases.
+
+In 2012, Microsoft released TypeScript as an open-source project. The key insight was simple: add optional static typing to JavaScript, compile down to plain JavaScript, and let developers gradually adopt types without breaking existing code.
+
+The timing was perfect. Single-page applications were exploding, Node.js was making JavaScript a server-side language, and teams were building massive web applications that desperately needed better tooling and type safety.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "TypeScript is JavaScript with syntax for types." — Official documentation
+</Callout>
+
+TypeScript's core principles:
+
+- **Gradual adoption**: Add types incrementally; existing JavaScript is valid TypeScript
+- **Structural typing**: Types are compatible if their shapes match, not their names
+- **Compile to JavaScript**: Runs everywhere JavaScript runs—browsers, servers, edge
+- **Tooling first**: World-class IDE support with IntelliSense, refactoring, and error detection
+
+The `any` type is both TypeScript's greatest flexibility and its most controversial feature—allowing escape hatches when needed but undermining safety when overused.
+
+## Code Example
+
+```typescript filename="api.ts"
+// TypeScript's type system shines in API definitions and data transformation
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'admin' | 'user' | 'guest';
+  createdAt: Date;
+}
+
+type UserDTO = Omit<User, 'id' | 'createdAt'> & { id?: string };
+
+async function fetchUser(id: number): Promise<User> {
+  const response = await fetch(`/api/users/${id}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch user: ${response.statusText}`);
+  }
+  return response.json() as Promise<User>;
+}
+
+function transformUser(user: User): UserDTO {
+  return {
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+}
+
+// Generic utility type for API responses
+type ApiResponse<T> = 
+  | { success: true; data: T }
+  | { success: false; error: string };
+
+// Union types enable exhaustive checking
+function describeRole(role: User['role']): string {
+  switch (role) {
+    case 'admin': return 'Administrator with full access';
+    case 'user': return 'Standard user with limited access';
+    case 'guest': return 'Read-only guest access';
+  }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Web Frameworks | Angular, Vue 3, Next.js, Remix, SvelteKit |
+| Build Tools | Vite, esbuild, swc, Parcel |
+| IDEs | VS Code (itself written in TypeScript) |
+| Mobile | React Native, Expo, NativeScript |
+| Backend | NestJS, Fastify, Deno, Fresh |
+
+## Influence & Legacy
+
+**Inspired by:** JavaScript, C#, Java, ML
+
+**Influenced:** Kotlin, Swift (type annotations), Python's type hints, ocamlformat
+
+TypeScript didn't just add types to JavaScript—it established that a language could be both compatible with an existing ecosystem AND dramatically safer. The result is that TypeScript is now the de facto standard for large-scale JavaScript development, with most new web frameworks默认 using it.
+
+The language proved that "gradual typing" could work in practice, influencing discussions about type systems in Python, PHP, and even inspiring renewed interest in adding types to JavaScript itself through proposals like "Types as Comments."
+
+<Cards num={3}>
+  <Cards.Card title="JavaScript" href="/timeline/1990s/javascript" arrow />
+  <Cards.Card title="Angular" href="/timeline/2010s/angular" arrow />
+  <Cards.Card title="Kotlin" href="/timeline/2010s/kotlin" arrow />
+</Cards>

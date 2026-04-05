@@ -1,0 +1,118 @@
+---
+title: Swift
+description: Apple 为 iOS、macOS 及更远未来打造的现代安全编程语言
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Swift
+
+> _没有 C 的 Objective-C。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2014 |
+| **创造者** | Apple（Chris Lattner） |
+| **范式** | 多范式（面向对象、函数式、协议导向） |
+| **类型系统** | 静态、强类型、推断 |
+| **平台** | Apple 平台、Linux、Windows |
+| **当前版本** | 5.9（2023） |
+| **许可证** | Apache 2.0 |
+
+## 起源故事
+
+Apple 在 2014 年 WWDC 上推出 Swift，令所有人惊讶——包括 Apple 内部许多人——他们预期只会对 Objective-C 进行渐进式更新。Chris Lattner 曾参与 LLVM 和 Clang 的开发，他领导了这项开发工作，目标简单：创造一门像 Objective-C 一样强大，又像 Python 一样安全易学的语言。
+
+时机至关重要。Objective-C 开发于 1980 年代初，在智能手机时代显得老态龙钟。冗长的语法、缺乏现代安全特性、以及手动内存管理，使得编写大规模安全代码越来越困难。
+
+Swift 带现代语法、可选安全、以及 Objective-C 的性能登场。一年内，它成为了 Apple 平台开发的首选语言。到 2015 年，Apple 开源了 Swift，这门语言开始了超越 Apple 设备的旅程。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "Swift 是编程语言最新研究成果与数十年 Apple 平台建设经验的结晶。" —— Apple
+</Callout>
+
+Swift 的定义原则：
+
+- **安全第一**：可选类型让 nil 引用错误成为编译时捕获
+- **现代语法**：简洁、表达力强、可读性高——无分号、类型推断无处不在
+- **协议导向**：带默认实现的协议（如接口）实现灵活组合
+- **默认值类型**：结构体和枚举的值语义防止意外变更
+- **代数类型**：带关联值的枚举无需空检查即可建模状态
+
+`guard` 语句是 Swift 的标志性控制流——声明式早期退出，强制在边界处理失败情况，而非嵌套逻辑。
+
+## 代码示例
+
+```swift filename="Models.swift"
+// Swift 的可选类型和协议组合在 SwiftUI 风格的状态管理中大放异彩
+
+enum LoadingState<T: Error> {
+    case idle
+    case loading
+    case success(T)
+    case failure(Error)
+}
+
+struct User: Identifiable, Codable {
+    let id: UUID
+    var name: String
+    var email: String
+    var role: Role
+}
+
+enum Role: String, Codable, CaseIterable {
+    case admin = "管理员"
+    case user = "用户"
+    case guest = "访客"
+}
+
+protocol UserRepository {
+    func fetchUser(id: UUID) async throws -> User
+    func updateUser(_ user: User) async throws -> User
+}
+
+// 协议组合实现灵活的依赖注入
+typealias UserServiceProtocol = UserRepository & Logger
+
+// Swift 的 Result 类型用于显式错误处理
+func fetchCurrentUser() async -> Result<User, UserError> {
+    do {
+        let user = try await repository.fetchUser(id: currentUserID)
+        return .success(user)
+    } catch let error as UserError {
+        return .failure(error)
+    } catch {
+        return .failure(.unknown(error))
+    }
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|----------|
+| iOS/macOS 应用 | 2015 年以来 App Store 大多数应用 |
+| 框架 | SwiftUI、Combine、Alamofire、SnapKit |
+| 服务器 | Vapor、Kitura、Perfect |
+| 跨平台 | Swift for TensorFlow、SwiftWasm |
+| 工具 | Swift Package Manager、SwiftLint |
+
+## 影响与遗产
+
+**启发自：** Objective-C、Rust、Python、C#、Haskell
+
+**影响：** Kotlin（空安全）、Dart（async/await 语法）、Rust（所有权概念）
+
+Swift 对 iOS 开发的影响是绝对的——它在几年内取代了 Objective-C 成为默认值。但它的野心更进一步：服务器端 Swift（通过 Vapor 等框架）、ML 的 Swift（Swift for TensorFlow）、以及 SwiftWasm 用于 WebAssembly。
+
+这门语言的协议导向编程模型——通过扩展提供默认实现——提供了不同于经典继承和纯函数式编程的替代方案，找到了一个务实的中间地带。
+
+<Cards num={3}>
+  <Cards.Card title="Objective-C" href="/timeline/1980s/objective-c" arrow />
+  <Cards.Card title="Rust" href="/timeline/2000s/rust" arrow />
+  <Cards.Card title="Kotlin" href="/timeline/2010s/kotlin" arrow />
+</Cards>

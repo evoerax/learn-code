@@ -1,0 +1,114 @@
+---
+title: Kotlin
+description: 更现代、更实用的语言，赢得了 Android 开发者的青睐
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Kotlin
+
+> _比 Java 更好，却没有 Java 的包袱。_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2011 |
+| **创造者** | JetBrains |
+| **范式** | 多范式（面向对象、函数式） |
+| **类型系统** | 静态、强类型、可空 |
+| **平台** | JVM、Android、原生、浏览器 |
+| **当前版本** | 1.9（2023） |
+| **许可证** | Apache 2.0 |
+
+## 起源故事
+
+JetBrains 在 2011 年创建了 Kotlin，以圣彼得堡附近的一座岛屿命名——那是他们团队经常去度假的地方。动机很实际：Java 日渐老化，而 JetBrains 需要一门更好的语言来开发自己的工具（IntelliJ IDEA、PyCharm、WebStorm——都用 Java 编写）。
+
+Java 的问题众所周知：语法冗长、空指针异常导致服务器崩溃、缺乏函数式编程支持、语言本身演进缓慢。Kotlin 针对所有这些问题，同时保持与现有 Java 代码的 100% 互操作性。
+
+当 Google 在 2017 年宣布正式支持 Kotlin 用于 Android 时，这门语言的轨迹彻底改变了。一款内部工具一夜之间成为 Android 的首选语言。
+
+## 设计哲学
+
+<Callout type="default" emoji="💡">
+  "Kotlin 以务实的方案融合了面向对象和函数式语言的最佳特性。" —— JetBrains
+</Callout>
+
+Kotlin 的实用主义原则：
+
+- **简洁优于仪式**：数据类替代数百行样板代码
+- **默认空安全**：类型系统在编译时防止 NullPointerException
+- **协程处理并发**：轻量级线程，没有回调地狱
+- **互操作性**：从 Kotlin 调用 Java 和从 Java 调用 Kotlin 无缝衔接
+- **智能转换**：编译器追踪类型检查，消除手动转换
+
+可空类型修饰符 `?` 是 Kotlin 最受欢迎的特性——简单的语法让空指针异常在编译时就被捕获，而不是等到运行时才崩溃。
+
+## 代码示例
+
+```kotlin filename="domain.kt"
+// Kotlin 的空安全和数据类在领域建模中大放异彩
+
+sealed class Result<out T> {
+    data class Success<T>(val data: T) : Result<T>()
+    data class Error(val message: String, val code: Int? = null) : Result<Nothing>()
+    data object Loading : Result<Nothing>()
+}
+
+data class User(
+    val id: Long,
+    val name: String,
+    val email: String,
+    val role: Role = Role.USER
+)
+
+enum class Role {
+    ADMIN, USER, GUEST
+}
+
+// 扩展函数在不使用继承的情况下添加行为
+fun User.displayName(): String = "${name} (${role.name.lowercase()})"
+
+// 密封类启用穷尽性 when 表达式
+fun Result<User>.describe(): String = when (this) {
+    is Result.Success -> "欢迎回来，${data.displayName()}！"
+    is Result.Error -> "错误 ${code ?: ""}：$message"
+    is Result.Loading -> "加载中..."
+}
+
+// 协程简化异步代码
+suspend fun fetchUser(id: Long): Result<User> = withContext(Dispatchers.IO) {
+    try {
+        Result.Success(userRepository.findById(id))
+    } catch (e: Exception) {
+        Result.Error(e.message ?: "未知错误")
+    }
+}
+```
+
+## 代表性项目
+
+| 领域 | 项目 |
+|--------|----------|
+| Android | 2018 年以来大多数新 Android 应用 |
+| 后端 | Spring Boot、Ktor、Vert.x、Exposed |
+| 多平台 | Kotlin Multiplatform Mobile (KMP) |
+| 构建工具 | Gradle（其自身的构建脚本） |
+| Serverless | AWS Lambda Kotlin 运行时 |
+
+## 影响与遗产
+
+**启发自：** Java、C#、Scala、Groovy、Python
+
+**影响：** Swift（空安全）、Dart（扩展函数）、Java 17+（模式匹配预览）
+
+Kotlin 的成功在于证明了一门语言可以既务实又有原则。它没有试图成为革命性的语言——它采用了 Java、Scala 和 C# 中可行的部分，丢弃了尴尬的部分，并添加了空安全作为杀手级功能。
+
+这门语言证明了 100% 的 Java 互操作性是正确的选择——它允许大规模代码库逐步采用 Kotlin，消除了之前 JVM 语言所面临的全有或全无的迁移风险。
+
+<Cards num={3}>
+  <Cards.Card title="Java" href="/timeline/1990s/java" arrow />
+  <Cards.Card title="Scala" href="/timeline/2000s/scala" arrow />
+  <Cards.Card title="Swift" href="/timeline/2010s/swift" arrow />
+</Cards>

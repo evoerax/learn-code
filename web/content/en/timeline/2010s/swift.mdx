@@ -1,0 +1,118 @@
+---
+title: Swift
+description: Apple's safe, modern language for iOS, macOS, and beyond
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Swift
+
+> _Objective-C without the C._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2014 |
+| **Creator** | Apple (Chris Lattner) |
+| **Paradigm** | Multi-paradigm (OO, Functional, Protocol-oriented) |
+| **Type System** | Static, Strong, Inferred |
+| **Platform** | Apple platforms, Linux, Windows |
+| **Current Version** | 5.9 (2023) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+Apple introduced Swift in 2014 at WWDC, surprising everyone—including many inside Apple—who had expected only incremental updates to Objective-C. Chris Lattner, who had worked on LLVM and Clang, led the development with a simple goal: create a language as powerful as Objective-C but as safe and approachable as Python.
+
+The timing was critical. Objective-C, developed in the early 1980s, showed its age in the smartphone era. Its verbose syntax, lack of modern safety features, and manual memory management made it increasingly difficult to write secure code at scale.
+
+Swift arrived with modern syntax, nil safety, and the performance of Objective-C. Within a year, it became the preferred language for Apple platform development. By 2015, Apple open-sourced Swift, and the language began its journey beyond Apple devices.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Swift is the result of the latest research in programming languages, combined with decades of experience building Apple platforms." — Apple
+</Callout>
+
+Swift's defining principles:
+
+- **Safety first**: Optional types make nil reference errors compile-time catches
+- **Modern syntax**: Clean, expressive, readable code—no semicolons, type inference everywhere
+- **Protocol-oriented**: Protocols (like interfaces) with default implementations enable flexible composition
+- **Value types by default**: Structs and enums with value semantics prevent accidental mutation
+- **Algebraic types**: Enums with associated values model state without null checks
+
+The `guard` statement is Swift's signature control flow—declarative early exit that forces handling of failure cases at the boundary rather than nesting logic.
+
+## Code Example
+
+```swift filename="Models.swift"
+// Swift's optionals and protocol composition shine in SwiftUI-style state management
+
+enum LoadingState<T: Error> {
+    case idle
+    case loading
+    case success(T)
+    case failure(Error)
+}
+
+struct User: Identifiable, Codable {
+    let id: UUID
+    var name: String
+    var email: String
+    var role: Role
+}
+
+enum Role: String, Codable, CaseIterable {
+    case admin = "Admin"
+    case user = "User"
+    case guest = "Guest"
+}
+
+protocol UserRepository {
+    func fetchUser(id: UUID) async throws -> User
+    func updateUser(_ user: User) async throws -> User
+}
+
+// Protocol composition for flexible dependency injection
+typealias UserServiceProtocol = UserRepository & Logger
+
+// Swift's result type for explicit error handling
+func fetchCurrentUser() async -> Result<User, UserError> {
+    do {
+        let user = try await repository.fetchUser(id: currentUserID)
+        return .success(user)
+    } catch let error as UserError {
+        return .failure(error)
+    } catch {
+        return .failure(.unknown(error))
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| iOS/macOS Apps | Most apps in App Store since 2015 |
+| Frameworks | SwiftUI, Combine, Alamofire, SnapKit |
+| Servers | Vapor, Kitura, Perfect |
+| Cross-platform | Swift for TensorFlow, SwiftWasm |
+| Tools | Swift Package Manager, SwiftLint |
+
+## Influence & Legacy
+
+**Inspired by:** Objective-C, Rust, Python, C#, Haskell
+
+**Influenced:** Kotlin (null safety), Dart (async/await syntax), Rust (ownership concepts)
+
+Swift's impact on iOS development is absolute—it replaced Objective-C as the default in a few years. But its ambition extends further: Swift on the server (via frameworks like Vapor), Swift for ML (Swift for TensorFlow), and SwiftWasm for web assembly.
+
+The language's protocol-oriented programming model—where default implementations are provided via extensions—offers an alternative to both classical inheritance and pure functional programming, finding a pragmatic middle ground.
+
+<Cards num={3}>
+  <Cards.Card title="Objective-C" href="/timeline/1980s/objective-c" arrow />
+  <Cards.Card title="Rust" href="/timeline/2000s/rust" arrow />
+  <Cards.Card title="Kotlin" href="/timeline/2010s/kotlin" arrow />
+</Cards>

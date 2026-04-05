@@ -1,0 +1,114 @@
+---
+title: Kotlin
+description: The modern, pragmatic language that won Android development
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Kotlin
+
+> _Better than Java, without Java's baggage._
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2011 |
+| **Creator** | JetBrains |
+| **Paradigm** | Multi-paradigm (OO, Functional) |
+| **Type System** | Static, Strong, Nullable |
+| **Platform** | JVM, Android, Native, Browser |
+| **Current Version** | 1.9 (2023) |
+| **License** | Apache 2.0 |
+
+## Origin Story
+
+JetBrains created Kotlin in 2011, naming it after an island near St. Petersburg where their team frequently went for team retreats. The motivation was practical: Java was showing its age, and JetBrains needed a better language for their own tools (IntelliJ IDEA, PyCharm, WebStorm—all written in Java).
+
+The problems with Java were well-known: verbose syntax, null pointer exceptions crashing production servers, no support for functional programming patterns, and slow evolution of the language itself. Kotlin addressed all of these while maintaining 100% interoperability with existing Java code.
+
+When Google announced official support for Kotlin on Android in 2017, the language's trajectory changed forever. What started as an internal tool became Android's preferred language overnight.
+
+## Design Philosophy
+
+<Callout type="default" emoji="💡">
+  "Kotlin combines the best features of object-oriented and functional languages in a pragmatic package." — JetBrains
+</Callout>
+
+Kotlin's pragmatic principles:
+
+- **Conciseness over ceremony**: Data classes replace hundreds of lines of boilerplate
+- **Null safety by default**: The type system prevents NullPointerException at compile time
+- **Coroutines for concurrency**: Lightweight threads without callback hell
+- **Interoperability**: Call Java from Kotlin and Kotlin from Java seamlessly
+- **Smart casts**: The compiler tracks type checks, eliminating manual casting
+
+The `?` nullable type modifier is Kotlin's most loved feature—a simple syntax that makes null pointer exceptions a compile-time error rather than a runtime crash.
+
+## Code Example
+
+```kotlin filename="domain.kt"
+// Kotlin's null safety and data classes shine in domain modeling
+
+sealed class Result<out T> {
+    data class Success<T>(val data: T) : Result<T>()
+    data class Error(val message: String, val code: Int? = null) : Result<Nothing>()
+    data object Loading : Result<Nothing>()
+}
+
+data class User(
+    val id: Long,
+    val name: String,
+    val email: String,
+    val role: Role = Role.USER
+)
+
+enum class Role {
+    ADMIN, USER, GUEST
+}
+
+// Extension functions add behavior without inheritance
+fun User.displayName(): String = "${name} (${role.name.lowercase()})"
+
+// Sealed classes enable exhaustive when expressions
+fun Result<User>.describe(): String = when (this) {
+    is Result.Success -> "Welcome back, ${data.displayName()}!"
+    is Result.Error -> "Error ${code ?: ""}: $message"
+    is Result.Loading -> "Loading..."
+}
+
+// Coroutines simplify async code
+suspend fun fetchUser(id: Long): Result<User> = withContext(Dispatchers.IO) {
+    try {
+        Result.Success(userRepository.findById(id))
+    } catch (e: Exception) {
+        Result.Error(e.message ?: "Unknown error")
+    }
+}
+```
+
+## Notable Projects
+
+| Domain | Projects |
+|--------|----------|
+| Android | Most new Android apps since 2018 |
+| Backend | Spring Boot, Ktor, Vert.x, Exposed |
+| Multiplatform | Kotlin Multiplatform Mobile (KMP) |
+| Build Tools | Gradle (its own build scripts) |
+| Serverless | AWS Lambda Kotlin runtime |
+
+## Influence & Legacy
+
+**Inspired by:** Java, C#, Scala, Groovy, Python
+
+**Influenced:** Swift (null safety), Dart (extension functions), Java 17+ (pattern matching preview)
+
+Kotlin's success lies in proving that a language can be both pragmatic and principled. It didn't try to be revolutionary—it took what worked from Java, Scala, and C#, discarded the awkward parts, and added null safety as a killer feature.
+
+The language demonstrated that 100% Java interoperability was the right call—it allowed massive codebases to adopt Kotlin incrementally, removing the all-or-nothing migration risk that doomed previous JVM languages.
+
+<Cards num={3}>
+  <Cards.Card title="Java" href="/timeline/1990s/java" arrow />
+  <Cards.Card title="Scala" href="/timeline/2000s/scala" arrow />
+  <Cards.Card title="Swift" href="/timeline/2010s/swift" arrow />
+</Cards>
