@@ -1,0 +1,120 @@
+---
+title: AIs — Natural Language as a Programming Language
+---
+
+import { Callout } from 'nextra/components'
+
+# AIs — Natural Language as a Programming Language
+
+The 2020s saw a paradigm shift in programming: the emergence of AI assistants as the primary interface for software development. With tools like GitHub Copilot, ChatGPT, and Claude, natural language became a viable — often preferred — way to express programming intent. This raises a fascinating question: which natural languages are most efficient for AI-assisted programming?
+
+## Context
+
+| | |
+|---|---|
+| **Era** | AI-native development, LLM-assisted coding |
+| **Key events** | GitHub Copilot (2021), ChatGPT (2022), Claude 3 (2024), GPT-4o (2024) |
+| **Milestone** | Natural language rivals code in task completion speed |
+| **Key challenge** | Token efficiency, information density, cross-lingual understanding |
+
+<Callout type="info">
+  AI models like GPT-4 and Claude use tokenization that varies significantly across languages. Understanding these differences can reduce token costs by 30-50% for the same task.
+</Callout>
+
+## Natural Languages in AI Programming
+
+Unlike traditional programming languages, natural languages weren't designed for computation — yet they have become essential tools for AI-assisted development. The choice of language affects:
+
+- **Token consumption** — how many tokens per concept expressed
+- **Information density** — how much meaning per token
+- **AI comprehension** — how well the model understands context
+- **Output length** — code generation efficiency
+
+## Token Efficiency Comparison
+
+| Language | Tokens per Character | Tokens per Word | Info Density | Relative Cost |
+|----------|---------------------|-----------------|--------------|---------------|
+| **Chinese (中文)** | 0.25 | 1.0–1.5 | Very High | ~40-60% |
+| **Japanese (日本語)** | 0.25 | 1.0–1.5 | Very High | ~40-60% |
+| **Korean (한국어)** | 0.3 | 0.8–1.2 | High | ~50-70% |
+| **Russian (Русский)** | 0.5 | 0.6–0.8 | Medium-High | ~70-85% |
+| **German (Deutsch)** | 0.6 | 0.7–0.9 | Medium-High | ~75-90% |
+| **French (Français)** | 0.6 | 0.75–0.9 | Medium | ~80-95% |
+| **Spanish (Español)** | 0.6 | 0.8–0.95 | Medium | ~85-100% |
+| **Portuguese (Português)** | 0.6 | 0.8–0.95 | Medium | ~85-100% |
+| **Arabic (العربية)** | 0.5 | 0.6–0.8 | Medium-High | ~70-85% |
+| **English (English)** | 0.75 | 0.75 | Medium | 100% (baseline) |
+
+<Callout type="info">
+  Lower "Relative Cost" means more efficient — you get the same result with fewer tokens. Chinese and Japanese are approximately 40-60% as expensive as English for equivalent semantic content.
+</Callout>
+
+## Why Languages Differ in Token Efficiency
+
+**Character-based vs. Word-based**
+
+Languages like Chinese, Japanese, and Korean use character-based writing systems where each character often carries more semantic meaning than a typical English word. For example:
+- English: "concatenation" (13 characters, 1 token) → "连接" (2 characters, ~2-3 tokens)
+- But the Chinese version often conveys the same meaning in broader AI context
+
+**Morphological Complexity**
+
+German's compound words (Donaudampfschifffahrtsgesellschaftskapitän) create single semantic units that English splits across multiple tokens. However, tokenizers must split German compounds, reducing efficiency.
+
+**Tokenization Algorithms**
+
+Modern LLMs use subword tokenizers (BPE, SentencePiece). Languages with larger training corpora (English) get more efficient tokenization. Low-resource languages often suffer from over-tokenization.
+
+## Information Density Analysis
+
+Information density measures how much meaning is packed into each token:
+
+| Language | Semantic Units per Token | Redundancy | Efficiency |
+|----------|------------------------|------------|------------|
+| Chinese | 1.2–1.8 | Low | Very High |
+| Japanese | 1.0–1.5 | Low | High |
+| Korean | 0.9–1.3 | Medium | High |
+| English | 0.8–1.0 | Medium | Medium |
+| German | 0.7–1.0 | Low | Medium-High |
+| Arabic | 0.7–0.9 | High | Medium |
+| Spanish | 0.7–0.9 | Medium | Medium |
+
+**Key Finding**: Chinese and Japanese achieve highest information density because:
+1. Each character is a semantic unit (morpheme)
+2. No spaces requiring tokenization decisions
+3. Minimal morphological inflection
+
+## Practical Recommendations
+
+### For Token Cost Optimization
+
+1. **Use Chinese or Japanese** for maximum efficiency in prompt engineering
+2. **Be concise** — AI models respond better to direct language
+3. **Avoid redundancy** — both languages can express complex ideas briefly
+4. **Consider code-switching** — mix formal terms and natural language
+
+### For Non-Latin Scripts
+
+- **Arabic**: Right-to-left text requires careful prompting structure
+- **Russian**: Cyrillic training data is smaller; English technical terms often more recognized
+- **Korean**: Hangul is highly phonetic; consistent spelling helps tokenization
+
+### For English Speakers
+
+- **Embrace brevity** — "fix bug" often works as well as "please fix the bug in the following code"
+- **Use technical terms** — they're token-efficient across all languages
+- **Structure prompts** — clear hierarchy reduces needed context tokens
+
+## The Future: Multilingual AI Programming
+
+As AI models improve, cross-lingual programming becomes more viable:
+
+- **Code generation** in any language from prompts in any language
+- **Code explanation** bridging between natural and programming languages
+- **Documentation translation** maintaining semantic accuracy
+
+The choice of natural language for AI programming is becoming less about capability and more about efficiency and personal preference.
+
+## Conclusion
+
+For AI-assisted programming, language choice affects efficiency but not capability. Chinese and Japanese offer 40-60% token savings compared to English for equivalent semantic content. However, English remains the most widely supported for technical terminology and has the largest body of training data. The optimal strategy may be multilingual: use high-density languages for efficiency and English for technical precision.

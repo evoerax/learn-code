@@ -9,4 +9,5 @@ export default {
   '2000s': { title: '2000s' },
   '2010s': { title: '2010s' },
   '2020s': { title: '2020s' },
+  'ais': { title: 'AIs' },
 }
