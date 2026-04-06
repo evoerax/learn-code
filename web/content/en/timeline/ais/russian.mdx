@@ -1,0 +1,113 @@
+---
+title: Russian — Cyrillic Script Representative
+---
+
+import { Callout } from 'nextra/components'
+
+# Russian — Cyrillic Script Representative
+
+Russian (Русский) serves as the primary representative of Cyrillic-script languages in AI-assisted programming. With approximately 70-85% of English token cost, Russian offers access to 260+ million speakers across Russia, former Soviet states, and the Cyrillic-using world.
+
+## Russian Token Characteristics
+
+**Cyrillic Alphabet**
+
+Russian uses the Cyrillic alphabet with 33 letters:
+- Some letters overlap with Latin (А, О, Е, К, М)
+- Unique letters: Я, Ж, Х, Ц, Ч, Ш, Щ, Ъ, Ь, Э, Ю
+
+**Morphological Complexity**
+
+Russian is a Slavic language with rich morphology:
+- Six grammatical cases: именительный, родительный, дательный, винительный, творительный, предложный
+- Verb aspects: совершенный (perfective), несовершенный (imperfective)
+- No definite articles
+
+**Token/Character Ratio**
+
+```
+Russian: "программирование" (programming) → 3-4 tokens (16 characters)
+English: "programming" → 1 token (11 characters)
+
+Russian: "искусственный интеллект" → 4-5 tokens
+English: "artificial intelligence" → 3 tokens
+```
+
+## Token Efficiency Comparison
+
+| Language | Token Cost (relative) | Info Density | Script |
+|----------|---------------------|--------------|--------|
+| English | 100% (baseline) | Medium | Latin |
+| Russian | 70-85% | Medium-High | Cyrillic |
+| German | 75-90% | Medium-High | Latin |
+| Chinese | 40-60% | Very High | Logographic |
+| Japanese | 40-60% | Very High | Mixed |
+
+<Callout type="info">
+  Russian token efficiency is comparable to German. Cyrillic script doesn't inherently affect tokenization — it's the morphological complexity that increases token count.
+</Callout>
+
+## Best Practices for Russian Prompts
+
+### Do
+
+- **Use English technical terms** — they're universally recognized and token-efficient
+- **Prefer perfective verbs** — "напиши" (write/complete) over "пиши" (write/ongoing)
+- **Keep sentences concise** — Russian allows flexible word order
+- **Consider code-switching** — Russian + English technical terms is common
+
+### Avoid
+
+- **Excessive case endings** — unnecessary morphological marking wastes tokens
+- **Overly formal constructions** — "будьте добры" adds tokens without value
+- **Transliteration mixing** — don't mix transliterated and Cyrillic terms
+
+## Code-Switching in Russian Tech
+
+Russian developers commonly use English technical terms:
+
+```
+Напиши Quick Sort на Python:
+1. Функция принимает список
+2. Возвращает отсортированный список
+3. Использует рекурсию
+```
+
+This combines Russian structure with English programming terms.
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+Напиши Quick Sort на Python
+```
+Tokens: ~6 | Meaning: Write Quick Sort in Python
+
+**Verbose (Less Efficient):**
+```
+Не могли бы вы, пожалуйста, написать алгоритм быстрой сортировки с использованием языка программирования Python? Заранее благодарю.
+```
+Tokens: ~30 | Meaning: Same result, 5x tokens
+
+## Cyrillic World Coverage
+
+Russian serves as a lingua franca across:
+
+- Russia (145M speakers)
+- Belarus (8M speakers)
+- Kazakhstan (4M speakers)
+- Ukraine (28M speakers, use Ukrainian too)
+- Central Asian states
+
+<Callout type="warning">
+  Russian AI training data is substantial but less than English. Some regional technical vocabulary may differ. Ukrainian, Belarusian, and Kazakh Russian variants exist.
+</Callout>
+
+## Conclusion
+
+Russian offers 70-85% of English token cost with access to the Cyrillic-script world. For Russian speakers:
+
+- English technical terms are widely used and token-efficient
+- Keep prompts concise and direct
+- Code-switching with English is the norm in tech
+- Perfective verbs (напиши, исправь) are more efficient than imperfective

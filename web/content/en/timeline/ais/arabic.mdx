@@ -1,0 +1,110 @@
+---
+title: Arabic — RTL and Morphological Richness
+---
+
+import { Callout } from 'nextra/components'
+
+# Arabic — RTL and Morphological Richness
+
+Arabic (العربية) presents unique challenges and opportunities in AI-assisted programming. As a right-to-left (RTL) language with rich morphology built on consonantal roots, Arabic requires approximately 70-85% of English token cost while offering access to 400+ million speakers across the Middle East and North Africa.
+
+## Arabic Token Characteristics
+
+**Right-to-Left Writing**
+
+Arabic is written right-to-left, which affects:
+- Prompt structure and readability
+- Code example integration
+- UI/UX considerations
+
+**Root-Based Morphology**
+
+Arabic uses a consonantal root system:
+- Three-letter roots (فعل) carry core meaning
+- Patterns (أوزان) derive words: كَتَبَ (wrote), مَكْتُوبٌ (written), كَاتِبٌ (writer)
+- This creates high information density per character
+
+**Token/Character Ratio**
+
+```
+Arabic: "برمجة" (programming) → 2-3 tokens (4 characters)
+English: "programming" → 1 token (11 characters)
+
+Arabic: "الذكاء الاصطناعي" (artificial intelligence) → 4-5 tokens
+English: "artificial intelligence" → 3 tokens
+```
+
+## Token Efficiency Comparison
+
+| Language | Token Cost (relative) | Info Density | Direction |
+|----------|---------------------|--------------|-----------|
+| English | 100% (baseline) | Medium | LTR |
+| Arabic | 70-85% | Medium-High | RTL |
+| Hebrew | 70-85% | Medium-High | RTL |
+| Chinese | 40-60% | Very High | LTR |
+| Japanese | 40-60% | Very High | LTR |
+
+<Callout type="info">
+  Arabic token efficiency is comparable to German and Russian. The RTL direction doesn't affect token count but requires careful prompt structuring.
+</Callout>
+
+## Best Practices for Arabic Prompts
+
+### Do
+
+- **Use English technical terms** — they're universally token-efficient
+- **Keep constructions concise** — Arabic allows compressed expression
+- **Structure prompts clearly** — "اكتب" (write), "صحح" (fix) are direct
+- **Consider code-switching** — Arabic + English technical terms works well
+
+### Avoid
+
+- **Overly ornate classical Arabic** — adds tokens without clarity
+- **Excessive diacritics** — tashkeel (تشكيل) may increase token count
+- **Mixed RTL/LTR confusion** — keep code examples clearly separated
+
+## RTL Considerations for AI
+
+When AI models process Arabic prompts:
+
+| Aspect | Challenge | Mitigation |
+|--------|-----------|------------|
+| Code examples | Often LTR | Clearly separate code blocks |
+| Technical terms | Often English | Use transliteration + English |
+| Mathematical notation | Standard | Works well in Arabic context |
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+اكتب Quick Sort بـ Python
+```
+Tokens: ~6 | Meaning: Write Quick Sort in Python
+
+**Verbose (Less Efficient):**
+```
+هل يمكنك كتابة خوارزمية ترتيب سريع باستخدام لغة البرمجة بايثون؟ شكراً لك
+```
+Tokens: ~25 | Meaning: Same result, 4x tokens
+
+## Code-Switching Strategy
+
+Many Arabic developers use Arabic-English code-switching:
+
+```
+اكتب function بـ Python يحسب:
+1. مجموع الأرقام
+2. المتوسط
+3. الوسيط
+```
+
+This combines Arabic structure with English technical terms for efficiency.
+
+## Conclusion
+
+Arabic offers 70-85% of English token cost with significant Middle Eastern and North African market access. For Arabic speakers:
+
+- English technical terms integrate efficiently
+- Keep prompts concise and direct
+- Consider code-switching for technical precision
+- RTL requires careful UI/UX consideration but doesn't affect token efficiency

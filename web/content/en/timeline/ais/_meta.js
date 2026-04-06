@@ -3,4 +3,10 @@ export default {
   chinese: { title: 'Chinese' },
   english: { title: 'English' },
   spanish: { title: 'Spanish' },
+  french: { title: 'French' },
+  portuguese: { title: 'Portuguese' },
+  japanese: { title: 'Japanese' },
+  arabic: { title: 'Arabic' },
+  russian: { title: 'Russian' },
+  german: { title: 'German' },
 }

@@ -1,0 +1,108 @@
+---
+title: German — Compound Words and Precision
+---
+
+import { Callout } from 'nextra/components'
+
+# Deutsch — Compound Words and Precision
+
+German (Deutsch) achieves the highest information density among Latin-script European languages, with approximately 75-90% of English token cost. Famous for its compound words (Donaudampfschifffahrtsgesellschaftskapitän), German offers both efficiency through compounding and precision through compound technical terms.
+
+## German Token Characteristics
+
+**Compound Word System**
+
+German creates new words by combining existing ones:
+- Handschuh (hand + shoe = glove)
+- Fingerspitzengefühl (finger tip + feeling = finesse)
+- QUICK + SORT = QUICKSort (directly usable)
+
+**Token/Character Ratio**
+
+```
+German: "Programmierung" (programming) → 2-3 tokens (12 characters)
+English: "programming" → 1 token (11 characters)
+
+German: "künstliche Intelligenz" → 3-4 tokens
+English: "artificial intelligence" → 3 tokens
+```
+
+German compound words can actually reduce token count when the concept is expressed as a single compound.
+
+## Token Efficiency Comparison
+
+| Language | Token Cost (relative) | Info Density | Compound Words |
+|----------|---------------------|--------------|---------------|
+| English | 100% (baseline) | Medium | Limited |
+| German | 75-90% | Medium-High | Extensive |
+| Dutch | 80-95% | Medium | Moderate |
+| Chinese | 40-60% | Very High | N/A |
+| Japanese | 40-60% | Very High | N/A |
+
+<Callout type="info">
+  German compound words are tokenized inconsistently: some are single tokens, others are split. This creates variable efficiency depending on the specific compound.
+</Callout>
+
+## Best Practices for German Prompts
+
+### Do
+
+- **Use compound words naturally** — "Datenstruktur" (data structure) works well
+- **Keep imperatives direct** — "schreib" (write), "korrigier" (fix) are concise
+- **Employ technical compounds** — German creates technical terms systematically
+- **Use English terms when efficient** — API, SQL, Git are token-efficient
+
+### Avoid
+
+- **Overly long invented compounds** — tokenizers may split unexpected compounds
+- **Excessive formality** — "würde Ihnen gerne helfen" wastes tokens
+- **Translation artifacts** — don't translate English compounds word-by-word
+
+## Compound Word Strategy
+
+| English Phrase | German Compound | Token Efficiency |
+|----------------|---------------|------------------|
+| machine learning | maschinelles Lernen | Similar |
+| deep learning | tiefes Lernen | Similar |
+| quick sort | Schnellsortierung | More efficient |
+| binary search | Binäre Suche | More efficient |
+
+<Callout type="warning">
+  German compound words that don't exist in training data may be tokenized character-by-character, losing efficiency. Stick to established compounds or use phrasal forms.
+</Callout>
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+Schreib Quick Sort in Python
+```
+Tokens: ~6 | Meaning: Write Quick Sort in Python
+
+**Verbose (Less Efficient):**
+```
+Könnten Sie mir bitte einen schnellen Sortieralgorithmus in der Programmiersprache Python implementieren? Das wäre sehr freundlich von Ihnen.
+```
+Tokens: ~32 | Meaning: Same result, 5x tokens
+
+## German in European Tech
+
+German is the dominant language in:
+
+- German-speaking countries (DE, AT, CH): ~100M speakers
+- European technical documentation
+- Engineering and manufacturing software
+- Central European tech companies
+
+<Callout type="info">
+  German technical documentation is extensive and well-represented in training data. German speakers have strong access to quality AI assistance.
+</Callout>
+
+## Conclusion
+
+German offers 75-90% of English token cost with the highest information density among Latin-script languages. For German speakers:
+
+- Use natural compound words for technical concepts
+- Keep prompts concise and direct
+- English technical terms integrate well
+- Established compounds are more efficient than invented ones

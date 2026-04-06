@@ -1,0 +1,107 @@
+---
+title: French — European and African Reach
+---
+
+import { Callout } from 'nextra/components'
+
+# French — European and African Reach
+
+French (Français) occupies a significant position in global AI-assisted programming as both a major European language and the most widely spoken language in Africa. With approximately 80-95% of English token cost, French offers a middle ground between Latin-script efficiency and Romance language expressiveness.
+
+## French Token Characteristics
+
+**Romance Language Structure**
+
+French is a Romance language with rich morphological system:
+
+- Verb conjugation: je parle, tu parles, il parle, nous parlons, vous parlez, ils parlent
+- Gender agreement: le programmeur, la programmeuse
+- Complex negation: ne...pas, ne...jamais
+
+**Token/Character Ratio**
+
+```
+French: "concaténation" → 3-4 tokens (12 characters)
+English: "concatenation" → 1 token (13 characters)
+
+French: "intelligence artificielle" → 3-4 tokens
+English: "artificial intelligence" → 3 tokens
+```
+
+French typically requires 15-20% more tokens than English for equivalent content due to longer word forms and more complex morphology.
+
+## Token Efficiency Comparison
+
+| Language | Token Cost (relative) | Info Density | Global Reach |
+|----------|---------------------|--------------|--------------|
+| English | 100% (baseline) | Medium | Very High |
+| French | 80-95% | Medium | High |
+| Spanish | 85-100% | Medium | High |
+| German | 75-90% | Medium-High | High |
+| Chinese | 40-60% | Very High | Very High |
+| Japanese | 40-60% | Very High | High |
+
+<Callout type="info">
+  French token efficiency is comparable to other Romance languages. Differences are most pronounced in technical contexts where English terms are often used directly.
+</Callout>
+
+## Best Practices for French Prompts
+
+### Do
+
+- **Use Anglicismes techniques** — English tech terms (API, SQL, JavaScript) work well in French contexts
+- **Employ formal register** — "veuillez" (please), "merci de" (thank you for) add politeness efficiently
+- **Keep imperatives direct** — "corrige" (fix), "écris" (write) are concise
+- **Use French technical vocabulary** — "tableau" (array), "chaîne" (string) are well understood
+
+### Avoid
+
+- **Excessive politesse** — overly formal French constructions waste tokens
+- **Anglo-French hybrid** — mixing English and French inconsistently reduces efficiency
+- **Subjonctif overuse** — "que je puisse" adds tokens; use indicatif when possible
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+Écris un tri rapide en Python
+```
+Tokens: ~7 | Meaning: Write quicksort in Python
+
+**Verbose (Less Efficient):**
+```
+Pourriez-vous avoir l'obligeance de rédiger un algorithme de tri rapide en langage Python ? Je vous en serais très reconnaissant.
+```
+Tokens: ~32 | Meaning: Same result, 4.5x tokens
+
+## French in Africa
+
+French is the official language of 29 African countries and the most widely spoken language on the continent. This gives French AI prompts access to:
+
+- Growing tech markets in West and Central Africa
+- French-language documentation for open source projects
+- International organizations (UN, EU, AU)
+
+<Callout type="warning">
+  African French has distinctive vocabulary and expressions. AI models trained primarily on European French may not fully understand African French variations.
+</Callout>
+
+## Technical Vocabulary
+
+| English | French | Token Efficiency |
+|---------|--------|------------------|
+| array | tableau | Similar |
+| string | chaîne | Similar |
+| function | fonction | Same |
+| bug | bogue | Same concept |
+
+Many French technical terms are cognates of English, reducing comprehension barriers.
+
+## Conclusion
+
+French offers 80-95% of English token cost with significant global reach across Europe and Africa. For French speakers, the recommendation is to:
+
+- Embrace technical Anglicismes where they improve efficiency
+- Keep prompts concise and direct
+- Use formal register for professional contexts
+- Consider French African variations for broader audiences

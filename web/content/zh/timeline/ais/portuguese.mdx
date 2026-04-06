@@ -1,0 +1,96 @@
+---
+title: Portuguese — Brazilian and Iberian Markets
+---
+
+import { Callout } from 'nextra/components'
+
+# Português — Brazilian and Iberian Markets
+
+Portuguese (Português) connects two major markets: Brazil, the largest country in South America with a thriving tech scene, and Portugal, gateway to European Union. With approximately 85-100% of English token cost, Portuguese offers Latin-script efficiency with access to over 260 million native speakers.
+
+## Portuguese Token Characteristics
+
+**Romance Language Structure**
+
+Portuguese shares Romance language features with Spanish and French:
+
+- Verb conjugation: eu falo, tu falas, ele fala, nós falamos, vocês falam
+- Gender agreement: o programador, a programadora
+- Rich verbal system with multiple tenses
+
+**Token/Character Ratio**
+
+```
+Portuguese: "concatenação" → 3-4 tokens (12 characters)
+English: "concatenation" → 1 token (13 characters)
+
+Portuguese: "inteligência artificial" → 4-5 tokens
+English: "artificial intelligence" → 3 tokens
+```
+
+Portuguese and Spanish have similar token efficiency profiles, with minor differences in specific constructions.
+
+## Token Efficiency Comparison
+
+| Language | Token Cost (relative) | Info Density | Native Speakers |
+|----------|---------------------|--------------|-----------------|
+| English | 100% (baseline) | Medium | 360M |
+| Portuguese | 85-100% | Medium | 260M |
+| Spanish | 85-100% | Medium | 550M |
+| French | 80-95% | Medium | 300M |
+| Chinese | 40-60% | Very High | 1.1B |
+
+<Callout type="info">
+  Portuguese token efficiency is nearly identical to Spanish. The main difference is regional: Brazilian Portuguese dominates training data, making it more reliable for AI interactions.
+</Callout>
+
+## Best Practices for Portuguese Prompts
+
+### Do
+
+- **Use Anglicismos técnicos** — English tech terms work well in both European and Brazilian contexts
+- **Keep constructions direct** — "escreve" (write), "corrige" (fix) are concise
+- **Prefer European Portuguese neutrality** — less slang, more universally understood
+- **Use "você" over "tu"** — Brazilian dominance in training data
+
+### Avoid
+
+- **Excessive informal register** — "cara" (buddy) adds no value
+- **Regional slang mixing** — Portuguese-Brazilian slang differs significantly from European
+- **Overly formal constructions** — "venha por favor" wastes tokens
+
+## Brazilian vs European Portuguese
+
+| Aspect | Brazilian (BR) | European (PT) |
+|--------|---------------|---------------|
+| Token Efficiency | ~90-100% | ~85-95% |
+| AI Comprehension | Very High | Medium-High |
+| Tech Community Size | Large | Medium |
+| Verb Form (you) | você | você (formal) or tu |
+
+<Callout type="warning">
+  Brazilian Portuguese dominates AI training data due to population size. European Portuguese constructions may be less reliably understood.
+</Callout>
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+Escreve um quicksort em Python
+```
+Tokens: ~7 | Meaning: Write quicksort in Python
+
+**Verbose (Less Efficient):**
+```
+Será que você poderia, por obséquio, escrever-me um algoritmo de ordenação rápida na linguagem Python? Ficaria muito grato!
+```
+Tokens: ~30 | Meaning: Same result, 4x tokens
+
+## Conclusion
+
+Portuguese offers 85-100% of English token cost with access to Brazilian and European markets. For Portuguese speakers:
+
+- Brazilian Portuguese is more reliably understood by AI
+- English technical terms integrate well
+- Keep prompts concise and direct
+- Regional variations exist but don't significantly impact efficiency

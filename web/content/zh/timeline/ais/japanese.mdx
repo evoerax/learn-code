@@ -1,0 +1,95 @@
+---
+title: Japanese — High-Density Script Mixing
+---
+
+import { Callout } from 'nextra/components'
+
+# 日本語 — High-Density Script Mixing
+
+Japanese (日本語) achieves exceptional token efficiency in AI-assisted programming, comparable to Chinese. With approximately 40-60% of English token cost, Japanese is one of the most efficient languages for prompt engineering. However, its mixed-script writing system (hiragana, katakana, kanji) requires specific prompting strategies.
+
+## Japanese Token Characteristics
+
+**Mixed Script System**
+
+Japanese uses three writing systems simultaneously:
+
+- **Hiragana (ひらがな)** — native Japanese words, grammatical elements
+- **Katakana (カタカナ)** — loanwords, emphasis, technical terms
+- **Kanji (漢字)** — Chinese-derived characters, nouns, verbs
+
+**Token/Character Ratio**
+
+```
+Japanese: "結合" (ketsugou - concatenation) → 2-3 tokens (2 characters)
+English: "concatenation" → 1 token (13 characters)
+
+Japanese: "人工衛星" (jinkou eisei - satellite) → 3 tokens (4 characters)
+English: "artificial satellite" → 3 tokens
+```
+
+Japanese kanji achieves high information density because each character is a semantic unit, similar to Chinese.
+
+## Token Efficiency Comparison
+
+| Language | Token Cost (relative) | Info Density | Script Type |
+|----------|---------------------|--------------|-------------|
+| English | 100% (baseline) | Medium | Latin |
+| Chinese | 40-60% | Very High | Logographic |
+| Japanese | 40-60% | Very High | Mixed |
+| Korean | 50-70% | High | Alphabetic |
+| German | 75-90% | Medium-High | Latin |
+
+<Callout type="info">
+  Japanese achieves Chinese-level efficiency when using kanji. Katakana loanwords (like 人工智能 for AI) are tokenized similarly to English.
+</Callout>
+
+## Best Practices for Japanese Prompts
+
+### Do
+
+- **Prefer kanji for technical terms** — "計算" (computation) vs "computed"
+- **Use katakana for English loanwords** — AI models recognize both forms
+- **Keep sentences concise** — Japanese grammar allows omission of subjects
+- **Employ proper particles** — は (wa), を (wo), が (ga) clarify structure
+
+### Avoid
+
+- **Overusing hiragana** — kanji is more token-efficient
+- **Mixing unnecessary romaji** — Japanese script is more efficient
+- **Excessive keigo** (polite forms) — add tokens without meaning
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+Pythonでクイックソート書いて
+```
+Tokens: ~8 | Meaning: Write quicksort in Python
+
+**Verbose (Less Efficient):**
+```
+恐れ入りますが、Pythonというプログラミング言語を使用してクイックソートというアルゴリズムを実装していただけないでしょうか？
+```
+Tokens: ~35 | Meaning: Same result, 4x tokens
+
+## Mixed Script Strategy
+
+| Concept | Hiragana | Katakana | Kanji | Most Efficient |
+|---------|----------|----------|-------|---------------|
+| Computer | コンピュータ | コンピュータ | コンピュータ | Katakana |
+| AI | エーアイ | 人工智能 | 人口知能 | Kanji |
+| Program | プログラム | プログラム | プログラム | Katakana |
+
+<Callout type="warning">
+  AI models may not consistently recognize hiragana-only text. Using kanji and katakana improves reliability.
+</Callout>
+
+## Conclusion
+
+Japanese achieves 40-60% token cost like Chinese, making it one of the most efficient languages for AI-assisted programming. For Japanese speakers:
+
+- Use kanji for technical concepts whenever possible
+- Katakana for English loanwords is reliably understood
+- Keep prompts concise and omit unnecessary politeness
+- Consider code-switching with English for technical precision
