@@ -1,0 +1,104 @@
+---
+title: Chinese — Highest Token Efficiency
+---
+
+import { Callout } from 'nextra/components'
+
+# Chinese — Highest Token Efficiency
+
+Chinese (中文) achieves the highest token efficiency among major world languages in AI-assisted programming. With approximately 40-60% of the token cost of English for equivalent semantic content, Chinese prompts can express the same intent with significantly fewer tokens.
+
+## Why Chinese Is Efficient
+
+**Character-Based Writing System**
+
+Unlike alphabetic languages, Chinese uses a logographic writing system where each character (汉字) is a self-contained semantic unit. This means:
+
+- No word boundaries requiring tokenization decisions
+- Each character carries substantial meaning independently
+- Compound words (成语, 合成词) are formed logically from constituent characters
+
+**Tokenization Advantage**
+
+Modern LLMs tokenize Chinese differently than Latin-script languages:
+
+```
+English: "concatenation" → 1 token (13 characters)
+Chinese: "连接" → 2-3 tokens (2 characters)
+
+English: "artificial intelligence" → 3 tokens
+Chinese: "人工智能" → 3-4 tokens (4 characters)
+```
+
+**Semantic Density**
+
+Chinese achieves high information density because:
+- Minimal morphological inflection (no verb conjugation, no plural forms)
+- Compound words built from semantic components
+- Extensive use of four-character idioms (成语) conveying complex ideas
+
+## Token Cost Comparison
+
+| Task | English Tokens | Chinese Tokens | Savings |
+|------|---------------|----------------|---------|
+| Explain a function | 45 | 18-22 | ~55% |
+| Describe a bug | 30 | 12-15 | ~50% |
+| Request code refactor | 25 | 10-13 | ~52% |
+| Ask for explanation | 20 | 8-10 | ~50% |
+
+<Callout type="info">
+  Token counts are approximate and vary by model. Chinese savings are most pronounced in models trained with substantial Chinese data (GPT-4, Claude 3, Gemini).
+</Callout>
+
+## Best Practices for Chinese Prompts
+
+### Do
+
+- **Use concise phrasing** — Chinese naturally compresses meaning
+- **Employ technical terms** — most AI terminology is consistent across languages
+- **Structure with punctuation** — clear organization helps tokenization
+- **Use classical Chinese** — 四字格 (four-character phrases) are token-efficient
+
+### Avoid
+
+- **Excessive politeness markers** — 请、麻烦、谢谢 add tokens without meaning
+- **Redundant modifiers** — Chinese doesn't need "very", "really" as often
+- **Mixed script** — avoid unnecessary English words in Chinese text
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+用 Python 写个快速排序
+```
+Tokens: ~8 | Meaning: Write quicksort in Python
+
+**Verbose (Less Efficient):**
+```
+麻烦你帮我用 Python 编程语言写一个快速排序算法可以吗？谢谢
+```
+Tokens: ~35 | Meaning: Could you please write a quicksort algorithm in Python? Thank you.
+
+## Technical Considerations
+
+**Model-Specific Behavior**
+
+Different AI models handle Chinese differently:
+
+| Model | Chinese Proficiency | Token Efficiency |
+|-------|-------------------|------------------|
+| GPT-4 | Excellent | High |
+| Claude 3 | Very Good | High |
+| Gemini | Excellent | Very High |
+| Llama 3 | Good | Medium |
+
+**Code Generation**
+
+When generating code, Chinese prompts work best with:
+- Clear language specification: "用 Python" not "with Python"
+- Direct imperative: "写" (write) vs "请写" (please write)
+- Technical terminology: "递归" (recursion) vs "自己调用自己" (self-calling)
+
+## Conclusion
+
+Chinese is the most token-efficient major language for AI-assisted programming. With proper prompting technique, Chinese speakers can achieve 40-60% token savings compared to English for equivalent results. The character-based writing system and high information density make Chinese ideal for prompt engineering optimization.

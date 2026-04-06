@@ -1,0 +1,110 @@
+---
+title: English — The Baseline
+---
+
+import { Callout } from 'nextra/components'
+
+# English — The Baseline
+
+English (English) serves as the baseline for measuring token efficiency in AI-assisted programming. As the most extensively trained language in major LLMs, English offers the broadest technical terminology coverage and most reliable AI comprehension, though at approximately 2x the token cost of Chinese for equivalent semantic content.
+
+## Why English Is the Baseline
+
+**Largest Training Corpus**
+
+English dominates LLM training data:
+
+- ~60-70% of Common Crawl is English
+- Most documentation, tutorials, and technical writing is in English
+- AI models have the deepest understanding of English nuances
+
+**Technical Terminology**
+
+English technical terms are universally recognized across AI models:
+
+```
+API, REST, CRUD, JSON, SQL, Git, HTTP, DNS, TCP/IP
+```
+
+These terms are token-efficient (1 token each) and universally understood, regardless of the prompt language.
+
+## Token Efficiency Reality
+
+| Aspect | English | vs Chinese | vs Spanish |
+|--------|---------|-----------|-----------|
+| Token/Character Ratio | 0.75 | 3x higher | ~1.2x higher |
+| Technical Term Coverage | 100% | 70-80% | 60-70% |
+| Model Comprehension | Excellent | Very Good | Good |
+
+<Callout type="info">
+  English token efficiency is improving as models are fine-tuned for multilingual capability. GPT-4o and Claude 3.5 show significant improvement in non-English tokenization.
+</Callout>
+
+## Token Cost Comparison
+
+| Task | English Tokens | Chinese Tokens | Spanish Tokens |
+|------|---------------|---------------|---------------|
+| Explain a function | 45 | 18-22 (~50%) | 38-42 (~85%) |
+| Describe a bug | 30 | 12-15 (~50%) | 26-30 (~90%) |
+| Request code refactor | 25 | 10-13 (~50%) | 22-26 (~90%) |
+| Ask for explanation | 20 | 8-10 (~50%) | 17-20 (~85%) |
+
+## Best Practices for English Prompts
+
+### Do
+
+- **Be concise** — "fix bug" works as well as "please fix the bug"
+- **Use technical terms** — they're universally token-efficient
+- **Structure clearly** — bullet points and numbered lists reduce ambiguity
+- **Specify context** — English models expect explicit context
+
+### Avoid
+
+- **Verbose politeness** — "Could you possibly..." adds tokens without value
+- **Ambiguous pronouns** — be specific about what "it" refers to
+- **Unnecessary adjectives** — "very large" vs "large" save tokens without losing meaning
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+Write a quicksort in Python
+```
+Tokens: ~6 | Meaning: Direct imperative
+
+**Verbose (Less Efficient):**
+```
+Could you please be so kind as to write a quicksort algorithm in Python for me? That would be very helpful, thank you!
+```
+Tokens: ~35 | Meaning: Same result, 5x tokens
+
+## English Advantages
+
+Despite higher token cost, English offers unique advantages:
+
+1. **Widest Model Support** — all LLMs are optimized for English
+2. **Code Generation** — code examples in training data are mostly English-commented
+3. **Debugging** — error messages and stack traces use English
+4. **Documentation** — official docs for most libraries are in English
+
+## Hybrid Approach
+
+Many developers find success with English-Chinese code-switching:
+
+```
+用 Python 写 quicksort，要求：
+1. 时间复杂度 O(n log n)
+2. 使用 list comprehension
+3. 添加 docstring
+```
+
+This combines Chinese efficiency with English technical terms.
+
+## Conclusion
+
+English is the baseline for AI programming due to its training dominance and technical term coverage. While token cost is 2x that of Chinese, English remains essential for:
+- Maximum AI comprehension
+- Code generation accuracy
+- Technical precision
+
+The optimal strategy is often bilingual: English for technical terms, Chinese for structure and efficiency.

@@ -1,0 +1,117 @@
+---
+title: Spanish — Latin-Script Efficiency
+---
+
+import { Callout } from 'nextra/components'
+
+# Spanish — Latin-Script Efficiency
+
+Spanish (Español) occupies a middle ground in token efficiency for AI-assisted programming. As a Latin-script language with relatively transparent orthography, Spanish achieves approximately 85-100% of English token cost while offering advantages in certain linguistic constructions.
+
+## Spanish Token Characteristics
+
+**Morphological Structure**
+
+Spanish is a Romance language with rich inflection:
+
+- Verb conjugation: hablo, hablas, habla, hablamos, habláis, hablan
+- Gender agreement: el problema, la solución
+- Plural forms: los problemas, las soluciones
+
+This inflection means Spanish words can encode more grammatical information per token than English, but the tokenizer must handle more variants.
+
+**Token/Character Ratio**
+
+```
+Spanish: "concatenación" → 3-4 tokens (13 characters)
+English: "concatenation" → 1 token (13 characters)
+```
+
+Spanish has a higher token-to-character ratio than English because:
+- Accent marks (á, é, í, ó, ú, ñ) are separate tokens in some models
+- Longer average word length
+- Morphological complexity
+
+## Token Efficiency Comparison
+
+| Language | Token Cost (relative) | Info Density | Latin-Script |
+|----------|---------------------|--------------|--------------|
+| English | 100% (baseline) | Medium | Yes |
+| Spanish | 85-100% | Medium | Yes |
+| Portuguese | 85-100% | Medium | Yes |
+| French | 80-95% | Medium | Yes |
+| German | 75-90% | Medium-High | Yes |
+| Chinese | 40-60% | Very High | No |
+
+<Callout type="info">
+  Spanish token efficiency is similar to other major Romance languages. Differences are most pronounced in code generation tasks where English technical terms dominate.
+</Callout>
+
+## Best Practices for Spanish Prompts
+
+### Do
+
+- **Use formal second person (usted)** — grammatically neutral for AI context
+- **Employ Anglicismos** — English technical terms work well in Spanish prompts
+- **Keep sentences concise** — Spanish allows compressed expression
+- **Use passive voice** — "se requiere" (is required) is token-efficient
+
+### Avoid
+
+- **Excessive diacritics** — á, é, í, ó, ú can increase token count
+- **Overly formal constructions** — "le rogamos que tenga a bien" wastes tokens
+- **Code-switching inconsistency** — mix Spanish and English consistently
+
+## Example Prompts
+
+**Efficient (Recommended):**
+```
+Escribe un quicksort en Python
+```
+Tokens: ~7 | Meaning: Write quicksort in Python
+
+**Verbose (Less Efficient):**
+```
+¿Podría usted tener la amabilidad de escribirme un algoritmo de ordenamiento rápido usando el lenguaje de programación Python? Se lo agradecería mucho.
+```
+Tokens: ~38 | Meaning: Same result, 5x tokens
+
+## Spanish in Code Generation
+
+When generating code, Spanish prompts work well with:
+
+- **Direct imperatives**: "escribe" (write), "corrige" (fix), "explica" (explain)
+- **Technical Anglicismos**: API, JSON, SQL, Git — universally recognized
+- **Clear requirements**: numbered lists help structure expectations
+
+```
+Implementa una función en Python que:
+1. Tome una lista de números
+2. Devuelva la suma
+3. Maneje casos vacíos
+```
+
+## Latin American vs Iberian Spanish
+
+| Region | Token Efficiency | Notes |
+|--------|----------------|-------|
+| Mexico | ~95% | Neutral, widely understood |
+| Argentina | ~90% | Uses voseo (vos instead of tú) |
+| Spain | ~85% | Uses vosotros, different idioms |
+
+<Callout type="warning">
+  AI models are generally trained on mixed Spanish corpora. Argentine-specific constructions (voseo) may be less well-recognized than Mexican or neutral Spanish.
+</Callout>
+
+## Conclusion
+
+Spanish offers approximately 85-100% of English token cost for equivalent tasks. While not as efficient as Chinese or Japanese, Spanish provides:
+
+- Latin-script compatibility with technical terms
+- Familiar grammar for native speakers
+- Wide AI model comprehension
+
+For Spanish speakers, the recommendation is to:
+- Embrace English technical terms within Spanish prompts
+- Keep prompts concise and direct
+- Use formal register for professional contexts
