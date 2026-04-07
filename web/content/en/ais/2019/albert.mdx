@@ -1,0 +1,29 @@
+---
+title: ALBERT
+description: 约 2.35 亿 xxlarge，参数共享与因子化嵌入，更少参数对标 BERT-Large
+---
+
+import { Cards } from 'nextra/components'
+
+# ALBERT
+
+> 约 2.35 亿参数（xxlarge），**跨层参数共享** + **嵌入维度分解**，用更少参数达到 BERT-Large 量级表现。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Google |
+| **创新** | 隐藏层之间共享权重、词嵌入矩阵分解为两个较小矩阵 |
+| **意义** | 压低参数量与显存，仍保持强下游性能，启发轻量化预训练 |
+
+## 概述
+
+ALBERT 指出 BERT 类模型中大量参数花在嵌入与跨层重复上；通过 **factorized embedding parameterization** 与 **cross-layer parameter sharing** 显著减少独立参数，同时配合 **SOP**（sentence order prediction）替代 NSP 提升句间建模，是 2019 年「参数效率」路线的代表工作。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="DistilBERT (2019)" href="/en/ais/2019/distilbert" arrow />
+  <Cards.Card title="BERT (2018)" href="/en/ais/2018/bert" arrow />
+</Cards>

@@ -1,0 +1,18 @@
+export default {
+    index: { title: '概述' },
+    qwen3: { title: 'Qwen3' },
+    qwen35: { title: 'Qwen3.5' },
+    deepseek_r2: { title: 'DeepSeek-R2' },
+    ernie45: { title: 'ERNIE 4.5' },
+    gpt41: { title: 'GPT-4.1 / o3' },
+    gpt5: { title: 'GPT-5 / GPT-4.5' },
+    gemini_2: { title: 'Gemini 2.0 / 2.5' },
+    claude_35: { title: 'Claude 3.5 / 4.x' },
+    llama4: { title: 'Llama 4' },
+    mistral4: { title: 'Mistral Large 3 / 4' },
+    grok: { title: 'Grok 3 / 4' },
+    glm5: { title: 'GLM-5' },
+    yi_large: { title: 'Yi-Large / Yi-VL' },
+    minicpm: { title: 'MiniCPM 3 / 4' },
+    phi4: { title: 'Phi-4 / Phi-4-Multimodal' },
+}

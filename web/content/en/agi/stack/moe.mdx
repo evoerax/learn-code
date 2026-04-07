@@ -1,0 +1,7 @@
+# MoE (Mixture of Experts)
+
+- **Idea**: Replace dense FFNs with **many experts + a router**; each token touches only a few experts—**large total params, moderated per-forward compute**.  
+- **Engineering**: Expert parallelism, load-balancing losses, comms and memory fragmentation, stable Top-k routing.  
+- **Vs “active” params**: Products usually report **total parameters** and **activated parameters per token** (or FLOPs/token)—see [params & activation](/en/agi/stack/params_activation).
+
+See also: [Transformer](/en/agi/stack/transformer), [more engineering](/en/agi/stack/engineering_misc) (EP in training).

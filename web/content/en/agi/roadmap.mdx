@@ -1,0 +1,30 @@
+# AGI technology roadmap (2017–2026)
+
+Narrative phases of mainstream industry and research trends; for named variants see **[architecture landscape](/en/agi/landscape)**.
+
+## 1. Foundation: dense Transformers (~2017–2022)
+
+- **Core**: Self-attention; encoder–decoder, decoder-only, and encoder-only pretraining; scaling laws push models toward larger dense stacks.  
+- **Examples**: Vanilla Transformer, GPT-style LMs, BERT, early trillion-parameter-class *dense* baselines (e.g. GPT-3).
+
+## 2. Efficiency at scale: MoE (~2023–2024)
+
+- **Core**: Sparsely activated FFN “experts” with a **router** so each step activates only a subset—large total params, moderated inference cost.  
+- **Engineering**: Expert parallelism, load balancing, comms and memory tuning.  
+- **Reality**: MoE is a **standard option**, not a full replacement for dense models.
+
+## 3. Reasoning and “System 2” (~2024–2025)
+
+- **Core**: **Test-time / inference-time compute**—search, reflection, and verification before answering.  
+- **Toolkit**: Preference learning (RLHF / RLAIF / DPO); explicit or latent **chain-of-thought**; tree search (MCTS-style thinking); productized “reasoning” variants.  
+- **Metaphor**: From fast System-1 completion toward slow System-2 deliberation.
+
+## 4. Current frontier: physics and embodiment (~2025–2026)
+
+- **World models / predictive objectives**: Predict next states or representations from video and interaction—space, time, causality.  
+- **Long context & hybrids**: **SSM (e.g. Mamba)** layers alternated with full attention for-million-token-class contexts at acceptable cost.  
+- **Embodiment**: Large multimodal models as the “brain”; **VLA** maps instructions and vision to low-level actions or skills—shared stack with autonomous agents.
+
+---
+
+**Takeaway**: Two turning points worth highlighting—**from next-token prediction to verifiable reasoning**, and **from text-only worlds to physical, embodied interaction**.

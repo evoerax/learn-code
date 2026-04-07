@@ -1,0 +1,54 @@
+---
+title: GPT-1
+description: The first Generative Pre-Trained Transformer — 117M parameters
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# GPT-1
+
+> _"Improving Language Understanding by Generative Pre-Training"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2018 |
+| **Organization** | OpenAI |
+| **Authors** | Radford et al. |
+| **Parameters** | ~117 million |
+| **Architecture** | 12-layer Transformer decoder |
+| **Training Data** | BooksCorpus (4.5 GB, ~7,000 unique books) |
+| **Context Length** | 512 tokens |
+
+## Origin Story
+
+In 2018, OpenAI published a paper demonstrating that **pre-training a large language model on diverse text, then fine-tuning on specific tasks** could achieve remarkable results. This two-stage approach became the foundation of modern NLP.
+
+<Callout type="info" emoji="💡">
+GPT-1 proved that scale + pre-training was the path forward for language understanding — a paradigm that still dominates today.
+</Callout>
+
+## Architecture
+
+- **12-layer Transformer decoder**
+- **117 million parameters**
+- **Context length**: 512 tokens
+- **Training data**: BooksCorpus — 4.5 GB of text from ~7,000 unique books
+
+## Key Innovation
+
+**Pre-training + Fine-tuning**: Unlike previous approaches that trained on each task from scratch, GPT-1:
+
+1. Pre-trained on large unlabeled corpus (unsupervised)
+2. Fine-tuned on specific tasks with small labeled datasets
+3. Transferred learned representations to downstream tasks
+
+## Significance
+
+<Cards>
+  <Cards.Card title="GPT-2 (2019)" href="/ais/2019/gpt2" arrow />
+  <Cards.Card title="GPT-3 (2020)" href="/ais/2020/gpt3" arrow />
+</Cards>
+
+GPT-1 was a proof-of-concept. GPT-2 would scale this 10x and introduce zero-shot learning.

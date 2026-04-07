@@ -1,0 +1,7 @@
+# Transformer 架构
+
+- **核心**：自注意力（MHA）+ 前馈层（FFN）+ 残差与归一化（Pre-LN / Post-LN）；Decoder-only、Encoder-only、Encoder–Decoder 三种范式对应 GPT、BERT、T5 等族系。  
+- **复杂度**：标准自注意力对序列长度多为 **O(N²)**（相对序列维度），长上下文成本主要来源之一。  
+- **变体**：稀疏/局部窗注意力、线性注意力、与 SSM/Mamba 等块的 **混合堆叠**，见 [架构全景](/zh/agi/landscape)。  
+
+相关：[MoE](/zh/agi/stack/moe)、[FlashAttention](/zh/agi/stack/flash_attention)、[KV Cache](/zh/agi/stack/kv_cache)。

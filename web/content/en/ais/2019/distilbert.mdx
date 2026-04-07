@@ -1,0 +1,29 @@
+---
+title: DistilBERT
+description: 约 6600 万参数蒸馏 BERT，保留约 97% 性能，推动端侧部署
+---
+
+import { Cards } from 'nextra/components'
+
+# DistilBERT
+
+> 约 **6600 万参数**，用**知识蒸馏**压缩 BERT，在多项任务上保留约 **97%** 的老师性能，适合延迟敏感场景。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Hugging Face |
+| **方法** | 蒸馏 BERT 的 logits、隐藏状态与输出分布 |
+| **意义** | 成为早期「小语言模型」部署与边缘推理标杆实现 |
+
+## 概述
+
+DistilBERT 将 BERT 层数减半、去除 token 类型嵌入与池化头，仍通过 **三重损失**（蒸馏、_masked LM_、余弦对齐）逼近教师表示；在推理速度显著提升的同时维持竞争力，推动 **Transformer 小型化** 在工业界快速落地。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="ALBERT (2019)" href="/en/ais/2019/albert" arrow />
+  <Cards.Card title="GPT-3 (2020)" href="/en/ais/2020/gpt3" arrow />
+</Cards>

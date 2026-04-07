@@ -1,0 +1,45 @@
+---
+title: PaLM
+description: Google 5400亿稠密transformer — Pathways架构
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# PaLM
+
+> _"使用 Pathways 扩展语言建模"_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2022 |
+| **机构** | Google |
+| **参数** | 5400 亿 |
+| **架构** | 稠密 Transformer（标准） |
+| **训练** | Pathways 系统（定制 TPU pod） |
+| **关键创新** | Pathways 基础设施，极限规模 |
+
+## 起源
+
+PaLM（Pathways 语言模型）证明 Google 的 Pathways 基础设施可以以卓越效率训练 5400 亿稠密模型。它在推理、笑话解释和代码生成方面表现出色。
+
+<Callout type="default" emoji="📊">
+PaLM 在推理任务、笑话解释和代码生成方面设定了新基准——需要多步推理的任务。
+</Callout>
+
+## 架构
+
+- **5400 亿参数**（稠密 Transformer）
+- 使用 Google Pathways 系统训练
+- 扩展到数千个 TPU 芯片
+- 标准稠密架构——不是 MoE
+
+## 后续发展
+
+<Cards>
+  <Cards.Card title="GPT-4 (2023)" href="/zh/ais/2023/gpt4" arrow />
+  <Cards.Card title="Claude 2 (2023)" href="/zh/ais/2023/claude2" arrow />
+</Cards>
+
+PaLM 证明稠密 Transformer 可以扩展到 5400 亿并在推理任务上显著提升。GPT-4 将引入 MoE 以达到更高的有效容量。

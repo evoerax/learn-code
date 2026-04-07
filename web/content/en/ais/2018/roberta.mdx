@@ -1,0 +1,29 @@
+---
+title: RoBERTa
+description: 约 3.55 亿参数，动态掩码与更充分训练，稳健性显著强于原版 BERT
+---
+
+import { Cards } from 'nextra/components'
+
+# RoBERTa
+
+> 约 3.55 亿参数（Large 档），**动态掩码**、更大 batch、更多数据与更长训练，稳健性显著强于原版 BERT。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Meta（FAIR） |
+| **要点** | 去掉 NSP、动态掩码模式、更大批次与数据量 |
+| **意义** | 证明 BERT 预训练**训练配方与算力**本身还有巨大上浮空间 |
+
+## 概述
+
+RoBERTa 系统消融 BERT 设计：例如用 **动态掩码** 每个 epoch 重新采样掩蔽位置、扩大 batch 与训练步数、使用更大更清洁的语料；在 GLUE 等基准上稳定超越 BERT-Large，说明「同样的 Transformer 编码器架构」可通过 **更科学的优化与数据工程** 获得巨大增益，直接影响后续所有 BERT 系模型的训练实践。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="BERT (2018)" href="/en/ais/2018/bert" arrow />
+  <Cards.Card title="GPT-2 (2019)" href="/en/ais/2019/gpt2" arrow />
+</Cards>

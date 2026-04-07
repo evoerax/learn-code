@@ -1,0 +1,49 @@
+---
+title: "2026 — Current State of AI"
+description: US vs China flagship models comparison, parameter transparency analysis
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# 2026: The State of AI
+
+## Overview
+
+By 2026, the AI landscape has crystallized into two distinct paradigms: **US closed-source labs** (OpenAI, Google, Anthropic, xAI) that keep parameters secret, and **Chinese open-weight labs** (Alibaba, Baidu, DeepSeek, Tencent) that publish detailed specifications.
+
+## Key Insight
+
+<Callout type="success" emoji="🎯">
+**US Closed-Source**: Parameters often undisclosed → focus on capabilities and API pricing
+**Chinese Open-Weight**: Parameters fully disclosed → enabling research and efficient deployment
+</Callout>
+
+## Quick Comparison
+
+| Aspect | US Labs | Chinese Labs |
+|--------|---------|--------------|
+| **Typical Disclosure** | Not disclosed | Fully disclosed |
+| **Architecture** | MoE (estimated) | MoE (documented) |
+| **Representative Scale** | 100B–1T+ (estimated) | 100B–700B (documented) |
+| **Example Models** | GPT-4, Claude 4, Gemini 3 | DeepSeek-V3, Qwen3.5, ERNIE 4.5 |
+
+## Timeline: 2018 → 2026
+
+```
+2018: GPT-1 — 117M (proof of concept)
+2019: GPT-2 — 1.5B (zero-shot learning)
+2020: GPT-3 — 175B (few-shot, API economy begins)
+2021: ERNIE 3.0 Titan — 260B (Chinese entry)
+2022: PaLM — 540B, GLM-130B — 130B (scaling race)
+2023: GPT-4 (~1.8T MoE), Claude 2, Llama 1, Mistral 7B
+2024: Gemini 1.5 (~540B), Claude 3, Llama 3.1 (405B), DeepSeek-V3 (671B/37B)
+2025: Qwen3 (235B/22B), ERNIE 4.5 (424B/47B), GPT-4.1/o3, Claude 3.5
+2026: Next gen — undisclosed parameters vs fully transparent Chinese models
+```
+
+## Detailed Comparisons
+
+<Cards>
+  <Cards.Card title="US Flagship Models" href="/ais/2026/us_flagship" arrow />
+  <Cards.Card title="China Flagship Models" href="/ais/2026/china_flagship" arrow />
+</Cards>

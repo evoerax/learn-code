@@ -1,0 +1,78 @@
+---
+title: x86 vs ARM
+description: Introduction, comparison, and historical evolution of the two dominant CPU ISAs
+---
+
+# x86 vs ARM: overview, comparison, and evolution
+
+This appendix summarizes **x86** and **ARM** from an **instruction-set architecture (ISA)** angle—origins, design trade-offs, and how the industry evolved—complementary to the rest of the guide.
+
+## One-line distinction
+
+| | **x86** | **ARM** |
+| :--- | :--- | :--- |
+| **Lineage** | Grew from Intel **8086** (1978); long anchor for PCs and data centers | Born as Acorn **RISC** (1980s); ARM Ltd scaled via **IP licensing** |
+| **Typical markets** | Desktop, laptop, server, HPC | Phones, tablets, embedded; increasingly **laptops & servers** (Apple Silicon, Neoverse, cloud instances) |
+| **Design tilt** | Historic **CISC** with decoder-heavy front ends turning instructions into **µops** | Classic **RISC** flavor: regular instructions, **load/store** model, power-first mindset |
+| **Business model** | **Intel / AMD** ship x86 processors | Many vendors license **ARM architecture + cores / semi-custom**, implementation depth varies by tier |
+
+Modern CPUs are not judged by “CISC vs RISC” alone: both families use wide, out-of-order cores. Differences usually show up in **ecosystem, power envelopes, licensing, and product cadence**.
+
+---
+
+## x86: brief timeline
+
+- **1978 — 8086**: 16-bit registers and 20-bit addressing; the name **x86** stuck; IBM PC (1981) locked in the mass market.  
+- **1985 — 80386**: 32-bit protected mode and evolving memory models for the PC era.  
+- **1990s — Pipelines & MMX**: More IPC and early SIMD-style multimedia instructions.  
+- **2003 — x86-64 (AMD64)**: AMD leads with **64-bit GPRs and addressing** while keeping 32-bit compatibility; becomes the PC/server standard; Intel follows as **Intel 64**.  
+- **2000s–2010s — SIMD waves**: SSE family, then **AVX / AVX-2 / AVX-512**, shaping HPC, media codecs, and hand-tuned libraries.  
+- **2010s–today — Cores, chiplets, hybrid SKUs**: **P-cores and E-cores** on laptops/desktops; server **Xeon / EPYC** pushes core counts, caches, IMCs, and chiplets; security mitigations and extensions are a steady drumbeat.
+
+**Takeaway**: x86’s hallmark is **backwards compatibility pressure**—decades of binary and OS assumptions—paid for with a complex encoding and decode path.
+
+---
+
+## ARM: brief timeline
+
+- **1980s — Acorn RISC**: 32-bit RISC aimed beyond the 6502; favors simpler control and **efficiency**.  
+- **1990 — ARM spun out**: Focus shifts to **selling architecture IP**, not only end chips.  
+- **ARM7 / ARM9 / ARM11**: Embedded and early mobile proliferation under a **license + partner silicon** model.  
+- **ARMv7-A**: 32-bit application profile unification (Cortex-A era) before mobile explodes.  
+- **ARMv8-A (~2011 onward)**: Introduces **AArch64** plus AArch32 legacy; foundation for server parts, Apple custom CPUs, and Android flagships on 64-bit.  
+- **ARMv9**: Security, **SVE2**-class vector story, confidential computing themes—rolled out unevenly by core vendor and product line.  
+- **2020s — Desktop & cloud breakout**: Apple **M-series**; **AWS Graviton**, **Ampere**, others make **ARM cloud instances** mainstream; Windows on ARM grows slowly.
+
+**Takeaway**: ARM’s rise pairs **performance per watt** with a **menu of licensable cores** from tiny MCUs to huge out-of-order CPUs.
+
+---
+
+## Side-by-side (engineering lens)
+
+| Axis | x86 (typical) | ARM (typical) |
+| :--- | :--- | :--- |
+| **Binary-compat expectations** | Very strong for PC/server software stacks | Fragmented by segment; AArch64 on server/desktop is maturing but still “rebuild your image” heavy |
+| **Decode / density** | Variable-length x86; complex decoders; µop caches help | More regular profiles; predictable decode—**not** the same as a simple SoC |
+| **Power & thermals** | Wide TDP windows; high peak performance designs | Traditionally wins on **battery / fanless**; now also 100W+ desktop/server sockets |
+| **Software ecosystem** | Mature Windows/Linux desktop & x86 server binaries | Dominates **Android & embedded**; Linux ARM server toolchains improved sharply in the 2010s–2020s |
+| **How you procure silicon** | Mostly buy **Intel / AMD** parts or OEM systems | Buy merchant **SoCs** (Qualcomm, MediaTek, Apple, …) or **roll your own** CPU under architecture license |
+| **Customization headroom** | System builders rarely design custom x86 cores | ARM route enables wildly different **SoCs** (NPU, ISP, memory, core count) |
+
+---
+
+## Who picks what (rough guide)
+
+- **Legacy Windows/Linux x86 binaries, classic CUDA / HPC stacks**: x86-64 remains the comfort zone.  
+- **Phones, ultra-low-power MCUs, hard real-time**: ARM Cortex families (-M, -R, -A tiers).  
+- **Laptop battery life + vertical integration**, or cloud **$/watt at scale with custom silicon**: AArch64 share keeps climbing.
+
+---
+
+## Deeper topics (keywords)
+
+- x86: **micro-op fusion & renaming**, **TSX**, **Meltdown/Spectre-class** issues, **chiplets & UCIe**.  
+- ARM: **AArch64 ABI**, **SVE/SVE2**, **big.LITTLE / DynamIQ**, **PSCI / boot firmware**, **TrustZone / Realm** (confidential-computing paths).
+
+---
+
+Why it matters here: every language runtime finally lands on **some ISA and ABI**—knowing x86 vs ARM explains why builds are target-specific, why SIMD intrinsics differ, and why cloud vendors push Graviton-class hardware.

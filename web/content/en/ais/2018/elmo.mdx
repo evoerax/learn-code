@@ -1,0 +1,29 @@
+---
+title: ELMo
+description: 约 9400 万参数 BiLSTM 动态词向量，推动上下文嵌入时代
+---
+
+import { Cards } from 'nextra/components'
+
+# ELMo
+
+> 约 9400 万参数，基于 **BiLSTM** 的**上下文相关词向量**，开启动态词表示时代。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Allen Institute for AI |
+| **机制** | 深层双向 LSTM 语言模型，各层隐状态线性组合为 ELMo 表示 |
+| **意义** | 「词向量」随句子而变，较 Word2Vec 静态嵌入大幅改进句法/语义任务 |
+
+## 概述
+
+ELMo 先在大规模语料上训练双向语言模型，再将 **各层隐藏状态加权拼接** 作为下游输入；与后来 BERT 的深层 Transformer 相比，ELMo 参数规模更小，但首次在通用 NLP 流程中系统展示：**同一词在不同上下文应有不同向量**，为 Transformer 时代「语境化表示」铺路。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="BERT (2018)" href="/en/ais/2018/bert" arrow />
+  <Cards.Card title="GPT-1 (2018)" href="/en/ais/2018/gpt1" arrow />
+</Cards>

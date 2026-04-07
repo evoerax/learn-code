@@ -1,0 +1,44 @@
+---
+title: Mistral 7B
+description: Efficient architecture — outperformance at 7B parameters
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Mistral 7B
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2023 |
+| **Organization** | Mistral AI |
+| **Parameters** | 7 billion |
+| **Architecture** | Grouped-query attention, Sliding Window Attention |
+| **Key Innovation** | Efficient design, outperforms 2x size models |
+
+## Origin Story
+
+Mistral 7B proved that **small models + good architecture** could match models twice their size. Its efficient attention mechanisms made it a favorite for local deployment.
+
+<Callout type="default" emoji="⚡">
+Mistral 7B used two key innovations: Grouped-query Attention (GQA) for faster inference and Sliding Window Attention for handling longer contexts efficiently.
+</Callout>
+
+## Key Innovations
+
+### Grouped-Query Attention (GQA)
+- Shares key/value heads across query groups
+- Faster inference with minimal quality loss
+
+### Sliding Window Attention
+- Each token attends to a fixed-size window
+- Enables efficient handling of long sequences
+
+## Significance
+
+<Cards>
+  <Cards.Card title="Llama 3.1 (2024)" href="/ais/2024/llama3_1" arrow />
+</Cards>
+
+Mistral 7B established that efficient architectures could close the gap with dense scaling, influencing how future models were designed.

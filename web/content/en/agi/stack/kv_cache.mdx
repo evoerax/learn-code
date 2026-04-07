@@ -1,0 +1,7 @@
+# KV cache
+
+- **Role**: In autoregressive decoding, cache past **K/V** to avoid recomputing prefixes—essential for inference.  
+- **Cost**: Memory grows roughly with **layers × sequence length × KV head width × batch**—a top bottleneck for long context and high concurrency.  
+- **Mitigations**: MQA, GQA, **MLA-style** latent compression; **paged / blockwise** KV ([vLLM & serving](/en/agi/stack/vllm_serving)); KV quantization.
+
+See also: [FlashAttention](/en/agi/stack/flash_attention), [params & activation](/en/agi/stack/params_activation).

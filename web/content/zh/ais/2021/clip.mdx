@@ -1,0 +1,29 @@
+---
+title: CLIP
+description: 约 4 亿参数级对比学习图文对齐，奠基零样本视觉与多模态理解
+---
+
+import { Cards } from 'nextra/components'
+
+# CLIP
+
+> 约 **4 亿参数**量级（ViT-B/32 等配置），**对比学习**将图像与文本映射到同一嵌入空间，支撑 **零样本图像分类** 与图文检索。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | OpenAI |
+| **训练** | 大规模互联网图文对，InfoNCE 式对称损失 |
+| **影响** | 成为 Stable Diffusion、DALL·E 2 等模型的 **文本塔骨干** |
+
+## 概述
+
+CLIP 把「网页噪声图文」转化为可扩展监督：无需标注类别即可在数百类基准上迁移；其 **图文联合表示** 成为现代多模态模型的标准件，连接 CV 与 NLP。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="DALL·E (2021)" href="/zh/ais/2021/dalle" arrow />
+  <Cards.Card title="GPT-4V (2023)" href="/zh/ais/2023/gpt4v" arrow />
+</Cards>

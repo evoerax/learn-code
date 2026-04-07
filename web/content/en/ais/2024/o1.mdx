@@ -1,0 +1,55 @@
+---
+title: o1 / o1-preview
+description: OpenAI's first reasoning model — September 12, 2024
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# o1 (Code Name: Strawberry)
+
+> _Thinking before answering_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Release Date** | September 12, 2024 (preview) |
+| **Full Release** | December 5, 2024 |
+| **Organization** | OpenAI |
+| **Key Innovation** | Chain-of-thought reasoning, test-time compute |
+
+## Overview
+
+o1 was OpenAI's first model designed specifically for reasoning. Unlike previous models that generated answers quickly, o1 "thinks" through problems step-by-step, spending more computation time on difficult tasks.
+
+<Callout type="success" emoji="🧠">
+o1 scored 83% on International Mathematical Olympiad (IMO) problems, compared to GPT-4's 13%.
+</Callout>
+
+## Key Innovation: Test-Time Compute
+
+Previous LLMs computed answers in a single pass. o1 introduced **test-time compute scaling** — the model can spend more tokens (thinking time) on harder problems.
+
+### How It Works
+
+1. **Chain-of-thought**: Generate detailed reasoning steps
+2. **Evaluate**: Check if reasoning leads to correct answer
+3. **Iterate**: Try alternative approaches if needed
+4. **Respond**: Provide final answer with reasoning
+
+## Versions
+
+| Model | Release | Description |
+|-------|---------|-------------|
+| **o1-preview** | Sep 12, 2024 | Limited access, full reasoning |
+| **o1-mini** | Sep 12, 2024 | Faster, cheaper, less context |
+| **o1** | Dec 5, 2024 | Full release, improved reasoning |
+
+## Significance
+
+<Cards>
+  <Cards.Card title="GPT-4o (2024)" href="/ais/2024/gpt4o" arrow />
+  <Cards.Card title="GPT-4.1 / o3 (2025)" href="/ais/2025/gpt41" arrow />
+</Cards>
+
+o1 proved that "thinking" models could solve problems that previous LLMs couldn't handle.

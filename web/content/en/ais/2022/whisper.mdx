@@ -1,0 +1,29 @@
+---
+title: Whisper
+description: 约 15 亿 Large，多语识别与翻译，端到端鲁棒性强
+---
+
+import { Cards } from 'nextra/components'
+
+# Whisper
+
+> OpenAI **Whisper（Large ~1.5B 参数量级）**：多语言 **语音识别 + 翻译** 一体化，**弱监督** 在海量网络音频上训练，鲁棒应对口音与噪声。
+
+## 速览
+
+| | |
+|---|---|
+| **输入** | 30s 音频切片 |
+| **输出** | 转录文本或翻译成英文（取决于任务提示） |
+| **生态** | 大规模本地部署与字幕自动化 |
+
+## 概述
+
+Whisper 证明「**足够大的编码器-解码器 Transformer + 多样化嘈杂数据**」可在零样本条件下跨语种迁移；降低实时字幕、会议纪要、无障碍服务的成本，也成为后来 **多模态语音 LLM** 的常用语音前端。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="GPT-4o (2024)" href="/en/ais/2024/gpt4o" arrow />
+  <Cards.Card title="ChatGPT (2022)" href="/en/ais/2022/chatgpt" arrow />
+</Cards>

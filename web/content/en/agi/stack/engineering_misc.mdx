@@ -1,0 +1,9 @@
+# Other engineering staples
+
+- **Tokenization**: BPE, SentencePiece, BBPE; visual discrete tokens and unified vocabularies for multimodal models.  
+- **Quantization**: W8A8, W4, GPTQ / AWQ / FP8 paths; **KV quantization** separately caps long-context headroom.  
+- **Speculative decoding**: Draft model + target verification—cuts **perceived** latency (often paired with [vLLM & serving](/en/agi/stack/vllm_serving)).  
+- **Training parallelism**: DP / TP / PP / **EP (expert parallel)**, ZeRO, sequence parallel—MoE almost always mentions EP.  
+- **Systems layer**: RLHF, DPO, long-CoT distillation; RAG and agent toolchains (mostly **systems**, not single kernels).
+
+Back to [stack overview](/en/agi/stack).

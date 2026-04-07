@@ -5,6 +5,9 @@ export default {
         display: 'hidden',
         theme: { layout: 'full', toc: false, timestamp: false },
     },
-    timeline: { title: 'Timeline', type: 'page' },
+    'ai-timeline': { title: 'AI Timeline', type: 'page' },
+    timeline: { title: 'Programming Languages', type: 'page' },
+    ais: { title: 'AI Models', type: 'page' },
+    agi: { title: 'AGI', type: 'page' },
     appendix: { title: 'Appendix', type: 'page' },
 }

@@ -1,0 +1,57 @@
+---
+title: GPT-3
+description: 大模型时代开始 — 1750亿参数，少样本学习
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# GPT-3
+
+> _"语言模型是少样本学习者"_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2020 |
+| **机构** | OpenAI |
+| **参数** | 1750 亿 |
+| **架构** | 96 层 Transformer，96 个注意力头 |
+| **训练数据** | CommonCrawl, WebText, Wikipedia, Books |
+| **上下文长度** | 2,048 tokens |
+| **关键创新** | 少样本学习 |
+
+## 起源
+
+GPT-3 是一个量子飞跃——**1750 亿参数**，比之前任何非稀疏语言模型大约大 10 倍。关键洞察：在这个规模上，模型可以通过上下文中仅几个示例执行新任务（少样本学习）。
+
+<Callout type="success" emoji="🚀">
+GPT-3 证明了仅靠规模就能实现上下文学习——无需梯度更新，只需提示中的示例。
+</Callout>
+
+## 架构详情
+
+| 组件 | 值 |
+|------|-----|
+| 层数 | 96 |
+| 维度 | 12,288 |
+| 注意力头 | 96 |
+| 参数 | 1750亿 |
+| 训练 token | 约 3000亿 |
+
+## 少样本 vs 零样本 vs 微调
+
+| 设置 | 描述 | 示例 |
+|------|------|------|
+| **微调** | 在任务数据上更新权重 | 在 1000 个翻译对上训练 |
+| **零样本** | 无示例，只有指令 | "翻译成法语：Hello" |
+| **少样本** | 上下文中 2-3 个示例 | "Hello → Bonjour, World → Monde, Cat → ?" |
+
+## 后续发展
+
+<Cards>
+  <Cards.Card title="ERNIE 3.0 Titan (2021)" href="/zh/ais/2021/ernie3_titan" arrow />
+  <Cards.Card title="PaLM (2022)" href="/zh/ais/2022/palm" arrow />
+</Cards>
+
+GPT-3 确立了"基础模型 + 提示"范式至今仍占主导地位，并引发了 LLM API 经济。

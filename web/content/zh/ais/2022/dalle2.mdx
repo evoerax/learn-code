@@ -1,0 +1,29 @@
+---
+title: DALL·E 2
+description: 扩散 + CLIP 引导，分辨率、可控性与编辑能力升级
+---
+
+import { Cards } from 'nextra/components'
+
+# DALL·E 2
+
+> OpenAI 第二代文生图：**扩散模型 + CLIP 文本嵌入**，显著提升 **分辨率、真实度与局部编辑/inpainting** 能力。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | OpenAI |
+| **相对 v1** | 从离散自回归 token 走向连续扩散采样 |
+| **影响** | 与 Imagen、SD 共同定义「消费级文生图」标杆 |
+
+## 概述
+
+DALL·E 2 利用 **prior + decoder** 两阶段：先在 CLIP 图像嵌入空间生成，再解码为像素；支持 **语义编辑、扩展画布**，并成为 API 商业模式示范，推动内容生成治理与版权讨论。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="DALL·E (2021)" href="/zh/ais/2021/dalle" arrow />
+  <Cards.Card title="Imagen (2022)" href="/zh/ais/2022/imagen" arrow />
+</Cards>

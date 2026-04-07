@@ -1,0 +1,30 @@
+# AGI stack overview
+
+This section is a **2026-oriented** frame for tracing ideas from **Transformer and MoE** toward long-context operators, System-2 reasoning, multimodal fusion, and embodied AI— alongside the site’s **[AI Models](/en/ais/overview)** timeline.
+
+## How to read the two threads
+
+In one sentence: **Transformers scale associative “sequence memory”; MoE pushes “capacity under a compute budget.”** The pages below cover **reasoning, durable memory, and grounding in the physical world**:
+
+1. **[Roadmap](/en/agi/roadmap)** — 2017–2026 narrative phases.  
+2. **[Pillars](/en/agi/pillars)** — Long context, System 2, multimodal, external knowledge.  
+3. **[Architecture landscape](/en/agi/landscape)** — SSM/Mamba, linear attention, hybrid blocks, diffusion LMs, unified multimodal stacks, and engineering tricks.  
+4. **[2026 stack checklist](/en/agi/stack)** — Quick lookup by dimension (silicon, architecture, data, inference, safety).
+
+## Evolution snapshot
+
+| Phase | Representative ideas | Main problem addressed |
+| :--- | :--- | :--- |
+| **Perception** | Transformer, BERT, ViT | Cross-modal features and alignment |
+| **Scale-up** | MoE (Mixture of Experts) | Large effective parameters within a power envelope |
+| **Long sequence** | SSM (Mamba family), FlashAttention, linear/hybrid attention | Cost of long docs/video and KV footprint |
+| **Logic** | RLHF / DPO, CoT, MCTS, test-time compute | Planning, verification, “slow thinking” |
+| **Embodiment** | World models, JEPA, VLA | Physics and acting in the real world |
+
+## Do not skip in 2026: world models
+
+**World models** aim to internalize **causal and physical structure** (what happens if you let go of a cup), not only token statistics. They tie together predictive video/interaction objectives (JEPA-style ideas) and **vision–language–action (VLA)** stacks for robotics.
+
+---
+
+Suggested path: read the **[roadmap](/en/agi/roadmap)** first, then drill into **[architecture landscape](/en/agi/landscape)** for named families.

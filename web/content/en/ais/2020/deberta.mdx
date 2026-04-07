@@ -1,0 +1,29 @@
+---
+title: DeBERTa
+description: 约 15 亿 Large，解耦注意力与增强掩码解码，GLUE 上超越人类基线
+---
+
+import { Cards } from 'nextra/components'
+
+# DeBERTa
+
+> 约 **15 亿参数**（Large），**解耦注意力** + **增强掩码解码器**，在 GLUE 等基准上超越当时人类聚合基线。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Microsoft |
+| **核心** | 将相对位置编码与内容注意力分离（disentangled attention） |
+| **意义** | 不增参数数量级前提下显著抬升 BERT 系编码器天花板 |
+
+## 概述
+
+DeBERTa 对 self-attention 进行改造：分别用两组向量刻画 **内容与相对位置**，减轻二者纠缠；再配合 **ELECTRA 式**的解码与训练细节优化，在 SuperGLUE/GLUE 时代频繁霸榜，是 **编码器侧精细化设计** 的典范。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="BERT (2018)" href="/en/ais/2018/bert" arrow />
+  <Cards.Card title="RoBERTa (2018)" href="/en/ais/2018/roberta" arrow />
+</Cards>

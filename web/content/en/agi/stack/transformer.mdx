@@ -1,0 +1,7 @@
+# Transformer architecture
+
+- **Core**: Multi-head self-attention (MHA) + feed-forward (FFN) + residual and norm (Pre-LN / Post-LN); decoder-only, encoder-only, and encoder–decoder patterns (GPT-, BERT-, T5-style families).  
+- **Complexity**: Vanilla self-attention is typically **O(N²)** in sequence length—main driver of long-context cost.  
+- **Variants**: Sparse / windowed attention, linear attention, **hybrid stacks** with SSM/Mamba-type blocks—see **[architecture landscape](/en/agi/landscape)**.
+
+See also: [MoE](/en/agi/stack/moe), [FlashAttention](/en/agi/stack/flash_attention), [KV cache](/en/agi/stack/kv_cache).

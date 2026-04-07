@@ -1,0 +1,31 @@
+# Four technical pillars (2026 view)
+
+Beyond the shorthand “Transformer ≈ memory, MoE ≈ scale,” these directions add **reasoning, long-context economics, multimodal grounding, and externalized knowledge**.
+
+## 1. Architecture: from quadratic attention toward linear / hybrid paths
+
+- **Issue**: Vanilla self-attention is often **quadratic** in sequence length for compute and memory—bottleneck for huge documents, video, and KV caches.  
+- **SSM / Mamba-style blocks**: State-space or equivalent operators targeting **near-linear** sequence scaling and friendlier streaming inference.  
+- **Hybrid stacks**: **Full-attention layers** interleaved with **linear / SSM layers** on a fixed period—tradeoff between fine dependency matching and cost; already deployed at large scale.  
+- **Engineering**: IO-aware attention (e.g. FlashAttention-class kernels), compressed KV heads (GQA, MLA, etc.), often combined with the above.
+
+## 2. Reasoning and reflection: System 1 → System 2
+
+- **MCTS-style search**: Expand and backtrack in answer or “thought-step” space (game/tree search lineage).  
+- **CoT and self-correction**: Intermediate steps, check-and-rewrite loops; can pair with **RL** (process or outcome rewards).  
+- **Test-time compute**: Hard queries get more “thinking budget”; easy ones stay short—compute shifts from training-only to **schedulable at inference**.
+
+## 3. Multimodal fusion
+
+- **Diffusion / flow matching**: Backbone of image and video generation; **DiT**-style blocks treat pixels/patches as sequence tokens.  
+- **Native multimodal training**: Joint text, audio, vision/video in one stack—not only a bolt-on vision encoder.  
+- **VLA**: Maps **instruction + visual state → action**—the interface layer for many embodied systems.
+
+## 4. External knowledge and “brute-force” context
+
+- **RAG**: Retrieve, then generate; production systems layer **permissions, freshness, multi-hop retrieval, and long-horizon org/personal memory**—not a single vector search.  
+- **Extreme context**: At very large effective windows, “fit the whole library in KV” overlaps with RAG for some use cases; **cost, latency, and privacy** still favor **tiered memory + retrieval**.
+
+---
+
+For “everything beyond Transformer / MoE” at family level, see **[architecture landscape](/en/agi/landscape)**.

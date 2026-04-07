@@ -1,0 +1,7 @@
+# MoE（混合专家）
+
+- **思想**：把稠密 FFN 换成 **多组专家 + 路由（Router）**，每 token 只激活少数专家，**总参数量大、单次前向算力相对可控**。  
+- **关键工程**：专家并行、负载均衡损失、通信与显存碎片、Top-k 路由稳定性。  
+- **和「激活参数」**：MoE 常见同时报 **总参数量** 与 **每 token 激活参数量**（或相近的 FLOPs/token 指标），详见 [参数量与激活](/zh/agi/stack/params_activation)。  
+
+相关：[Transformer 架构](/zh/agi/stack/transformer)、[其它工程项](/zh/agi/stack/engineering_misc)（并行训练中的 EP）。

@@ -1,0 +1,29 @@
+---
+title: ERNIE 1.0
+description: 约 1.1 亿参数知识增强预训练，融合实体关系，中文理解领先
+---
+
+import { Cards } from 'nextra/components'
+
+# ERNIE 1.0
+
+> 约 **1.1 亿参数**，**知识增强**预训练，显式融合实体与关系信息，中文理解任务表现突出。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | 百度 |
+| **核心** | 在 MLM 中掩蔽实体与短语而不仅是 token，注入百科结构化知识 |
+| **意义** | 开创「知识 + 语言」联合预训练路线，后续 ERNIE 家族演进到 Titan、4.x |
+
+## 概述
+
+ERNIE 1.0 利用中文百科等源构造 **实体级掩码**，让模型学习事实性约束与语义边界；与纯文本 BERT 相比，更贴合中文信息检索与知识密集型应用，对国内搜索、对话业务形成长期技术谱系。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="ERNIE 3.0 (2020)" href="/zh/ais/2020/ernie3" arrow />
+  <Cards.Card title="BERT (2018)" href="/zh/ais/2018/bert" arrow />
+</Cards>

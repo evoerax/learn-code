@@ -1,0 +1,45 @@
+---
+title: PaLM
+description: Google's 540B dense transformer — Pathways architecture
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# PaLM
+
+> _"Scaling Language Modeling with Pathways"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2022 |
+| **Organization** | Google |
+| **Parameters** | 540 billion |
+| **Architecture** | Dense Transformer (standard) |
+| **Training** | Pathways system (custom TPU pods) |
+| **Key Innovation** | Pathways infrastructure, extreme scale |
+
+## Origin Story
+
+PaLM (Pathways Language Model) demonstrated that Google's Pathways infrastructure could train a 540B dense model with remarkable efficiency. It excelled at reasoning, joke explanation, and code generation.
+
+<Callout type="default" emoji="📊">
+PaLM set new benchmarks on reasoning tasks, joke explanation, and code generation — tasks that required multi-step reasoning.
+</Callout>
+
+## Architecture
+
+- **540 billion parameters** (dense Transformer)
+- Trained using Google's Pathways system
+- Scaled to thousands of TPU chips
+- Standard dense architecture — not MoE
+
+## Significance
+
+<Cards>
+  <Cards.Card title="GPT-4 (2023)" href="/ais/2023/gpt4" arrow />
+  <Cards.Card title="Claude 2 (2023)" href="/ais/2023/claude2" arrow />
+</Cards>
+
+PaLM proved dense transformers could scale to 540B and still improve dramatically on reasoning tasks. GPT-4 would introduce MoE to reach even higher effective capacity.

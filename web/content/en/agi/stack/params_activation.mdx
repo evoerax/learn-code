@@ -1,0 +1,7 @@
+# Parameters vs activated parameters
+
+- **Total params**: Full weight count—“capacity.”  
+- **Activated params** (or active FLOPs per token): the **subset actually used in one forward**; dense models: near-total; **MoE**: huge total, small activated subset.  
+- **Use**: For comparable **compute budgets**, activated metrics usually track latency and $/token better than headline param count.
+
+See also: [MoE](/en/agi/stack/moe), [KV cache](/en/agi/stack/kv_cache).

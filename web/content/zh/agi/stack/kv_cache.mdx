@@ -1,0 +1,7 @@
+# KV Cache
+
+- **作用**：自回归解码时缓存历史 token 的 **K、V**，避免对前缀重复计算，推理必备。  
+- **代价**：显存随 **层数 × 序列长度 × KV 头维度 × batch** 增长，是长上下文与多并发的主要瓶颈之一。  
+- **压缩手段**：MQA（多查询共享 K/V）、GQA（分组共享）、**MLA** 等潜在空间压缩；Paged/分块 KV（见 [vLLM 与推理服务](/zh/agi/stack/vllm_serving)）；量化 KV。  
+
+相关：[FlashAttention](/zh/agi/stack/flash_attention)、[参数量与激活](/zh/agi/stack/params_activation)。

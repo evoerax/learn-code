@@ -1,0 +1,49 @@
+---
+title: "2026 — AI现状"
+description: 美国 vs 中国旗舰模型对比，参数透明度分析
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# 2026: AI现状
+
+## 概述
+
+到2026年，AI格局已经形成两个明显不同的范式：**美国闭源实验室**（OpenAI、Google、Anthropic、xAI）保密参数，和**中国开源权重实验室**（阿里、百度、DeepSeek、腾讯）公布详细规格。
+
+## 关键洞察
+
+<Callout type="success" emoji="🎯">
+**美国闭源**: 参数常未披露 → 关注能力和 API 定价
+**中国开源权重**: 参数完全披露 → 赋能研究和高效部署
+</Callout>
+
+## 快速对比
+
+| 方面 | 美国实验室 | 中国实验室 |
+|------|----------|----------|
+| **典型披露** | 未披露 | 完全披露 |
+| **架构** | MoE（估计） | MoE（有文档） |
+| **代表性规模** | 1000亿–1万亿+（估计） | 1000亿–7000亿（有文档） |
+| **示例模型** | GPT-4, Claude 4, Gemini 3 | DeepSeek-V3, Qwen3.5, ERNIE 4.5 |
+
+## 时间线: 2018 → 2026
+
+```
+2018: GPT-1 — 1.17亿（概念验证）
+2019: GPT-2 — 15亿（零样本学习）
+2020: GPT-3 — 1750亿（少样本，API经济开始）
+2021: ERNIE 3.0 Titan — 2600亿（中国入场）
+2022: PaLM — 5400亿，GLM-130B — 1300亿（扩展竞赛）
+2023: GPT-4 (~1.8万亿 MoE), Claude 2, Llama 1, Mistral 7B
+2024: Gemini 1.5 (~5400亿), Claude 3, Llama 3.1 (4050亿), DeepSeek-V3 (6710亿/370亿)
+2025: Qwen3 (2350亿/220亿), ERNIE 4.5 (4240亿/470亿), GPT-4.1/o3, Claude 3.5
+2026: 下一代 — 未披露参数 vs 完全透明的中国模型
+```
+
+## 详细对比
+
+<Cards>
+  <Cards.Card title="美国旗舰模型" href="/zh/ais/2026/us_flagship" arrow />
+  <Cards.Card title="中国旗舰模型" href="/zh/ais/2026/china_flagship" arrow />
+</Cards>

@@ -1,0 +1,54 @@
+---
+title: GPT-2
+description: Zero-shot learning breakthrough — 1.5B parameters
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# GPT-2
+
+> _"Better Language Models and Their Implications"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2019 |
+| **Organization** | OpenAI |
+| **Parameters** | ~1.5 billion (largest version) |
+| **Architecture** | 12-layer Transformer decoder |
+| **Training Data** | WebText (8 million web pages) |
+| **Key Innovation** | Zero-shot task transfer |
+
+## Origin Story
+
+GPT-2 was built on a simple but powerful insight: **larger language models could perform tasks without any task-specific training** — just by reading instructions in natural language.
+
+<Callout type="warning" emoji="⚠️">
+OpenAI initially withheld the full 1.5B model citing misuse concerns, using a "staged release" strategy. This was the first major staged release in AI history.
+</Callout>
+
+## Versions
+
+| Model | Parameters |
+|-------|------------|
+| Small | 117M |
+| Medium | 345M |
+| Large | 762M |
+| XL | 1.5B |
+
+## Key Innovation: Zero-Shot Learning
+
+Unlike GPT-1 which required fine-tuning on each task, GPT-2 demonstrated **zero-shot** capabilities:
+
+- Read natural language instructions
+- Perform translation, summarization, Q&A without task-specific training
+- Learn from context alone
+
+## Significance
+
+<Cards>
+  <Cards.Card title="GPT-3 (2020)" href="/ais/2020/gpt3" arrow />
+</Cards>
+
+GPT-2 proved that scale could emerge zero-shot abilities. GPT-3 would push this further with few-shot learning at 175B parameters.

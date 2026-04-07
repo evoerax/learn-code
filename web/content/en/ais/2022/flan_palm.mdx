@@ -1,0 +1,29 @@
+---
+title: Flan-PaLM
+description: 约 5400 亿参数，指令与多任务微调显著提升零样本泛化
+---
+
+import { Cards } from 'nextra/components'
+
+# Flan-PaLM
+
+> 在 **~5400 亿 PaLM** 基础上做 **Flan 指令微调**：海量任务模板 + 思维链数据，显著提升 **零样本 / 少样本** 泛化。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Google |
+| **关键** | 任务多样性 + 链式推理标注 |
+| **意义** | 「Instruction tuning at scale」与后来 Chat 模型路线汇合 |
+
+## 概述
+
+Flan 系列展示：当我们在 **数千 NLP 任务** 上统一成「指令格式」微调时，大模型会内化任务抽象，进而在 **从未见过的指令样式** 上表现更好；这对 Flan-T5、后续 UL2 与所有 Chat 模型的数据工程影响深远。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="PaLM 详页" href="/en/ais/2022/palm" arrow />
+  <Cards.Card title="Llama 2 (2023)" href="/en/ais/2023/llama2" arrow />
+</Cards>

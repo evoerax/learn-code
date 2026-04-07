@@ -1,0 +1,29 @@
+---
+title: T5
+description: 约 110 亿 Large，Text-to-Text 统一分类、生成与翻译等任务
+---
+
+import { Cards } from 'nextra/components'
+
+# T5
+
+> 约 110 亿参数（Large），**Text-to-Text** 框架将分类、生成、翻译等任务统一为序列到序列格式。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Google（*Exploring the Limits of Transfer Learning with Text...*） |
+| **核心** | 所有 NLP 任务改写为「输入文本 → 输出文本」 |
+| **意义** | 用同一 Transformer 编解码器与同一训练目标覆盖最广任务类型 |
+
+## 概述
+
+T5 在 C4 等大规模清洗语料上做 **去噪自监督**（类似 span corruption），再通过前缀字符串把任务「告诉」模型；微调阶段分类、问答、摘要等均被视为生成目标 tokens，简化多任务学习 pipelines，并催生后续 UL2、mT5 等沿此路线的模型。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="GPT-2 (2019)" href="/zh/ais/2019/gpt2" arrow />
+  <Cards.Card title="BERT (2018)" href="/zh/ais/2018/bert" arrow />
+</Cards>

@@ -1,0 +1,87 @@
+---
+title: Apple chip history
+description: From 68k and PowerPC through Intel to A-series and M-series Apple Silicon
+---
+
+# Apple chip history
+
+Apple’s Mac line has crossed four major CPU families: **Motorola 68k → IBM/Motorola PowerPC → Intel x86 → first‑party ARM (Apple Silicon)**. In parallel, **iPhone / iPad A‑series SoCs** evolved from merchant silicon toward designs that share philosophy—and ISA—with **M‑series** Mac chips. This page is a **timeline + turning points** overview, not a full SKU catalog.
+
+For industry context on **x86 vs ARM**, see **[x86 vs ARM](/en/appendix/x86-vs-arm)**.
+
+---
+
+## How the timelines fit together
+
+| Phase | Approx. years | Products | Notes |
+| :--- | :--- | :--- | :--- |
+| **68k** | 1984–mid‑1990s | Macintosh, early PowerBooks | Motorola CISC supply |
+| **PowerPC** | 1994–2006 | Power Mac, iBook, iMac G3/G4 | **AIM alliance** RISC; power vs cooling tension |
+| **Intel** | 2006–2020 | MacBook, Mac Pro, etc. | **x86** parity with PC industry |
+| **Apple Silicon** | 2020–today | Mac, flagship iPads | **AArch64**, hybrid cores, **unified memory** |
+
+**A‑series** (deepening in‑house design ~2010 onward) and **M‑series** (2020 onward) are both **ARMv8 / ARMv9** class at the ISA level; differences show up in TDP, packaging, I/O, and memory bandwidth.
+
+---
+
+## Motorola 68000 era (Macintosh)
+
+- **1984 — Macintosh 128K**: **Motorola 68000** (~8 MHz) and integrated GUI; later 68k generations (68020/30/40) powered portables.  
+- **Takeaway**: Apple defined the “personal computer” experience early, but **ISA and vendor dependence** still tracked Motorola; 68k eventually lost ground to contemporary x86/Power offerings on power/performance curves.
+
+---
+
+## PowerPC era (RISC on the desk)
+
+- **1994**: **PowerPC 601** in **Power Macintosh**—the **AIM** (Apple / IBM / Motorola) **RISC** push.  
+- **1990s–2000s**: **G3, G4 (AltiVec)** for consumer desktops and notebooks; the **GHz marketing wars** reflected real architectural competition.  
+- **~2003 — Power Mac G5**: IBM **PowerPC 970 (G5)** for towers; **thermals and watts** struggled in laptop form factors versus Intel’s mobile Core roadmap.  
+- **Takeaway**: First sustained bet on **non‑x86** desktops; the exit lesson is that **performance per watt + laptop physics** can force a platform change.
+
+---
+
+## Intel era (industry alignment)
+
+- **2006**: Jobs announces **Intel Core**; first **Intel Macs** ship with **Core Duo**‑class processors.  
+- **2006–2020**: Mac tracks **mainstream x86** stacks—drivers, virtualization, **Boot Camp**, and a flood of cross‑platform tooling.  
+- **Takeaway**: Predictable supply and **ecosystem parity**; differentiation moved to **macOS, industrial design, and I/O** more than the CPU ISA itself.
+
+---
+
+## iPhone / iPad: A‑series SoCs
+
+- **2007**: Original iPhone uses **merchant ARM SoCs** with Apple’s tight software stack.  
+- **2010 — A4** (iPhone 4): Often cited as the inflection where **in‑house SoC leverage** becomes visible—**Intrinsity + PA Semi** talent integrated.  
+- **2013 — A7**: Among the first high‑volume **64‑bit ARM (AArch64)** phone SoCs, pulling apps and OS toward **ARM64**.  
+- **2017 onward — P‑cores & E‑cores**: **big.LITTLE‑style** scheduling matures; **GPU, Neural Engine, ISP, media blocks** co‑design with CPUs.  
+- **Takeaway**: Apple optimized **sustained perf per watt** and **accelerator coupling** under battery constraints—**rehearsal** for later Mac silicon.
+
+---
+
+## Apple Silicon: M‑series on the Mac
+
+- **2020.11 — M1** (Air, 13" Pro, mini): First **Mac‑first SoC** at leading‑edge nodes; **performance + efficiency cores**; **unified memory** so CPU / GPU / Neural Engine share a **single memory pool**, unlike classic discrete‑GPU VRAM models.  
+- **2021 — M1 Pro / Max / Ultra**: Scales **bandwidth and I/O** for pro workloads via multi‑die packaging strategies.  
+- **2022 — M2**: Generational efficiency and scale‑out across more Mac tiers.  
+- **2023 — M2 Ultra, M3 family**: Further GPU features (incl. ray tracing per Apple’s public materials); cadence follows **(process, micro‑arch, packaging)**.  
+- **2024 — M4** (debuts on select iPads first in Apple’s timeline): Illustrates continued cadence and **NPU emphasis**; check Apple’s technical specifications for exact SKUs.  
+- **Takeaway**: Mobile‑era silicon ideas—**energy, accelerators, memory unity**—move to **desktop and workstation**, buffered by **Rosetta 2** for x86 transition.
+
+---
+
+## Other Apple silicon (brief)
+
+- **S / W families**: Watch‑oriented **SiPs** emphasize **sensors + endurance**, parallel to A/M but different constraints.  
+- **H and audio‑focused chips**: Wireless and audio pipelines, not general‑purpose application processors.
+
+---
+
+## What repeats each migration
+
+1. **Experience first**: Thinner, quieter, longer battery, or higher sustained performance under real thermals.  
+2. **Supply + differentiation**: When merchant roadmaps **misalign with chassis limits**, bring design **in‑house**.  
+3. **Software absorption**: Each jump needed strong systems work—Classic→OS X→Rosetta / universal binaries / ARM64 toolchains.
+
+---
+
+**Deeper keywords**: **Rosetta 2**, **unified memory**, **P/E cluster scheduling**, **AMX / Neural Engine**, **Secure Enclave**‑adjacent platform security. Pair Apple’s developer docs on **ARM64 ABI** with ARM’s **ARMv8/v9 manuals** for implementation‑level study.

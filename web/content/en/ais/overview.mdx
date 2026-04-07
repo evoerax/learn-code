@@ -1,0 +1,415 @@
+---
+title: AI Models Overview
+description: LLM timeline 2017–2026 — architecture, scale, alignment, multimodal
+---
+
+# 🗓️ Large model timeline (2017–2026)
+
+> Highlights by year; figures and capabilities follow public papers and vendor posts. Cross-year programs are filed by first broad availability.
+
+For **architecture families and capability pillars** (Transformer, MoE, SSM/hybrid blocks, test-time compute, world models, embodiment), see **[AGI stack](/en/agi/overview)**.
+
+Body is **2026 → 2017** (newest first). Each year lists **model name** then **one-sentence takeaway**.
+
+---
+
+## 2026 (outlook)
+
+> Expectations only—verify on vendor channels.
+
+**GPT-6 / GPT-5.5 (OpenAI, expected)**
+
+Native multimodal planning plus System‑2-style reasoning fused with tool chains toward general agents.
+
+**Gemini 3.0 (Google, expected)**
+
+Very long context, multitask scheduling, and on-device/cloud stack; world-model and embodied threads.
+
+**Claude 5.0 (Anthropic, expected)**
+
+Stronger alignment and auditable reasoning; constitutional AI and dynamic human-preference modeling.
+
+**DeepSeek-R3 / V4 (DeepSeek, expected)**
+
+MoE + reasoning chains + dynamic sparsity; token economics and open-weight strategy stay in focus.
+
+**Qwen4 / Qwen-Omni (Alibaba, expected)**
+
+Balances parameter efficiency, lightweight deployment, licenses, and unified text/image/audio/video modeling.
+
+**Llama 5 (Meta, expected)**
+
+Open multimodal line expanding toward 3D, embodied interaction, and multi-device workflows.
+
+**Mistral 5 (Mistral AI, expected)**
+
+Multilingual flagship plus SMB tooling and edge/privacy-oriented packaging.
+
+**Open Source AGI Initiative (community, expected)**
+
+Multi-org open mega-model narrative stressing transparent training, reproducible evals, and governance.
+
+---
+
+## 2025 (shipped / expected)
+
+**Qwen3.5 (Alibaba, expected)**
+
+Series refresh with better multilingual orchestration, tool chains, multimodal reasoning, and efficient deploy.
+
+**DeepSeek-R2 (DeepSeek, expected)**
+
+Continues MoE/reasoning thrust with lower per-token cost and refined license mix.
+
+**Claude 3.5 / 4.x (Anthropic, expected)**
+
+Coding and long-horizon reasoning with auditable traces and deeper safety/preference alignment.
+
+**Gemini 2.0 / 2.5 (Google, expected)**
+
+Tighter multimodal + long-context + agentic generation; edge/cloud latency improvements.
+
+**Llama 4 (Meta, expected)**
+
+Next open family (MoE / hybrid attention) targeting multimodal and extreme-context workloads.
+
+**Mistral Large 3 / Mistral 4 (Mistral AI, expected)**
+
+Next multilingual flagship with SMB toolchain and edge packaging.
+
+**GPT-5 / GPT-4.5 (OpenAI, expected)**
+
+Stronger multimodal general-task blend; “near AGI” remains marketing/research debate.
+
+**Grok 3 / 4 (xAI, expected)**
+
+Live retrieval and multimodal reasoning with tight X integration and freshness claims.
+
+**GLM-5 (Zhipu AI, expected)**
+
+Bilingual multimodal agents with open/commercial license mix for industry rollout.
+
+**Yi-Large / Yi-VL (01.AI, expected)**
+
+High-performance open track: long context, quality pretraining, multilingual coverage.
+
+**MiniCPM 3 / 4 (OpenBMB, expected)**
+
+On-device small models: quantization, local inference, lightweight multimodal.
+
+**Phi-4 / Phi-4-Multimodal (Microsoft, expected)**
+
+Small-but-strong models for education/workplace flows and Microsoft 365 adjacency.
+
+---
+
+## 2024
+
+**DeepSeek-V3 (DeepSeek, Dec)**
+
+~671B total / ~37B active MoE with training/inference efficiency and open weights at compelling cost.
+
+**Gemini 1.5 Pro / Flash (Google)**
+
+Up to ~1M-token multimodal long docs; Flash emphasizes latency and cost.
+
+**Llama 3.1 (Meta, Jul)**
+
+8B/70B/405B-class open family leapfrogs tools + multilingual expectations for open weights.
+
+**Qwen3 (Alibaba, Apr)**
+
+~235B-scale milestone balancing multilingual, tools, long context, and code.
+
+**ERNIE 4.5 (Baidu, Jun)**
+
+~424B total / ~47B active with full open story and Chinese workload focus.
+
+**Mistral Large 2 (Jul)**
+
+~123B-class flagship boosting code and multilingual quality.
+
+**GPT-4o (OpenAI, May)**
+
+Unified text/audio/vision multimodal with realtime speech and cheaper inferencing.
+
+**GPT-4o mini (OpenAI, Jul)**
+
+Cost-down tier with vision input for mass deployment.
+
+**Claude 3.5 Sonnet (Anthropic, Jun)**
+
+Coding, reasoning, and long tasks plus Artifacts-style live collaboration.
+
+**o1-preview / o1-mini (OpenAI, Sep)**
+
+Test-time compute + long chain-of-thought lifts math, code, and science reasoning.
+
+**o1 (OpenAI, Dec)**
+
+Full reasoning build with decomposition and self-checking; contest-grade benchmarks.
+
+**Sora (OpenAI)**
+
+Text/image/video-to-video with physics and shot consistency narratives for commercial video gen.
+
+**GLM-4 / GLM-4V (Zhipu AI)**
+
+Bilingual multimodal + long context with tools/agents in open and commercial tracks.
+
+**Qwen2.5 / Qwen2.5-VL (Alibaba)**
+
+0.5B–72B refresh plus vision-language upgrades across code, math, and long text.
+
+**DeepSeek-R1 (DeepSeek)**
+
+Reasoning-specialized stack from V3 with GRPO + rule RL for low-cost high reasoning.
+
+**Kimi / Kimi+ (Moonshot)**
+
+200K+ context and multimodal Chinese long-document + search augmentation.
+
+**MiniMax / Abab**
+
+Multimodal agents targeting consumer and vertical products.
+
+**Step-1 / Step-2 (StepFun)**
+
+Trillion-scale MoE story balancing multilingual, multimodal, and long context.
+
+---
+
+## 2023
+
+**GPT-4 (OpenAI, Mar)**
+
+Image+text multimodal with major reasoning jump and ~128K-scale context.
+
+**GPT-4V (OpenAI, Sep)**
+
+Native vision for analysis, charts, and multimodal QA.
+
+**Claude 2 / 2.1 (Anthropic)**
+
+200K context plus constitutional alignment for long docs and factuality.
+
+**Claude 3 family (Anthropic)**
+
+Haiku/Sonnet/Opus tiers combining multimodal, long context, and high safety bar.
+
+**Llama 1 (Meta, Feb)**
+
+7B–65B open weights igniting the fine-tuning ecosystem.
+
+**Llama 2 (Meta, Jul)**
+
+7B/13B/70B with commercial license and chat/safety tuning for enterprise uptake.
+
+**Llama 3 (Meta)**
+
+8B/70B with strong instruct data closing much of the gap to closed models.
+
+**Mistral 7B (Mistral AI, Oct)**
+
+7B open flagship cost/perf darling for edge and local deploy conversations.
+
+**Mixtral 8x7B (Dec)**
+
+~47B total / ~12B active sparse MoE balancing throughput and quality.
+
+**Qwen1.5 / Qwen2 (Alibaba)**
+
+0.5B–72B open lineup with Chinese, tools, and long context.
+
+**DeepSeek-V2 (DeepSeek)**
+
+~236B total / ~21B active efficient MoE with Chinese and cost angle.
+
+**Gemini 1.0 / 1.5 (Google)**
+
+Native multimodal with up to ~1M-token narratives for long multimodal documents.
+
+**Stable Diffusion 2 / 3 (Stability AI)**
+
+Architecture/data refresh improving fidelity, control, and rights diligence.
+
+**Midjourney v5 / v6**
+
+Commercial diffusion leader for stylized high-res creative workflows.
+
+**ERNIE 4.0 (Baidu)**
+
+Knowledge + multimodal Chinese strengths tied to search/corpus ecosystems.
+
+**Yi-34B (01.AI)**
+
+34B bilingual open model noted for long context and strong open scores.
+
+---
+
+## 2022
+
+**ChatGPT (OpenAI, Nov 30)**
+
+GPT-3.5 + RLHF chat product that popularized generative AI worldwide.
+
+**InstructGPT (OpenAI)**
+
+~175B model establishing SFT+RLHF recipe underpinning ChatGPT.
+
+**Flan-PaLM (Google)**
+
+~540B instruction + multitask tuning improving zero-shot generalization.
+
+**OPT-175B (Meta)**
+
+Fully open ~175B model for reproducible academia-scale research.
+
+**BLOOM (BigScience)**
+
+~176B 46-language collaboration model with open-data emphasis.
+
+**DALL·E 2 (OpenAI)**
+
+Diffusion + CLIP guidance for higher resolution, control, and editing.
+
+**Imagen (Google)**
+
+Cascaded diffusion + T5 encoder for quality-focused text-to-image with safety filters.
+
+**Whisper (OpenAI, Large)**
+
+~1.5B multilingual ASR + translation with robust end-to-end training.
+
+---
+
+## 2021
+
+**Gopher (DeepMind)**
+
+~280B scaling study foregrounding data quality and evaluation discipline.
+
+**LaMDA (Google)**
+
+~137B open-domain dialog model with safety/fact/fun evaluation axes.
+
+**PaLM (Google)**
+
+~540B Pathways LM excelling at reasoning, code, and multilingual tasks.
+
+**GLM-130B (Zhipu AI / Tsinghua)**
+
+~130B bilingual dense model enabling open training practices.
+
+**DALL·E (OpenAI)**
+
+~12B text-to-image bridge between language and vision representations.
+
+**CLIP (OpenAI)**
+
+~400M-class contrastive image-text model enabling zero-shot vision and multimodal roots.
+
+**Stable Diffusion v1 (Stability / CompVis)**
+
+Open latent diffusion stack democratizing image generation.
+
+---
+
+## 2020
+
+**GPT-3 (OpenAI)**
+
+~175B with explosive in-context learning powering APIs and prompting culture.
+
+**Turing-NLG (Microsoft)**
+
+~17B disclosed dialog LM tied to Microsoft 365 narratives.
+
+**ERNIE 3.0 (Baidu)**
+
+~10B knowledge-infused Chinese–English pretraining balancing understanding and generation.
+
+**DeBERTa (Microsoft, Large)**
+
+~1.5B with disentangled attention pushing GLUE past human baselines.
+
+**Megatron–Turing NLG (NVIDIA / Microsoft)**
+
+~530B sparse-training demonstration paving MoE-style scale paths.
+
+---
+
+## 2019
+
+**GPT-2 (OpenAI)**
+
+~1.5B showing zero/few-shot continuation with staged release for misuse concerns.
+
+**T5 (Google)**
+
+~11B Large text-to-text unifier for classification, generation, and translation.
+
+**ALBERT (Google)**
+
+~235M xxlarge uses sharing + factorized embeddings to match BERT-Large with fewer params.
+
+**DistilBERT (Hugging Face)**
+
+~66M distilled BERT retaining ~97% quality for deployment.
+
+**ERNIE 1.0 (Baidu)**
+
+~110M knowledge-enhanced Chinese LM with entity/relation signals.
+
+---
+
+## 2018
+
+**GPT-1 (OpenAI)**
+
+~117M decoder-only GPT proving generative pretrain + finetune recipe.
+
+**BERT (Google)**
+
+~340M Large bidirectional Transformer + MLM sweeping NLP leaderboards.
+
+**XLNet (Google / CMU)**
+
+~340M Large permutation LM beating BERT on multiple understanding tasks.
+
+**ELMo (Allen AI)**
+
+~94M BiLSTM contextual embeddings ushering dynamic word representations.
+
+**RoBERTa (Meta)**
+
+~355M recipe with dynamic masking, bigger batches, and more data for robustness.
+
+---
+
+## 2017
+
+**Transformer (Google)**
+
+*Attention Is All You Need* introduces attention-only encoder–decoder stacks as the universal LM backbone.
+
+---
+
+## 🔑 Evolution summary
+
+| Phase | Years | Focus | Examples |
+|-------|-------|-------|----------|
+| Architecture | 2017 | Attention | Transformer |
+| Pre-training | 2018–19 | MLM / text-to-text | BERT, GPT-2, T5 |
+| Scale | 2020–21 | scaling laws + ICL | GPT-3, PaLM, GLM-130B |
+| Alignment | 2022 | RLHF + constitutional AI | ChatGPT, InstructGPT, Claude |
+| Multimodal | 2023–24 | native multimodal + long ctx | GPT-4V, Gemini, Qwen-VL |
+| Efficiency / reasoning | 2024–25 | MoE + test-time compute | DeepSeek-V3, o1, Mixtral |
+| Open ecosystem | 2023–26 | weights + efficient deploy | Llama, Qwen, Mistral |
+| Outlook | 2026+ | agents / world models | TBD |
+
+> **Trend**: parameter races → reasoning & efficiency → native multimodal → open ecosystems → agents & general tooling.
+
+---
+
+Jump to: [AI Timeline](/ai-timeline)

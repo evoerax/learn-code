@@ -1,0 +1,45 @@
+---
+title: GLM-130B
+description: Tsinghua's bilingual 130B open-source model
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# GLM-130B
+
+> _"General Language Model Pretraining with Autoregressive Blank Infilling"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2022 |
+| **Organization** | Tsinghua University / Zhipu AI |
+| **Parameters** | 130 billion |
+| **Architecture** | GLM (General Language Model) |
+| **Training** | Bilingual (English + Chinese) |
+| **Key Innovation** | Autoregressive blank infilling, open-source |
+
+## Origin Story
+
+GLM-130B was one of the first high-quality open-source bilingual (English-Chinese) LLMs. Unlike standard left-to-right models, GLM used a unique **blank infilling** pre-training objective.
+
+<Callout type="info" emoji="🇨🇳">
+GLM-130B established Tsinghua and Zhipu AI as major players in the open-source LLM space, influencing subsequent Chinese models.
+</Callout>
+
+## Architecture
+
+- **130 billion parameters** (dense)
+- **GLM Architecture**: Uses autoregressive blank infilling instead of standard masked language modeling
+- Bilingual training: English + Chinese
+- Open weights released
+
+## Significance
+
+<Cards>
+  <Cards.Card title="GPT-4 (2023)" href="/ais/2023/gpt4" arrow />
+  <Cards.Card title="Claude 2 (2023)" href="/ais/2023/claude2" arrow />
+</Cards>
+
+GLM-130B proved Chinese labs could produce competitive open-source models, setting the stage for the Chinese open-source LLM ecosystem.

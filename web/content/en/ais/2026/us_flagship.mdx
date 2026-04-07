@@ -1,0 +1,67 @@
+---
+title: US Flagship Models (2025-2026)
+description: Major US AI labs and their flagship models — most parameters undisclosed
+---
+
+import { Callout } from 'nextra/components'
+
+# US Flagship Models (2025–2026)
+
+## Overview
+
+US AI labs (OpenAI, Google DeepMind, Anthropic, xAI, Meta) dominate the global AI landscape. Most flagship closed-source models **do not disclose parameter counts**, focusing instead on capabilities, API pricing, and benchmark performance.
+
+<Callout type="warning" emoji="📊">
+**Key Pattern:** US closed-source labs (OpenAI, Google, Anthropic, xAI) → parameters often undisclosed. US open-weight labs (Meta Llama, Mistral) → parameters typically disclosed.
+</Callout>
+
+## Parameter Comparison Table
+
+| Model | Parameters | Architecture | Disclosure |
+|-------|------------|--------------|------------|
+| **GPT-4 Series** (GPT-4, GPT-4 Turbo, GPT-4o) | ~1.8T total | MoE (~16×120B experts) | Third-party estimate |
+| **GPT-4.1 Series** | Undisclosed | — | Not disclosed |
+| **o3 / o3-mini** | Undisclosed | Reasoning model | Not disclosed |
+| **Gemini 1.5 Pro** | ~540B | Dense/MoE | Third-party estimate |
+| **Gemini 2.0 / 2.5 Flash** | ~20B (Flash), ~5B (Lite) | — | Third-party estimate |
+| **Gemini 3.0** | Undisclosed | — | Not disclosed |
+| **Claude 3.5 Sonnet/Haiku/Opus** | Undisclosed | — | Not disclosed |
+| **Claude 4 / 4.5 / 4.6 Opus** | Undisclosed | — | Not disclosed |
+| **Llama 3.1 405B** | 405B | Dense Transformer | **Disclosed** |
+| **Llama 3.x 8B/70B** | 8B / 70B | Dense Transformer | **Disclosed** |
+| **Mistral Large 2** | 123B | Dense | **Disclosed** |
+| **Mistral Small/Medium** | Billions | — | **Disclosed** |
+| **Grok-1** | ~314B | MoE | Third-party estimate |
+| **Grok-2** | Undisclosed | — | Not disclosed |
+
+## Key Observations
+
+### Closed-Source Giants Keep Parameters Secret
+
+- **OpenAI**: Has not officially confirmed GPT-4's ~1.8T parameter count (widely cited from third-party analysis)
+- **Google**: Gemini 1.5 Pro's ~540B estimate comes from LLM-Bento and similar databases
+- **Anthropic**: Claude series parameters are explicitly "not disclosed" in official documentation
+- **xAI**: Grok-1's 314B is an estimate; Grok-2 has no reliable public parameter data
+
+### Open-Weight Models Are Transparent
+
+Meta and Mistral publish parameter counts as a competitive advantage:
+- **Llama 3.1 405B**: Largest open-weight dense model
+- **Mistral Large 2**: 123B with strong reasoning capabilities
+
+## Trend: From "Bigger is Better" to "More Efficient"
+
+<Callout type="default" emoji="📈">
+**2018–2022**: Dense models dominated — GPT-3 (175B), PaLM (540B), GLM-130B (130B)
+
+**2023–present**: MoE architecture allows massive total parameters with controlled activation:
+- GPT-4 estimated at ~1.8T total / ~120B active per token
+- Enables trillion-parameter class models at reasonable inference cost
+</Callout>
+
+## Why Don't US Labs Disclose Parameters?
+
+1. **Competitive secrecy**: Parameter counts reveal architecture scale and capabilities
+2. **Focus on capabilities**: Emphasize what models can do, not how big they are
+3. **MoE complexity**: Total parameters ≠ active parameters, making single numbers misleading
+4. **Regulatory considerations**: Larger models face more scrutiny

@@ -1,0 +1,29 @@
+---
+title: Mixtral 8x7B
+description: 约 470 亿总参 / 120 亿激活的稀疏 MoE，平衡效率与性能
+---
+
+import { Cards } from 'nextra/components'
+
+# Mixtral 8x7B
+
+> Mistral AI **稀疏 MoE**：**8 个专家各 7B**，每 token **激活 2 个专家**，总参约 **47B**、激活约 **12B**，在成本可控下逼近更大稠密模型表现。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Mistral AI |
+| **路由** | 门控网络选择 Top-2 专家 |
+| **意义** | 引爆 2024 开源 MoE 浪潮（含国内厂商跟进） |
+
+## 概述
+
+Mixtral 将 **MoE 从实验室论文**推进到 **Apache 2.0 权重**与 **易于微调的生态**；在代码、数学、多语基准上优于同激活算力的 Llama 2 70B，展示 **「总参数≠成本，激活参数才是」** 的推理经济逻辑。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="Mistral 7B (2023)" href="/zh/ais/2023/mistral7b" arrow />
+  <Cards.Card title="DeepSeek-V2 (2023)" href="/zh/ais/2023/deepseek_v2" arrow />
+</Cards>

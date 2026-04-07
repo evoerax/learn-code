@@ -1,0 +1,75 @@
+---
+title: China Flagship Models (2025-2026)
+description: Chinese AI models — most are open-weight with transparent parameter counts
+---
+
+import { Callout } from 'nextra/components'
+
+# China Flagship Models (2025–2026)
+
+## Overview
+
+Chinese AI labs take a different approach: **most models are open-weight or open-source with fully disclosed parameters**. This transparency has made them critical for AI research, especially for studying MoE scaling laws.
+
+<Callout type="info" emoji="🇨🇳">
+**Key Pattern:** Chinese labs (Alibaba, Baidu, DeepSeek, Tencent, 01.AI) → parameters typically disclosed. ByteDance, Zhipu, iFlytek → often undisclosed.
+</Callout>
+
+## Parameter Comparison Table
+
+| Model | Total Parameters | Active Parameters | Architecture | Disclosure |
+|-------|-----------------|-------------------|--------------|------------|
+| **DeepSeek-V3** | 671B | 37B | MoE | **Disclosed** |
+| **DeepSeek-R1** | 671B (base) | 37B | MoE (reasoning) | **Disclosed** |
+| **Qwen3-235B-A22B** | 235B | 22B | MoE | **Disclosed** |
+| **Qwen3-Coder-480B-A35B** | 480B | 35B | MoE (coding) | **Disclosed** |
+| **Qwen3.5-397B-A17B** | 397B | 17B | MoE | **Disclosed** |
+| **Qwen3.5-122B-A10B** | 122B | 10B | MoE | **Disclosed** |
+| **Qwen2.5 / Qwen3** (dense) | 7B–72B | — | Dense | **Disclosed** |
+| **ERNIE 4.5** | 424B | ~47B | MoE | **Disclosed** |
+| **ERNIE 4.5-VL-28B** | 28B | 3B | MoE (multimodal) | **Disclosed** |
+| **ERNIE 3.0 Titan** | 260B | — | Dense | **Disclosed** |
+| **Hunyuan-A13B** | 80B | 13B | MoE | **Disclosed** |
+| **Hunyuan-Large** | 389B | 52B | MoE | **Disclosed** |
+| **Hunyuan** (dense) | 0.5B–7B | — | Dense | **Disclosed** |
+| **GLM-130B** | 130B | — | Dense | **Disclosed** |
+| **Yi-34B** | 34B | — | Dense | **Disclosed** |
+| **Doubao (ByteDance)** | Undisclosed | — | — | Not disclosed |
+| **Kimi K2.5 (Moonshot)** | Undisclosed | — | Long context (256K) | Not disclosed |
+| **Seed (ByteDance)** | Undisclosed | — | — | Not disclosed |
+| **GLM-4.5 / GLM-5** | Undisclosed | — | — | Not disclosed |
+| **MiniMax M2.5** | Undisclosed | — | — | Not disclosed |
+
+## Key Observations
+
+### MoE Dominates Chinese Large Models
+
+<Callout type="default" emoji="🏗️">
+**MoE Architecture Pattern:** Chinese labs aggressively adopt Mixture-of-Experts:
+- DeepSeek-V3: 671B total / 37B active (12x efficiency)
+- Qwen3.5: 397B total / 17B active (~23x efficiency)
+- ERNIE 4.5: 424B total / 47B active (~9x efficiency)
+</Callout>
+
+### Why Chinese Labs Disclose Parameters
+
+1. **Research community**: Open-source culture from academia (Tsinghua, Zhipu)
+2. **Competitive differentiation**:透明度 as a selling point for enterprise adoption
+3. **MoE research**: Clear parameter counts help the research community study scaling laws
+4. **Regulatory environment**: Different posture compared to US labs
+
+## Efficiency Comparison
+
+| Model | Total Params | Active Params | Efficiency Ratio |
+|-------|-------------|---------------|-----------------|
+| DeepSeek-V3 | 671B | 37B | **18x** |
+| Qwen3.5-397B | 397B | 17B | **23x** |
+| ERNIE 4.5 | 424B | 47B | **9x** |
+| Hunyuan-Large | 389B | 52B | **7.5x** |
+
+## 2026 Outlook
+
+Chinese models continue to push open-weight boundaries:
+- **DeepSeek-R1** proving competitive with closed models on reasoning tasks
+- **Qwen3.5** series enabling efficient local deployment at massive scale
+- **ERNIE 4.5** maintaining leadership in Chinese language understanding

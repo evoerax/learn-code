@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { NextraSearchDialog } from '@/components/nextra-search-dialog'
 import { getPagesFromPageMap } from '@/lib/getPagesFromPageMap'
+import { reorderAisPageMap } from '@/lib/reorderAisPageMap'
 
 export const metadata: Metadata = {
     title: {
@@ -23,7 +24,8 @@ export default async function RootLayout({
     params: Promise<{ lang: string }>
 }) {
     const { lang } = await params
-    const pageMap = await getPageMap(`/${lang}`)
+    const rawPageMap = await getPageMap(`/${lang}`)
+    const pageMap = reorderAisPageMap(rawPageMap) as typeof rawPageMap
     const pages = await getPagesFromPageMap({ pageMapArray: pageMap })
 
     const navbar = (

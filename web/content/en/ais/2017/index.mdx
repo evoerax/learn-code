@@ -1,0 +1,31 @@
+---
+title: "2017 — Transformer & Attention"
+description: Transformer paper and attention-only architectures
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# 2017: Architectural shift
+
+## Overview
+
+**2017** brought the **Transformer**: an encoder–decoder stack built purely from attention, friendly to parallel training and displacing RNN/CNN stacks as the default backbone for large LMs.
+
+## Landmarks
+
+### Transformer (Google Brain)
+- **Paper**: *Attention Is All You Need*
+- **Ideas**: self-attention, multi-head attention, positional encodings, residuals + layer norms
+- **Impact**: template for BERT, GPT, and essentially all scaled LMs that followed
+
+<Callout type="info" emoji="🗓️">
+Generative pre-training fully takes off with **GPT-1** in [2018](/en/ais/2018).
+</Callout>
+
+## Next
+
+<Cards>
+  <Cards.Card title="Transformer" href="/en/ais/2017/transformer" arrow />
+  <Cards.Card title="Full timeline 2017–2026" href="/en/ais/overview" arrow />
+  <Cards.Card title="GPT-1 (2018)" href="/en/ais/2018/gpt1" arrow />
+</Cards>

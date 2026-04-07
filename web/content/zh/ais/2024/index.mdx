@@ -1,0 +1,61 @@
+---
+title: "2024 — MoE革命、Gemini 1.5、DeepSeek-V3"
+description: 5400亿 Gemini, 4050亿 Llama, 6710亿 DeepSeek-V3, 中国MoE主导
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# 2024: MoE革命
+
+## 概述
+
+**2024年** Mixture-of-Experts（MoE）架构成为主流。Google Gemini 1.5 Pro（约5400亿）、Meta Llama 3.1 4050亿、中国的 DeepSeek-V3（6710亿总参数/370亿激活）证明了大总参数+稀疏激活才是未来。
+
+## 关键里程碑
+
+### Gemini 1.5 Pro (Google)
+- **参数**: 约 5400亿（第三方估计；Google 未确认）
+- **架构**: 可能是 MoE
+- **关键创新**: 100万 token 上下文窗口，多模态
+
+### Llama 3.1 405B (Meta)
+- **参数**: 4050 亿（稠密）
+- **架构**: 稠密 Transformer
+- **意义**: 最大的开源权重稠密模型
+- **披露**: Meta 完全披露
+
+### DeepSeek-V2 / V3（中国）
+- **DeepSeek-V2**: 2360亿总参数 / 210亿激活（MoE）
+- **DeepSeek-V3**: 6710亿总参数 / 370亿激活（MoE）
+- **意义**: 中国 MoE 突破，发表了详细训练方法
+- **披露**: 完全披露
+
+### Hunyuan-Large (腾讯)
+- **参数**: 3890亿总参数 / 520亿激活（MoE）
+- **披露**: 论文完全披露
+
+### Claude 3 (Anthropic)
+- **参数**: 未披露；Opus 估计约 1370亿
+- **家族**: Opus, Sonnet, Haiku
+- **意义**: 强多模态、长上下文、推理
+
+<Callout type="warning" emoji="🇨🇳">
+2024 年是中国实验室在模型透明度上明显超越美国实验室的一年。DeepSeek-V3 的 6710亿/370亿和 Hunyuan-Large 的 3890亿/520亿都有完整文档。
+</Callout>
+
+## 时间线
+
+```
+2024: Gemini 1.5 (~5400亿) | Claude 3 | Llama 3.1 (4050亿) | DeepSeek-V3 (6710亿/370亿) | Hunyuan-Large (3890亿/520亿)
+2025: Qwen3 (2350亿/220亿) | ERNIE 4.5 (4240亿/470亿) | GPT-4.1 (未披露) | Claude 3.5
+```
+
+## 后续发展
+
+<Cards>
+  <Cards.Card title="GPT-4o (2024)" href="/zh/ais/2024/gpt4o" arrow />
+  <Cards.Card title="o1 (2024)" href="/zh/ais/2024/o1" arrow />
+  <Cards.Card title="Sora (2024)" href="/zh/ais/2024/sora" arrow />
+  <Cards.Card title="Qwen3 / Qwen3.5 (2025)" href="/zh/ais/2025/qwen3" arrow />
+  <Cards.Card title="ERNIE 4.5 (2025)" href="/zh/ais/2025/ernie45" arrow />
+</Cards>

@@ -1,0 +1,30 @@
+---
+title: BERT
+description: 约 3.4 亿 Large，双向 Transformer 与 MLM，刷新多项 NLP 任务记录
+---
+
+import { Cards } from 'nextra/components'
+
+# BERT
+
+> 约 3.4 亿参数（Large），双向 Transformer 与掩码语言建模（MLM），刷新多项 NLP 任务记录。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Google |
+| **规模** | Base ~1.1 亿 / **Large ~3.4 亿**（常见引用） |
+| **训练** | MLM + NSP（下一句预测，原版配方） |
+| **意义** | 「预训练 + 微调」在理解类任务上成为标准范式 |
+
+## 概述
+
+BERT 通过 **双向上下文** 同时吸收左右侧词语信息，与 GPT 的单向左到右建模形成对照；下游只需添加轻量任务头并在标注数据上微调，即可在 GLUE、SQuAD 等基准上大幅刷新记录，推动工业界大规模采用 Transformer 编码器。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="GPT-1 (2018)" href="/en/ais/2018/gpt1" arrow />
+  <Cards.Card title="XLNet (2018)" href="/en/ais/2018/xlnet" arrow />
+</Cards>

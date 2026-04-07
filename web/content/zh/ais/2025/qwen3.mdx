@@ -1,0 +1,39 @@
+---
+title: Qwen3 / Qwen3.5
+description: 阿里MoE系列 — 2350亿到4800亿总参数
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Qwen3 / Qwen3.5
+
+## 概览
+
+| 模型 | 总参数 | 激活参数 | 类型 |
+|------|--------|---------|------|
+| Qwen3-235B-A22B | 2350亿 | 220亿 | MoE |
+| Qwen3-Coder-480B-A35B | 4800亿 | 350亿 | MoE（编程） |
+| Qwen3.5-397B-A17B | 3970亿 | 170亿 | MoE |
+| Qwen3.5-122B-A10B | 1220亿 | 100亿 | MoE |
+
+<Callout type="success" emoji="🇨🇳">
+Qwen3.5-397B 达到 23倍效率（3970亿总 / 170亿激活）——这是生产 MoE 模型中最高的比率之一。
+</Callout>
+
+## 架构亮点
+
+| 模型 | 效率比 | 专长 |
+|------|--------|------|
+| Qwen3-235B-A22B | ~10.7倍 | 通用 |
+| Qwen3-Coder-480B-A35B | ~13.7倍 | 编程 |
+| Qwen3.5-397B-A17B | ~23倍 | 通用 |
+| Qwen3.5-122B-A10B | ~12倍 | 通用 |
+
+## 后续发展
+
+<Cards>
+  <Cards.Card title="DeepSeek-V3" href="/zh/ais/2024/deepseek_v3" arrow />
+  <Cards.Card title="ERNIE 4.5" href="/zh/ais/2025/ernie45" arrow />
+</Cards>
+
+Qwen3/Qwen3.5 确立了阿里作为领先开源权重 MoE 实验室的地位，模型在研究和行业中广泛采用。

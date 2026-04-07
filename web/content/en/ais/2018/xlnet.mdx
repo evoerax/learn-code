@@ -1,0 +1,29 @@
+---
+title: XLNet
+description: 约 3.4 亿 Large，排列语言建模与双流注意力，多项理解任务超越 BERT
+---
+
+import { Cards } from 'nextra/components'
+
+# XLNet
+
+> 约 3.4 亿参数（Large），**排列语言建模**与**双流注意力**，在多项理解任务上超越同期 BERT。
+
+## 速览
+
+| | |
+|---|---|
+| **机构** | Google / CMU |
+| **核心** | 对所有 token 排列做自回归建模，缓解 BERT 与预训练-微调间分布差异 |
+| **与 BERT** | 保留自回归优势，同时利用双向上下文信息（通过排列与双流实现） |
+
+## 概述
+
+XLNet 用 **Permutation Language Modeling**：在随机排列句子 token 顺序的前提下做自回归预测，使模型在预训练阶段即可利用两侧信息，又被认为在若干设置下比 MLM 更贴合生成式目标；配合 **Two-Stream Self-Attention** 区分内容流与查询流，成为 2018–2019 理解模型线的重要里程碑。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="BERT (2018)" href="/en/ais/2018/bert" arrow />
+  <Cards.Card title="RoBERTa (2018)" href="/en/ais/2018/roberta" arrow />
+</Cards>

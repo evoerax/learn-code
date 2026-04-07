@@ -1,0 +1,276 @@
+---
+title: 大模型输出格式对比
+description: JSON/XML/YAML/CSV 与 TOON 等：可读性、生态与 Token 开销对照
+---
+
+import { Callout } from 'nextra/components'
+
+# 大模型输出格式对比
+
+在 **提示工程（prompt）**、**工具调用（function calling）** 与 **Agent 工作流** 里，模型输出往往需要 **结构化**：既要给人读，又要给程序解析。格式的选择会同时影响 **token 开销**、**解析健壮性** 与 **工程生态**。
+
+<Callout type="info">
+  **TOON**（Token-Oriented Object Notation）是近年面向 LLM 场景的紧凑文本格式之一，项目在 GitHub 维护规范、基准与 TypeScript SDK：  
+  [toon-format/toon](https://github.com/toon-format/toon)（*Compact, human-readable, schema-aware JSON for LLM prompts*）。
+</Callout>
+
+## 实例：同一份数据，三种写法
+
+模型越来越便宜、上下文越来越长，但 **token 仍按量计费**；在 prompt 里塞进大块结构化数据时，**标准 JSON 往往最费 token**：重复的字段名、引号与括号都会拉长序列。
+
+下面用同一个小例子（朋友列表 + 徒步记录）对比 **JSON**、**YAML** 与 **TOON**。YAML 通常已比 JSON 短；**TOON** 在「多行同结构」时更进一步：嵌套仍用 **类 YAML 缩进**，同质对象数组则用 **表头 + 类 CSV 行** 压缩重复键名——完整语法与基准见 [toon-format/toon](https://github.com/toon-format/toon)。
+
+### JSON（偏啰嗦）
+
+```json
+{
+  "context": {
+    "task": "Our favorite hikes together",
+    "location": "Boulder",
+    "season": "spring_2025"
+  },
+  "friends": ["ana", "luis", "sam"],
+  "hikes": [
+    {
+      "id": 1,
+      "name": "Blue Lake Trail",
+      "distanceKm": 7.5,
+      "elevationGain": 320,
+      "companion": "ana",
+      "wasSunny": true
+    },
+    {
+      "id": 2,
+      "name": "Ridge Overlook",
+      "distanceKm": 9.2,
+      "elevationGain": 540,
+      "companion": "luis",
+      "wasSunny": false
+    },
+    {
+      "id": 3,
+      "name": "Wildflower Loop",
+      "distanceKm": 5.1,
+      "elevationGain": 180,
+      "companion": "sam",
+      "wasSunny": true
+    }
+  ]
+}
+```
+
+### YAML（通常少于 JSON 的 token）
+
+```yaml
+context:
+  task: Our favorite hikes together
+  location: Boulder
+  season: spring_2025
+friends:
+  - ana
+  - luis
+  - sam
+hikes:
+  - id: 1
+    name: Blue Lake Trail
+    distanceKm: 7.5
+    elevationGain: 320
+    companion: ana
+    wasSunny: true
+  - id: 2
+    name: Ridge Overlook
+    distanceKm: 9.2
+    elevationGain: 540
+    companion: luis
+    wasSunny: false
+  - id: 3
+    name: Wildflower Loop
+    distanceKm: 5.1
+    elevationGain: 180
+    companion: sam
+    wasSunny: true
+```
+
+### TOON（表格化数组：常常再省一截）
+
+`friends[3]` 表示长度为 3 的简单列表；`hikes[3]{列名...}` 先声明 **同质行的表头**，下面每行是一条徒步记录，逗号分隔字段。
+
+```text
+context:
+  task: Our favorite hikes together
+  location: Boulder
+  season: spring_2025
+friends[3]: ana,luis,sam
+hikes[3]{id,name,distanceKm,elevationGain,companion,wasSunny}:
+  1,Blue Lake Trail,7.5,320,ana,true
+  2,Ridge Overlook,9.2,540,luis,false
+  3,Wildflower Loop,5.1,180,sam,true
+```
+
+<Callout type="default" emoji="📊">
+  **具体省多少 token** 取决于 **分词器与模型**。这里的结论是结构性的：JSON 的字段名与括号在数组元素上 **重复最多**；TOON 把重复 **收到一行表头** 里，长表越明显越划算。
+</Callout>
+
+---
+
+下面按「**文本格式**（人可读）」与「**二进制格式**（程序优先）」分开整理；末尾给出 **token 开销粗排序** 与 **接口场景** 速记。
+
+---
+
+## 一类：文本格式
+
+人可以直接阅读，也常常能直接贴进 prompt。
+
+### JSON
+
+- **特点**：最通用，生态最好（几乎所有语言都能解析）。
+- **缺点**：字段名在每行/每个对象上 **重复出现时**，相对 **费 token**。
+- **典型用途**：对外开放 HTTP API、LLM `response_format: json_object`、函数调用结果。
+
+### XML
+
+老牌格式，**标签成对出现**，往往比 JSON **更啰嗦**（开始标签 + 结束标签各算一遍），对 LLM 来说 **一般比 JSON 更费 token**。
+
+```xml
+<user>
+  <name>Alice</name>
+  <age>18</age>
+</user>
+```
+
+### YAML
+
+更像「给人看的配置」，缩进敏感。
+
+```yaml
+user:
+  name: Alice
+  age: 18
+```
+
+- 很多场景下 **比 XML 短**，有时也比 JSON **顺眼**。
+- **语法歧义** 比 JSON 多，机器解析不如 JSON **稳**（边界情况、安全解析更费心）。
+
+### CSV / TSV
+
+适合 **行列表格**、多行 **同结构** 数据。
+
+```csv
+name,age
+Alice,18
+Bob,20
+```
+
+这类格式在 **多行重复键名** 时，通常比「每行一个 JSON 对象」**省 token**。
+
+### TOML
+
+配置文件里常见（尤其 Python / Rust 生态）。
+
+```toml
+[user]
+name = "Alice"
+age = 18
+```
+
+可读性不错；**深层嵌套** 时不如 JSON 直观。
+
+### INI
+
+更简单、更老的段区 + 键值形式。
+
+```ini
+[user]
+name=Alice
+age=18
+```
+
+表达能力弱，只适合很轻的开关配置。
+
+### S-expressions
+
+Lisp 系风格，结构规整，多数人 **不直观**。
+
+```lisp
+(user (name "Alice") (age 18))
+```
+
+### 自定义分隔纯文本
+
+例如：
+
+```txt
+Alice|18|SG
+Bob|20|NY
+```
+
+往往 **极省 token**，但 **不标准**，分隔符与转义约定必须自制，**歧义与安全解析**风险最高。
+
+### TOON
+
+见上文 [toon-format/toon](https://github.com/toon-format/toon)：面向 **Token 效率** 与 **schema 意识** 的 JSON 友好替代叙事——在 **重复结构 / 表格化对象列表** 等场景，设计上强调比朴素 JSON **更紧凑**，仍保持可读与类型提示空间。具体缩进、表头与数组编码以仓库内的 **Spec / Benchmarks** 为准。
+
+---
+
+## 另一类：二进制格式
+
+主要面向 **程序传输与存储**，**不适合**作为「直接贴给模型的自然语言上下文」的主流载体（模型侧通常仍要先解码成文本或其它 tokenization 方案）。
+
+| 格式 | 一句话 |
+|------|--------|
+| **Protocol Buffers** | 体积小、性能好，服务间通信极常见；需 schema，非人类直接阅读。 |
+| **MessagePack** | 常称「二进制版 JSON」。 |
+| **CBOR** | JSON 风格的二进制编码，IoT 等场景常见。 |
+| **Avro** | 大数据管道里常见，带 schema 演化故事。 |
+| **Parquet** | **列式存储**，分析/数仓常见，不是普通 REST 接口Payload 的首选。 |
+
+---
+
+## 若你关心「给大模型更省 token」：粗排序
+
+以下只是 **经验量级**，真实开销随 **具体数据形状、分词器、是否重复字段名** 波动很大。
+
+**通常更费 token → 更省 token**（同一信息量、偏结构化场景下）：
+
+1. **XML**（标签冗余通常最大）  
+2. **JSON / YAML / TOML**（中间带；JSON 最稳，YAML/TOML 有时略短）  
+3. **CSV / TSV**、**行列化紧凑文本**、**TOON**（在重复结构上往往明显省）、**自定义分隔**（最省但最不稳）
+
+### 简表
+
+| 格式 | Token 倾向 | 备注 |
+|------|-------------|------|
+| XML | 偏高 | 闭合成对标签多 |
+| JSON | 中等 | 通用、稳 |
+| YAML / TOML | 中等偏上/中 | 视嵌套深度 |
+| CSV / TSV | 低（表格时） | 列名只出现一次 |
+| TOON | 低（重复结构时） | 见官方 spec 与 benchmark |
+| 自定义分隔 | 往往最低 | 协议与歧义自负 |
+
+---
+
+## 若你关心「接口与工程落地」
+
+| 场景 | 常见选型 |
+|------|-----------|
+| 对外开放 HTTP API | **JSON** |
+| 应用/系统配置 | **YAML / TOML / INI** |
+| 高性能内部 RPC | **Protobuf / gRPC**，或 MessagePack/CBOR |
+| 表格导入导出 | **CSV / TSV** |
+
+---
+
+## 一句话记忆
+
+- **JSON** = 最通用、解析最省心  
+- **XML** = 通常最重  
+- **YAML** = 最好读的配置向  
+- **CSV** = 规整表格时很省  
+- **Protobuf 等** = 传输高效、给人看不友好  
+- **TOON** = 面向 LLM prompt 的省 token 结构化文本玩法（[规范与基准](https://github.com/toon-format/toon)）
+
+---
+
+## 延伸阅读
+
+- TOON 仓库（规范、基准、TS SDK）：[https://github.com/toon-format/toon](https://github.com/toon-format/toon)

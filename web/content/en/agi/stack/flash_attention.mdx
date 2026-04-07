@@ -1,0 +1,7 @@
+# FlashAttention & fast attention kernels
+
+- **FlashAttention**: Tiled computation and reduced HBM↔SRAM traffic—**numerically standard attention** with big speedups / VRAM savings.  
+- **Lineage**: FlashAttention-2/3 iterations target occupancy and hardware efficiency.  
+- **In practice**: Often combined with **GQA / MQA / MLA** and packed variable-length batches; ties directly to [KV cache](/en/agi/stack/kv_cache) pressure.
+
+See also: [Transformer](/en/agi/stack/transformer), **[architecture landscape](/en/agi/landscape)**.

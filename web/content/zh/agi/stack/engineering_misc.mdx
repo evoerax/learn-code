@@ -1,0 +1,9 @@
+# 其它常见工程项
+
+- **分词**：BPE、SentencePiece、BBPE；多模态下的视觉离散 Token、统一词表。  
+- **量化**：W8A8、W4、GPTQ / AWQ / FP8 训练或推理；**KV 量化**单独影响长上下文上限。  
+- **投机解码**：小模型草稿 + 大模型验证，降低**感知延迟**（与 [vLLM 与推理服务](/zh/agi/stack/vllm_serving) 常组合）。  
+- **并行训练**：DP / TP / PP / EP（专家并行）、ZeRO、序列并行；与 MoE 组合时 EP 几乎必谈。  
+- **对齐与落局**：RLHF、DPO、长 CoT 蒸馏；RAG 与 Agent 工具链（偏系统而非单机算子）。  
+
+返回 [技术栈总览](/zh/agi/stack)。

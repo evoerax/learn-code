@@ -1,0 +1,267 @@
+---
+title: LLM Structured Output Formats
+description: JSON, XML, YAML, CSV, TOON — readability, ecosystems, and token cost
+---
+
+import { Callout } from 'nextra/components'
+
+# LLM structured output formats
+
+In **prompting**, **tool / function calling**, and **agent workflows**, model outputs are often **structured**: readable for humans yet parsable for programs. Format choice affects **token cost**, **parser robustness**, and **ecosystem support**.
+
+<Callout type="info">
+  **TOON** (Token-Oriented Object Notation) is a compact, schema-aware text format aimed at LLM prompts, with a public spec, benchmarks, and a TypeScript SDK:  
+  [toon-format/toon](https://github.com/toon-format/toon).
+</Callout>
+
+## Case study: the same payload three ways
+
+AI is becoming cheaper and more accessible, but **larger context windows** also invite **larger inputs**. **LLM tokens still cost money** — and **plain JSON is verbose**: every repeated field name and every `{` / `}` / `"` adds tokens.
+
+Below is one small but realistic nested document (friends + hike records). **YAML** already says the same thing with fewer tokens. **TOON** goes further: **YAML-like indentation for nested maps**, plus **CSV-style tabular rows** where objects share one schema — see [toon-format/toon](https://github.com/toon-format/toon) for the full encoding rules.
+
+### JSON (verbose)
+
+```json
+{
+  "context": {
+    "task": "Our favorite hikes together",
+    "location": "Boulder",
+    "season": "spring_2025"
+  },
+  "friends": ["ana", "luis", "sam"],
+  "hikes": [
+    {
+      "id": 1,
+      "name": "Blue Lake Trail",
+      "distanceKm": 7.5,
+      "elevationGain": 320,
+      "companion": "ana",
+      "wasSunny": true
+    },
+    {
+      "id": 2,
+      "name": "Ridge Overlook",
+      "distanceKm": 9.2,
+      "elevationGain": 540,
+      "companion": "luis",
+      "wasSunny": false
+    },
+    {
+      "id": 3,
+      "name": "Wildflower Loop",
+      "distanceKm": 5.1,
+      "elevationGain": 180,
+      "companion": "sam",
+      "wasSunny": true
+    }
+  ]
+}
+```
+
+### YAML (fewer tokens than JSON)
+
+```yaml
+context:
+  task: Our favorite hikes together
+  location: Boulder
+  season: spring_2025
+friends:
+  - ana
+  - luis
+  - sam
+hikes:
+  - id: 1
+    name: Blue Lake Trail
+    distanceKm: 7.5
+    elevationGain: 320
+    companion: ana
+    wasSunny: true
+  - id: 2
+    name: Ridge Overlook
+    distanceKm: 9.2
+    elevationGain: 540
+    companion: luis
+    wasSunny: false
+  - id: 3
+    name: Wildflower Loop
+    distanceKm: 5.1
+    elevationGain: 180
+    companion: sam
+    wasSunny: true
+```
+
+### TOON (tabular arrays: often fewer tokens still)
+
+TOON combines **indentation** (like YAML for maps) with **declared columns + comma-separated rows** for homogeneous lists — here `friends[3]` is a simple list, and `hikes[3]{...}` is a **schema header** followed by one CSV-like row per hike.
+
+```text
+context:
+  task: Our favorite hikes together
+  location: Boulder
+  season: spring_2025
+friends[3]: ana,luis,sam
+hikes[3]{id,name,distanceKm,elevationGain,companion,wasSunny}:
+  1,Blue Lake Trail,7.5,320,ana,true
+  2,Ridge Overlook,9.2,540,luis,false
+  3,Wildflower Loop,5.1,180,sam,true
+```
+
+<Callout type="default" emoji="📊">
+  Exact **token savings** depend on the tokenizer (model-specific). The point is structural: **repeated keys** and **per-object braces** dominate JSON length; TOON moves that repetition into **one header row** for tabular data.
+</Callout>
+
+---
+
+Below: **text** (human-readable) vs **binary** (machine-first); then a **rough token ranking** and **API** cheat sheet.
+
+---
+
+## Text formats
+
+### JSON
+
+- **Pros**: Universal; best tooling.
+- **Cons**: Repeated field names can burn **extra tokens**.
+- **Typical use**: Public HTTP APIs, `json_object` style responses, tool outputs.
+
+### XML
+
+Legacy; **opening + closing tags** usually make it **more verbose than JSON** for LLMs.
+
+```xml
+<user>
+  <name>Alice</name>
+  <age>18</age>
+</user>
+```
+
+### YAML
+
+Indentation-based; great for config drafts.
+
+```yaml
+user:
+  name: Alice
+  age: 18
+```
+
+Often shorter than XML; **more ambiguous** than JSON for strict machine parsing at scale.
+
+### CSV / TSV
+
+Best for **tabular** rows sharing one schema.
+
+```csv
+name,age
+Alice,18
+Bob,20
+```
+
+Usually **much cheaper** than repeating JSON objects per line when there are many rows.
+
+### TOML
+
+Common in Python / Rust config worlds.
+
+```toml
+[user]
+name = "Alice"
+age = 18
+```
+
+Nice for flat configs; deep nesting gets awkward.
+
+### INI
+
+Minimal sections + key/value.
+
+```ini
+[user]
+name=Alice
+age=18
+```
+
+### S-expressions
+
+Lisp-style, regular but unfamiliar to most readers.
+
+```lisp
+(user (name "Alice") (age 18))
+```
+
+### Ad-hoc delimited text
+
+```txt
+Alice|18|SG
+Bob|20|NY
+```
+
+Often **token-minimal**; **non-standard** and **fragile** without a tight spec.
+
+### TOON
+
+See [toon-format/toon](https://github.com/toon-format/toon): positions itself as a **compact, schema-aware** alternative narrative to naive JSON for prompts, especially when structures **repeat** (schema + tables). Follow the repo **spec and benchmarks** for exact encoding rules.
+
+---
+
+## Binary formats (not for raw LLM paste)
+
+Optimized for **storage / wire**, not as the primary human-facing layer in prompts.
+
+| Format | One-liner |
+|--------|-----------|
+| **Protocol Buffers** | Small, fast, schema-first; gRPC backbone. |
+| **MessagePack** | “Binary JSON” mental model. |
+| **CBOR** | JSON-like binary; IoT, constrained envs. |
+| **Avro** | Data pipelines + schema evolution. |
+| **Parquet** | Columnar analytics storage—not your typical REST body. |
+
+---
+
+## Rough token ranking (same information, structured data)
+
+Order from **usually heavier → lighter** (highly data-dependent):
+
+1. **XML**  
+2. **JSON / YAML / TOML**  
+3. **CSV / TSV**, **row/column text**, **TOON** (often strong on repeated shapes), **custom delimiters** (lightest but riskiest)
+
+### Table
+
+| Format | Token tendency | Notes |
+|--------|----------------|-------|
+| XML | High | Paired tags |
+| JSON | Medium | Safest parse story |
+| YAML / TOML | Medium | Depth matters |
+| CSV / TSV | Low | One header row |
+| TOON | Low (repeated structs) | See official benchmarks |
+| Custom delimiter | Often lowest | Roll your own schema |
+
+---
+
+## Engineering defaults
+
+| Scenario | Common pick |
+|----------|-------------|
+| Public HTTP API | **JSON** |
+| Config files | **YAML / TOML / INI** |
+| Internal high-perf RPC | **Protobuf** (+ gRPC) or MessagePack/CBOR |
+| Spreadsheet exchange | **CSV / TSV** |
+
+---
+
+## One-line memory
+
+- **JSON** = most universal  
+- **XML** = heaviest text framing  
+- **YAML** = nicest for humans to skim configs  
+- **CSV** = cheap for tables  
+- **Protobuf family** = efficient on the wire, not for naked LLM prompts  
+- **TOON** = LLM-oriented compact structured text — [spec & SDK](https://github.com/toon-format/toon)
+
+---
+
+## Further reading
+
+- TOON: [https://github.com/toon-format/toon](https://github.com/toon-format/toon)

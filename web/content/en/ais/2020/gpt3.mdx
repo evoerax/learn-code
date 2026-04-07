@@ -1,0 +1,57 @@
+---
+title: GPT-3
+description: The era of large models begins — 175B parameters, few-shot learning
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# GPT-3
+
+> _"Language Models are Few-Shot Learners"_
+
+## At a Glance
+
+| | |
+|---|---|
+| **Year** | 2020 |
+| **Organization** | OpenAI |
+| **Parameters** | 175 billion |
+| **Architecture** | 96-layer Transformer, 96 attention heads |
+| **Training Data** | CommonCrawl, WebText, Wikipedia, Books |
+| **Context Length** | 2,048 tokens |
+| **Key Innovation** | Few-shot learning |
+
+## Origin Story
+
+GPT-3 was a quantum leap — **175 billion parameters**, roughly 10x larger than any previous non-sparse language model. The key insight: at this scale, models could perform new tasks with just a few examples in context (few-shot learning).
+
+<Callout type="success" emoji="🚀">
+GPT-3 demonstrated that scale alone could enable in-context learning — no gradient updates needed, just examples in the prompt.
+</Callout>
+
+## Architecture Details
+
+| Component | Value |
+|-----------|-------|
+| Layers | 96 |
+| Dimensions | 12,288 |
+| Attention Heads | 96 |
+| Parameters | 175B |
+| Training Tokens | ~300B |
+
+## Few-Shot vs Zero-Shot vs Fine-tuning
+
+| Setting | Description | Example |
+|---------|-------------|---------|
+| **Fine-tuning** | Update weights on task data | Train on 1000 translation pairs |
+| **Zero-shot** | No examples, just instruction | "Translate to French: Hello" |
+| **Few-shot** | 2-3 examples in context | "Hello → Bonjour, World → Monde, Cat → ?" |
+
+## Significance
+
+<Cards>
+  <Cards.Card title="ERNIE 3.0 Titan (2021)" href="/ais/2021/ernie3_titan" arrow />
+  <Cards.Card title="PaLM (2022)" href="/ais/2022/palm" arrow />
+</Cards>
+
+GPT-3 established the "foundation model + prompting" paradigm that dominates today, and sparked the LLM API economy.

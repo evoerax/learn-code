@@ -1,0 +1,7 @@
+# vLLM 与推理服务
+
+- **vLLM**：开源 **高吞吐 LLM 服务** 框架代表之一，核心是 **PagedAttention** 等对 KV 显存的管理与连续批处理（continuous batching）。  
+- **同类生态**：TensorRT-LLM、TGI、SGLang、lmdeploy 等，侧重点在 **吞吐、延迟、多 LoRA、投机解码** 等组合能力。  
+- **选型维度**：硬件（CUDA/ROCm）、模型格式（HF/Safetensors/GGUF）、是否需要 **前缀缓存、并行 decode、多模态负载**。  
+
+相关：[KV Cache](/zh/agi/stack/kv_cache)、[其它工程项](/zh/agi/stack/engineering_misc)。

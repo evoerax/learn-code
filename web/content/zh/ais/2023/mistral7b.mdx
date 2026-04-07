@@ -1,0 +1,44 @@
+---
+title: Mistral 7B
+description: 高效架构 — 70亿参数超越表现
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Mistral 7B
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2023 |
+| **机构** | Mistral AI |
+| **参数** | 70 亿 |
+| **架构** | 分组查询注意力、滑动窗口注意力 |
+| **关键创新** | 高效设计，超越 2 倍尺寸模型 |
+
+## 起源
+
+Mistral 7B 证明了**小模型 + 好架构**可以匹配 2 倍尺寸的模型。其高效注意力机制使其成为本地部署的最爱。
+
+<Callout type="default" emoji="⚡">
+Mistral 7B 使用两个关键创新：分组查询注意力（GQA）用于更快推理，滑动窗口注意力用于更高效处理长序列。
+</Callout>
+
+## 关键创新
+
+### 分组查询注意力 (GQA)
+- 在查询组之间共享键/值头
+- 以最小质量损失实现更快推理
+
+### 滑动窗口注意力
+- 每个 token 关注固定大小的窗口
+- 实现高效处理长序列
+
+## 后续发展
+
+<Cards>
+  <Cards.Card title="Llama 3.1 (2024)" href="/zh/ais/2024/llama3_1" arrow />
+</Cards>
+
+Mistral 7B 确立了高效架构可以弥合与稠密扩展的差距，影响了未来模型的设计方式。

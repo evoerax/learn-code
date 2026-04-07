@@ -1,0 +1,29 @@
+---
+title: Transformer
+description: 《Attention Is All You Need》— 纯注意力编解码器奠基大模型骨架
+---
+
+import { Cards } from 'nextra/components'
+
+# Transformer
+
+> 《Attention Is All You Need》提出纯注意力编解码器，并行友好，取代 RNN/CNN 成为大模型通用骨架。
+
+## 速览
+
+| | |
+|---|---|
+| **论文** | *Attention Is All You Need*（2017，Google） |
+| **核心** | 自注意力、多头注意力、位置编码、残差与层归一化 |
+| **意义** | BERT、GPT 及后续几乎所有大规模语言模型的计算图模板 |
+
+## 概述
+
+Transformer 用 **Self-Attention** 在序列全体位置间直接建模依赖，训练时可高度并行；对比 RNN 的顺序依赖与 CNN 的局部归纳偏置，它在机器翻译等任务上迅速确立优势，并成为 **GPT 类（解码器堆叠）** 与 **BERT 类（编码器堆叠）** 的统一祖先结构。
+
+## 延伸阅读
+
+<Cards>
+  <Cards.Card title="2017 年概述" href="/zh/ais/2017" arrow />
+  <Cards.Card title="GPT-1 (2018)" href="/zh/ais/2018/gpt1" arrow />
+</Cards>

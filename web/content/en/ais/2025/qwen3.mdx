@@ -1,0 +1,39 @@
+---
+title: Qwen3 / Qwen3.5
+description: Alibaba's MoE series — 235B to 480B total parameters
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Qwen3 / Qwen3.5
+
+## At a Glance
+
+| Model | Total Params | Active Params | Type |
+|-------|-------------|---------------|------|
+| Qwen3-235B-A22B | 235B | 22B | MoE |
+| Qwen3-Coder-480B-A35B | 480B | 35B | MoE (coding) |
+| Qwen3.5-397B-A17B | 397B | 17B | MoE |
+| Qwen3.5-122B-A10B | 122B | 10B | MoE |
+
+<Callout type="success" emoji="🇨🇳">
+Qwen3.5-397B achieves 23x efficiency (397B total / 17B active) — among the highest ratios in production MoE models.
+</Callout>
+
+## Architecture Highlights
+
+| Model | Efficiency Ratio | Specialization |
+|-------|-----------------|----------------|
+| Qwen3-235B-A22B | ~10.7x | General |
+| Qwen3-Coder-480B-A35B | ~13.7x | Coding |
+| Qwen3.5-397B-A17B | ~23x | General |
+| Qwen3.5-122B-A10B | ~12x | General |
+
+## Significance
+
+<Cards>
+  <Cards.Card title="DeepSeek-V3" href="/ais/2024/deepseek_v3" arrow />
+  <Cards.Card title="ERNIE 4.5" href="/ais/2025/ernie45" arrow />
+</Cards>
+
+Qwen3/Qwen3.5 established Alibaba as a leading open-weight MoE lab, with models widely adopted in research and industry.

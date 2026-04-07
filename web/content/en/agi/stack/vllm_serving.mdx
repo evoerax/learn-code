@@ -1,0 +1,7 @@
+# vLLM & serving stacks
+
+- **vLLM**: A representative open **high-throughput LLM serving** stack; **PagedAttention**-style KV memory + continuous batching are central ideas.  
+- **Peers**: TensorRT-LLM, TGI, SGLang, lmdeploy—tradeoffs around **throughput, latency, multi-LoRA, speculative decoding**, etc.  
+- **Pick axes**: Hardware (CUDA/ROCm), weight formats (HF/Safetensors/GGUF), need for **prefix cache, parallel decode, multimodal payloads**.
+
+See also: [KV cache](/en/agi/stack/kv_cache), [more engineering](/en/agi/stack/engineering_misc).

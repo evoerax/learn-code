@@ -1,0 +1,7 @@
+# FlashAttention 与高效注意力内核
+
+- **FlashAttention**：分块计算、减少 HBM↔SRAM 往返，在 **数值等价于标准注意力** 的前提下显著提速与省显存。  
+- **家族**：FlashAttention-2/3 等迭代主要针对并行与硬件利用率。  
+- **外围**：落地时常与 **GQA / MQA / MLA**、可变长序列打包（padding 优化）一起用；与 [KV Cache](/zh/agi/stack/kv_cache) 压力在同一条推理链上。  
+
+相关：[Transformer 架构](/zh/agi/stack/transformer)、[架构全景](/zh/agi/landscape)。

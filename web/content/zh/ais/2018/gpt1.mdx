@@ -1,0 +1,54 @@
+---
+title: GPT-1
+description: 第一个生成式预训练Transformer — 1.17亿参数
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# GPT-1
+
+> _"通过生成式预训练改进语言理解"_
+
+## 概览
+
+| | |
+|---|---|
+| **年份** | 2018 |
+| **机构** | OpenAI |
+| **作者** | Radford et al. |
+| **参数** | 约 1.17 亿 |
+| **架构** | 12 层 Transformer 解码器 |
+| **训练数据** | BooksCorpus (4.5 GB, 约 7,000 本独特的书) |
+| **上下文长度** | 512 tokens |
+
+## 起源
+
+2018年，OpenAI 发表了一篇论文，证明**在大规模多样文本上进行预训练，然后在特定任务上微调**可以获得卓越的结果。这种两阶段方法成为现代 NLP 的基石。
+
+<Callout type="info" emoji="💡">
+GPT-1 证明了规模 + 预训练是语言理解的发展方向——这个范式至今仍占主导地位。
+</Callout>
+
+## 架构
+
+- **12 层 Transformer 解码器**
+- **1.17 亿参数**
+- **上下文长度**: 512 tokens
+- **训练数据**: BooksCorpus — 约 7,000 本独特书籍的 4.5 GB 文本
+
+## 关键创新
+
+**预训练 + 微调**: 与之前从零开始训练每个任务的方法不同，GPT-1：
+
+1. 在大型无标注语料库上进行预训练（无监督）
+2. 在特定任务的小型标注数据集上进行微调
+3. 将学到的表示迁移到下游任务
+
+## 后续发展
+
+<Cards>
+  <Cards.Card title="GPT-2 (2019)" href="/zh/ais/2019/gpt2" arrow />
+  <Cards.Card title="GPT-3 (2020)" href="/zh/ais/2020/gpt3" arrow />
+</Cards>
+
+GPT-1 是一个概念验证。GPT-2 将其扩展 10 倍并引入零样本学习。
