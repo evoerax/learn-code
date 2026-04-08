@@ -1,10 +1,128 @@
 ---
 title: DeepSeek
-description: "TODO: China — timeline and key facts"
+description: "China — AI startup; key nodes: 2023 founded from High-Flyer hedge fund, 2024 DeepSeek-V3 released (trained at $6M vs $100M for GPT-4), 2025 R1 launched matching GPT-o1 performance at fraction of cost, shocked global AI markets"
 ---
 
 # DeepSeek
 
-> **Placeholder** — content TBD: timelines, products, strategy shifts, citations.
+DeepSeek AI (深度求索) is a Chinese artificial intelligence company headquartered in Hangzhou, Zhejiang Province, founded in 2023 with the stated mission of pursuing Artificial General Intelligence (AGI). The company originated from **High-Flyer** (幻方量化), a quantitative hedge fund established in 2015 by Zhejiang University graduates that accumulated significant GPU computing resources. DeepSeek emerged as a separate AI research organization when High-Flyer spun out its large language model research division. The company's January 2025 release of **DeepSeek-R1** sent shockwaves through the global AI industry — demonstrating performance comparable to OpenAI's GPT-4o and o1 at a fraction of the training cost, and challenging assumptions about China's AI capabilities relative to US companies. DeepSeek's models are open-source and available through APIs, with the company claiming it trained its V3 model for approximately **$6 million** compared to the estimated $100 million+ for comparable OpenAI models.
+
+## Origins: High-Flyer Quantitative Hedge Fund
+
+### 2015–2023: High-Flyer and Accumulated Computing Power
+
+- **2015**: **High-Flyer (High-Flyer Quant)** founded by graduates from Zhejiang University, including **Peng Zheng** and **白天明** (Bai Tianming). The fund specialized in algorithmic trading using AI and machine learning.
+- High-Flyer grew to become one of China's largest quantitative hedge funds, managing tens of billions of RMB in assets under management.
+- By 2023, High-Flyer had accumulated **10,000+ Nvidia A100/H100 GPUs** — an enormous compute infrastructure that put it in a rare position among Chinese AI organizations. This was possible because Chinese quant funds had been major buyers of Nvidia GPUs before the 2022 US export restrictions.
+- **2023**: High-Flyer decided to spin out its LLM research team as an independent company, creating **DeepSeek AI** to focus specifically on frontier AI research.
+
+## 2024: First Model Releases
+
+- **January 2024**: DeepSeek released its first LLM, establishing the company's presence in the open-source AI community.
+- **February 2024**: Released **DeepSeekMath** — a specialized mathematical reasoning model that achieved state-of-the-art performance on benchmarks.
+- **June 2024**: Released **DeepSeek-Coder-V2**, an open-source code generation model that rivaled GPT-4 Turbo on coding benchmarks while being significantly more efficient.
+- These early releases established DeepSeek as a serious research organization, though still relatively unknown outside AI practitioner circles.
+
+## November 2024: R1-Lite-Preview and Growing Attention
+
+- **November 2024**: Released **DeepSeek-R1-Lite-Preview**, a reasoning model demonstrating chain-of-thought capabilities comparable to OpenAI's o1-preview. The model was made available through DeepSeek's API and web interface, gaining significant attention from the AI research community.
+- Early evaluations showed R1-Lite-Preview matched or exceeded OpenAI's o1 on several reasoning benchmarks.
+
+## December 2024: DeepSeek-V3 Release
+
+- **December 2024**: Released **DeepSeek-V3**, a 671-billion-parameter Mixture-of-Experts (MoE) language model that shocked the AI industry.
+- **Training cost**: DeepSeek claimed V3 was trained for approximately **$6 million** in compute costs (using 2,000 H800 GPUs over ~2 months), compared to estimates of $100+ million for GPT-4 class models trained by OpenAI/Google.
+- **Architecture**: DeepSeek-V3 used an innovative MoE architecture with 671B total parameters but only 37B active parameters per token, dramatically reducing inference costs while maintaining high quality.
+- **Key innovations**: DeepSeek-V3 introduced **Multi-head Latent Attention (MLA)** and **DeepSeekMoE** architecture, along with **auxiliary-loss-free** load balancing — technical advances that improved training stability and efficiency.
+- **Performance**: On benchmarks, V3 matched or exceeded GPT-4o and Claude 3.5 Sonnet on most tasks, while being significantly cheaper to run.
+- **Hardware**: Trained on **Nvidia H800** chips (the export-controlled version of the H100, limited to 800GB/s interconnect vs 900GB/s for H100) — demonstrating that frontier AI could be developed despite US chip restrictions.
+
+## January 2025: DeepSeek-R1 — Industry Disruption
+
+- **January 20, 2025**: Released **DeepSeek-R1**, a reasoning model that matched the performance of OpenAI's o1 on reasoning, math, and coding benchmarks.
+- **Key differentiator**: R1 was trained using **Group Relative Policy Optimization (GRPO)** — a reinforcement learning technique DeepSeek developed that does not require supervised fine-tuning, only rule-based rewards for accuracy and formatting.
+- **DeepSeek-R1-Zero**: A notable variant trained purely with RL (no SFT), demonstrating that reasoning capabilities can emerge from pure reinforcement learning — a significant research finding that challenged conventional wisdom about LLM training pipelines.
+- **Benchmark results**: R1 achieved **79.8% on MATH-A** (vs 77.3% for OpenAI o1), **96.3% on AIME** (vs 74.6% for o1), and **2024 Elo on LiveCodeBench** (vs 1871 for o1).
+- **Open-source**: DeepSeek released R1 under an open license, along with distilled 1.5B–70B parameter versions (R1-Distill) that could run on consumer hardware.
+- **Market impact**: DeepSeek-R1's release caused a **$600+ billion one-day decline in Nvidia's stock market cap** (January 27, 2025) as investors questioned whether frontier AI training required far less compute than previously assumed.
+
+## May 2025: R1-0528 and Continued Innovation
+
+- **May 2025**: Released **R1-0528**, an updated version of R1 with improved reasoning and reduced hallucination rates.
+
+## August 2025: DeepSeek-V3.1
+
+- **August 2025**: Published **DeepSeek-V3.1**, a further refined version of V3 with improved multilingual capabilities and longer context windows.
+
+## Key Technologies and Innovations
+
+### Multi-head Latent Attention (MLA)
+MLA is DeepSeek's novel attention mechanism that reduces the KV cache memory requirement during inference, enabling longer context windows and lower memory costs compared to standard multi-head attention.
+
+### DeepSeekMoE Architecture
+Mixture-of-Experts architecture that activates only a fraction of the model's parameters per token, dramatically reducing inference cost while maintaining model quality.
+
+### Group Relative Policy Optimization (GRPO)
+DeepSeek's RL training method that generates groups of responses and uses relative comparison for reward signals — more sample-efficient than standard PPO and not requiring a separate critic model.
+
+### Auxiliary-Loss-Free Load Balancing
+A technique to balance expert utilization in MoE models without introducing auxiliary losses that can harm training stability or model quality.
+
+## Models and Products
+
+### Foundation Models
+- **DeepSeek-V3** (Dec 2024) — 671B MoE, 37B active params; general purpose
+- **DeepSeek-V3.1** (Aug 2025) — improved multilingual, longer context
+
+### Reasoning Models
+- **DeepSeek-R1** (Jan 2025) — o1-class reasoning, RL-trained
+- **DeepSeek-R1-Zero** (Jan 2025) — pure RL reasoning (no SFT)
+- **R1-0528** (May 2025) — improved reasoning
+
+### Distilled Models (from R1)
+- R1-Distill-Qwen (1.5B, 7B, 14B, 32B, 70B) — based on Qwen architecture
+- R1-Distill-Llama (8B, 70B) — based on Llama architecture
+- These distilled models bring o1-class reasoning to consumer-grade hardware
+
+### Specialized Models
+- **DeepSeek-Coder-V2** — code generation (June 2024)
+- **DeepSeekMath** — mathematical reasoning (Feb 2024)
+
+### Platform Access
+- **API**: deepseek-api (chat.deepseek.com) — pay-per-token pricing significantly below OpenAI
+- **Web**: chat.deepseek.com — free and paid tiers
+- **Open Source**: Hugging Face, GitHub — fully open weights
+
+## Corporate Structure
+
+- **Parent**: High-Flyer Quant (Hangzhou)
+- **Headquarters**: Hangzhou, Zhejiang, China
+- **Founder**: Peng Zheng (High-Flyer), with research team led by DeepSeek researchers
+- **Funding**: Self-funded from High-Flyer's hedge fund operations; no external VC funding
+- **Note**: DeepSeek is notable as one of the few frontier AI labs without external venture capital — the high-Flyer quant fund's profits funded the entire operation
+
+## Impact on Global AI Industry
+
+### Nvidia Stock Impact
+DeepSeek's January 2025 R1 release triggered the largest single-day drop in Nvidia's market cap, reducing it by over $600 billion in one day. The market reaction reflected concerns that:
+1. Frontier AI models could be trained for orders of magnitude less than previously assumed
+2. Nvidia's GPU dominance might face pressure from efficiency innovations
+3. Chinese AI companies could close the gap with US firms using only controlled hardware
+
+### OpenAI and US AI Companies Response
+- OpenAI, Google, and Anthropic publicly acknowledged DeepSeek as a serious competitor
+- Several US AI companies accelerated their own efficiency research in response
+- The incident renewed debate about the effectiveness of US chip export controls
+
+### Policy Implications
+- US lawmakers cited DeepSeek as evidence that chip export controls were ineffective
+- Simultaneously, some argued that the controls still meaningfully restricted China's access to cutting-edge chips
+- DeepSeek's success with H800 chips demonstrated that software innovation can partially compensate for hardware constraints
+
+## References
+
+- [DeepSeek GitHub](https://github.com/deepseek-ai)
+- [DeepSeek Papers](https://arxiv.org/search/?searchtype=author&searchasintitle=DeepSeek)
+- [DeepSeek Official](https://www.deepseek.com)
 
 Back to **[China](/en/companies/china)** · **[Overview](/en/companies/overview)**
