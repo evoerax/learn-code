@@ -1,7 +1,7 @@
 export default {
     'index': { title: '导读' },
-    'goto': { title: 'GoTo Group' },
-    'grab': { title: 'Grab Holdings' },
-    'sea': { title: 'Sea Group' },
+    'goto': { title: 'GoTo 集团' },
+    'grab': { title: 'Grab' },
+    'sea': { title: 'Sea 集团' },
     'traveloka': { title: 'Traveloka' },
 }
