@@ -1,0 +1,173 @@
+---
+title: 多语言同一任务与 Token 对比
+description: 主流语言实现「偶数平方和」的写法对照，及 cl100k_base 下的代码 token 统计
+---
+
+# 多语言同一任务与 Token 对比
+
+下面用**同一条语义**在各语言中的**较短、常见写法**做对照：给定若干整数，求**其中所有偶数的平方之和**。示例输入 `[1, 2, 3, 4, 5, 6]` 应得到 `4 + 16 + 36 = 56`。
+
+## 如何理解 Token 数
+
+- 使用 **`cl100k_base`** 分词器（与许多 **GPT‑3.5 / GPT‑4** 系 API 相近；本站依赖 `gpt-tokenizer` 计算）。  
+- 对**每个代码块中出现的全部字符**（含缩进、换行、注释）计数，**不包括** Markdown 围栏标签本身。  
+- **用途**：在「把代码喂给模型」时，粗略比较**同样算法**在不同语言里的**表面积**；若换用 `o200k_base` 等，数值会漂移，不宜当作绝对标准。  
+- 表中数字与仓库脚本 `web/scripts/count-appendix-snippets.mjs` 中的字符串严格一致；修改代码后请在 `web` 目录执行 `pnpm run tokens:appendix`（或 `pnpm exec node scripts/count-appendix-snippets.mjs`），将输出对照并回写本文表格。
+
+---
+
+## 汇总表（按 Token 数升序）
+
+| 语言 | `cl100k_base` tokens | 备注 |
+| :--- | ---: | :--- |
+| Ruby | **47** | `select` + `sum` 块，行数少 |
+| Kotlin | **59** | `sumOf` 单行核心逻辑 |
+| Python | **69** | 生成式一行 `return` |
+| JavaScript | **69** | `filter` + `reduce` |
+| TypeScript | **72** | 较 JS 多类型标注 |
+| Rust | **74** | 迭代器链 |
+| C# | **78** | `using` + `LINQ` |
+| C++ | **84** | 显式循环 + `vector` |
+| Go | **89** | 显式循环，无链式 API |
+| Java | **91** | `import` + `stream` + `main` 样板 |
+
+---
+
+## 各语言代码
+
+### Ruby（47 tokens）
+
+```ruby
+def sum_even_squares(nums)
+  nums.select(&:even?).sum { |x| x * x }
+end
+
+puts sum_even_squares([1, 2, 3, 4, 5, 6])
+```
+
+### Kotlin（59 tokens）
+
+```kotlin
+fun sumEvenSquares(nums: List<Int>) =
+    nums.filter { it % 2 == 0 }.sumOf { it * it }
+
+fun main() = println(sumEvenSquares(listOf(1, 2, 3, 4, 5, 6)))
+```
+
+### Python（69 tokens）
+
+```python
+def sum_even_squares(nums: list[int]) -> int:
+    return sum(x * x for x in nums if x % 2 == 0)
+
+if __name__ == "__main__":
+    print(sum_even_squares([1, 2, 3, 4, 5, 6]))  # 56
+```
+
+### JavaScript（69 tokens）
+
+```javascript
+function sumEvenSquares(nums) {
+  return nums.filter((x) => x % 2 === 0).reduce((s, x) => s + x * x, 0);
+}
+console.log(sumEvenSquares([1, 2, 3, 4, 5, 6])); // 56
+```
+
+### TypeScript（72 tokens）
+
+```typescript
+function sumEvenSquares(nums: number[]): number {
+  return nums.filter((x) => x % 2 === 0).reduce((s, x) => s + x * x, 0);
+}
+console.log(sumEvenSquares([1, 2, 3, 4, 5, 6])); // 56
+```
+
+### Rust（74 tokens）
+
+```rust
+fn sum_even_squares(nums: &[i32]) -> i32 {
+    nums.iter().filter(|&&x| x % 2 == 0).map(|x| x * x).sum()
+}
+
+fn main() {
+    println!("{}", sum_even_squares(&[1, 2, 3, 4, 5, 6]));
+}
+```
+
+### C#（78 tokens）
+
+```csharp
+using System;
+using System.Linq;
+
+class P {
+    static int SumEvenSquares(int[] nums) =>
+        nums.Where(x => x % 2 == 0).Sum(x => x * x);
+    static void Main() =>
+        Console.WriteLine(SumEvenSquares(new[] { 1, 2, 3, 4, 5, 6 }));
+}
+```
+
+### C++（84 tokens）
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> nums{1, 2, 3, 4, 5, 6};
+    int s = 0;
+    for (int x : nums) {
+        if (x % 2 == 0)
+            s += x * x;
+    }
+    std::cout << s << '\n';
+}
+```
+
+### Go（89 tokens）
+
+```go
+package main
+
+import "fmt"
+
+func sumEvenSquares(nums []int) int {
+    s := 0
+    for _, x := range nums {
+        if x%2 == 0 {
+            s += x * x
+        }
+    }
+    return s
+}
+
+func main() {
+    fmt.Println(sumEvenSquares([]int{1, 2, 3, 4, 5, 6}))
+}
+```
+
+### Java（91 tokens）
+
+```java
+import java.util.List;
+
+public class Main {
+    static int sumEvenSquares(List<Integer> nums) {
+        return nums.stream().filter(x -> x % 2 == 0).mapToInt(x -> x * x).sum();
+    }
+    public static void main(String[] args) {
+        System.out.println(sumEvenSquares(List.of(1, 2, 3, 4, 5, 6)));
+    }
+}
+```
+
+---
+
+复杂任务示例（**AVL 插入 + 旋转**，token 约比本页高一个数量级）见 **[AVL 树与 Token 对比](/zh/appendix/multi-lang-balanced-tree)**。
+
+## 说明
+
+- 本页**不比性能、不比惯用法大全**，只在「行数/样板相近」的前提下比较**静态文本在 cl100k 下的长度**。  
+- 省略 `public` 的 Kotlin、或改成 `fun main()` 无包名的 Kotlin 等，都会改变 token；Java / C# 的 `import` 与类名样板通常抬高基数。  
+- 若你希望换成别的任务（例如 **HTTP GET + JSON 解析**、**读取文件按行统计**），可以专用一页复用同一套用脚本对齐全文与表格。

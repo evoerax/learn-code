@@ -1,0 +1,783 @@
+---
+title: AVL tree across languages + token counts
+description: cl100k_base sizes for hand-written AVL insert with rotations
+---
+
+# Harder task: balanced binary tree (AVL insert)
+
+Each snippet implements the **same algorithm**: **AVL insertion** (integer keys) with **LL / RR / LR / RL** rotations when balance factors exceed ±1. No delete. Demo inserts `10, 20, 30, 40, 50, 25`.
+
+For the lighter “sum of even squares” exercise, see **[multi-lang & token counts](/en/appendix/multi-lang-token-compare)**.
+
+## Token methodology
+
+- Encoder **`cl100k_base`** via `gpt-tokenizer`; counts **only the code inside each fence**.  
+- Strings must stay **identical** to `web/scripts/count-appendix-balanced-tree.mjs`. After edits run `pnpm run tokens:appendix:avl` and refresh the tables.  
+- **Not** a performance or safety review (the C++ sample uses raw `new` and omits cleanup on purpose).
+
+---
+
+## Summary (sorted by tokens)
+
+| Language | `cl100k_base` tokens | Notes |
+| :--- | ---: | :--- |
+| JavaScript | **394** | Minimal ceremony |
+| Ruby | **402** | Short defs |
+| Go | **442** | Nil checks + helpers |
+| Kotlin | **444** | Nullability + `!!` |
+| Java | **451** | Static helpers + class |
+| TypeScript | **457** | Types + non-null asserts |
+| C++ | **459** | Raw pointers |
+| C# | **461** | `foreach` + properties |
+| Python | **478** | Annotations + `assert` |
+| Rust | **578** | `Option<Box>` churn |
+
+---
+
+## JavaScript (394 tokens)
+
+```javascript
+class AVLNode {
+  constructor(key) {
+    this.key = key;
+    this.left = this.right = null;
+    this.h = 1;
+  }
+}
+
+function gh(n) {
+  return n ? n.h : 0;
+}
+
+function upd(n) {
+  n.h = 1 + Math.max(gh(n.left), gh(n.right));
+}
+
+function bal(n) {
+  return n ? gh(n.left) - gh(n.right) : 0;
+}
+
+function rotR(y) {
+  const x = y.left;
+  y.left = x.right;
+  x.right = y;
+  upd(y);
+  upd(x);
+  return x;
+}
+
+function rotL(x) {
+  const y = x.right;
+  x.right = y.left;
+  y.left = x;
+  upd(x);
+  upd(y);
+  return y;
+}
+
+function avlInsert(root, key) {
+  if (!root) return new AVLNode(key);
+  if (key < root.key) root.left = avlInsert(root.left, key);
+  else if (key > root.key) root.right = avlInsert(root.right, key);
+  else return root;
+  upd(root);
+  const b = bal(root);
+  if (b > 1 && key < root.left.key) return rotR(root);
+  if (b > 1 && key > root.left.key) {
+    root.left = rotL(root.left);
+    return rotR(root);
+  }
+  if (b < -1 && key > root.right.key) return rotL(root);
+  if (b < -1 && key < root.right.key) {
+    root.right = rotR(root.right);
+    return rotL(root);
+  }
+  return root;
+}
+
+let r = null;
+for (const k of [10, 20, 30, 40, 50, 25]) r = avlInsert(r, k);
+```
+
+---
+
+## Ruby (402 tokens)
+
+```ruby
+class AVLNode
+  attr_accessor :key, :left, :right, :h
+  def initialize(k)
+    @key = k
+    @left = @right = nil
+    @h = 1
+  end
+end
+
+def gh(n) = n ? n.h : 0
+
+def upd(n) = n.h = 1 + [gh(n.left), gh(n.right)].max
+
+def bal(n) = n ? gh(n.left) - gh(n.right) : 0
+
+def rot_r(y)
+  x = y.left
+  y.left, x.right = x.right, y
+  upd(y)
+  upd(x)
+  x
+end
+
+def rot_l(x)
+  y = x.right
+  x.right, y.left = y.left, x
+  upd(x)
+  upd(y)
+  y
+end
+
+def avl_insert(root, key)
+  return AVLNode.new(key) unless root
+  if key < root.key
+    root.left = avl_insert(root.left, key)
+  elsif key > root.key
+    root.right = avl_insert(root.right, key)
+  else
+    return root
+  end
+  upd(root)
+  b = bal(root)
+  if b > 1 && key < root.left.key
+    return rot_r(root)
+  end
+  if b > 1 && key > root.left.key
+    root.left = rot_l(root.left)
+    return rot_r(root)
+  end
+  if b < -1 && key > root.right.key
+    return rot_l(root)
+  end
+  if b < -1 && key < root.right.key
+    root.right = rot_r(root.right)
+    return rot_l(root)
+  end
+  root
+end
+
+r = nil
+[10, 20, 30, 40, 50, 25].each { |k| r = avl_insert(r, k) }
+```
+
+---
+
+## Go (442 tokens)
+
+```go
+package main
+
+type node struct {
+	key         int
+	left, right *node
+	h           int
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func gh(n *node) int {
+	if n == nil {
+		return 0
+	}
+	return n.h
+}
+
+func upd(n *node) {
+	n.h = 1 + max(gh(n.left), gh(n.right))
+}
+
+func bal(n *node) int {
+	if n == nil {
+		return 0
+	}
+	return gh(n.left) - gh(n.right)
+}
+
+func rotR(y *node) *node {
+	x := y.left
+	y.left = x.right
+	x.right = y
+	upd(y)
+	upd(x)
+	return x
+}
+
+func rotL(x *node) *node {
+	y := x.right
+	x.right = y.left
+	y.left = x
+	upd(x)
+	upd(y)
+	return y
+}
+
+func insert(n *node, key int) *node {
+	if n == nil {
+		return &node{key: key, h: 1}
+	}
+	if key < n.key {
+		n.left = insert(n.left, key)
+	} else if key > n.key {
+		n.right = insert(n.right, key)
+	} else {
+		return n
+	}
+	upd(n)
+	b := bal(n)
+	if b > 1 && key < n.left.key {
+		return rotR(n)
+	}
+	if b > 1 && key > n.left.key {
+		n.left = rotL(n.left)
+		return rotR(n)
+	}
+	if b < -1 && key > n.right.key {
+		return rotL(n)
+	}
+	if b < -1 && key < n.right.key {
+		n.right = rotR(n.right)
+		return rotL(n)
+	}
+	return n
+}
+
+func main() {
+	var r *node
+	for _, k := range []int{10, 20, 30, 40, 50, 25} {
+		r = insert(r, k)
+	}
+	_ = r
+}
+```
+
+---
+
+## Kotlin (444 tokens)
+
+```kotlin
+class AVLNode(
+    var key: Int,
+    var left: AVLNode? = null,
+    var right: AVLNode? = null,
+    var h: Int = 1,
+)
+
+fun gh(n: AVLNode?) = n?.h ?: 0
+
+fun upd(n: AVLNode) {
+    n.h = 1 + maxOf(gh(n.left), gh(n.right))
+}
+
+fun bal(n: AVLNode?) = if (n == null) 0 else gh(n.left) - gh(n.right)
+
+fun rotR(y: AVLNode): AVLNode {
+    val x = y.left!!
+    y.left = x.right
+    x.right = y
+    upd(y)
+    upd(x)
+    return x
+}
+
+fun rotL(x: AVLNode): AVLNode {
+    val y = x.right!!
+    x.right = y.left
+    y.left = x
+    upd(x)
+    upd(y)
+    return y
+}
+
+fun avlInsert(root: AVLNode?, key: Int): AVLNode {
+    if (root == null) return AVLNode(key)
+    var r = root
+    if (key < r.key) r.left = avlInsert(r.left, key)
+    else if (key > r.key) r.right = avlInsert(r.right, key)
+    else return r
+    upd(r)
+    val b = bal(r)
+    if (b > 1 && key < r.left!!.key) return rotR(r)
+    if (b > 1 && key > r.left!!.key) {
+        r.left = rotL(r.left!!)
+        return rotR(r)
+    }
+    if (b < -1 && key > r.right!!.key) return rotL(r)
+    if (b < -1 && key < r.right!!.key) {
+        r.right = rotR(r.right!!)
+        return rotL(r)
+    }
+    return r
+}
+
+fun main() {
+    var r: AVLNode? = null
+    for (k in listOf(10, 20, 30, 40, 50, 25)) r = avlInsert(r, k)
+}
+```
+
+---
+
+## Java (451 tokens)
+
+```java
+class AVLNode {
+    int key, h = 1;
+    AVLNode left, right;
+    AVLNode(int k) { key = k; }
+}
+
+public class AvlDemo {
+    static int gh(AVLNode n) { return n == null ? 0 : n.h; }
+    static void upd(AVLNode n) { n.h = 1 + Math.max(gh(n.left), gh(n.right)); }
+    static int bal(AVLNode n) { return n == null ? 0 : gh(n.left) - gh(n.right); }
+
+    static AVLNode rotR(AVLNode y) {
+        AVLNode x = y.left;
+        y.left = x.right;
+        x.right = y;
+        upd(y);
+        upd(x);
+        return x;
+    }
+
+    static AVLNode rotL(AVLNode x) {
+        AVLNode y = x.right;
+        x.right = y.left;
+        y.left = x;
+        upd(x);
+        upd(y);
+        return y;
+    }
+
+    static AVLNode insert(AVLNode root, int key) {
+        if (root == null) return new AVLNode(key);
+        if (key < root.key) root.left = insert(root.left, key);
+        else if (key > root.key) root.right = insert(root.right, key);
+        else return root;
+        upd(root);
+        int b = bal(root);
+        if (b > 1 && key < root.left.key) return rotR(root);
+        if (b > 1 && key > root.left.key) {
+            root.left = rotL(root.left);
+            return rotR(root);
+        }
+        if (b < -1 && key > root.right.key) return rotL(root);
+        if (b < -1 && key < root.right.key) {
+            root.right = rotR(root.right);
+            return rotL(root);
+        }
+        return root;
+    }
+
+    public static void main(String[] args) {
+        AVLNode r = null;
+        for (int k : new int[] {10, 20, 30, 40, 50, 25}) r = insert(r, k);
+    }
+}
+```
+
+---
+
+## TypeScript (457 tokens)
+
+```typescript
+class AVLNode {
+  key: number;
+  left: AVLNode | null = null;
+  right: AVLNode | null = null;
+  h = 1;
+  constructor(key: number) {
+    this.key = key;
+  }
+}
+
+function gh(n: AVLNode | null): number {
+  return n ? n.h : 0;
+}
+
+function upd(n: AVLNode): void {
+  n.h = 1 + Math.max(gh(n.left), gh(n.right));
+}
+
+function bal(n: AVLNode | null): number {
+  return n ? gh(n.left) - gh(n.right) : 0;
+}
+
+function rotR(y: AVLNode): AVLNode {
+  const x = y.left!;
+  y.left = x.right;
+  x.right = y;
+  upd(y);
+  upd(x);
+  return x;
+}
+
+function rotL(x: AVLNode): AVLNode {
+  const y = x.right!;
+  x.right = y.left;
+  y.left = x;
+  upd(x);
+  upd(y);
+  return y;
+}
+
+function avlInsert(root: AVLNode | null, key: number): AVLNode {
+  if (!root) return new AVLNode(key);
+  if (key < root.key) root.left = avlInsert(root.left, key);
+  else if (key > root.key) root.right = avlInsert(root.right, key);
+  else return root;
+  upd(root);
+  const b = bal(root);
+  if (b > 1 && key < root.left!.key) return rotR(root);
+  if (b > 1 && key > root.left!.key) {
+    root.left = rotL(root.left!);
+    return rotR(root);
+  }
+  if (b < -1 && key > root.right!.key) return rotL(root);
+  if (b < -1 && key < root.right!.key) {
+    root.right = rotR(root.right!);
+    return rotL(root);
+  }
+  return root;
+}
+
+let r: AVLNode | null = null;
+for (const k of [10, 20, 30, 40, 50, 25]) r = avlInsert(r, k);
+```
+
+---
+
+## C++ (459 tokens)
+
+```cpp
+#include <algorithm>
+#include <iostream>
+
+struct Node {
+    int key{};
+    Node *left = nullptr;
+    Node *right = nullptr;
+    int h = 1;
+};
+
+int gh(Node *n) { return n ? n->h : 0; }
+
+void upd(Node *n) {
+    n->h = 1 + std::max(gh(n->left), gh(n->right));
+}
+
+int bal(Node *n) { return n ? gh(n->left) - gh(n->right) : 0; }
+
+Node *rotR(Node *y) {
+    Node *x = y->left;
+    y->left = x->right;
+    x->right = y;
+    upd(y);
+    upd(x);
+    return x;
+}
+
+Node *rotL(Node *x) {
+    Node *y = x->right;
+    x->right = y->left;
+    y->left = x;
+    upd(x);
+    upd(y);
+    return y;
+}
+
+Node *insert(Node *root, int key) {
+    if (!root)
+        return new Node{key};
+    if (key < root->key)
+        root->left = insert(root->left, key);
+    else if (key > root->key)
+        root->right = insert(root->right, key);
+    else
+        return root;
+    upd(root);
+    int b = bal(root);
+    if (b > 1 && key < root->left->key)
+        return rotR(root);
+    if (b > 1 && key > root->left->key) {
+        root->left = rotL(root->left);
+        return rotR(root);
+    }
+    if (b < -1 && key > root->right->key)
+        return rotL(root);
+    if (b < -1 && key < root->right->key) {
+        root->right = rotR(root->right);
+        return rotL(root);
+    }
+    return root;
+}
+
+int main() {
+    Node *r = nullptr;
+    for (int k : {10, 20, 30, 40, 50, 25})
+        r = insert(r, k);
+    (void)r;
+}
+```
+
+---
+
+## C# (461 tokens)
+
+```csharp
+using System;
+
+class AVLNode {
+    public int Key;
+    public AVLNode Left, Right;
+    public int H = 1;
+    public AVLNode(int k) => Key = k;
+}
+
+static class Avl {
+    static int Gh(AVLNode n) => n == null ? 0 : n.H;
+    static void Upd(AVLNode n) => n.H = 1 + Math.Max(Gh(n.Left), Gh(n.Right));
+    static int Bal(AVLNode n) => n == null ? 0 : Gh(n.Left) - Gh(n.Right);
+
+    static AVLNode RotR(AVLNode y) {
+        var x = y.Left;
+        y.Left = x.Right;
+        x.Right = y;
+        Upd(y);
+        Upd(x);
+        return x;
+    }
+
+    static AVLNode RotL(AVLNode x) {
+        var y = x.Right;
+        x.Right = y.Left;
+        y.Left = x;
+        Upd(x);
+        Upd(y);
+        return y;
+    }
+
+    public static AVLNode Insert(AVLNode root, int key) {
+        if (root == null) return new AVLNode(key);
+        if (key < root.Key) root.Left = Insert(root.Left, key);
+        else if (key > root.Key) root.Right = Insert(root.Right, key);
+        else return root;
+        Upd(root);
+        int b = Bal(root);
+        if (b > 1 && key < root.Left.Key) return RotR(root);
+        if (b > 1 && key > root.Left.Key) {
+            root.Left = RotL(root.Left);
+            return RotR(root);
+        }
+        if (b < -1 && key > root.Right.Key) return RotL(root);
+        if (b < -1 && key < root.Right.Key) {
+            root.Right = RotR(root.Right);
+            return RotL(root);
+        }
+        return root;
+    }
+}
+
+class P {
+    static void Main() {
+        AVLNode r = null;
+        foreach (var k in new[] { 10, 20, 30, 40, 50, 25 })
+            r = Avl.Insert(r, k);
+    }
+}
+```
+
+---
+
+## Python (478 tokens)
+
+```python
+class AVLNode:
+    __slots__ = ("key", "left", "right", "h")
+
+    def __init__(self, key: int):
+        self.key = key
+        self.left = self.right = None
+        self.h = 1
+
+
+def _gh(n: AVLNode | None) -> int:
+    return n.h if n else 0
+
+
+def _upd(n: AVLNode) -> None:
+    n.h = 1 + max(_gh(n.left), _gh(n.right))
+
+
+def _bal(n: AVLNode) -> int:
+    return _gh(n.left) - _gh(n.right)
+
+
+def _rot_r(y: AVLNode) -> AVLNode:
+    x = y.left
+    assert x is not None
+    y.left, x.right = x.right, y
+    _upd(y)
+    _upd(x)
+    return x
+
+
+def _rot_l(x: AVLNode) -> AVLNode:
+    y = x.right
+    assert y is not None
+    x.right, y.left = y.left, x
+    _upd(x)
+    _upd(y)
+    return y
+
+
+def avl_insert(root: AVLNode | None, key: int) -> AVLNode:
+    if root is None:
+        return AVLNode(key)
+    if key < root.key:
+        root.left = avl_insert(root.left, key)
+    elif key > root.key:
+        root.right = avl_insert(root.right, key)
+    else:
+        return root
+    _upd(root)
+    bf = _bal(root)
+    if bf > 1 and root.left and key < root.left.key:
+        return _rot_r(root)
+    if bf > 1 and root.left and key > root.left.key:
+        root.left = _rot_l(root.left)
+        return _rot_r(root)
+    if bf < -1 and root.right and key > root.right.key:
+        return _rot_l(root)
+    if bf < -1 and root.right and key < root.right.key:
+        root.right = _rot_r(root.right)
+        return _rot_l(root)
+    return root
+
+
+r: AVLNode | None = None
+for v in (10, 20, 30, 40, 50, 25):
+    r = avl_insert(r, v)
+```
+
+---
+
+## Rust (578 tokens)
+
+```rust
+#[derive(Debug)]
+struct Node {
+    key: i32,
+    left: Link,
+    right: Link,
+    h: i8,
+}
+
+type Link = Option<Box<Node>>;
+
+impl Node {
+    fn new(key: i32) -> Self {
+        Node {
+            key,
+            left: None,
+            right: None,
+            h: 1,
+        }
+    }
+}
+
+fn gh(n: &Link) -> i8 {
+    n.as_ref().map_or(0, |b| b.h)
+}
+
+fn upd(n: &mut Node) {
+    n.h = 1 + gh(&n.left).max(gh(&n.right));
+}
+
+fn bal(n: &Node) -> i8 {
+    gh(&n.left) - gh(&n.right)
+}
+
+fn rot_r(mut y: Box<Node>) -> Box<Node> {
+    let mut x = y.left.take().unwrap();
+    y.left = x.right.take();
+    x.right = Some(y);
+    if let Some(ref mut yr) = x.right {
+        upd(yr);
+    }
+    upd(&mut x);
+    x
+}
+
+fn rot_l(mut x: Box<Node>) -> Box<Node> {
+    let mut y = x.right.take().unwrap();
+    x.right = y.left.take();
+    y.left = Some(x);
+    if let Some(ref mut yl) = y.left {
+        upd(yl);
+    }
+    upd(&mut y);
+    y
+}
+
+fn insert(t: Link, key: i32) -> Link {
+    let mut n = match t {
+        None => return Some(Box::new(Node::new(key))),
+        Some(b) => b,
+    };
+    if key < n.key {
+        n.left = insert(n.left.take(), key);
+    } else if key > n.key {
+        n.right = insert(n.right.take(), key);
+    } else {
+        return Some(n);
+    }
+    upd(&mut n);
+    let b = bal(&n);
+    if b > 1 {
+        let lk = n.left.as_ref().unwrap().key;
+        if key < lk {
+            return Some(rot_r(n));
+        }
+        n.left = Some(rot_l(n.left.take().unwrap()));
+        return Some(rot_r(n));
+    }
+    if b < -1 {
+        let rk = n.right.as_ref().unwrap().key;
+        if key > rk {
+            return Some(rot_l(n));
+        }
+        n.right = Some(rot_r(n.right.take().unwrap()));
+        return Some(rot_l(n));
+    }
+    Some(n)
+}
+
+fn main() {
+    let mut r: Link = None;
+    for k in [10, 20, 30, 40, 50, 25] {
+        r = insert(r, k);
+    }
+    let _ = r;
+}
+```
+
+---
+
+## Takeaways
+
+- **JavaScript / Ruby** stay cheapest for this style of AVL; **Rust** pays the usual **`Option<Box>` tax** in tokens.  
+- **Python** annotations + `assert` noticeably inflate counts—strip them if you only care about runtime behavior.  
+- Compare against the **[simple task page](/en/appendix/multi-lang-token-compare)** to see how complexity explodes token use (roughly **6–15×** vs the even-squares micro-sample).

@@ -9,5 +9,6 @@ export default {
     timeline: { title: 'Programming Languages', type: 'page' },
     ais: { title: 'AI Models', type: 'page' },
     agi: { title: 'AGI', type: 'page' },
+    companies: { title: 'Tech Giants', type: 'page' },
     appendix: { title: 'Appendix', type: 'page' },
 }

@@ -357,11 +357,18 @@ declare global {
 
 async function importPagefind() {
     if (window.pagefind) return;
-    window.pagefind = await import(
-        /* webpackIgnore: true */ addBasePath('/_pagefind/pagefind.js')
-        );
+    const url = addBasePath('/_pagefind/pagefind.js');
+    const load = import(/* webpackIgnore: true */ url);
+    const timeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Pagefind load timeout')), 12_000),
+    );
+    try {
+        window.pagefind = await Promise.race([load, timeout]);
+    } catch {
+        throw new Error('Search index unavailable (run `pnpm build` once to generate `public/_pagefind`, or retry).');
+    }
     await window.pagefind.options({
-        baseUrl: '/'
+        baseUrl: '/',
     });
 }
 

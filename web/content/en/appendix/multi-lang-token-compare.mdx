@@ -1,0 +1,173 @@
+---
+title: Same task in many languages + token counts
+description: Idiomatic snippets for “sum of squares of even numbers” with cl100k_base token sizes
+---
+
+# Same task in many languages + token counts
+
+Each snippet below implements the **same behavior**: given a list of integers, return the **sum of squares of the even values**. For `[1, 2, 3, 4, 5, 6]` the result is `4 + 16 + 36 = 56`.
+
+## How to read the token numbers
+
+- Encoded with **`cl100k_base`** (close to many **GPT‑3.5 / GPT‑4** APIs; counted here with the `gpt-tokenizer` package).  
+- The count includes **every character inside the fence** (indentation, newlines, comments) and **excludes** the Markdown code-fence delimiters themselves.  
+- Useful as a rough **surface-area** proxy when you paste code into an LLM; other models (`o200k_base`, etc.) will shift the absolute counts.  
+- Numbers are tied to `web/scripts/count-appendix-snippets.mjs`. After editing a snippet, from `web/` run `pnpm run tokens:appendix` (or `node scripts/count-appendix-snippets.mjs`) and refresh the tables in both locales.
+
+---
+
+## Summary (sorted by tokens)
+
+| Language | `cl100k_base` tokens | Notes |
+| :--- | ---: | :--- |
+| Ruby | **47** | Short `select` + `sum` |
+| Kotlin | **59** | `sumOf` core |
+| Python | **69** | Comprehension `return` |
+| JavaScript | **69** | `filter` + `reduce` |
+| TypeScript | **72** | Adds type annotations |
+| Rust | **74** | Iterator chain |
+| C# | **78** | `using` + LINQ |
+| C++ | **84** | Explicit loop + `vector` |
+| Go | **89** | Explicit loop |
+| Java | **91** | `import` + `stream` + `main` boilerplate |
+
+---
+
+## Snippets
+
+### Ruby (47 tokens)
+
+```ruby
+def sum_even_squares(nums)
+  nums.select(&:even?).sum { |x| x * x }
+end
+
+puts sum_even_squares([1, 2, 3, 4, 5, 6])
+```
+
+### Kotlin (59 tokens)
+
+```kotlin
+fun sumEvenSquares(nums: List<Int>) =
+    nums.filter { it % 2 == 0 }.sumOf { it * it }
+
+fun main() = println(sumEvenSquares(listOf(1, 2, 3, 4, 5, 6)))
+```
+
+### Python (69 tokens)
+
+```python
+def sum_even_squares(nums: list[int]) -> int:
+    return sum(x * x for x in nums if x % 2 == 0)
+
+if __name__ == "__main__":
+    print(sum_even_squares([1, 2, 3, 4, 5, 6]))  # 56
+```
+
+### JavaScript (69 tokens)
+
+```javascript
+function sumEvenSquares(nums) {
+  return nums.filter((x) => x % 2 === 0).reduce((s, x) => s + x * x, 0);
+}
+console.log(sumEvenSquares([1, 2, 3, 4, 5, 6])); // 56
+```
+
+### TypeScript (72 tokens)
+
+```typescript
+function sumEvenSquares(nums: number[]): number {
+  return nums.filter((x) => x % 2 === 0).reduce((s, x) => s + x * x, 0);
+}
+console.log(sumEvenSquares([1, 2, 3, 4, 5, 6])); // 56
+```
+
+### Rust (74 tokens)
+
+```rust
+fn sum_even_squares(nums: &[i32]) -> i32 {
+    nums.iter().filter(|&&x| x % 2 == 0).map(|x| x * x).sum()
+}
+
+fn main() {
+    println!("{}", sum_even_squares(&[1, 2, 3, 4, 5, 6]));
+}
+```
+
+### C# (78 tokens)
+
+```csharp
+using System;
+using System.Linq;
+
+class P {
+    static int SumEvenSquares(int[] nums) =>
+        nums.Where(x => x % 2 == 0).Sum(x => x * x);
+    static void Main() =>
+        Console.WriteLine(SumEvenSquares(new[] { 1, 2, 3, 4, 5, 6 }));
+}
+```
+
+### C++ (84 tokens)
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> nums{1, 2, 3, 4, 5, 6};
+    int s = 0;
+    for (int x : nums) {
+        if (x % 2 == 0)
+            s += x * x;
+    }
+    std::cout << s << '\n';
+}
+```
+
+### Go (89 tokens)
+
+```go
+package main
+
+import "fmt"
+
+func sumEvenSquares(nums []int) int {
+    s := 0
+    for _, x := range nums {
+        if x%2 == 0 {
+            s += x * x
+        }
+    }
+    return s
+}
+
+func main() {
+    fmt.Println(sumEvenSquares([]int{1, 2, 3, 4, 5, 6}))
+}
+```
+
+### Java (91 tokens)
+
+```java
+import java.util.List;
+
+public class Main {
+    static int sumEvenSquares(List<Integer> nums) {
+        return nums.stream().filter(x -> x % 2 == 0).mapToInt(x -> x * x).sum();
+    }
+    public static void main(String[] args) {
+        System.out.println(sumEvenSquares(List.of(1, 2, 3, 4, 5, 6)));
+    }
+}
+```
+
+---
+
+For a **harder, self-contained sample** (AVL insert + rotations, roughly an order of magnitude more tokens than this page), see **[AVL tree & token counts](/en/appendix/multi-lang-balanced-tree)**.
+
+## Notes
+
+- This is **not** a benchmark of runtime performance or “best style”—only **tokenizer length** under `cl100k_base` for comparable snippets.  
+- Changing visibility (`public`), packages, or file layout (especially Java / C#) moves the numbers quickly.  
+- For a different task (HTTP + JSON, file I/O, etc.), copy the script pattern: one string per fence, keep MDX and script in lockstep.

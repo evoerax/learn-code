@@ -4,9 +4,21 @@ import { getPageMap } from 'nextra/page-map'
 import '../globals.css'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import { cache } from 'react'
 import { NextraSearchDialog } from '@/components/nextra-search-dialog'
 import { getPagesFromPageMap } from '@/lib/getPagesFromPageMap'
 import { reorderAisPageMap } from '@/lib/reorderAisPageMap'
+
+/** 同一次请求内（含 Strict Mode 双调用）只算一遍 pageMap，减轻 dev 下长时间「卡在加载」的感觉。 */
+const getCachedPageMap = cache(async (lang: string) => {
+    const raw = await getPageMap(`/${lang}`)
+    return reorderAisPageMap(raw) as typeof raw
+})
+
+const getCachedPages = cache(async (lang: string) => {
+    const pageMap = await getCachedPageMap(lang)
+    return getPagesFromPageMap({ pageMapArray: pageMap })
+})
 
 export const metadata: Metadata = {
     title: {
@@ -24,9 +36,8 @@ export default async function RootLayout({
     params: Promise<{ lang: string }>
 }) {
     const { lang } = await params
-    const rawPageMap = await getPageMap(`/${lang}`)
-    const pageMap = reorderAisPageMap(rawPageMap) as typeof rawPageMap
-    const pages = await getPagesFromPageMap({ pageMapArray: pageMap })
+    const pageMap = await getCachedPageMap(lang)
+    const pages = await getCachedPages(lang)
 
     const navbar = (
         <Navbar
