@@ -95,7 +95,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L2",
-    title: "② · 嵌入式系统",
+    title: "② · 嵌入式与 MCU",
     subtitle: "EMBEDDED & FIRMWARE",
     color: "#6B8E6B",
     accent: "#C4E8C4",
