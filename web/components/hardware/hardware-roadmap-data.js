@@ -282,7 +282,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L6",
-    title: "Ⅶ · 通信与总线",
+    title: "Ⅶ · 总线与通信",
     subtitle: "COMMUNICATION & BUS",
     color: "#7A5A5A",
     accent: "#E8C4C4",
