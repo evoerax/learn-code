@@ -1,10 +1,83 @@
 ---
 title: Electronics
-description: 'Stub — see Chinese section'
+description: 'Voltage, current, power, analog vs. digital, common components, and power safety — the foundational layer of hardware.'
 ---
 
 # Electronics
 
-Stub. **[/zh/hardware/basics/electronics](/zh/hardware/basics/electronics)**
+## The Minimum Concept Set You Need to Build
 
-[Intro](/en/hardware/basics)
+### Voltage, Current, and Power
+
+Every circuit behavior ultimately traces back to three quantities: **voltage** (potential difference, measured in volts), **current** (flow of charge, measured in amps), and **power** (rate of energy transfer, measured in watts). Ohm's Law — $V = I \times R$ — is the single most important equation in electronics. It governs everything from the voltage drop across a resistor to the current flowing through a motor driver.
+
+Power is calculated as $P = V \times I$ (or equivalently $P = I^2 \times R$). In hardware systems, thermal management is inseparable from power dissipation. A trace on a PCB that carries 3 A needs adequate width and copper weight to avoid overheating. Connectors have current ratings that must not be exceeded; a micro-USB connector rated for 1.8 A will fail prematurely if pushed to 3 A. Always check the **derating curves** for connectors and fuses — many specs are given at room temperature with a comfortable margin that shrinks at elevated temperatures.
+
+### Analog vs. Digital
+
+Real-world signals are almost always **analog**: a temperature sensor outputs a voltage that varies continuously with temperature, an accelerometer's output voltage changes with tilt angle, and radio signals arrive as smoothly varying electromagnetic waves. **Analog circuits** process these continuous signals using components such as operational amplifiers (op-amps), comparators, and analog filters.
+
+Key analog concepts that show up constantly in embedded hardware:
+
+- **Op-amp circuits**: voltage followers (buffers), amplifiers, active filters, and instrumentation amplifiers for sensor signal conditioning. The classic non-inverting amplifier has a gain of $1 + R_f/R_i$.
+- **ADC sampling**: Analog-to-Digital Converters discretize continuous voltages into digital numbers. Key parameters include **resolution** (12-bit gives 4096 levels), **sample rate** (how many times per second), and **input range** (e.g., 0–3.3 V or ±5 V). Aliasing occurs if you sample a signal faster than twice its highest frequency component (Nyquist criterion).
+- **Noise and ground return**: Every conductor has resistance and inductance; long wire runs to a sensor pick up electromagnetic interference. Differential signaling (e.g., RS-485, CAN) rejects common-mode noise. Proper **ground plane** design on PCBs and careful single-point grounding prevent ground loops that cause offset voltages and oscillation.
+- **Level shifting**: When interfacing circuits with different voltage rails (e.g., a 5 V sensor with a 3.3 V MCU), you need level shifters — either resistor dividers (for slow signals), diode clamps, or dedicated level-translator ICs.
+
+### DC Power Distribution
+
+Most embedded hardware runs on DC power, typically from batteries or regulated supplies.
+
+- **Battery chemistries**: Lithium-polymer (LiPo) packs are common in drones and mobile robots due to high energy density, but require careful management — over-discharge below ~3.0 V/cell or over-charge above ~4.2 V/cell causes permanent damage or fire. Cylindrical cells (18650, 21700) offer good energy density with more robust mechanical design. Nickel-Metal Hydride (NiMH) and Lead-Acid are less common in new designs but appear in industrial and automotive contexts.
+- **BMS (Battery Management System)**: A BMS monitors cell voltages, balances charge across cells in a multi-cell pack, and protects against over-current, over-temperature, and over/under-voltage. For a 3S (3-cell) LiPo pack, each cell should stay between 3.0 V and 4.2 V. Many embedded systems include a simple "fuel gauge" IC (e.g., TI's BQ series) that reports remaining capacity via I2C/SPI.
+- **Fuses and protection**: A fuse or polyfuse (PTC) on the main power input protects against short circuits downstream. Automotive hardware often includes TVS (Transient Voltage Suppression) diodes to clamp voltage spikes from inductive loads. **Reverse polarity protection** — either a series diode or a MOSFET-based ideal diode — prevents damage if the battery is connected incorrectly.
+- **Decoupling and bulk capacitors**: Digital ICs demand decoupling capacitors (typically 100 nF per power pin, placed close to the IC) to suppress high-frequency noise on the power rail. Bulk electrolytic capacitors (10–100 µF) near the power entry point smooth out current transients. In motor drive circuits, large bulk caps are critical to supply burst current to the motor windings.
+
+### Digital Logic Levels
+
+Microcontrollers and digital ICs communicate using discrete voltage levels representing 0 and 1.
+
+| Logic Family | Logic "0" (max) | Logic "1" (min) | Notes |
+|---|---|---|---|
+| CMOS (5 V) | 0–1.5 V | 3.5–5 V | Classic 74HC series |
+| CMOS (3.3 V) | 0–0.8 V | 2.0–3.3 V | Common in modern MCUs |
+| LVTTL | 0–0.4 V | 2.4–3.3 V | 3.3 V signaling with TTL thresholds |
+| CMOS (5 V tolerant) | — | — | Input tolerates 5 V even at 3.3 V VCC |
+
+**Open-drain and pull-up resistors**: In open-drain mode, a GPIO pin can only pull the line low (to ground) or let it float. An external **pull-up resistor** (typically 4.7 kΩ–10 kΩ) then pulls the line high when no device is actively driving it low. This architecture is used for I2C, single-wire buses, and any shared bus where multiple devices may drive the line. The pull-up value is a tradeoff: too small increases current draw and slows edges; too large makes the circuit more susceptible to noise.
+
+**Level translation** between logic families can be as simple as a voltage divider for unidirectional signals (e.g., 5 V MCU output → 3.3 V input) or requires active translators (e.g., for bidirectional signals like I2C between 3.3 V and 5 V rails).
+
+## Relationship to the Systems That Follow
+
+### Drones
+
+Drones place extreme demands on power distribution. The **Electronic Speed Controller (ESC)** switches high currents (10–50 A) at high frequencies (20–100 kHz PWM) to drive brushless motors. This switching creates **power supply ripple** on the 5 V rail that can couple into the IMU (Inertial Measurement Unit) and corrupt accelerometer and gyroscope readings. Decoupling the IMU's power supply and using dedicated LDOs (Low Dropout regulators) rather than switching regulators directly for the IMU is a common and critical design practice.
+
+High-current motor wires must be thick, short, and properly twisted or shielded to minimize inductance and reduce electromagnetic emissions that could interfere with the GPS compass and radio receiver.
+
+### Automotive
+
+Automotive electronics run on **12 V** (traditional) or **48 V** (modern mild-hybrid) rails. The 12 V network has a wide voltage range — from ~9 V during cold crank to ~14.4 V during charging — and is subject to **transient spikes** (load dump, jump start, inductive kickback) that can exceed 100 V for microseconds. Automotive designs require voltage clamping (TVS diodes), reverse-battery protection, and components rated for the full -40 °C to +125 °C temperature range.
+
+CAN bus and LIN bus are the dominant in-vehicle networks; both use differential signaling for noise immunity in the electrically harsh automotive environment.
+
+### Robotics
+
+Robot control systems typically have a **central controller** (PC or high-performance MCU) communicating with multiple motor drives and sensors over various buses. A critical design consideration is **common ground**: when motor drivers switch heavy inductive loads, the ground potential at the driver can bounce relative to the MCU ground, causing reset or communication errors. **Opto-isolation** (optocouplers) or **digital isolators** are used to separate noisy motor grounds from sensitive logic grounds.
+
+Industrial robots often run on 24 V DC with separate **logic power** and **motor power** rails, and use safety-rated circuits (hardware watchdog, STO — Safe Torque Off) to meet ISO 10218 (industrial robot safety).
+
+## Practical Advice: Start Hands-On
+
+Before designing a custom PCB, build the circuit on a **breadboard** or use off-the-shelf modules. This lets you:
+
+1. **Measure voltage** at key nodes with a multimeter. Verify your power rail is actually at the voltage you think it is — under load, a marginally-regulating LDO can droop.
+2. **Observe waveforms** with an oscilloscope. Look at the power rail noise, the actual shape of PWM signals driving motors, and whether the SPI/I2C clock and data lines look clean.
+3. **Calculate power consumption** by measuring current draw at the supply. Know how long your battery will actually last. A system that draws 500 mA at 12 V for 2 hours delivers 12 Wh — a 2 Ah 3S LiPo (nominally 11.1 V, 22.2 Wh) will run it for roughly 4 hours, but only if you don't over-discharge below 3.0 V per cell.
+
+**My first electronics project**: a simple bench supply (a 12 V wall adapter → LM7805 linear regulator → breadboard rail) with a few LEDs, a potentiometer as a voltage divider, and a capacitor filter. Then add an Arduino reading a TMP36 temperature sensor and printing values over serial. This single setup teaches voltage regulation, voltage division, ADC sampling, serial output, and wiring mistakes all at once.
+
+Once you are comfortable reading schematics, prototyping on breadboard, and debugging with a scope, you are ready to design a two-layer PCB in KiCad and order it from a fabricator — the transition from prototype to product starts with a well-annotated schematic and a clean layout.
+
+[Basics Overview](/en/hardware/basics) · [Next: Embedded Systems](/en/hardware/basics/embedded)
