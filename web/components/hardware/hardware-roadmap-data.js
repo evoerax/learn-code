@@ -47,7 +47,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L1",
-    title: "① · 电路与电子",
+    title: "① 电路与电子",
     subtitle: "CIRCUITS & ELECTRONICS",
     color: "#5A7A94",
     accent: "#C4D5E8",
@@ -95,7 +95,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L2",
-    title: "② · 嵌入式与 MCU",
+    title: "② 嵌入式与 MCU",
     subtitle: "EMBEDDED & FIRMWARE",
     color: "#6B8E6B",
     accent: "#C4E8C4",
@@ -143,7 +143,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L3",
-    title: "③ · 执行器与动力",
+    title: "③ 执行器与动力",
     subtitle: "ACTUATORS & POWER",
     color: "#94825A",
     accent: "#E8DCC4",
@@ -191,7 +191,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L4",
-    title: "④ · 传感器与感知",
+    title: "④ 传感器与感知",
     subtitle: "SENSORS & PERCEPTION",
     color: "#8E6B8E",
     accent: "#E8C4E8",
@@ -236,7 +236,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L5",
-    title: "⑤ · 控制与估计",
+    title: "⑤ 控制与估计",
     subtitle: "CONTROL & ESTIMATION",
     color: "#5A8E8E",
     accent: "#C4E8E8",
@@ -282,7 +282,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L6",
-    title: "⑥ · 总线与通信",
+    title: "⑥ 总线与通信",
     subtitle: "BUS & COMMUNICATION",
     color: "#7A5A5A",
     accent: "#E8C4C4",
@@ -331,7 +331,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L7",
-    title: "⑦ · 机械结构",
+    title: "⑦ 机械结构",
     subtitle: "MECHANICAL DESIGN",
     color: "#5A6B94",
     accent: "#C4D0E8",
@@ -377,7 +377,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L8",
-    title: "⑧ · 智能算法",
+    title: "⑧ 智能算法",
     subtitle: "AI & ALGORITHMS",
     color: "#8E8E5A",
     accent: "#E8E8C4",
@@ -425,7 +425,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L9",
-    title: "⑨ · 整机实战",
+    title: "⑨ 整机实战",
     subtitle: "SYSTEM INTEGRATION",
     color: "#6B6B8E",
     accent: "#D0D0E8",
@@ -484,7 +484,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L10",
-    title: "⑩ · 工程素养",
+    title: "⑩ 工程素养",
     subtitle: "ENGINEERING PRACTICE",
     color: "#6B8080",
     accent: "#C4DEDE",
