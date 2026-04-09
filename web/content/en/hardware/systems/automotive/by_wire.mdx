@@ -1,10 +1,123 @@
 ---
 title: Automotive · By-wire
-description: 'Stub'
+description: 'Drive-by-wire steering, braking, and throttle — the interface philosophy and safety redundancy that separates a prototype vehicle from a production car'
 ---
 
-# By-wire
+# By-wire & Actuation
 
-**[/zh/hardware/systems/automotive/by_wire](/zh/hardware/systems/automotive/by_wire)**
+By-wire — also called **x-by-wire** or **drive-by-wire** — replaces the traditional mechanical or hydraulic linkage between a driver's input and the vehicle's actuators with an electronic signal path. The driver's intent (steering angle, brake force, accelerator position) is captured by sensors, converted to a digital signal, processed by safety-rated controllers, and translated into actuator commands. The result is a fully electronic control loop with no direct mechanical backup for the primary path.
 
-[Automotive](/en/hardware/systems/automotive)
+This is fundamentally different from the hobby-drone ESC approach, where a PWM or DShot signal goes directly from the flight controller to brushless motor drivers. Automotive by-wire adds layers of determinism, fault tolerance, and regulatory compliance that push the engineering bar much higher.
+
+---
+
+## Why By-wire Is Difficult
+
+### Human Factors and Safety Criticality
+
+A by-wire system failure can directly cause a crash. Unlike a drone losing a motor in flight (which can glide or deploy a parachute in some cases), a car losing steering or braking at 100 km/h on a highway leaves the driver with almost no recovery options. This means every by-wire system must be designed to an **automotive safety integrity level (ASIL)** defined in ISO 26262, with ASIL D being the most stringent (requiring < 10⁻⁸ failures per hour per component).
+
+### Fault Tolerance and Redundancy
+
+A single-point failure is unacceptable for primary controls. Automotive by-wire systems use **redundant architectures** with two or three parallel signal paths:
+
+- **Dual-redundant (2oo2)**: Two independent channels; the system continues operating if one fails, with degraded performance.
+- **Triple-redundant (2oo3)**: Three channels; majority-vote logic selects the correct output, allowing continued full performance after a single failure.
+- **Fail-safe**: At minimum, the system must detect a fault and transition to a safe state (e.g., apply spring-return brakes, reduce motor torque to zero) rather than allowing uncontrolled acceleration or steering.
+
+### Real-time Determinism
+
+The electronic control loop must have bounded latency. For electric power steering (EPS), the motor assist must react within **2–10 ms** of the driver's input to feel natural. For brake-by-wire, the time from pedal travel to full brake force application must be under **100–150 ms**. These are hard real-time constraints, not best-effort.
+
+### Environmental Harshness
+
+Automotive actuators operate across the full temperature range (−40°C to +85°C for interior, −40°C to +125°C for under-hood), with vibration, humidity, and electromagnetic interference (EMI) from the ignition system and traction motor inverters. The gap between an Arduino-driven servo and a production automotive actuator is enormous.
+
+---
+
+## Types of By-wire Systems
+
+### Steer-by-wire (SbW)
+
+Steer-by-wire removes the mechanical steering column entirely, replacing it with:
+
+- A **steering input sensor** (contactless, typically magnetoresistive) that reads steering wheel angle and torque.
+- An electronic control unit (ECU) that maps steering angle to a desired front-wheel angle.
+- An **electric power steering (EPS)** motor at the rack or column that actuates the steering linkage.
+- A **road-feel motor** in the steering wheel that provides artificial feedback to the driver (simulating steering resistance from tire forces).
+
+Production steer-by-wire is rare (Nissan and Infiniti have offered it in limited models), because regulatory safety requirements are extremely demanding. The mechanical backup steering column is still required by most regulations unless the vehicle achieves very high reliability thresholds.
+
+### Brake-by-wire (EBS / BBW)
+
+Electronic brake systems use a **brake pedal travel sensor** and **pressure sensors** in each brake circuit:
+
+- **Electronic Brakeforce Distribution (EBD)** continuously varies brake force between front and rear axles based on load.
+- **Anti-lock Braking System (ABS)** modulates brake pressure at each wheel to prevent lockup.
+- **Electronic Stability Control (ESC)** uses selective braking on individual wheels to correct understeer or oversteer.
+
+In **brake-by-wire** (as opposed to conventional ABS), the brake pedal is not hydraulically connected to the brake calipers at all. Instead, the pedal sensor commands brake motors or hydraulic actuators at each wheel independently. **Regenerative braking** (common in EVs) is coordinated with friction braking through the same electronic system.
+
+A key safety feature is **brake assist** — if the driver depresses the brake pedal very quickly (indicating an emergency), the system applies maximum braking pressure automatically regardless of how hard the driver is pushing.
+
+### Throttle-by-wire (ETC)
+
+Electronic throttle control (ETC) — also called **drive-by-wire throttle** — replaced mechanical throttle cables in most gasoline vehicles starting in the 1990s:
+
+- The accelerator pedal has a **dual-channel position sensor** (two independent potentiometer or hall-effect sensors).
+- The Engine Control Unit (ECU) reads pedal position, engine load, speed, and other signals, then commands the **throttle body motor** to achieve the desired intake airflow.
+- Throttle position is verified by a **redundant throttle position sensor (TPS)** on the throttle plate itself.
+- The system supports **idle speed control**, **cruise control**, and **traction control** by modifying the throttle angle in closed-loop with wheel-speed sensors.
+
+### Park-by-wire (EPB)
+
+Electric Parking Brake (EPB) uses an actuator (typically a motor-driven caliper or cable puller) to apply the parking brake, activated by a dashboard button. Modern EPB integrates with the stability control system to provide **auto-hold** (maintaining brake pressure when stopped) and **dynamic emergency braking** (applying full brake force if the driver pulls and holds the EPB switch during driving).
+
+---
+
+## Safety Architecture
+
+### ISO 26262 and ASIL
+
+ISO 26262 is the functional safety standard for road vehicles. It defines the **Automotive Safety Integrity Level (ASIL)** from ASIL A (lowest) to ASIL D (highest). By-wire systems for steering and braking are typically ASIL D — the highest integrity level, requiring:
+
+- **Hardware fault tolerance**: Dual- or triple-redundant hardware that can tolerate single-component failures without loss of function.
+- **Diagnostic coverage**: > 99% diagnostic coverage for dangerous hardware failures.
+- **Software development**: Automotive SPICE process compliance and freedom from interference between software components.
+- **Verification and validation**: Extensive testing including hardware-in-the-loop (HIL), vehicle-level testing, and corner-case analysis.
+
+### Fail-operational vs Fail-safe
+
+- **Fail-operational**: The system continues operating at reduced capability after a fault. Required for steer-by-wire to allow the driver to maintain steering control after a single failure.
+- **Fail-safe**: The system transitions to a safe state (e.g., zero torque, applied parking brake) after a fault. Acceptable for some throttle and park-by-wire applications.
+
+### Watchdog and Self-test
+
+Automotive ECUs run **continuous self-tests** on sensors, actuators, and the CPU itself. If a fault is detected, the system transitions to a safe state within the real-time deadline. Motor drivers include **overcurrent protection**, **overtemperature shutdown**, and **dead-time insertion** to prevent shoot-through in H-bridge configurations.
+
+---
+
+## Prototype and Hobby Practice
+
+For university vehicle projects, Formula Student teams, or DIY robocar experiments, full automotive-grade by-wire is not affordable or necessary. The typical approach:
+
+- **Motor-driven actuation**: A brushless DC motor with belt or gearbox drives the steering or brake mechanism.
+- **Steering**: A column-torque sensor measures driver effort; a BLDC motor at the steering rack or a separate actuator pushes the tie rods. An Arduino or ESP32 generates PWM commands, with a secondary microcontroller reading redundant pedal sensors.
+- **Braking**: A master cylinder driven by a DC motor or pneumatic piston; brake pressure measured by a pressure sensor and fed back in closed-loop. Some teams use brake-by-wire with a proportional valve controlled by the ECU.
+- **Emergency stop**: A hardware **dead-man switch** (mushroom-head button) that cuts all motor drivers regardless of software state is mandatory for any vehicle that could cause harm.
+
+The gap between this and production by-wire is enormous — but the prototype platform teaches the same fundamental concepts: sensor → ECU → actuator, with closed-loop feedback and fail-safe logic.
+
+---
+
+## Relationship to Other Pages
+
+- **[Basics · Actuation](/en/hardware/basics/actuation)**: Motor types, ESC principles, and mechanical power transmission provide the foundation for how by-wire actuators convert electrical signals to mechanical motion.
+- **[Basics · Electronics](/en/hardware/basics/electronics)**: Power supply design, protection circuits, and EMI considerations apply directly to the harsh electrical environment of by-wire systems.
+- **[Basics · Communication](/en/hardware/basics/communication)**: CAN bus is the dominant networking protocol for by-wire ECUs; understanding CAN arbitration and error handling is essential for debugging vehicle networks.
+- **[Onboard Networks](/en/hardware/systems/automotive/onboard_network)**: The power architecture (12V/48V rails, load dump, reverse polarity protection) supplies the by-wire actuators and their ECUs.
+- **[ADAS Sensors](/en/hardware/systems/automotive/adas)**: ADAS features like lane keeping and autonomous emergency braking are built on top of the by-wire infrastructure — the same actuators used for driver assistance are commanded by ADAS algorithms.
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+[← Automotive](/en/hardware/systems/automotive) · [Onboard Networks](/en/hardware/systems/automotive/onboard_network) · [ADAS Sensors →](/en/hardware/systems/automotive/adas)
+</div>
