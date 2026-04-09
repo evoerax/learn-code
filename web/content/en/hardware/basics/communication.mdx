@@ -1,10 +1,56 @@
 ---
 title: Buses & links
-description: 'Stub — see Chinese section'
+description: 'UART, SPI, I2C, CAN, Ethernet, and RC links — how subsystems talk to each other'
 ---
 
 # Buses & links
 
-Stub. **[/zh/hardware/basics/communication](/zh/hardware/basics/communication)**
+Modern embedded machines are collections of subsystems that must share state, commands, and sensor data in real time. Choosing the right bus—or the right link protocol—shapes latency, determinism, wiring complexity, and even regulatory compliance. This page covers the protocol ladder from board-level chip-to-chip communication up to over-the-air RC and telemetry links.
 
-[Intro](/en/hardware/basics)
+## Board-level and in-vehicle protocols
+
+These sit inside the same enclosure, often on the same PCB or a short backplane.
+
+**UART / SPI / I2C** are the three workhorses of MCU-to-sensor and MCU-to-Actuator communication. UART (Universal Asynchronous Receiver-Transmitter) is point-to-point, requires only two wires (TX/RX) plus ground, and is the classic choice for GPS modules, betaflight-style ESP32 telemetry, and debug consoles. SPI (Serial Peripheral Interface) is synchronous, full-duplex, and supports higher throughput—ideal for high-speed ADC sampling, external FLASH, or displays. I2C (Inter-Integrated Circuit) uses only two shared wires (SDA/SCL), supports multiple masters and many slaves on the same bus, and is the standard for reading sensors like magnetometers, barometers, and some IMUs at low to moderate speeds. All three are mastered early in any embedded career and together cover the majority of chip-to-chip links inside a robot or vehicle.
+
+**CAN (Controller Area Network)** is the dominant bus in automotive and industrial robotics. It is a two-wire differential bus with built-in arbitration (higher-priority IDs win without corruption), error detection and retransmission, and support for up to ~5 Mbps at short bus lengths. CAN messages are identified by a numeric ID, not by slave addresses as in I2C, which makes it easier to add nodes without a central coordinator. Every node on the bus can transmit when the bus is idle; a collision is resolved by ID priority. This makes CAN deterministic and suitable for safety-critical functions like motor shutdown or braking. Familiarity with CAN is practically a prerequisite for automotive and collaborative robot work. The physical layer requires 120 Ω termination at both ends of the bus to prevent signal reflections.
+
+**Ethernet and USB** occupy the high-bandwidth end of the spectrum. Ethernet (100BASE-T or 1000BASE-T via a microcontroller with an external PHY) delivers tens to hundreds of megabits per second and is the natural choice for cameras, lidars, computing modules (SOM/NUC), and debug access in larger systems. USB 2.0/3.0 serves similar roles when a device is already USB-equipped—webcams, flash storage, and high-speed ADCs are common examples. Both require careful connector selection and, in the case of Ethernet, magnetics and precise impedance-controlled wiring to maintain signal integrity.
+
+## Link layer: RC and telemetry
+
+When the signal must travel through air rather than copper, different constraints dominate: latency, bandwidth, regulatory compliance, and safety.
+
+**RC (pulse-position modulation and PWM receivers)** remain the primary safety link for drones and hobby vehicles. A PWM receiver outputs discrete pulses (typically 1–2 ms wide, repeated at 50 Hz) for each channel; the flight controller reads these pulses using input capture timers to determine pilot intent. Modern RC protocols like SBUS, CRSF (Crossfire), and FPort encode multiple channels into a serial stream on a single wire, reducing wiring and enabling higher update rates (up to 1 kHz for SBUS). Regardless of protocol, a failsafe must be configured: on signal loss, the vehicle should enter a predetermined safe state (e.g., altitude hold, return-to-home, or motor stop).
+
+**Telemetry and image transmission** round out the over-the-air picture. Data telemetry (915 MHz or 433 MHz radios using protocols like MAVLink, LTM, or FrSky SmartPort) streams real-time telemetry—battery voltage, GPS position, current draw—to a ground station. Image transmission (5.8 GHz analog VTX or digital systems like DJI O3, HDZero, or Walksnail) pushes high-bandwidth video to the pilot or operator. Both are subject to local radio regulations: output power limits, permitted frequency bands, and licensing requirements vary by country. Always verify compliance before deploying a new link—particularly for CE/FCC-marked products sold commercially.
+
+## Message brokers and middleware: ROS topics, MQTT, DDS
+
+At the system level, inter-process or inter-board communication benefits from a structured pub/sub or service layer rather than raw point-to-point links.
+
+**ROS (Robot Operating System) topics** provide a publish/subscribe messaging layer. Nodes publish messages to named topics; other nodes subscribe to receive them. Topics are typed (e.g., `sensor_msgs/Imu`, `geometry_msgs/Twist`), which enforces a contract between producer and consumer and enables tooling like `rostopic echo` for debugging. The original ROS (ROS 1) relies on a single master node for name registration, which introduces a single point of failure. ROS 2 replaces this with DDS (Data Distribution Service), a standard-based peer-to-peer middleware that provides automatic discovery, configurable QoS (quality of service) policies, and native support for real-time systems.
+
+**MQTT (Message Queuing Telemetry Transport)** is a lightweight pub/sub protocol designed for unreliable networks, making it a common choice for IoT gateways and cloud-connected vehicles. It uses a broker to relay messages; clients publish to topics (e.g., `/vehicle/left_motor/current`) and subscribe to topics they care about. MQTT's three QoS levels (0: at most once, 1: at least once, 2: exactly once) let developers trade bandwidth and latency for delivery guarantees. For a robot that streams telemetry to a cloud dashboard while accepting commands from an operator, MQTT is often a natural fit.
+
+**DDS (Data Distribution Service)** is the underlying protocol in ROS 2. It is a standard (Object Management Group) with many implementation vendors (e.g., Fast DDS, Cyclone DDS, RTI Connext). DDS supports fine-grained QoS policies including deadline monitoring, liveliness detection, ownership strength (for redundant publishers), and transport priority. For multi-vehicle or multi-robot deployments where latency, reliability, and real-time guarantees matter, DDS is the professional-grade choice.
+
+## Design points
+
+Regardless of which bus or link you choose, three system-level properties deserve deliberate attention:
+
+**Bandwidth and update rate** must be matched to the control loop. A flight controller running at 1 kHz needs sensor data refreshed at least at that rate or faster; publishing IMU data at 10 Hz creates a fundamental control problem. Map every bus's practical throughput to the data rates your system requires, with headroom for protocol overhead and retransmissions.
+
+**Latency and jitter** matter most for closed-loop control. UART's latency is typically under 1 ms but is non-deterministic under OS scheduling. CAN's worst-case latency depends on bus load and message priority—a high-priority message waiting behind a long low-priority frame can be delayed by hundreds of microseconds. For hard real-time chains (sensor → estimation → control → actuation), consider whether each link's jitter budget fits within your control loop period.
+
+**Documentation and interface contracts** prevent the "only one person can fly/drive" problem. Label every bus, connector, and protocol version in the schematics. Pin the CAN bit rate and termination status. Document which topic or message type each node publishes and subscribes to, and maintain a single source of truth (a shared `.msg` or `.srv` definition, a ROS bag index, or a MQTT topic tree). A system where every engineer can probe the bus and read the data is far more maintainable than one that requires tribal knowledge.
+
+## Relationship across machine types
+
+The three machine families emphasize different parts of the communication stack. Drones rely heavily on RC (SBUS/CRSF for pilot input) and lightweight telemetry (MAVLink over 433 MHz), while CAN is increasingly common for cross-controller communication in larger multi-rotor platforms with compute-heavy payloads. Automotive is dominated by CAN (OBD-II, diagnostics, ECUs), with Automotive Ethernet (100BASE-T1, 1000BASE-T1) for ADAS sensors and infotainment, and LIN for low-speed sensors like window switches. Robotics—particularly industrial arms and AMRs—uses a mix of EtherCAT or PROFINET for hard real-time joint control, ROS 2/DDS for perception-compute communication, and MQTT for fleet-level status reporting to a supervisory dashboard.
+
+## Practical suggestions
+
+Start with UART for any sensor that comes with a UART interface—GPS, some lidars, and betaflight-style ESC telemetry are all UART by default and require only a TX/RX cross connection. Graduate to CAN when you need multi-node determinism, galvanic isolation, or the robustness that differential signaling provides. For ROS-based systems, begin with ROS 2 Humble and Fast DDS; the learning curve is gentler than it looks, and the tooling (rviz2, ros2 topic, ros2 doctor) rewards the investment. For cloud-connected fleets, prototype with MQTT over Wi-Fi before committing to a cellular modem or LoRa link—debugging over unreliable radio is significantly harder than debugging over a stable LAN.
+
+[Intro](/en/hardware/basics) · [Control & estimation](/en/hardware/basics/control)
