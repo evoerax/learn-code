@@ -1,10 +1,110 @@
 ---
-title: Automotive · Network
-description: 'Stub'
+title: Automotive · Onboard Networks
+description: '12V/48V power architecture, CAN/LIN/FlexRay/Ethernet buses, and diagnostic protocols — bridging the gap between hobby wiring and automotive-grade reliability'
 ---
 
-# Onboard network
+# Onboard Networks & Power
 
-**[/zh/hardware/systems/automotive/onboard_network](/zh/hardware/systems/automotive/onboard_network)**
+The **Onboard network** page covers the electrical backbone of a modern vehicle: power distribution, in-vehicle networking buses, and the diagnostic infrastructure that ties them together. Unlike the simple 5V regulated rails of a hobby drone ESC, automotive power and communication must survive transients, temperature extremes, and decades of vibration — all while meeting functional safety requirements.
 
-[Automotive](/en/hardware/systems/automotive)
+---
+
+## Power Supply Architecture
+
+### 12V and 24V Rails
+
+Most passenger vehicles operate on a **12V negative-ground** electrical system, derived from a lead-acid starter battery (typically 40–70 Ah). The alternator regurator maintains 13.8–14.4V during charging. Heavy commercial vehicles (trucks, buses) often use **24V** systems (two 12V batteries in series) to reduce current and cable gauge for the same power.
+
+Key characteristics:
+- **Starting surge**: Cranking current can exceed 400A for 1–3 seconds, causing momentary voltage dip to 6–8V. Electronics must tolerate this without resetting.
+- **Load dump**: When the alternator is disconnected while charging, a voltage spike of 60–125V can appear on the 12V rail for up to 400ms. TVS diodes or absorptive circuits are mandatory for any node directly connected to the battery rail.
+- **Reverse polarity**: A reversed battery connection can destroy unprotected circuits. Automotive modules typically include reverse-polarity protection diodes or MOSFET-based ideal-diode circuits.
+- **48V mild hybrid (MHEV)**: Modern architectures introduce a 48V rail (up to 60V maximum) for efficient boost/sailing operation, with a DC-DC converter interfacing to the traditional 12V bus. The 48V domain powers high-current loads like e-turbo or active suspension.
+
+### Distribution and Fusing
+
+Automotive distribution uses **blade fuses** (ATO/ATC standard, color-coded by amperage: yellow=15A, white=20A, blue=25A, etc.) and **Midi/Max fuses** for higher current. Fuse boxes (SJB — smart junction box) often integrate relay control and LIN/CAN interfaces for smart switching. Power routing follows star topology from the battery, with fused branch circuits to each load.
+
+---
+
+## In-Vehicle Networking Buses
+
+### CAN Bus (Controller Area Network)
+
+CAN is the dominant in-vehicle network, specified as ISO 11898-2 (high-speed, up to 1 Mbps) and ISO 11898-3 (low-speed fault-tolerant, up to 125 kbps). Key concepts:
+
+- **Frame structure**: 11-bit (standard) or 29-bit (extended) identifier, up to 8 bytes data, CRC, ACK, and end-of-frame bits.
+- **Bus arbitration**: Non-destructive bit-wise arbitration using dominant (0) and recessive (1) levels on a differential pair. Lower identifier wins — no collisions.
+- **Load rate**: Automotive designs typically target a maximum of 30% bus load during peak traffic to preserve latency margins. High-speed CAN at 500 kbps with multiple ECU chatter can approach saturation without careful message scheduling.
+- **Termination**: Two 120Ω resistors at the bus ends (one at each extreme node). Missing or incorrect termination causes reflection and communication errors.
+
+Typical CAN use cases: powertrain (engine ECU, transmission), chassis (ABS/ESC, steering angle sensor), body (BCM, HVAC), and diagnostic gateways.
+
+### LIN Bus (Local Interconnect Network)
+
+LIN (ISO 17987) is a low-speed (1–20 kbps), single-wire subsidiary bus used for simple sensors and actuators where CAN is cost-prohibitive. The master polls slave nodes on a schedule table; no collision detection is needed. LIN is commonly used for:
+- Interior lighting, window switches, mirror adjusters
+- Rain/lights sensors, climate control actuators
+- Seat position motors
+
+The LIN physical layer is not fault-tolerant like CAN; a single wire + ground reference is used.
+
+### FlexRay
+
+FlexRay (ISO 17458) is a deterministic, high-speed (up to 10 Mbps) bus for safety-critical applications like x-by-wire (steering, braking). It uses a time-triggered protocol with static and dynamic segments, supporting redundant channel A/B for fault tolerance. Adoption has decreased in favor of Automotive Ethernet for new platforms due to cost and complexity.
+
+### Automotive Ethernet
+
+As ADAS and connected car domains generate massive data (camera streams, LIDAR point clouds), **Automotive Ethernet** (100BASE-T1, 1000BASE-T1 per IEEE 802.3bw/802.3bp) has become the backbone for high-bandwidth sensor aggregation. A **gateway ECU** acts as the hub, bridging CAN/LIN/FlexRay to Ethernet and routing traffic to domain controllers (powertrain, chassis, ADAS, cockpit).
+
+Key differences from office Ethernet:
+- **Single-pair cabling**: 100BASE-T1 uses a single twisted pair (not 4 pairs like RJ45), reducing weight and cost — critical for automotive.
+- **EMC requirements**: Stringent electromagnetic compatibility ensures no interference with radio receivers.
+- **QoS and AVB/TSN**: Audio Video Bridging / Time-Sensitive Networking provides guaranteed latency for time-critical frames.
+
+---
+
+## Diagnostics and Logging
+
+### UDS and OBD-II
+
+**UDS (Unified Diagnostic Services, ISO 14229)** is the primary diagnostic protocol used in automotive ECUs. It operates over CAN (or Ethernet) and provides services such as:
+- **Session control**: Entering extended diagnostic sessions with elevated privileges.
+- **Read/Write DTCs**: Reading Diagnostic Trouble Codes (stored fault conditions) and clearing them after repair.
+- **Data monitoring**: Real-time reading of live data (sensor values, actuator states).
+- **Routine control**: Executing on-board tests (compression test, adaptation relearning).
+
+**OBD-II (On-Board Diagnostics II)** is a US-mandated subset of diagnostics focused on emissions-related monitoring. The OBD-II port (SAE J1962) provides access to the powertrain CAN bus at 500 kbps, with standardized PIDs (Parameter IDs) for emissions monitoring. EOBD (European OBD) is the European equivalent.
+
+### Practical CAN and Power Diagnostics
+
+Capturing CAN traffic and power rail behavior is essential for debugging vehicle systems:
+
+- **CAN capturing**: A USB-CAN adapter (e.g., Kvaser, Vector, or budget options like CANalyze or lawmate clones) connected to the OBD-II port lets you log raw frames. Software like Wireshark (with CANDissector), SavvyCAN, or manufacturer tools (Vector CANalyzer, Bosch CANalyzer) decodes raw IDs to human-readable signals.
+- **Power rail probing**: An oscilloscope with differential probes on the 12V rail during engine start reveals cranking dip depth, alternator ripple, and load-dump spike amplitude. This is critical before connecting any aftermarket electronics.
+- **Bus load analysis**: Continuous logging during drive cycles identifies peak-load periods. If bus load exceeds 30–40%, message priorities and transmission rates need re-scheduling.
+
+On a test bench (bench setup without a live vehicle), a **CANoe** or its open-source equivalent can simulate ECU chatter, and a bench power supply set to 12V/24V with programmable transient profiles can replicate load-dump and cranking profiles.
+
+---
+
+## Relationship to Other Pages
+
+This page provides the electrical and networking foundation. The following pages build on it:
+- **[By-wire](/en/hardware/systems/automotive/by_wire)**: Drive-by-wire actuation and the interface philosophy between driver intent and electronic control — these systems rely on both the power architecture and the CAN bus described here.
+- **[ADAS sensors](/en/hardware/systems/automotive/adas)**: ADAS sensor modules (radar, camera) are network nodes on the automotive Ethernet backbone and often draw power from the 12V rail.
+- **[Basics · Communication](/en/hardware/basics/communication)**: The foundational CAN/LIN/Ethernet material in the hardware basics section provides the general bus concepts applied here in an automotive context.
+- **[Basics · Electronics](/en/hardware/basics/electronics)**: Power supply design, protection circuits, and DC-DC conversion are covered in the electronics foundations.
+
+---
+
+## Summary
+
+Automotive onboard networks must meet demanding electrical and protocol requirements far beyond hobby systems. Key takeaways:
+- **12V automotive power** is unforgiving: expect 6–8V cranking dips, 60–125V load-dump spikes, and decades of vibration.
+- **CAN** is the workhorse bus; LIN handles cheap actuators; FlexRay serves x-by-wire; Automotive Ethernet aggregates high-bandwidth domains.
+- **Diagnostics** (UDS over CAN, OBD-II on the DLC port) are the primary debug and service interface — mastering them is essential for any automotive hardware work.
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+[← Automotive](/en/hardware/systems/automotive) · [By-wire & Actuation](/en/hardware/systems/automotive/by_wire) · [ADAS Sensors →](/en/hardware/systems/automotive/adas)
+</div>
