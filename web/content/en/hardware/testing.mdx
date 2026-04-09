@@ -1,0 +1,67 @@
+---
+title: Testing & Validation
+description: "Hardware testing methodology: HIL, environmental testing, and FMEA — a validation system from component to whole machine"
+---
+
+# Testing & Validation
+
+Hardware goes through layers of evidence-gathering between design and mass production. Simulation validates concepts but cannot replace test data under real stress; bench testing accelerates iteration but cannot cover every edge case in field operation. Testing is the process of turning design assumptions into repeatable, verifiable conclusions — the final kilometer of engineering before deployment.
+
+---
+
+## HIL — Hardware-in-the-Loop
+
+HIL (Hardware-in-the-Loop) connects a real controller to a closed-loop system driven by a real-time simulator. The controller under test does not know whether it is connected to a real actuator or a simulated model. The core value of HIL: **fully test the controller without relying on a real plant**.
+
+**When HIL Applies**: Flight controllers are verified against failure responses in an HIL simulator — no real aircraft crashes required. Automotive ECUs cover extreme conditions (icy roads, sensor failures) on an HIL bench — no real collision experiments needed. Robot joint drives run acceleration/deceleration curves in an HIL environment — no physical robot arm required. HIL converts "hard-to-reproduce" and "high-hazard" edge cases into repeatable simulation events.
+
+**Real-Time Simulator Requirements**: HIL platforms must deliver deterministic real-time computation (typically microsecond-level or better simulation step size), often using dedicated real-time operating systems such as Speedgoat, dSPACE, or NI PXI. The plant model (aerodynamics, vehicle dynamics, manipulator kinematics) must run in real time on the simulator, and I/O interfaces (ADC, CAN, PWM) must be electrically compatible with the real controller. The trade-off between model fidelity and simulation step size is the central engineering trade-off in HIL — finer models demand more computational headroom, while longer step sizes risk losing fidelity.
+
+**Gaps Between HIL and Physical Testing**: Tire-ground adhesion models are a classic challenge in automotive HIL — simulation cannot fully replicate the nonlinear characteristics of real road surfaces. Flight controller HIL cannot replicate real GPS multipath effects and electromagnetic interference. HIL cannot verify the physical failure modes of sensors themselves — only communication failures, not physical degradation. No matter how high HIL test coverage is, vehicle calibration and field acceptance cannot be skipped.
+
+---
+
+## Environmental Testing
+
+Environmental testing simulates the climatic and mechanical stresses a product may encounter during transport, storage, and operation — an essential step in reliability validation.
+
+**Temperature Testing**: High-temperature storage tests (typically 85°C or higher) verify that components survive extreme thermal stress. Temperature cycling tests (‑40°C ↔ 85°C cycles) check solder joint and package resistance to thermal fatigue. High-temperature operational tests verify that heat sink design and thermal interface materials maintain protection at critical thresholds. Automotive electronics must meet ISO 16750-4 temperature specifications; consumer drones typically reference GJB 150A.
+
+**Vibration and Shock**: Sine vibration tests simulate transport vibration, commonly across the 5–500 Hz band. Random vibration tests more closely approximate real transport and operational conditions. Shock tests (half-sine or sawtooth waves) simulate the instantaneous mechanical impact of drops and collisions. Vibration during take-off and landing is the primary source of structural fatigue and connector loosening in drones. Vehicle electronics must pass ISO 16750-3 vibration endurance tests.
+
+**Ingress Protection and Salt Spray**: IP ratings (IEC 60529) define dust and water ingress protection; drones typically require IP54–IP67. Salt spray tests (ISO 9227) simulate marine atmosphere corrosion to verify anti-corrosion plating and fastener integrity. Automotive components and outdoor robots must pass 48–96 hour salt spray exposure.
+
+**EMC Immunity**: Radiated immunity testing within environmental test suites (ISO 11452 series) takes place in an anechoic chamber, verifying that products maintain normal operation under external electromagnetic fields. This is distinct from EMC compliance testing (which measures external emissions), but both fall under the same standards framework and together constitute complete EMC validation.
+
+---
+
+## FMEA — Failure Mode and Effects Analysis
+
+FMEA (Failure Mode and Effects Analysis) is a systematic design tool for identifying potential failure modes and assessing their effects. Its emphasis is on proactively uncovering design weaknesses before failures occur, rather than reacting after the fact.
+
+**FMEA Structure**: Each potential failure mode is recorded on a dedicated form with core fields: Failure Mode — **what fails**; Effect — **what consequences the failure brings to the system or user**; Severity (S) — severity of the effect, rated 1–10; Cause — **why this failure occurs**; Occurrence (O) — likelihood that this cause produces the failure, rated 1–10; Detection (D) — whether existing tests or verification methods can catch this failure, rated 1–10. Risk Priority Number RPN = S × O × D. Higher RPN means greater risk and demands priority corrective action.
+
+**Design FMEA vs. Process FMEA**: Design FMEA (DFMEA) focuses on the product design phase, assuming parts are manufactured per design drawings, and identifies design-intrinsic defects. Process FMEA (PFMEA) focuses on the manufacturing and assembly process, assuming the design is correct, and identifies failure sources in assembly, packaging, and inspection. The automotive industry requires systematic DFMEA and PFMEA within the APQP (Advanced Product Quality Planning) workflow.
+
+**Limitations of FMEA in Hardware Development**: FMEA depends on team experience and historical data, giving it limited ability to identify unknown failure modes ("unknown unknowns"). FMEA scoring carries subjectivity — different teams may assign significantly different S/O/D ratings to the same failure. FMEA is a qualitative analysis tool; for complex nonlinear systems and software-intensive functions, it must be supplemented with quantitative methods such as FTA (Fault Tree Analysis) and Markov analysis. FMEA is not an endpoint but a means of making engineering experience explicit and building team consensus in a structured way.
+
+---
+
+## Relationship to Other Pages
+
+Testing and validation sits at the deployment end of the hardware lifecycle, intersecting with multiple design phases:
+
+- **HIL and Flight Control / Automotive ECU**: HIL simulation is central to flight controller and automotive ECU development, and its effectiveness depends directly on plant model fidelity — see [Drones Flight Control](/en/hardware/systems/drones/flight_control), [Automotive ADAS](/en/hardware/systems/automotive/adas)
+- **Environmental Testing and Mechanical Structure**: Vibration and shock testing validates airframe and chassis design — see [Drones Airframe](/en/hardware/systems/drones/airframe), [Robotics Mobile Base](/en/hardware/systems/robotics/mobile_base)
+- **FMEA and Functional Safety**: FMEA is a key input during the functional safety concept phase, supporting ASIL decomposition and redundant architecture decisions — see [Engineering & Compliance](/en/hardware/governance)
+- **Testing and Hardware Foundations**: Test program design depends on understanding hardware fundamentals — see [Circuits & Electronics](/en/hardware/basics/electronics)
+
+---
+
+## Testing & Validation Summary
+
+HIL, environmental testing, and FMEA form three pillars of hardware validation: HIL addresses whether the controller behaves correctly under boundary conditions; environmental testing addresses whether the product is reliable under real-world stresses; FMEA addresses whether we have systematically exhausted potential failure modes. Together, these three catch high-risk problems early in the design phase, reducing late-stage rework cost.
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+[← Engineering & Compliance](/en/hardware/governance) · [Hardware Overview](/en/hardware/overview)
+</div>
