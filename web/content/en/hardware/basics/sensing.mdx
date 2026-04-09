@@ -1,10 +1,131 @@
 ---
 title: Sensing
-description: 'Stub — see Chinese section'
+description: 'IMU, magnetometer, rangefinding, encoders, and vision — the sensory layer that feeds control and localization loops.'
 ---
 
 # Sensing
 
-Stub. **[/zh/hardware/basics/sensing](/zh/hardware/basics/sensing)**
+Sensors translate physical quantities into signals that embedded systems can interpret and act upon. Choosing the right sensor — and understanding its failure modes — is as important as the algorithm that consumes its data.
 
-[Intro](/en/hardware/basics)
+## Inertial Sensing
+
+### IMU: Gyroscope and Accelerometer
+
+An **Inertial Measurement Unit (IMU)** combines a gyroscope and an accelerometer into one package. The gyroscope measures angular rate (degrees per second or radians per second) around each axis. The accelerometer measures specific force — the acceleration acting on the device minus gravity — along each axis. A basic IMU has 6 degrees of freedom (6DoF): three rate gyros and three accelerometers. A full IMU adds a magnetometer (3-axis compass) for a 9DoF or 10DoF unit.
+
+Key specifications that affect control performance:
+
+- **Bias (offset)**: Every gyro and accelerometer has a non-zero output at zero motion. Bias is usually small (a few deg/hr for a good gyro, a few mg for an accelerometer) but is the dominant error source in short-duration measurements.
+- **Bias stability / drift**: Bias changes over time and temperature. A gyro that drifts 1 deg/hr at room temperature may drift 10 deg/hr at 60 °C. In attitude estimation, gyro drift causes the heading estimate to rotate away from true north over time unless corrected by another sensor.
+- **Noise density**: Random noise broadens the signal bandwidth and limits resolution. High-noise accelerometers make it hard to distinguish small linear motions from vibration.
+- **Scale factor**: The conversion from raw ADC counts to physical units (deg/s or m/s²) has a scale error, typically a few percent for MEMS sensors.
+- **Alignment / mounting**: The IMU's internal axes must be aligned with the vehicle's body axes. Misalignment by even a few degrees introduces cross-axis coupling — roll acceleration appearing as pitch, for example.
+
+**Installation** matters: the IMU should be mounted close to the vehicle's center of mass and on the stiffest part of the structure to minimize structural deformation under load. Vibration isolation mounts can reduce high-frequency vibration but may also filter legitimate high-dynamics signals.
+
+### Sensor Fusion: Complementary Filter and EKF
+
+A single gyroscope integrates angular rate to give angle, but any bias in the gyro causes the angle to drift without bound. An accelerometer can measure static tilt angle (gravity vector) but is useless in moving vehicles where inertial acceleration dominates gravity. The solution is **sensor fusion** — combining multiple imperfect sensors to produce a better estimate than any single sensor alone.
+
+Two entry-level approaches:
+
+- **Complementary filter**: A high-pass filter on the gyro (to track fast rotations) is summed with a low-pass filter on the accelerometer (to track slow tilt changes). This is simple to implement, requires very little memory and compute, and works well for mildly dynamic platforms.
+- **Extended Kalman Filter (EKF)**: A model-based recursive estimator that fuses gyro, accelerometer, and optionally magnetometer and GPS data. It tracks not only the angle but also the bias states, actively estimating and compensating for drift. EKF is the standard approach in drone flight controllers (e.g., ArduPilot's inertial navigation system) and automotive attitude estimation.
+
+The EKF approach is covered in depth in [Control and Estimation](/en/hardware/basics/control). The practical implication for hardware selection: even a mid-grade IMU with good fusion software outperforms an expensive IMU with naive fusion.
+
+## Joint and Pose Sensing
+
+### Encoders
+
+Encoders measure rotational position — either relative to a reference point (incremental) or absolutely (absolute).
+
+**Incremental encoders** produce a pair of quadrature pulse trains (A and B channels, 90° out of phase) and optionally an index pulse per revolution. Counting pulses and detecting the direction of phase advance gives relative position. They are inexpensive and widely used. The downside: power loss or cable disconnect erases the position estimate.
+
+**Absolute encoders** output a unique binary or Gray-code word for every shaft position. On power-up, the absolute position is immediately available — no homing sequence required. Single-turn absolute encoders resolve position within one revolution; multi-turn absolute encoders also count revolutions using gears or battery-backed counters, enabling position tracking across many turns.
+
+Common technologies:
+
+- **Optical encoders**: Use a slotted disc and LED/phototransistor pair. High resolution (up to 20+ bits per revolution) and fast response, but sensitive to dust and oil contamination.
+- **Magnetic (Hall) encoders**: Use a magnetized disc and Hall-effect sensors. Rugged, immune to dust and moisture, but typically lower resolution (12–16 bits) and may be affected by stray magnetic fields.
+- **Resolver**: An analog rotary transformer that outputs two sine-wave signals proportional to shaft angle. Very robust and used in high-reliability applications (automotive, aerospace), but requires analog-to-digital conversion and position computation.
+
+**Multi-turn counting** is needed when a mechanism wraps cable or leadscrew — the motor may rotate dozens of turns between limits. Incremental encoders with a index pulse can count revolutions using the index as a reference. Absolute encoders with multi-turn capability track it natively.
+
+**Zeroing strategies**: Many systems require a homing sequence on startup — driving the mechanism to a known physical limit (a limit switch or hard stop) to establish an absolute reference. Systems with absolute encoders can skip homing entirely, which is critical for safety-related axes (automotive steering, robotic joint limits).
+
+## Environmental Perception
+
+### Distance Sensors
+
+Environmental perception sensors measure distances to objects in the world, enabling obstacle detection, mapping, and navigation.
+
+**Ultrasonic (sonar) sensors** emit a burst of sound at 40 kHz and measure the time until the echo returns. Range is typically 2–400 cm. They are inexpensive, work in darkness, and are the classic parking-assist sensor in cars. Limitations: narrow beam angle, poor performance on soft surfaces (carpets absorb sound), slow update rate (a few Hz per sensor), and cross-talk when multiple sensors operate simultaneously.
+
+**Time-of-Flight (ToF) cameras** emit modulated infrared light and measure the phase delay of the returning light to compute depth per pixel. Range is typically 0.1–5 m for consumer ToF modules, with resolution of 320×240 to 640×480 pixels. They are widely used in smartphone face unlock and robot obstacle avoidance. Limitations: ambient infrared sunlight degrades performance outdoors, multi-path reflections in indoor environments cause artifacts, and range accuracy decreases with target reflectance (black objects absorb IR).
+
+**2D LiDAR** (planar LiDAR) scans a laser beam in a single plane, producing a 2D cross-section of the environment at up to 40 m range and 10–40 Hz scan rate. It is the primary sensor for indoor SLAM (Simultaneous Localization and Mapping) and an important sensor for autonomous driving lane keeping and obstacle detection. Limitations: glass and dark surfaces are poor reflectors, and performance degrades in rain or fog (airborne particles scatter the beam).
+
+**Structured light and stereo vision** both compute depth from triangle geometry. Structured light (used in Xbox Kinect, Intel RealSense) projects a known pattern onto the scene and observes its deformation. Stereo vision uses two cameras offset by a known baseline. Both produce dense depth maps but require significant compute for the depth computation — typically a GPU or dedicated vision processor.
+
+### Update Rate and Its Effect on Control Loops
+
+The sensor update rate directly affects the control system. A 100 Hz position sensor can only close a position loop at 100 Hz — if the mechanical system has structural resonances above 50 Hz, the controller cannot suppress them. Similarly, a 10 Hz LiDAR cannot be used to stop a robot before it hits an obstacle at speed unless the speed is low enough that 10 Hz is still safe.
+
+General guidance: the sensor update rate should be at least 5–10× the desired closed-loop bandwidth of the control system that uses it. If you need a 50 Hz attitude control loop, you need sensors updating at 250–500 Hz minimum.
+
+Outdoor vs. indoor also matters: GPS update rate (typically 1–10 Hz) is adequate for waypoint navigation but too slow for real-time collision avoidance, which requires LiDAR, vision, or ultrasonic sensors updating at 10+ Hz.
+
+## Relationship to AI and Compute
+
+### Where AI Vision Runs
+
+Deep learning-based computer vision (object detection, semantic segmentation, depth estimation from monocular images) requires substantial compute — running a YOLO-class detector at 30 fps needs a GPU or NPU delivering tens of TOPS (tera operations per second). This is far beyond what an MCU-class processor can provide.
+
+In a typical system architecture:
+
+- **Edge compute (SOM or GPU模块)**: Runs the heavy neural network inference — an NVIDIA Jetson, Google Edge TPU, or Qualcomm Snapdragon. Handles perception tasks like object detection, lane detection, and scene understanding.
+- **MCU or MPU**: Runs real-time control loops (motor control, attitude stabilization), sensor preprocessing, and communication protocols (CAN, Ethernet). It does not run deep learning.
+
+The interface between them is typically a **message bus** (ROS 2 with DDS, or custom over Ethernet/CAN) where the edge compute module publishes perception results (e.g., "obstacle at 3.2 m, bearing 15° right") and the MCU consumes them for path planning or emergency braking.
+
+This architectural split is covered in more detail in [Embedded Systems](/en/hardware/basics/embedded) and [Communication](/en/hardware/basics/communication).
+
+### Datasets and Benchmarks
+
+Training data for perception models is a distinct discipline. Public datasets for autonomous driving (KITTI, nuScenes, Waymo Open), robotics (Amazon Robotics Challenge datasets), and general object detection (COCO, YOLO training sets) are referenced in [Datasets Overview](/en/datasets/overview). Synthetic data generation (simulation-based data collection) is increasingly important for rare scenarios (edge cases) where real-world data is scarce or dangerous to collect.
+
+## Relationship to the Systems That Follow
+
+### Drones
+
+A drone uses an IMU as its primary attitude reference. The flight controller runs an EKF that fuses IMU data with GPS, barometer, and magnetometer to estimate position and velocity. The barometer provides altitude relative to sea level (but drifts with atmospheric pressure changes), and the magnetometer corrects yaw drift. Without a functioning IMU, the drone cannot stabilize flight. The IMU is also the sensor most sensitive to vibration — unbalanced propellers or loose mounts can saturate the accelerometer, causing the EKF to diverge.
+
+LiDAR (2D or 3D) on drones enables obstacle avoidance and terrain following. Lightweight 2D LiDARs (like the Livox MID series) are common on mapping drones. 3D LiDARs are used on larger inspection drones operating at low speed in cluttered environments.
+
+### Automotive
+
+Automotive sensing stacks combine multiple redundant sensors:
+
+- **IMU**: Used in Electronic Stability Control (ESC) and autonomous driving to estimate vehicle yaw rate and sideslip angle. Automotive IMUs are rated to AEC-Q100 automotive temperature grades and must operate across -40 °C to 105 °C or higher.
+- **Wheel speed encoders**: Each wheel has a magnetic encoder that measures rotation speed. The ESC uses these to detect wheel slip (traction control) and estimate vehicle speed. Unlike drone IMUs, automotive systems primarily rely on wheel speed sensors for longitudinal velocity.
+- **Camera**: Forward cameras detect lane markings, traffic signs, and objects. Automotive cameras must meet ISO 26262 ASIL requirements for safety-critical detection.
+- **Radar**: 77 GHz radar penetrates rain and fog better than LiDAR or cameras, making it the primary long-range sensor in adaptive cruise control and automatic emergency braking.
+- **LiDAR**: Increasingly standard in Level 3+ autonomous vehicles for high-resolution 3D obstacle detection. Automotive LiDAR must meet stringent reliability standards (vibration, thermal shock, Ingress Protection).
+
+The automotive sensor fusion architecture typically runs on dedicated ASIL-rated processors separate from the infotainment SoC.
+
+### Robotics
+
+Robot arms and mobile robots rely heavily on joint encoders for position control. An industrial robot joint typically has a motor-side encoder (low resolution, on the motor shaft) and a load-side encoder (high resolution, on the output shaft after the gearbox). Comparing the two gives gearbox error (backlash and compliance) in real time.
+
+Mobile robots (AMR — Autonomous Mobile Robots) use 2D LiDAR for localization (scan matching against a known map) and obstacle detection. Depth cameras (ToF or stereo) provide near-field obstacle avoidance in the 0.1–3 m range where LiDAR may have gaps near the robot's base.
+
+## Practical Advice: Start with Encoders and IMU
+
+1. **For a first project**: an ESP32 or STM32 reading a quadrature encoder with a timer/counter peripheral is the easiest entry point. Many MCUs have hardware decoder units ( quadrature decoder integrated in the timer) that count pulses without CPU overhead.
+2. **For IMU integration**: start with a module that has onboard bias correction and calibration (e.g., the MPU9250 or BMI088). Raw MEMS IMU data without calibration is noisy enough that the bias drift dominates in anything but very short runs.
+3. **For environmental perception**: a single Point A ToF sensor (VL53L0X) connected over I2C gives range data in millimeters. Stack a few of them or add a servo-mounted scanner to build a simple 2D range map.
+4. **Calibrate your sensors**: IMU calibration (accelerometer bias, scale, and gyro bias) takes 5 minutes with a known-good reference (level surface, compass swing) and can reduce heading error by an order of magnitude. Re-calibrate after thermal changes (moving from indoor to outdoor, or after the robot warms up).
+
+[Basics Overview](/en/hardware/basics) · [Previous: Actuation](/en/hardware/basics/actuation) · [Next: Control](/en/hardware/basics/control)
