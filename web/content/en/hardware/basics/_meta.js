@@ -7,4 +7,6 @@ export default {
     sensing: { title: '④ Sensing' },
     control: { title: '⑤ Control & estimation' },
     communication: { title: '⑥ Buses & links' },
+    '---sep-': { type: 'separator' },
+    glossary: { title: 'Glossary' },
 }
