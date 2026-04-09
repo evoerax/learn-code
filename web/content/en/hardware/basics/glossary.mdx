@@ -1,0 +1,169 @@
+---
+title: Glossary
+description: 'Key terms and concepts from the Foundations level — circuits, embedded, actuation, sensing, control, and communication'
+---
+
+# Glossary
+
+A unified reference for key terms across the six Foundations chapters. Terms are organized by chapter following the [chapter reading order](/en/hardware/basics).
+
+---
+
+## Circuits & Electronics
+
+| Term | Definition |
+|------|------------|
+| **Voltage (V)** | Electrical potential difference, measured in volts. The "pressure" pushing charge through a circuit. |
+| **Current (I)** | Flow of electric charge, measured in amperes. Determined by voltage divided by resistance (Ohm's law). |
+| **Power (P)** | Rate of energy transfer, measured in watts (W = V × I). Determines heat generation and battery life. |
+| **Ohm's Law** | V = I × R. Foundation for all circuit analysis; used to size resistors, calculate voltage drops, and design current-limiting circuits. |
+| **Impedance** | Opposition to AC current flow, combining resistance and reactance (capacitive and inductive). Critical for signal integrity at high frequencies. |
+| **Capacitance** | Ability to store charge in an electric field. Bypass/decoupling capacitors stabilize power supply voltage near ICs. |
+| **Inductance** | Property of a conductor opposing changes in current. Creates back-EMF in motors and transients in switching circuits. |
+| **PCB Ground Plane** | A large copper area on a PCB serving as the 0 V reference and return path for signals. Reduces EMI and provides thermal mass. |
+| **Logic Level** | Voltage threshold defining a digital 0 or 1. Common standards: 3.3 V CMOS, 5 V TTL, with VIL/VIH and VOL/VOH specifications. |
+| **Op-Amp (Operational Amplifier)** | Analog building block for amplification, filtering, and signal conditioning. Key parameters: gain-bandwidth product, input offset voltage, slew rate. |
+| **ADC (Analog-to-Digital Converter)** | Converts continuous analog voltages to discrete digital codes. Key specs: resolution (bits), sampling rate, ENOB (effective number of bits). |
+| **Differential Signaling** | Transmitting a signal as a pair of conductors with opposite polarity (e.g., CAN, RS-485). Rejects common-mode noise. |
+| **EMI (Electromagnetic Interference)** | Unwanted coupling of electromagnetic energy into circuits. Mitigated by shielding, filtering, and proper grounding. |
+| **ESR (Equivalent Series Resistance)** | Resistance appearing in series with an ideal capacitor. Causes heating and reduces effectiveness of decoupling. |
+| **Thermal Management** | Techniques to control component temperature: heatsinks, thermal vias, fans, and proper airflow design. |
+
+---
+
+## Embedded & MCUs
+
+| Term | Definition |
+|------|------------|
+| **GPIO (General Purpose Input/Output)** | Programmable pins that can be configured as inputs or outputs for digital signals. |
+| **PWM (Pulse Width Modulation)** | A technique where a digital output is rapidly toggled to approximate an analog voltage. Used for motor speed control and servo positioning. Duty cycle = on-time / total period. |
+| **Interrupt** | A hardware or software signal that pauses the main program to execute a specific handler immediately. Critical for real-time event response. |
+| **DMA (Direct Memory Access)** | Peripheral that transfers data between memory and peripherals without CPU intervention, freeing the CPU for computation. |
+| **RTOS (Real-Time Operating System)** | An OS that guarantees task execution within deterministic time bounds. Schedules tasks by priority with preemptive multitasking. |
+| **SPI (Serial Peripheral Interface)** | Synchronous full-duplex serial bus with a clock line (SCLK), two data lines (MOSI/MISO), and a chip select (CS). Common for high-speed sensors and displays. |
+| **I²C (Inter-Integrated Circuit)** | Two-wire synchronous bus (SDA + SCL) supporting multiple masters and slaves. Common for low-speed sensors (IMUs, magnetometers). |
+| **UART (Universal Asynchronous Receiver/Transmitter)** | Asynchronous point-to-point serial link (TX + RX + ground). Used for GPS, debug consoles, and simple sensor interfaces. |
+| **Watchdog Timer** | A hardware timer that resets the system if the software fails to periodically reset it. Essential for fail-safe embedded systems. |
+| **Bootloader** | First code that runs after reset. Initializes the system and loads the main application. Can support in-system programming via UART, USB, or CAN. |
+| **SWD/JTAG** | Serial Wire Debug and JTAG interfaces for programming and debugging microcontrollers. Provide breakpoints, register inspection, and real-time trace. |
+| **Cross-Compiler** | A compiler that runs on a host machine but produces executable code for a different target architecture (e.g., ARM GCC on x86 for ARM microcontrollers). |
+| **Priority Inversion** | A scheduling problem where a low-priority task holds a resource needed by a high-priority task. Solved by priority inheritance protocols. |
+| **Deterministic Timing** | Execution time that is bounded and predictable. Critical for hard real-time control loops where jitter causes system instability. |
+
+---
+
+## Actuators & Power
+
+| Term | Definition |
+|------|------------|
+| **DC Motor** | Direct current motor. Speed proportional to voltage. Brushed motors have commutators and brushes; brushless motors (BLDC) use electronic commutation. |
+| **BLDC (Brushless DC Motor)** | Motor with permanent magnets on the rotor and windings on the stator. Requires electronic commutation via ESC. Higher efficiency and longevity than brushed motors. |
+| **FOC (Field-Oriented Control)** | A control technique for BLDC motors that decouples torque and flux components, enabling smooth operation at low speeds and precise torque control. |
+| **Stepper Motor** | Motor that moves in discrete steps. Maintains position without feedback. Types: permanent magnet, variable reluctance, and hybrid. Prone to stalling if load exceeds torque. |
+| **Servo (Servomechanism)** | Actuator with built-in feedback (typically a potentiometer or encoder) and closed-loop control. Accepts PWM or digital command for position/speed/torque. |
+| **ESC (Electronic Speed Controller)** | Electronic circuit that converts DC power to three-phase AC for BLDC motors, controlling speed based on PWM input (1–2 ms pulses at 50 Hz). |
+| **Gearbox (Reduction Gear)** | Mechanical transmission that reduces motor speed and increases torque. Common ratios 5:1 to 100:1. Types: planetary, spur, harmonic. |
+| **Inertia Matching** | The ratio of motor inertia to load inertia. Ideally < 1:10 for responsive control; exceeded ratios cause overshoot and oscillation. |
+| **Backlash** | Dead zone in gear transmission where input reverses before output responds. Critical for precision robotics; mitigated by preloading or dual-drive systems. |
+| **Torque Constant (Kt)** | Relationship between motor current and output torque (τ = Kt × I). Fundamental parameter for sizing motors and designing current control loops. |
+| **Speed Constant (Kv)** | Motor speed (RPM) per volt with no load. Used to estimate no-load speed and system power requirements. |
+| **Motor Thermal Rating** | Maximum continuous current the motor windings can sustain without overheating. Peak current is typically 2–3× continuous for short durations. |
+| **Battery Internal Resistance** | Opposition to current flow within a battery, causing voltage sag under load. Higher internal resistance reduces efficiency and runtime. |
+| **C-Rating (Battery)** | Discharge rate relative to capacity. A 5000 mAh battery at 10C can deliver 50 A. Higher C-rating means less voltage sag under peak current. |
+
+---
+
+## Sensors & Perception
+
+| Term | Definition |
+|------|------------|
+| **IMU (Inertial Measurement Unit)** | Sensor combining accelerometers and gyroscopes to measure linear acceleration and angular rate. A 6DoF IMU has 3-axis accelerometer + 3-axis gyro; 9DoF adds a magnetometer. |
+| **Gyroscope (Gyro)** | Sensor measuring angular rate (°/s). MEMS gyros have bias drift (typically 1–10°/hr for consumer grade) that accumulates into heading error without correction. |
+| **Accelerometer** | Sensor measuring specific force (acceleration including gravity). Used for tilt sensing (inclination) and detecting high-g events. |
+| **Magnetometer** | Sensor measuring Earth's magnetic field for compass heading. Sensitive to hard-iron and soft-iron distortions from nearby metal. |
+| **Bias (Sensor Bias)** | Constant offset in sensor output. Gyro bias causes angle drift; accelerometer bias causes tilt error. Characterized by Allan variance plots. |
+| **Drift** | Systematic error that accumulates over time without correction. Gyro drift is a primary error source in dead-reckoning navigation. |
+| **Noise Density** | Spectral density of sensor noise (e.g., μg/√Hz for accelerometers). Determines integration accuracy over time. Lower is better. |
+| **Complementary Filter** | A simple sensor fusion method that combines high-frequency gyro data with low-frequency accelerometer/magnetometer correction to estimate orientation. |
+| **EKF (Extended Kalman Filter)** | A recursive estimator for non-linear systems. Models process and measurement noise to produce optimal state estimates. Widely used for GPS/IMU fusion and robot localization. |
+| **Encoder** | Sensor measuring rotational position or speed. Types: incremental (relative ticks), absolute (unique code per position), optical, magnetic, and resolver. |
+| **Incremental Encoder** | Encoder producing pulses per revolution (PPR). Direction determined by A/B phase quadrature. Requires index pulse or external counter for absolute position. |
+| **Absolute Encoder** | Encoder outputting a unique binary or Gray code for each shaft position. No need to home after power loss. Types: single-turn and multi-turn. |
+| **ToF (Time of Flight)** | Distance measurement technique using the round-trip time of light or sound. ToF cameras emit modulated IR and measure reflected photons. LiDAR uses laser pulses. |
+| **LiDAR (Light Detection and Ranging)** | Active sensor emitting laser pulses and measuring return time to create a 2D or 3D point cloud. Key specs: range, field of view, angular resolution, and points per second. |
+| **Ultrasonic Sensor** | Distance sensor using sound waves above human hearing range (20 kHz+). Inexpensive but limited range (2–4 m typical) and affected by surface absorption and temperature. |
+| **SLAM (Simultaneous Localization and Mapping)** | Algorithm that builds a map of an unknown environment while localizing the sensor within it. Essential for autonomous mobile robots. |
+| **SOM (System on Module)** | Fully integrated computer module (e.g., NVIDIA Jetson, Google Edge TPU) running a full OS with GPU/NPU for AI inference. Distinguished from MCU-level compute. |
+| **Update Rate (Sensor)** | Frequency at which a sensor produces new readings, measured in Hz or samples per second. Must be higher than the control loop rate for effective feedback. |
+
+---
+
+## Control & Estimation
+
+| Term | Definition |
+|------|------------|
+| **PID Controller** | Proportional-Integral-Derivative control law: u(t) = Kp·e(t) + Ki·∫e(t)dt + Kd·de/dt. The workhorse of closed-loop control. |
+| **Proportional (Kp)** | Gain multiplying the instantaneous error. Higher Kp reduces rise time but can cause overshoot and oscillation if too high. |
+| **Integral (Ki)** | Gain multiplying the accumulated error over time. Eliminates steady-state offset (residual error) but can cause windup and overshoot. |
+| **Derivative (Kd)** | Gain multiplying the rate of error change. Dampens oscillation and improves stability but amplifies sensor noise. |
+| **Anti-Windup** | Technique to prevent integral term from accumulating beyond actuator limits. Methods: back-calculation, conditional integration, and saturation detection. |
+| **Feedforward** | Control strategy using a model of the plant to pre-compensate for expected disturbances, reducing the burden on feedback. |
+| **Low-Pass Filter** | Filter that attenuates high-frequency signals. First-order RC filter: fc = 1/(2πRC). Used to smooth noisy sensor signals or reduce derivative kick. |
+| **Phase Lag** | Delay between input and output in a filter or system. Accumulated lag reduces phase margin and can cause instability in feedback loops. |
+| **Bandwidth (Control Loop)** | Frequency range where the closed-loop system responds to commands. Defined as the -3 dB frequency of the closed-loop transfer function. |
+| **State Estimation** | Reconstructing internal system states from noisy sensor measurements. Examples: Kalman filtering, particle filtering, complementary filtering. |
+| **State Space** | A mathematical representation of a dynamic system using first-order differential equations: x_dot = Ax + Bu, y = Cx + Du. Foundation for modern control theory. |
+| **Observability** | Property determining whether internal states can be inferred from outputs. A system is observable if the observability matrix has full rank. |
+| **Complementary Filter** | See Sensors & Perception. Blends high-frequency gyro with low-frequency accelerometer to estimate angle with reduced drift. |
+| **Nested Loops** | Control architecture with inner (fast) loops inside outer (slow) loops. Drone example: rate loop (1 kHz) → attitude loop (100 Hz) → position loop (10 Hz). |
+| **Friction Circle** | Constraint on tire lateral and longitudinal force. The sum of squared forces must be less than the maximum friction coefficient times normal force. |
+| **Singularity (Robotics)** | Configuration where the Jacobian matrix loses rank, causing infinite joint velocities to achieve finite end-effector motion. Avoided through path planning. |
+| **Gain Scheduling** | Technique where controller gains are changed based on operating point. Used for non-linear plants like aircraft across flight envelopes. |
+
+---
+
+## Buses & Communication
+
+| Term | Definition |
+|------|------------|
+| **UART** | See Embedded & MCUs. Asynchronous serial link, typically 9600–115200 baud for telemetry, up to 4 Mbps for high-speed serial. |
+| **SPI** | See Embedded & MCUs. Supports higher throughput than UART or I²C, commonly 10–100 Mbps. No built-in addressing; uses chip selects. |
+| **I²C** | See Embedded & MCUs. Standard speeds: 100 kHz (Standard), 400 kHz (Fast), 1 MHz (Fast Mode Plus). Limited by bus capacitance. |
+| **CAN (Controller Area Network)** | See Embedded & MCUs and Actuation. Two-wire differential bus, 125 kbps–1 Mbps, with built-in arbitration and error handling. Standard in automotive. |
+| **CAN Arbitration** | Mechanism where multiple nodes transmitting simultaneously are resolved by ID priority. Higher-priority IDs (lower numeric value) win bus access without data corruption. |
+| **CAN Termination** | 120 Ω resistor at each end of a CAN bus to match characteristic impedance and prevent signal reflections. Required for reliable operation. |
+| **Ethernet (Automotive)** | 100BASE-T1 or 1000BASE-T1: single-pair automotive Ethernet standards enabling high-bandwidth links (100 Mbps–1 Gbps) over a single twisted pair. |
+| **LIN (Local Interconnect Network)** | Low-speed (19.2 kbps) single-wire bus for undemanding sensors and actuators (window switches, HVAC). Lower cost than CAN. |
+| **PWM Receiver** | RC receiver outputting 1–2 ms pulses at 50 Hz, one per channel. Read using input capture timers on the MCU. |
+| **SBUS (Serial Bus)** | Futaba's serial RC protocol encoding up to 16 channels into one wire at 100 kbps. Inverted signal requires hardware inverter or firmware support. |
+| **CRSF (Crossfire)** | TBS's long-range RC protocol running over 900 MHz or 2.4 GHz. Supports telemetry backchannel and high update rates (1 kHz). |
+| **Failsafe** | Pre-programmed safe behavior when RC link or telemetry is lost. Examples: return-to-home, altitude hold, motor stop. |
+| **MAVLink** | Lightweight protocol for drone communication. Messages include heartbeat, GPS, battery status, and attitude. Standard for PX4 and ArduPilot. |
+| **Telemetry** | Real-time data stream from vehicle to ground station over radio link (433 MHz, 915 MHz, or 2.4 GHz). |
+| **ROS Topic** | Named channel for publish/subscribe messaging in ROS. Typed messages (e.g., sensor_msgs/Imu) enforce interface contracts. |
+| **ROS 2 / DDS** | Next-generation ROS using Data Distribution Service as the middleware. Provides peer-to-peer discovery, configurable QoS, and real-time support. |
+| **QoS (Quality of Service)** | DDS/ROS 2 policies controlling message delivery: reliability (best-effort vs reliable), durability, deadline, liveliness, and ownership. |
+| **MQTT** | Lightweight pub/sub protocol for IoT. Uses broker to relay messages. Three QoS levels: 0 (at most once), 1 (at least once), 2 (exactly once). |
+| **Pub/Sub** | Communication pattern where publishers send messages to named topics without knowing subscribers. Decouples producers from consumers. |
+| **Bus Arbitration** | Process of resolving access conflicts when multiple nodes attempt to transmit simultaneously. CAN uses ID-based non-destructive arbitration. |
+| **Determinism** | Property of a system where the worst-case execution time is bounded and known. Critical for hard real-time control. |
+
+---
+
+## Cross-Cutting Concepts
+
+| Term | Definition |
+|------|------------|
+| **Closed-Loop Control** | Control strategy that uses feedback from sensors to compute the control action, correcting errors between desired and actual state. |
+| **Open-Loop Control** | Control action computed without feedback. Used for feedforward compensation or in systems where feedback is unavailable. |
+| **Latency** | Time delay between an input change and the corresponding output change. Critical for stability: total loop latency must be less than 1/4 of the period. |
+| **Jitter** | Variation in latency from one sample to the next. In control loops, jitter causes derivative errors and can excite unmodeled dynamics. |
+| **Bandwidth (System)** | Frequency range where a system responds to inputs. In control, closed-loop bandwidth determines tracking speed and disturbance rejection. |
+| **Safety Critical** | System or component whose failure can cause harm to people. Requires rigorous verification, redundancy, and fail-safe design. |
+| **Redundancy** | Duplication of critical components or functions to increase reliability. Types: hardware redundancy (dual sensors), information redundancy (CRC checksums), and time redundancy (retransmission). |
+| **Galvanic Isolation** | Electrical separation between two circuits to prevent ground loops and protect against high voltages. Methods: optocouplers, transformers, and isolated DC-DC converters. |
+| **EMI/EMC** | EMI = electromagnetic interference (unwanted energy); EMC = electromagnetic compatibility (ability to operate without causing or suffering EMI). |
+
+---
+
+[Basics Overview](/en/hardware/basics) · [Circuits & Electronics](/en/hardware/basics/electronics)

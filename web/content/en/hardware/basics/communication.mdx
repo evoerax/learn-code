@@ -53,4 +53,4 @@ The three machine families emphasize different parts of the communication stack.
 
 Start with UART for any sensor that comes with a UART interface—GPS, some lidars, and betaflight-style ESC telemetry are all UART by default and require only a TX/RX cross connection. Graduate to CAN when you need multi-node determinism, galvanic isolation, or the robustness that differential signaling provides. For ROS-based systems, begin with ROS 2 Humble and Fast DDS; the learning curve is gentler than it looks, and the tooling (rviz2, ros2 topic, ros2 doctor) rewards the investment. For cloud-connected fleets, prototype with MQTT over Wi-Fi before committing to a cellular modem or LoRa link—debugging over unreliable radio is significantly harder than debugging over a stable LAN.
 
-[Intro](/en/hardware/basics) · [Control & estimation](/en/hardware/basics/control)
+[Previous: Control & Estimation](/en/hardware/basics/control) · [Basics Overview](/en/hardware/basics)
