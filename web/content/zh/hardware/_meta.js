@@ -12,4 +12,12 @@ export default {
         title: '整机脉络',
         theme: { collapsed: false },
     },
+    governance: {
+        title: '工程与合规',
+        theme: { collapsed: false },
+    },
+    testing: {
+        title: '测试与验证',
+        theme: { collapsed: false },
+    },
 }

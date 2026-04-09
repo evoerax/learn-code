@@ -12,4 +12,12 @@ export default {
         title: 'Systems',
         theme: { collapsed: false },
     },
+    governance: {
+        title: 'Engineering & Compliance',
+        theme: { collapsed: false },
+    },
+    testing: {
+        title: 'Testing & Validation',
+        theme: { collapsed: false },
+    },
 }
