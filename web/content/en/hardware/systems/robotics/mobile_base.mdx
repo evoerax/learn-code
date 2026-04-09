@@ -1,10 +1,88 @@
 ---
 title: Robotics · Mobile base
-description: 'Stub'
+description: 'Differential drive, Ackermann, omniwheel/Mecanum — understanding AGV chassis hardware, odometry, and navigation sensor integration'
 ---
 
-# Mobile base
+# Mobile Bases & AGVs
 
-**[/zh/hardware/systems/robotics/mobile_base](/zh/hardware/systems/robotics/mobile_base)**
+A mobile base is the locomotion layer of an autonomous mobile robot (AMR) or automated guided vehicle (AGV). Unlike a manipulator arm that stays fixed relative to its mounting base, a mobile base must simultaneously solve *where it is* and *where to go* while managing traction, floor conditions, and (in industrial settings) integration with fleet managers. The mechanical configuration of the wheels determines the kinematic constraints, and the sensor suite determines how accurately the robot can estimate its pose in the world.
 
-[Robotics](/en/hardware/systems/robotics)
+---
+
+## Configuration Selection
+
+The choice of wheel type is the first and most consequential design decision for a mobile base.
+
+**Differential drive** is the simplest and most common configuration for indoor AMRs. Two independently driven wheels on a common axle provide forward/backward motion and turning in place (zero turning radius) by applying differential speed. It requires no Ackermann steering geometry, and the control law is straightforward: `(v_left, v_right)` → `(v, ω)`. The trade-off is that differential drive on uneven floors can cause caster wheel oddysseying — the passive caster may not track cleanly and introduces odometry drift.
+
+**Ackermann steering** replicates automotive geometry: two rear drive wheels and two front wheels on steering kingpins with toe-in geometry that produces zero slip during turns. This is the standard configuration for outdoor delivery robots, agricultural rovers, and any platform traveling at speed on smooth surfaces. Ackermann cannot turn in place; the minimum turning radius is set by the wheelbase length. High-speed platforms also need suspension to maintain wheel-ground contact.
+
+**Omnidirectional wheels** (omni-wheels with free-rolling rollers at 45° or 90° to the wheel axis, or Mecanum wheels with angled roller crowns) allow *true omnidirectional motion*: the platform can translate laterally and rotate simultaneously without the footwork required of a differential drive. This is valuable in tight spaces like factory floors where a robot must slide sideways into a rack. The cost is reduced payload capacity per wheel, more complex mecanum inverse kinematics, and sensitivity to floor debris that can stall the angled rollers.
+
+**Tracked (skid-steer) drives** use two endless tracks driven independently, like a bulldozer. The robot turns by differential track speeds causing a skid steer. Tracks provide excellent traction on soft or uneven ground (outdoor, dirt, carpet) but cause significant slip during turns, which degrades odometry accuracy and accelerates track wear on smooth floors.
+
+| Configuration | Turn in place | Min turn radius | Lateral translation | Typical use |
+|---|---|---|---|---|
+| Differential | Yes | Zero | No | Indoor AMR, hospital, warehouse |
+| Ackermann | No | Wheelbase-dependent | No | Outdoor delivery, agricultural |
+| Omniwheel/Mecanum | Yes | Zero | Yes | Tight indoor spaces, factory |
+| Skid-steer (tracked) | Yes | Near-zero | No | Outdoor, rough terrain |
+
+---
+
+## Drive System & Motor Sizing
+
+Once the kinematic configuration is chosen, the drive system must be sized. The key parameters are **坡度 (gradeability)**, **payload**, and **maximum speed**.
+
+Motor torque at the wheel is determined by reflected inertial load. The robot must overcome rolling resistance, overcome any grade, and accelerate to max speed within the required time. For a differential drive AMR with two drive wheels and two passive casters, the drive wheels typically share the payload between 30–60% of the load (the remainder goes to the casters). Motors are almost always Brushed DC or BLDC with an integrated gearbox (planetary is most common for this price point). For collaborative robot (cobot) bases, integrated joint modules that combine motor, encoder, driver, and brake into one package are increasingly common.
+
+Brake selection matters for safety: an AMR stopping on a grade must hold position. Spring-applied brakes that release when powered (fail-safe) are standard, particularly for ceiling-suspended or inclined-track AGVs.
+
+---
+
+## Odometry & Localization Sensors
+
+A mobile base needs to know its position relative to its environment. This is addressed in layers:
+
+**Wheel odometry** is the foundational sensor. Optical or magnetic quadrature encoders on each drive wheel measure rotation, and by applying the kinematic model (differential or Ackermann), the controller integrates wheel increments into an estimated pose `(x, y, θ)`. Odometry drifts accumulates over distance because it cannot correct for wheel slip, floor irregularities, or caster skate. Typical indoor AMR odometry error is 1–5% of distance traveled.
+
+**Inertial Measurement Unit (IMU)** supplements wheel odometry between encoder ticks. A 6-DoF or 9-DoF IMU (accelerometer + gyroscope ± magnetometer) provides heading rate and linear acceleration. Extended Kalman Filters (EKF) fuse wheel odometry and IMU data into a pose estimate that is smoother and less susceptible to high-frequency wheel slip. The IMU does not fix long-term drift — that requires external references.
+
+**2D LiDAR** is the dominant exteroceptive sensor for indoor AMR localization. A spinning LiDAR scans the horizontal plane at 10–25 Hz, producing a 2D point cloud. SLAM (Simultaneous Localization and Mapping) algorithms match current scans against a stored map to correct the odometry drift. The effective range (typically 0.1–30 m for industrial LiDARs) and angular resolution (0.25°–0.5°) determine how well the system can detect features in sparse environments.Outdoor bases often add GNSS RTK for absolute positioning, which fixes the long-term drift that indoor-only systems cannot resolve.
+
+**Natural and artificial landmarks** provide additional correction: AprilTags mounted on walls, ceiling markers, reflectors for LiDAR, or RFID floor markers. In factory environments where permanent floor markings are acceptable, magnetic tape or wire guidance (grounded inductive loops) provides drift-free path following at the cost of infrastructure.
+
+---
+
+## Navigation, Scheduling & Fleet Integration
+
+The navigation stack of a mobile base operates at multiple levels:
+
+- **Path planning**: Given a start pose and goal pose, a global planner (A*, RRT, or dynamic window approach) computes a collision-free route through the known map.
+- **Motion control**: A local planner or pure pursuit controller tracks the global path while reacting to transient obstacles detected by the LiDAR.
+- **Fleet management**: In warehouses with multiple AMRs, a fleet manager (often VDA 5050-compliant) distributes tasks, manages intersection conflicts, and optimizes path scheduling.
+
+**VDA 5050** is an emerging German automotive-industry standard for AMR communication between the fleet manager and individual AGVs. It defines a JSON-based message schema for instant state, order, orderUpdate, and fault handling. Adoption of VDA 5050 enables mixing AMR brands from different vendors in a single fleet — a major practical advantage for large deployments.
+
+The distinction between **AGV** and **AMR** is important: an AGV follows a fixed infrastructure (magnetic tape, wire guide, or painted line) and cannot autonomously reroute around obstacles, while an AMR uses SLAM to navigate dynamically and can accept new goals without physical infrastructure changes. Most modern indoor logistics robots are AMRs.
+
+---
+
+## Relationship to Other Pages
+
+- **Manipulators & Joints** (manipulators): A composite robot = mobile base + arm. The mobile base handles locomotion while the arm handles manipulation. The integration point is the shared power bus and the communication bridge (often EtherCAT or ROS 2) between base and arm controllers.
+- **Actuators & Power** (basics/actuation): The drive motors in a mobile base are BLDC or geared DC motors. Motor selection criteria (torque, speed, current) apply here as they do for drone ESCs and automotive traction motors.
+- **Control & Estimation** (basics/control): The sensor fusion between wheel odometry and IMU is a practical application of the Kalman Filter concepts introduced in the basics control chapter.
+- **System Integration & Safety** (integration): Industrial mobile bases must implement emergency stop circuits, safety-rated monitored stops (STO per IEC 62061), and collision detection via safety laser scanners (SICK S300 or similar) that define protective and warning zones.
+
+---
+
+## Practical Considerations
+
+When sizing a mobile base, the three most common mistakes are: underestimating the effect of floor surface variation on odometry accuracy, selecting a LiDAR with insufficient angular resolution for the narrow aisles in the target environment, and omitting a caster that skates sideways under acceleration (a proper 360° swivel caster with adequate wheel diameter reduces this). For first builds, a differential drive platform with a front caster and a 2D LiDAR mounted at ankle height (roughly 200 mm above floor) provides the most straightforward SLAM and navigation development path.
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+
+[← Robotics Overview](/en/hardware/systems/robotics) · [Manipulators & Joints](/en/hardware/systems/robotics/manipulators) · [System Integration & Safety](/en/hardware/systems/robotics/integration)
+
+</div>
