@@ -17,7 +17,7 @@ The core question of functional safety is: **when the system fails, can it reach
 
 **Redundant Architectures**: Safety-critical systems typically employ redundant designs. A 2oo2 (Two-out-of-Two) dual-channel architecture requires both paths to detect a fault before triggering an action, suitable for braking systems. A 1oo2 (One-out-of-Two) architecture triggers on any single anomaly detection, more conservative but prone to false positives. The more advanced 2oo3 (Two-out-of-Three) is used in flight control and other ultra-high-reliability applications. The choice between Fail-operational (continue operating after a failure) and Fail-safe (transition to a safe state after failure) depends on the system's role — steering typically demands Fail-operational, while throttle and parking brakes may accept Fail-safe.
 
-**Robotic Functional Safety** shares similar frameworks with automotive but with different emphases. ISO 10218-1/2 defines industrial robot safety requirements, and ISO/TS 15066 specifies collaborative robot body region force limits. The关节扭矩传感器 (joint torque sensor) and current-sensing collision detection in collaborative arms are hardware-level force limiting mechanisms, not software settings.
+**Robotic Functional Safety** shares similar frameworks with automotive but with different emphases. ISO 10218-1/2 defines industrial robot safety requirements, and ISO/TS 15066 specifies collaborative robot body region force limits. Joint torque sensors and current-sensing collision detection in collaborative arms are hardware-level force limiting mechanisms, not software settings.
 
 ---
 
@@ -35,7 +35,7 @@ EMC addresses two directions: **emissions** (interference the device radiates ou
 
 ## Certification Workflows
 
-Certification transforms functional safety and EMC requirements into auditable evidence. Different markets have distinct准入 requirements for different products — certification is the prerequisite for market access.
+Certification transforms functional safety and EMC requirements into auditable evidence. Different markets have distinct access requirements for different products — certification is the prerequisite for market access.
 
 **Drone Compliance Essentials**: Civilian drones must comply with each country's civil aviation authority rules. The FAA requires registration for drones over 250g; EU CE marking requires compliance with RED (Radio Equipment Directive) and RoHS, and the airframe must pass structural strength testing. China's CAAC implements tiered standards for drones, and commercial operators must apply for operating permits. Key references: ASTM F3363 (consumer drones), DO-178C (flight control software — not mandatory but treated as engineering practice baseline).
 
