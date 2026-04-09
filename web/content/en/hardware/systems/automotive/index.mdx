@@ -1,10 +1,34 @@
 ---
 title: Automotive
-description: 'Stub hub'
+description: '12V networks, domain controllers, drive-by-wire, and ADAS sensors — understanding automotive-grade boundaries and system architecture'
 ---
 
 # Automotive
 
-**[/zh/hardware/systems/automotive](/zh/hardware/systems/automotive)**
+The **Automotive** section (汽车脉络) is the automotive track of the [Whole Systems](/en/hardware/systems) layer. The sidebar **third-level** pages drill into: [Onboard networks & power](/en/hardware/systems/automotive/onboard_network) · [Drive-by-wire & actuation](/en/hardware/systems/automotive/by_wire) · [ADAS sensors](/en/hardware/systems/automotive/adas)
 
-[Systems](/en/hardware/systems)
+---
+
+## How Automotive Differs from Drones / Robotics
+
+- **Electrical environment**: surge tolerance, wide temperature range, and EMC compliance are non-negotiable. The 12V/24V automotive bus sees transients that hobby systems never encounter.
+- **Safety**: Functional safety (ISO 26262) and hardware **redundancy** are hard certification thresholds for production vehicles — not optional hardening.
+- **Regulatory**: Road homologation, production audits, and type approval far exceed the barriers for hobby or research prototypes.
+
+---
+
+## Hardware Modules (Entry-Level Map)
+
+- **Body domain**: BCM (body control module), lighting, comfort electronics, LIN/CAN peripherals.
+- **Powertrain domain**: engine management, transmission control, hybrid / EV battery management system (BMS).
+- **Chassis / drive-by-wire** (底盘线控): steer-by-wire, brake-by-wire, drive-by-wire — the interface philosophy between driver intent and actuator control.
+- **ADAS sensors**: millimeter-wave radar, forward camera, ultrasonic parking sensors, and the sensor fusion domain controller.
+
+---
+
+## What an Individual Can Do
+
+- **Campus / closed-course prototypes**: drive-by-wire small vehicle, domain-controller test bench, CAN bus logging and replay.
+- **Production vehicles**: typically completed within an enterprise V-cycle; this section focuses on **terminology and architecture** aligned with industry practice rather than building a road-legal car from scratch.
+
+[Whole Systems](/en/hardware/systems) · [Robotics](/en/hardware/systems/robotics)
