@@ -1,10 +1,35 @@
 ---
 title: Drones
-description: 'Stub hub — Chinese has full text'
+description: 'Airframe, propellers, power system, and flight controller — from kit tuning to custom build'
 ---
 
 # Drones
 
-**[/zh/hardware/systems/drones](/zh/hardware/systems/drones)**
+The **Drones** section (无人机脉络) is the aerospace track of the [Whole Systems](/en/hardware/systems) layer. The sidebar **third-level** pages drill into: [Airframe & propulsion](/en/hardware/systems/drones/airframe) · [Flight control](/en/hardware/systems/drones/flight_control) · [Links & safety](/en/hardware/systems/drones/link_safety)
 
-[Systems](/en/hardware/systems)
+---
+
+## Subsystem Chain
+
+Airframe ↔ ESC ↔ Brushless motor ↔ Propeller ↔ Battery (BMS) ↔ Flight controller ↔ IMU ↔ RC / data link ↔ GPS (optional)
+
+---
+
+## Control Hierarchy (conceptual)
+
+- **Inner loop**: Rate / attitude — the flight controller maintains angular stability at hundreds of Hz.
+- **Outer loop**: Position / trajectory — waypoint navigation and wind rejection require good state estimation and a tighter IMU budget than inner loop alone.
+
+---
+
+## Safety and Regulations
+
+Arming logic, fail-safe landing, propeller guards, and test-site discipline vary by country. Airspace, weight class, and visual-line-of-sight rules are universal constraints for any outdoor deployment. Production hardware adds certification (CE / FCC / country-specific aviation authority) on top of the engineering baseline.
+
+---
+
+## Learning Path
+
+Kit assembly → log analysis → propeller tuning → frame balancing → custom flight controller firmware. Resist writing your own flight controller before understanding why the existing firmware fails.
+
+[Whole Systems](/en/hardware/systems) · [Automotive](/en/hardware/systems/automotive)
