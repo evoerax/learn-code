@@ -1,10 +1,103 @@
 ---
 title: Actuation
-description: 'Stub — see Chinese section'
+description: 'Motor types, ESCs/drivers, servos, gearboxes, and power matching — converting computation into motion.'
 ---
 
 # Actuation
 
-Stub. **[/zh/hardware/basics/actuation](/zh/hardware/basics/actuation)**
+## Common Actuator Types
 
-[Intro](/en/hardware/basics)
+### Brushed DC Motors
+
+A brushed DC motor uses a mechanical commutator and carbon brushes to reverse current direction in the rotor windings as it spins. They are the simplest motor type: apply a voltage and you get rotation. The trade-offs are **brush wear** (mechanical wear limits lifespan to hundreds to a few thousand hours) and **EMI** (the brush-commutator switching generates electrical noise). Brushed motors are still common in cheap toys, small fans, and pump applications where replaceability and low cost matter more than longevity.
+
+### Three-Phase Brushless DC (BLDC) Motors
+
+BLDC motors use electronic commutation — a controller (ESC) switches current through the three motor phases in sequence, generating a rotating magnetic field that drives the rotor. Because there are no brushes, BLDC motors offer higher efficiency, longer lifespan, and lower EMI than brushed motors. Two common control schemes are:
+
+- **Six-step (trapezoidal) commutation**: Simpler, used in many entry-level ESCs. Less smooth at low speeds but efficient at high RPM.
+- **FOC (Field-Oriented Control)**: Controls current vector to achieve smooth torque at all speeds, including near-zero RPM. Standard in robotics, drone ESCs, and servo drives. Requires current sensing and more compute, typically implemented on a dedicated motor-control MCU or DSP.
+
+BLDC motors are the dominant actuator in drones (where the motor runs at thousands of RPM with propellers), electric vehicles, and robot joints.
+
+### Stepper Motors
+
+A stepper motor divides full rotation into a fixed number of discrete steps — typically 200 steps per revolution (1.8° per step) in a standard two-phase hybrid stepper. Because each step is commanded digitally, stepper motors can achieve **open-loop positioning** without feedback — the controller simply counts steps sent. This makes them simple to drive and good for cost-sensitive positioning tasks (3D printers, CNC routers, textile machines).
+
+The failure modes are **step loss** (when load torque exceeds the motor's holding torque, the rotor slips one or more steps without the controller knowing) and **heating** (stepper motors draw maximum current in stationary holds, generating significant heat). Thermal limits typically cap continuous holding torque at 50–80% of the peak holding torque spec.
+
+### Servos
+
+An RC servo (hobby servo) is a small DC motor with an internal gearbox and a position-feedback loop via a potentiometer. The controller drives the motor with PWM (typically 1–2 ms pulse at 50 Hz) to reach a commanded angle. RC servos are closed-loop on angle but open-loop on torque and speed — they will stall at the commanded position and draw stall current indefinitely.
+
+For industrial and robotics use, **servo drives** (brushless servo motors with rotary encoders and FOC drives) replace hobby servos. These provide far higher precision, torque density, and efficiency, but require proper configuration of position/speed/torque loops, inertia ratio limits, and gains — which is itself a full engineering discipline.
+
+## Transmission Systems
+
+### Gearboxes and Reduction Ratio
+
+Most actuators spin fast but deliver low torque. A **gearbox** (reduction gear) trades speed for torque: if a motor delivers 1 N·m at 3000 RPM and you use a 10:1 reduction gearbox, the output delivers approximately 10 N·m at 300 RPM (neglecting losses, which are typically 10–30% per stage). Common types:
+
+- **Spur gears**: Simple, inexpensive, and efficient at low ratios. Common in open-loop systems.
+- **Planetary gears**: Compact, higher torque density, can achieve higher reduction ratios in a smaller diameter. Standard in robot joint actuators and RC servos.
+- **Harmonic drives ( strain wave gearing)**: Extremely high reduction ratio (30:1 to 100:1) in a single stage with near-zero backlash. Used in precision robotics. Expensive and sensitive to misalignment.
+- **belt/pulley**: Good for medium ratios, can absorb shock loads, introduces compliance (belt stretch) that affects control bandwidth.
+
+### Inertia Matching
+
+When a motor drives a load through a gearbox, the **reflected inertia** of the load seen by the motor is divided by the square of the gear ratio. A large inertia mismatch (e.g., driving a heavy robot wheel from a small motor) causes poor control performance, oscillation, and mechanical stress. General guideline: the reflected load inertia should be within 3–5× the motor's rotor inertia for stable, responsive control.
+
+### Backlash and Compliance
+
+**Backlash** (dead zone between input and output rotation due to gear tooth clearance) directly degrades positioning accuracy and introduces non-linearity in closed-loop control. In precision systems, backlash is addressed by pre-loading (spring or dual-stage gear train) or using zero-backlash designs (harmonic drives, direct drive motors). **Compliance** (elastic deformation under load) similarly limits control bandwidth — a compliantly coupled system behaves like a spring, requiring lower PID gains or more sophisticated control strategies.
+
+### The Torque–Speed–Current Triangle
+
+Every electric motor has a **torque–speed characteristic**: no-load speed is determined by applied voltage, and torque is proportional to current draw. At zero speed (stall), torque is maximum (stall torque) and current is maximum (stall current). At no-load speed, torque and current approach zero. The product of torque and speed gives mechanical output power. This relationship means you cannot simultaneously have high torque and high speed — sizing an actuator always involves choosing a point on this curve that matches your application's requirements.
+
+## Power Matching
+
+### Peak vs. Continuous Current
+
+Motor current is not constant — it spikes during acceleration (inertia load), drops during coast, and rises again during deceleration. **Peak current** (typically 2–5× the continuous current rating) can be sustained only for seconds before thermal limits are reached. A motor sized for continuous torque must handle the RMS (root-mean-square) current over the duty cycle, not the peak.
+
+Continuous current rating determines the motor's thermal limit for sustained operation. It is set by the temperature rise of the windings — typically limited to 80–100 °C above ambient, above which insulation begins to degrade. Proper motor sizing uses the **RMS torque** over the machine's expected motion profile.
+
+### Wire Gauge, Connectors, and Voltage Drop
+
+Current flowing through a conductor causes voltage drop proportional to current times wire resistance. For a 10 A motor running through 1 m of 16 AWG wire (resistance about 0.004 Ω per meter), the drop is about 0.04 V per lead — negligible at 12 V. But at 24 A through the same wire, the drop quadruples. At **low-voltage high-current** systems (e.g., 12 V drone power bus delivering 50 A to a motor), even small resistances cause significant voltage drop, and the bus can brown-out (voltage sags below the controller's minimum operating voltage) under load.
+
+Wire gauge selection follows from ampacity tables with derating for bundling, ambient temperature, and conduit fill. For motor leads carrying >10 A, use thick, short leads kept as short as possible to minimize both resistance and inductance.
+
+Connectors are often the weakest link in high-current power paths. A connector rated at 10 A will fail from heating if used at 20 A, even if the wire gauge upstream is adequate. Specify connectors with at least 25–50% margin above expected current.
+
+### Battery and ESC Sizing
+
+In a battery-powered system, the **Electronic Speed Controller (ESC)** must handle the motor's peak current. A 100 A ESC is required for a motor that peaks at 80 A — not 60 A. ESC rating is not a soft limit; sustained current above the ESC's rating causes overheating, silent cutoff, or permanent damage.
+
+Battery selection involves both capacity (mAh or Wh) and **C-rating** (discharge rate relative to capacity). A 2200 mAh LiPo with a 30C rating can deliver 66 A peak. Continuous C-rating is typically half the peak C-rating. Undersizing the C-rating causes voltage sag and possible battery damage under high-load maneuvers.
+
+## Relationship to the Systems That Follow
+
+### Drones
+
+Each rotor in a multi-rotor drone is a **BLDC motor + ESC + propeller** unit. The ESC takes a PWM or DShot signal from the flight controller and drives the motor at the commanded RPM. Propeller thrust scales with the square of RPM. Control inputs adjust individual motor RPMs to generate the differential thrust vectors that produce roll, pitch, yaw, and throttle. Motor KV (RPM per volt) determines the speed range and therefore the thrust available at a given battery voltage — lower KV motors at the same voltage draw more current but can swing larger propellers for more thrust at lower RPM.
+
+### Automotive
+
+In automotive drivetrains, the motor is almost always a **permanent magnet synchronous motor (PMSM)** — closely related to BLDC — driven by a traction inverter with FOC. The high-voltage battery (400–800 V in modern EVs) drives phase currents of hundreds of amps into the motor. The inverter's switching frequency, thermal management, and fault handling (over-current, over-temperature, ground fault) are critical for safety. Automotive motors are sized for peak torque at low RPM (for launch) and sustained power at high RPM (for highway cruising), requiring a motor characteristic that is broad and flat across the torque–speed curve.
+
+### Robotics
+
+Robot joints typically combine a **frameless torque motor** or **gearmotor** with a high-resolution encoder (14–20 bit) and an FOC servo drive. Direct-drive robots (no gearbox) eliminate backlash entirely but require large, expensive motors with high torque at low speed. Geared robots use harmonic drives or planetary gears with high reduction ratios (50:1 to 200:1) to multiply motor torque. The joint **torque sensor** (often strain-based) closes the loop directly on torque, enabling compliance and force control — essential for safe human–robot interaction.
+
+## Practical Advice: Start Hands-On
+
+Before buying expensive components, characterize what you actually need:
+
+1. **Calculate required torque and speed** at the output shaft using your mechanism's kinematics. Work backwards through the gear ratio to find the motor specifications you need. Don't overspecify — a motor with 5× the required torque will be harder to drive efficiently and wastes energy.
+2. **Check the motor's torque–speed curve** in the datasheet. The operating point must fall within the **continuous duty region**, not just the peak capability. If your application requires frequent acceleration peaks, verify that the RMS current over the cycle stays within thermal limits.
+3. **Estimate inertia ratio** (reflected load inertia / motor rotor inertia) before choosing a gearbox. Most servo drive manufacturers specify a maximum recommended ratio (typically ≤ 5:1 for good performance). If the ratio is too high, either choose a bigger motor or add a gearbox with a higher ratio.
+4. **For a first project**: a small brushed DC motor with an L298N driver board and PWM from an Arduino is the easiest path. Add an encoder and you can close a velocity loop. For drones: start with a pre-built ESC + motor + propeller combo and a flight controller that speaks Cleanflight/Betaflight — the firmware handles the closed-loop RPM control on the ESC side.
+
+[Basics Overview](/en/hardware/basics) · [Previous: Electronics](/en/hardware/basics/electronics) · [Next: Sensing](/en/hardware/basics/sensing)
