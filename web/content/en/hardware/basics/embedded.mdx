@@ -29,7 +29,7 @@ End-to-end workflow: cross-compiler (ARM GCC, LLVM), flash via SWD/JTAG or DFU b
 | Automotive | Body domain (lights, wipers, doors), gateway ECUs, actuator drivers (full domain controllers delegate to SoC) |
 | Robotics | Joint servo control, trajectory interpolation, safety PLC (industrial) |
 
-## Relationship to整机的通信与控制栈
+## Relationship to Whole Systems: Communication & Control Stack
 
 In a drone, the MCU typically sits below the flight controller SoC (which runs PX4 or ArduPilot). The MCU handles hard real-time tasks — motor PWM, RC input capture, failsafe detection — while the SoC handles path planning and computer vision. The UART or CAN bus between them is the integration boundary.
 

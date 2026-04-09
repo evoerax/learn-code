@@ -9,7 +9,7 @@ description: 'Wheelbase, propeller-motor matching, ESC current, vibration and ba
 
 The airframe determines the mechanical baseline for everything else. **Wheelbase** (the diagonal distance between motor shafts) sets the overall inertia tensor — a longer wheelbase resists yaw but increases drag; a shorter one is nimble but more sensitive to center-of-gravity shifts. In practice, 5-inch racing frames target wheelbases around 200–230 mm, while cinematic 7-inch platforms run 280–300 mm.
 
-**Propeller selection** is driven by two numbers: diameter (D) and pitch (Pitch or "螺距"). Larger diameter and higher pitch push more air per revolution but demand more torque, which translates to higher current. The **KV rating** of the motor (RPM per volt applied at full throttle) must be matched to the prop — a 2300 KV motor on 6-inch props works well for巡航; the same motor on 3-inch props will overspin and draw excessive current.
+**Propeller selection** is driven by two numbers: diameter (D) and pitch. Larger diameter and higher pitch push more air per revolution but demand more torque, which translates to higher current. The **KV rating** of the motor (RPM per volt applied at full throttle) must be matched to the prop — a 2300 KV motor on 6-inch props works well for cruise; the same motor on 3-inch props will overspin and draw excessive current.
 
 A critical but often overlooked factor is **resonance**. Propeller blades generate periodic vibration at multiples of motor electrical RPM. This vibration propagates through the frame to the IMU, corrupting gyroscope readings and causing attitude drift. Mitigation strategies include:
 

@@ -84,7 +84,7 @@ Deep learning-based computer vision (object detection, semantic segmentation, de
 
 In a typical system architecture:
 
-- **Edge compute (SOM or GPU模块)**: Runs the heavy neural network inference — an NVIDIA Jetson, Google Edge TPU, or Qualcomm Snapdragon. Handles perception tasks like object detection, lane detection, and scene understanding.
+- **Edge compute (SOM or GPU module)**: Runs the heavy neural network inference — an NVIDIA Jetson, Google Edge TPU, or Qualcomm Snapdragon. Handles perception tasks like object detection, lane detection, and scene understanding.
 - **MCU or MPU**: Runs real-time control loops (motor control, attitude stabilization), sensor preprocessing, and communication protocols (CAN, Ethernet). It does not run deep learning.
 
 The interface between them is typically a **message bus** (ROS 2 with DDS, or custom over Ethernet/CAN) where the edge compute module publishes perception results (e.g., "obstacle at 3.2 m, bearing 15° right") and the MCU consumes them for path planning or emergency braking.

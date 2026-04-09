@@ -32,7 +32,7 @@ The choice of wheel type is the first and most consequential design decision for
 
 ## Drive System & Motor Sizing
 
-Once the kinematic configuration is chosen, the drive system must be sized. The key parameters are **坡度 (gradeability)**, **payload**, and **maximum speed**.
+Once the kinematic configuration is chosen, the drive system must be sized. The key parameters are **gradeability (ability to climb slopes)**, **payload**, and **maximum speed**.
 
 Motor torque at the wheel is determined by reflected inertial load. The robot must overcome rolling resistance, overcome any grade, and accelerate to max speed within the required time. For a differential drive AMR with two drive wheels and two passive casters, the drive wheels typically share the payload between 30–60% of the load (the remainder goes to the casters). Motors are almost always Brushed DC or BLDC with an integrated gearbox (planetary is most common for this price point). For collaborative robot (cobot) bases, integrated joint modules that combine motor, encoder, driver, and brake into one package are increasingly common.
 
