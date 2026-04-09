@@ -1,10 +1,50 @@
 ---
 title: Embedded & MCUs
-description: 'Stub — see Chinese section'
+description: 'MCU selection, clock systems and interrupts, peripherals, RTOS fundamentals, and debugging techniques'
 ---
 
 # Embedded & MCUs
 
-Stub. **[/zh/hardware/basics/embedded](/zh/hardware/basics/embedded)**
+## Capability Ladder
 
-[Intro](/en/hardware/basics)
+Embedded development spans four maturity levels, each unlocking new system capabilities:
+
+**Level 1 — Bare-Metal**
+GPIO toggling, hardware timers, PWM generation, and interrupt prioritization. You learn to read a MCU datasheet's timing diagrams and configure registers directly. Typical project: blinking LEDs, reading a button with debouncing, generating servo pulses.
+
+**Level 2 — Peripheral Buses**
+SPI, I²C, and UART communication with external sensors and actuators. DMA (Direct Memory Access) offloads data transfers from the CPU, enabling concurrent sensor sampling without starving the control loop. Typical project: reading an IMU over I²C, streaming sensor data via UART.
+
+**Level 3 — RTOS (Optional)**
+A Real-Time Operating System introduces tasks, queues, and mutexes. Tasks allow decoupling sensor acquisition from control algorithms. Priority inheritance prevents priority inversion. The control loop now runs as a periodic task synchronized with sensor interrupts — a prerequisite for multi-rate systems. Typical project: porting a PID attitude controller across three tasks (sensor sampling, estimation, control output).
+
+**Level 4 — Toolchain Mastery**
+End-to-end workflow: cross-compiler (ARM GCC, LLVM), flash via SWD/JTAG or DFU bootloader, runtime debugging with breakpoints and watch variables, and logging via RTT (Segger J-Link) or UART printfs. Unit testing frameworks like Ceedling or Unity test peripheral drivers in isolation before hardware arrives.
+
+## Role in Complete Machines
+
+| Machine Type | Typical MCU / Domain Controller Tasks |
+|---|---|
+| Drone | High-frequency attitude loop, RC signal parsing, arm/disarm safety logic |
+| Automotive | Body domain (lights, wipers, doors), gateway ECUs, actuator drivers (full domain controllers delegate to SoC) |
+| Robotics | Joint servo control, trajectory interpolation, safety PLC (industrial) |
+
+## Relationship to整机的通信与控制栈
+
+In a drone, the MCU typically sits below the flight controller SoC (which runs PX4 or ArduPilot). The MCU handles hard real-time tasks — motor PWM, RC input capture, failsafe detection — while the SoC handles path planning and computer vision. The UART or CAN bus between them is the integration boundary.
+
+In automotive, the MCU is the ECU: it reads CAN/SENT sensors, drives H-bridges for actuators, and implements AUTOSAR-compliant diagnostics. The domain controller above it runs Linux or Adaptive AUTOSAR.
+
+In robotics arms, an MCU per joint implements current-loop PWM and encoder feedback, while a PLC or IPC runs the motion planner. EtherCAT or CANopen is the bus between them.
+
+## What Differs from「Writing Applications」
+
+Embedded programming is fundamentally different from application development on a OS like Linux or Windows:
+
+- **Deterministic timing**: Control loops run at fixed rates (1–10 kHz). Jitter is a bug, not a UX issue.
+- **Fault diagnosability**: When the motor drives unexpectedly, you need a crash dump, a reset vector, and a watchdog. A segmentation fault in userspace is not acceptable — the system must fail safe.
+- **Reset recoverability**: The embedded system must boot into a known-safe state after power loss. This requires explicit boot loader design, watchdog configuration, and non-volatile flag storage.
+
+These constraints shape every architectural decision: no dynamic memory allocation in ISRs, bounded loop times, and hardware redundancy for safety-critical paths.
+
+[基础层导读](/en/hardware/basics) · [执行器](/en/hardware/basics/actuation)
