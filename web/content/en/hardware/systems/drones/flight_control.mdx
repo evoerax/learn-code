@@ -1,10 +1,70 @@
 ---
 title: Drones · Flight control
-description: 'Stub'
+description: 'Sensor placement, nested control loops, filtering, and tuning — from manual flight to attitude stabilization'
 ---
 
 # Flight control
 
-**[/zh/hardware/systems/drones/flight_control](/zh/hardware/systems/drones/flight_control)**
+Flight control is where raw sensor data becomes synchronized motor output. This page covers the three nested loops, IMU installation trade-offs, and the ground-station workflow that turns a collection of ESCs and motors into a flyable aircraft.
 
-[Drones](/en/hardware/systems/drones)
+## IMU and Installation
+
+The Inertial Measurement Unit is the flight controller's primary sensor for estimating orientation and angular rates. Its mechanical integration determines how much vibration and frame flex reaches it — and therefore how clean your control loops can run.
+
+**Damping and isolator hardness.** Soft silicone dampers attenuate high-frequency vibration but introduce compliance that can cause phase lag at high roll rates. Hard mounts (or no dampers) preserve phase response for aggressive maneuvering but transmit vibration directly into the gyro, requiring more aggressive filtering that eats into your control bandwidth. A common starting point for 5-inch racing quads is hard-mounted MPU6000-class sensors; 250-class cinematic builds often use 60A shore silicone balls.
+
+**Body frame vs. world frame.** The IMU measures angular velocity in the body frame (rotation relative to the aircraft's own axes: roll, pitch, yaw). The inner rate loop closes directly on these body-frame rates. Attitude and position estimators transform body-frame measurements into world-frame estimates (NED or ENU, depending on firmware convention) using the current orientation estimate. Errors in orientation directly contaminate attitude and position loops — which is why yaw drift matters.
+
+**Magnetic interference and yaw drift.** The magnetometer compass is easily disturbed by motor current loops, battery wires, and ferrous frame materials. When the compass heading diverges from the true heading, the yaw estimate drifts, causing the position controller to command a slow turn even when the quad is flying straight. Mitigation strategies include: calibrating away from magnetic interference, using GPS heading as a fallback (available in PX4 from EKF2 when GPS accuracy is sufficient), and switching to airframe-only yaw sources (body-frame rate for acro, GPS heading for missions).
+
+## Nested Loop Architecture
+
+PIX4 and ArduPilot both implement three nested loops, each running at a different bandwidth and commanding the loop below it. Understanding the separation of time scales is the single most important concept in flight control tuning.
+
+| Loop | Command | Output | Approximate bandwidth |
+|------|---------|--------|-----------------------|
+| Rate (inner) | Angular rate (deg/s) | Motor differential | 80–250 Hz |
+| Attitude | Pitch/roll angle (deg) | Rate setpoint | 10–20 Hz |
+| Position (outer) | Position or velocity | Attitude setpoint | 1–5 Hz |
+
+**Rate loop.** The innermost loop runs on raw gyro data at the highest frequency — typically the STM32 FPU can sustain 1–2 kHz on a well-optimized scheduler. It commands individual motor output deltas to track the angular rate setpoint. Tuning this loop first determines the feel and agility of the aircraft. A well-tuned rate loop has crisp step response without oscillation; an over-tuned rate loop oscillates at the natural frequency of the airframe (typically 30–80 Hz for a 5-inch quad).
+
+**Attitude loop.** The attitude loop (also called the stabilise loop in ArduPilot or "Attitude" in PX4) commands rate setpoints to drive the measured Euler angles (roll, pitch) toward the setpoints from the higher-level loops or the RC transmitter in stabilised modes. It runs at a lower rate than the rate loop because it must wait for updated attitude estimates from the sensor fusion (typically 100–200 Hz).
+
+**Position loop.** The outermost loop closes on position or velocity in world coordinates using GPS (or optical flow for indoor/multi-copter VIO). It outputs attitude angle setpoints. In a position-hold flight mode, a position error drives the attitude loop, which drives the rate loop, which drives the motors. The position loop bandwidth is the lowest of the three — any faster and you chase GPS noise, which creates oscillations.
+
+**Saturation and anti-windup.** When the motors saturate at maximum throttle, the integral term in any of the PID loops continues to accumulate error, causing "integrator windup" — a large overshoot when the aircraft finally leaves the saturation region. Both PX4 and ArduPilot implement integrator limiting or "anti-windup" schemes: the I-term is clamped when motor output cannot track the demanded change. In practice, this shows up as sluggish pitch-up response after a hard dive, or oscillation on landing when the aircraft transitions from full down-throttle to contact.
+
+## Ground Station and Logs
+
+Flight logs are the primary diagnostic tool for distinguishing mechanical issues from control-gain issues.
+
+**What gets logged.** Standard data from the flight controller includes: gyro (raw and filtered), desired vs. actual rate, attitude (Euler angles), motor command outputs (PWM or DShot), barometer altitude, GPS position/velocity, and current/voltage from the ESC telemetry loop. Log bandwidth is typically limited to 1–2 kHz sample rate on the highest-priority signals; some logs (e.g., barometer) are sampled at lower rates.
+
+**Reading logs to identify oscillation sources.** A classic diagnostic: the aircraft oscillates at around 40 Hz during fast forward flight. If the oscillation appears in the rate error signal (desired vs. actual rate) but not in the gyro, the rate loop gain is too high. If it appears in both desired rate and gyro, the motor/ESC response bandwidth is the limiting factor (or the airframe has a natural frequency near 40 Hz — try stiffening the dampers or reducing thrust). If the oscillation only appears when GPS is active, the position loop is commanding aggressive attitude corrections that the rate loop cannot track.
+
+**Filter tuning via log spectral analysis.** Many oscillations that feel like "gain too high" are actually the result of resonance in the IMU mount amplifying high-frequency vibration into the gyro. Taking a spectral density plot of the raw gyro log (before software filtering) shows dominant frequencies. A sharp peak at the blade-pass frequency (Hz, roughly motor KV times number of poles divided by 60, times number of blades) indicates a mechanical resonance; filtering at that frequency with a notch filter (available in both PX4 and ArduPilot) is more effective than reducing gains.
+
+## Firmware Overview: PX4 and ArduPilot
+
+Both open-source firmwares implement the nested loop architecture described above. The differences are in how the loops are implemented and configured.
+
+**PX4.** Uses the European Space Agency's flight stack with QGroundControl as the ground station. The rate, attitude, and position controllers are implemented as separate modules running on the uORB middleware (a publish/subscribe message bus). Tuning is done via parameters in QGroundControl. The rate controller is a standard PID with separate P and I gains for roll, pitch, and yaw. EKF2 is the default attitude estimator (Extended Kalman Filter over 21-state vector). Mixer files define how the autopilot translates the attitude/differential throttle commands into motor PWM outputs for any geometry (quad, hex, octo, etc.).
+
+**ArduPilot.** Uses a more monolithic architecture with the Navigator and control libraries. The attitude estimator is the default Extended Kalman Filter (EKF3) or the older complementary filter (Copter AHRS). Tuning parameters use a different naming convention than PX4 (e.g., `ATC_RATE_RLL_P` for roll rate P gain vs. `MC_ROLL_P` in PX4). Supports a wider range of frame geometries and vehicle types natively. Mission Planner is the reference ground station, though other GCS software is supported via MAVLink.
+
+Both support MAVLink for ground station communication, both run on similar ARM Cortex-M4/M7 hardware (STM32 family), and both use the same IMU sensors (MPU6000, ICM42688, etc.). The choice between them is often determined by community support, hardware availability, and specific feature needs (e.g., ArduPilot has stronger support for tailsitter VTOL transitions; PX4 has a more modular architecture that some developers prefer).
+
+## Practical First Steps
+
+If you are new to flight controller tuning, the recommended path is:
+
+1. **Start with default PIDs** — both firmwares ship with reasonable defaults for standard 5-inch quad geometries. Do not change gains until you have flown in a stabilized mode (not acro) and confirmed the aircraft is mechanically sound.
+2. **Fly in Stabilize first** — this mode uses the attitude loop only; the rate loop handles disturbances. It is the safest mode to establish baseline behavior.
+3. **Collect a flight log** — even if the flight looks fine, download the log and inspect the rate tracking error. Small oscillations that are hard to feel can be seen clearly in the log.
+4. **Increase rate P incrementally** — raise the roll and pitch rate P gain by 10–20% at a time until you see a slight oscillation at the end of a fast pitch input, then back off 10%.
+5. **Only then touch I** — the integral term should compensate for steady-state bias (e.g., a slightly unbalanced aircraft that drifts in hover). Set I to roughly 30–50% of your final P value.
+
+[← Airframe & Propulsion](/en/hardware/systems/drones/airframe)
+[Drones Overview](/en/hardware/systems/drones)
+[Link & Safety →](/en/hardware/systems/drones/link_safety)
