@@ -1,10 +1,82 @@
 ---
 title: Control
-description: 'Stub — see Chinese section'
+description: 'PID, feedforward, filtering, and basic state estimation — turning raw sensor readings into stable, accurate tracking.'
 ---
 
 # Control
 
-Stub. **[/zh/hardware/basics/control](/zh/hardware/basics/control)**
+Control is the bridge between what a machine senses and what it does. A well-tuned controller takes a desired reference (setpoint or trajectory) and a measured output, then computes actuator commands that drive the error to zero — or keep it small despite disturbances. Getting this right is what separates a machine that wobbles or oscillates from one that tracks smoothly.
 
-[Intro](/en/hardware/basics)
+## Classic Control: PID
+
+The **PID controller** is the workhorse of embedded control. It computes the actuator command from three terms:
+
+- **P (Proportional)**: Output proportional to current error. Increasing P reduces rise time but can cause overshoot and oscillation if set too high.
+- **I (Integral)**: Output proportional to the integral of error over time. It eliminates steady-state error (the persistent offset that P alone cannot fix) but can cause windup if the actuator saturates.
+- **D (Derivative)**: Output proportional to the rate of change of error. It dampens oscillations and improves stability but amplifies sensor noise, so a low-pass filter on the D term is standard practice.
+
+### Tuning Order
+
+A practical tuning sequence:
+
+1. Start with I and D at zero. Increase P until the system oscillates or overshoots significantly.
+2. Increase D to dampen the oscillation. D is most effective when the plant dynamics are second-order or higher.
+3. Finally, increase I just enough to eliminate steady-state offset. Keep I small to avoid integral windup.
+
+**Anti-windup**: When the actuator saturates (e.g., a motor at maximum PWM), the integral term keeps accumulating even though the output cannot change. This causes large overshoot when the error eventually reverses. Common remedies: clamp the integral term to a fixed range, back-calculate the integral term based on actuator headroom, or disable integration when the actuator is saturated.
+
+### Feedforward
+
+**Feedforward** applies a control action based on a known disturbance or a known desired trajectory, before any error develops. The simplest example: if you know a robotic arm is holding a payload of known mass, you can pre-compensate the motor torque for gravity rather than waiting for the arm to sag and the PID to correct it.
+
+Feedforward reduces the burden on the feedback loop — the PID only needs to handle unmodeled dynamics, measurement noise, and unexpected disturbances. In practice, most high-performance controllers are a blend: `u = Kp·e + Ki·∫e + Kd·de/dt + u_ff`.
+
+## Filtering
+
+Raw sensor data is noisy. A simple moving average smooths noise but introduces delay. A **first-order low-pass filter** (`y[n] = α·x[n] + (1-α)·y[n-1]`, with 0 < α < 1) is the most common alternative: it costs one subtraction and one multiplication per sample.
+
+### Phase Lag and Bandwidth
+
+Every filter introduces **phase lag** — the output signal trails the input by some angle that grows with frequency. Phase lag reduces the effective damping of a closed-loop controller. In the frequency domain, a controller's **bandwidth** is the frequency at which the closed-loop gain drops to 1/√2 (−3 dB). Higher bandwidth means faster response but also higher sensitivity to sensor noise and potential instability.
+
+Practical rule: the control loop bandwidth should be at most 1/5 to 1/10 of the sensor update rate. If your IMU runs at 1 kHz and your motor control loop runs at 10 kHz, you have headroom; if the IMU runs at 100 Hz and your loop needs 500 Hz bandwidth, you have a problem.
+
+## State Estimation
+
+Sensors rarely give you exactly the state you want directly. An **estimator** fuses multiple noisy measurements into a coherent state estimate.
+
+### The Attitude Problem
+
+A accelerometer at rest measures gravity — you can extract tilt angles from it. But when the vehicle is accelerating (a drone climbing, a car braking), the accelerometer sees both gravity and inertial forces, making tilt angle ambiguous. A gyroscope integrates angular rate to track angle, but any gyro bias causes the angle estimate to drift without bound.
+
+### Complementary Filter
+
+A **complementary filter** blends two sources: it uses the gyroscope for short-term angle tracking (where its low noise and no drift are advantages) and the accelerometer for long-term tilt correction (where its absolute reference prevents drift). A typical form: `angle = α·(angle + gyro_rate·dt) + (1-α)·atan2(accel_x, accel_z)`, where α is close to 1 (e.g., 0.98). The gyro dominates at high frequency; the accelerometer corrects drift at low frequency.
+
+### Extended Kalman Filter (EKF)
+
+The **Extended Kalman Filter** generalizes the Kalman filter to nonlinear systems. It maintains a state estimate and a covariance matrix, predicts the state forward using a motion model, and corrects the prediction using sensor measurements. An EKF is the standard estimator in most drone and automotive systems.
+
+In a drone's EKF, the state vector typically includes position, velocity, attitude (quaternion), and IMU biases. The EKF runs at a higher rate using the IMU's inertial readings (in a prediction step) and at a lower rate using GPS, barometer, and magnetometer (in correction steps).
+
+## Relationship to the Systems That Follow
+
+### Drones
+
+Drone flight controllers almost universally use a **nested-loop structure**: an inner rate loop (controls angular rate, runs at 1–8 kHz), a middle attitude loop (controls roll/pitch/yaw angle, runs at 100–500 Hz), and an outer position loop (controls horizontal position, runs at 10–100 Hz). Each outer loop is slower than the inner one by roughly an order of magnitude. This separation ensures the inner loop can reject fast disturbances (wind gusts, motor imbalance) before the outer loop even reacts.
+
+### Automotive
+
+Automotive control splits into **longitudinal** (speed and traction) and **lateral** (steering) domains. The longitudinal controller manages engine torque or braking via throttle and brake commands. The lateral controller tracks a desired steering angle to follow a path; it must respect tire force limits (the **friction circle** — a tire cannot produce more lateral force than its load capacity). Vehicle dynamics are highly nonlinear at the limits (tire slip), which is why advanced systems use model predictive control (MPC) rather than simple PID.
+
+### Robotics
+
+Robot arms operate in **joint space** (each motor's angle) or **Cartesian space** (the end-effector's position and orientation). A typical arm controller has an outer Cartesian trajectory loop, an inverse kinematics stage that converts Cartesian errors to joint errors, and an inner joint torque/position loop running on the motor drive. Arms also face **singularity** configurations where the Jacobian matrix loses rank — near singularities, small Cartesian motions require huge joint motions, and naive control can request impossible velocities. Handling singularities is a core part of manipulator control, not an afterthought.
+
+## Practical Advice: Start with a PID and a Filter
+
+1. **First project**: implement a PID for motor speed control (DC motor with encoder feedback). Start with P only, increase until it oscillates, then add D to damp. Add I last, just enough to eliminate steady-state speed error.
+2. **For filtering**: a first-order low-pass with α = 0.1–0.2 is a good starting point for most sensor signals. For IMU data, a complementary filter with α ≈ 0.98 is sufficient for attitude estimation on slow platforms. Only move to an EKF when you need to fuse more than two sensor sources or when you need accurate covariance tracking.
+3. **For feedforward**: add it when you know the dominant disturbance. Gravity compensation on a balancing robot, inertia compensation on a fast-moving arm — these are the clearest wins.
+
+[Basics Overview](/en/hardware/basics) · [Previous: Sensing](/en/hardware/basics/sensing) · [Next: Communication](/en/hardware/basics/communication)
