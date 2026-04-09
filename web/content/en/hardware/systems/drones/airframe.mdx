@@ -1,10 +1,79 @@
 ---
-title: Drones · Airframe
-description: 'Stub'
+title: Drones · Airframe & Propulsion
+description: 'Wheelbase, propeller-motor matching, ESC current, vibration and balancing — multirotor airframe and propulsion system fundamentals'
 ---
 
-# Airframe & propulsion
+# Airframe & Propulsion
 
-**[/zh/hardware/systems/drones/airframe](/zh/hardware/systems/drones/airframe)**
+## Frame and Propellers
 
-[Drones](/en/hardware/systems/drones)
+The airframe determines the mechanical baseline for everything else. **Wheelbase** (the diagonal distance between motor shafts) sets the overall inertia tensor — a longer wheelbase resists yaw but increases drag; a shorter one is nimble but more sensitive to center-of-gravity shifts. In practice, 5-inch racing frames target wheelbases around 200–230 mm, while cinematic 7-inch platforms run 280–300 mm.
+
+**Propeller selection** is driven by two numbers: diameter (D) and pitch (Pitch or "螺距"). Larger diameter and higher pitch push more air per revolution but demand more torque, which translates to higher current. The **KV rating** of the motor (RPM per volt applied at full throttle) must be matched to the prop — a 2300 KV motor on 6-inch props works well for巡航; the same motor on 3-inch props will overspin and draw excessive current.
+
+A critical but often overlooked factor is **resonance**. Propeller blades generate periodic vibration at multiples of motor electrical RPM. This vibration propagates through the frame to the IMU, corrupting gyroscope readings and causing attitude drift. Mitigation strategies include:
+
+- Using **isolated motor mounts** or soft silicone grommets to attenuate high-frequency vibration before it reaches the flight controller
+- Running **propeller dynamic balancing** (blade-level mass distribution) to reduce harmonic content — a well-balanced prop produces 10× less vibration than an unbalanced one
+- Selecting stiff frame materials (carbon fiber vs. polycarbonate) and minimizing compliance in motor mounting pads
+
+## ESC and Motor
+
+The **Electronic Speed Controller** converts DC battery power into three-phase AC for the brushless motor and handles commutation — the electronic switching sequence that rotates the magnetic field and spins the rotor.
+
+### Three-phase wiring and commutation
+
+Six MOSFETs (three high-side, three low-side) switch in a 60° or 120° commutation pattern. Wires are labeled **U, V, W** — swapping any two phases reverses motor direction. On a quadrotor, two motors must spin clockwise (CW props) and two counter-clockwise (CCW props) to cancel net yaw torque, so prop direction and motor direction must both be matched.
+
+### Synchronous vs. asynchronous commutation
+
+In **synchronous commutation** (standard for most multirotor ESCs), the controller actively drives each phase based on back-EMF sensing from the motor. This gives high efficiency at high RPM but requires the motor to be spinning fast enough for back-EMF to be detectable — below roughly 10% throttle, the motor may stall or cog. **Asynchronous** or **sensorless** startup applies a forced commutation sequence initially then transitions to sensorless mode, allowing smoother low-speed behavior but with higher losses during transition.
+
+### Stall protection and high-throttle transients
+
+At full throttle, motor current can spike to **80–150 A** on a 5-inch racing quad. The ESC must handle this without overheating or triggering over-current protection mid-flight. Key specifications:
+
+- **Continuous current rating**: should exceed peak hover current by at least 30%
+- **Burst current rating**: rated for 10-second peaks during punch-out maneuvers
+- **Input capacitance**: more capacitance (e.g., low-ESR ceramic capacitors on the input) reduces voltage sag during transient loads
+
+The **battery C rating** directly limits how much current the pack can safely deliver. A 2200 mAh 4S LiPo rated at 45C can supply up to ~99 A continuously (2200 mA × 45 = 99 A). Running a setup that regularly demands 100 A from a 45C pack will cause voltage sag, premature aging, and potentially a puffed or failed battery mid-flight.
+
+## Battery and Power Distribution
+
+### Lithium-polymer storage and transport
+
+**LiPo batteries** are the standard for multirotor propulsion due to their high energy density. However, they require careful handling:
+
+- **Storage voltage**: always store at 3.7–3.85 V per cell for long-term health. A full charge (4.2 V/cell) or deep discharge (below 3.0 V/cell) accelerates degradation
+- **Storage condition**: keep at room temperature, not in direct sunlight or a hot car
+- **Transport regulations**: batteries over 100 Wh require airline approval; damaged or puffed packs must never be transported
+
+### Connector specs and power distribution
+
+The main battery connector (XT60, XT90, AS150) must be rated for the full motor current sum. For a 4-axis quad drawing 80 A total at hover:
+
+- XT60 (rated 60 A continuous) is **undersized** for this application
+- XT90 (90 A) or AS150 (150 A) is appropriate for high-power setups
+
+A **Power Distribution Board (PDB)** routes battery voltage to each ESC. Modern integrated frames often embed the PDB into the frame plate. Key design considerations:
+
+- **Bus bar width and thickness**: wider and thicker copper traces reduce resistive losses and heat
+- **Voltage sensing leads**: most ESCs with built-in BEC need a dedicated voltage sense wire to the flight controller for accurate battery percentage readings
+
+### Low voltage alarm and landing strategy
+
+The flight controller monitors cell voltage (not just total pack voltage) to trigger warnings. Typical thresholds:
+
+| Stage | Voltage per cell | Action |
+|-------|-------------------|--------|
+| Good  | 3.8–4.2 V | Normal flight |
+| Warning | 3.5–3.8 V | First alert — consider returning |
+| Critical | 3.3–3.5 V | Forced RTL or immediate landing |
+| Emergency | < 3.3 V | Cell damage imminent — land NOW |
+
+A **2-cell vs. 4-cell vs. 6-cell** choice affects everything: higher cell count (e.g., 6S vs. 4S) allows the same power with lower current, which reduces ESC and connector heating, but adds weight and cost.
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+← [Drones Overview](/en/hardware/systems/drones) · [Next: Flight Control](/en/hardware/systems/drones/flight_control) →
+</div>
