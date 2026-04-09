@@ -52,4 +52,22 @@ Joint servo control and trajectory planning belong to the **robot controller** �
 - **Progression path**: Single-axis PID identification → multi-axis interpolation → integration with gripper and vision → choose mobile base or collaborative arm depending on interest.
 - **Research / industrial**: After the kit stage, ISO 10218 safety architecture, robot controller selection (EtherCAT-based), and SLAM for mobile bases represent the transition from prototype to production.
 
-[Whole Systems](/en/hardware/systems) · [Drones](/en/hardware/systems/drones)
+---
+
+## Subsystem Chain
+
+The robotics subsystem chain spans three levels — mobile locomotion, manipulator arm, and safety coordination — flowing from perception to task execution:
+
+**Locomotion path:** Battery → motor drivers (BLDC/planetary) → wheel/leg actuators → mobile base → odometry (wheel encoders, IMU, LiDAR) → SLAM localization
+
+**Manipulation path:** Localization pose → task planning → trajectory generation → joint servo loops (current/velocity/position) → harmonic/planetary reducers → end-effector → object interaction
+
+**Safety path:** STO/SBC (Safe Torque Off / Safe Brake Control) → Safety PLC (SIL 2–3) → e-stop chain → light curtains / safety fencing → force-limited joints (cobot) or safety-monitored stops (industrial arm)
+
+**Data flow:** Mobile base provides the pose reference frame; the manipulator arm executes task-space trajectories within that frame; the safety layer (STO, force limiting, collision detection) enforces hardware-level boundaries that no software layer can override. Each sub-system's design trade-offs are covered in the three-level pages: [Manipulators & Joints](/en/hardware/systems/robotics/manipulators) covers joint hardware (harmonic/planetary reducers, integrated joint modules, backlash and stiffness), kinematics (forward/inverse kinematics, workspace, singularities), three-loop control hierarchy (current, velocity, position), and gravity/feedforward compensation; [Mobile Bases & AGVs](/en/hardware/systems/robotics/mobile_base) covers four chassis configurations (differential/Ackermann/omniwheel-Mecanum/tracked), drive system and motor selection, odometry and localization sensor layers (wheel odometry/IMU/LiDAR/SLAM), and navigation and fleet integration (VDA5050, AGV vs AMR); [System Integration & Safety](/en/hardware/systems/robotics/integration) covers industrial safety architecture (Safety PLC/SIL/Light curtain/ISO 12100), collaborative robotics (ISO/TS 15066 torque limiting, collision detection, Teach mode vs traditional industrial arms), and commissioning checklist (power-on/off sequence, e-stop reachability, cable stress, commissioning gap).
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+[← Manipulators & Joints](/en/hardware/systems/robotics/manipulators) · [Mobile Bases & AGVs](/en/hardware/systems/robotics/mobile_base) · [System Integration & Safety](/en/hardware/systems/robotics/integration)
+</div>
+
+[← Whole Systems](/en/hardware/systems) · [Drones](/en/hardware/systems/drones)
