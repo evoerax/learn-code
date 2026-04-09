@@ -83,4 +83,81 @@
 
 ---
 
+## 7. Hardware 模块内容维护约定（91–100 轮沉淀）
+
+本文档记录 `content/{en,zh}/hardware/**` 的维护约定，沉淀自 1–90 轮迭代经验。
+
+### 7.1 新增 MDX 文件规范
+
+**命名与路径**：
+- 文件名使用 kebab-case（如 `link_safety.mdx`、`by_wire.mdx`）
+- 路径与 URL 路由严格对应：`content/zh/hardware/systems/drones/link_safety.mdx` → `/zh/hardware/systems/drones/link_safety`
+- 新增页面须同时更新对应语言的 `_meta.js`，并在另一语言侧创建对应镜像（见 7.3）
+
+**Front Matter 必填字段**：
+
+```yaml
+---
+title: 页面标题（中文用完整中文，英文用完整英文）
+description: 描述字段，YAML 中含冒号时必须用双引号包裹
+---
+```
+
+- `title` 应与文件内 H1 一致
+- `description` ≥ 30 字符，含冒号时用双引号包裹（`"EMC 电磁兼容：传导与辐射"`）
+- sidebar 标题由 `_meta.js` 的 `name` 字段独立控制，与 `title` 允许语义等价但文字略有差异（如 `电路与电子基础` vs `① 电路与电子`）
+
+### 7.2 混合语言红线规则
+
+| 文件类型 | 规则 |
+|----------|------|
+| `zh/hardware/**/*.mdx` | 中文正文内禁止嵌入未加括号注释的英文技术词（如 `「arming」` 应改为 `arming状态机（电机解锁）`）；英文技术词作为主语时无缝嵌入中文句子，不加引号 |
+| `en/hardware/**/*.mdx` | 英文正文内禁止出现中文字符（标准汉字）；可接受的例外：hub 页释义性括号（如 `(无人机脉络)` 说明轨道名称）和 bilingual 对照表格单元格 |
+
+**常见混合语言 bug 模式**：
+- 中文引号夹英文：`「arming」` → 无引号嵌入 + 括号释义
+- 英文词打断中文句：`commissioning 清单` → `commissioning清单`（去多余空格）
+- 截断英文词：`完成 commission` → `完成commissioning`
+- 中英大小写不一致：`Commissioning差距` → `commissioning差距`
+
+### 7.3 中英同步节奏
+
+**强制同步要求**：
+- 新增任何 `zh/hardware/` 页面，须在 2–3 轮内创建对应 `en/hardware/` 镜像（≥500 词或等价结构）
+- 新增任何 `en/hardware/` 页面，须同步更新 `zh/hardware/` 对应页面
+- 两侧 `_meta.js` 须同步更新（同一轮或紧接的后续轮次）
+
+**镜像结构对仗原则**：
+- 中英版本结构完全对仗：同节标题、同级标题、同类表格/列表
+- hub 页 footer 导航链：指向同语言内相关 hub（如 `zh` 指向 `/zh/hardware/overview`，`en` 指向 `/en/hardware/overview`）
+- 「与其他页面的关系」节：两侧均须存在，互链指向同语言内对应页面
+
+**可接受的翻译差异**：
+- 英文保留专业术语缩写（如 ASIL、MCU、CP Plan）不加翻译
+- 英文保留中文特有概念的音译括号（如 `joint torque sensor (关节扭矩传感器)`）
+- 标题文字因语言特性略有差异（如 sidebar `① 电路与电子` vs front matter `电路与电子基础`）
+
+### 7.4 链接风格
+
+- 所有 MDX 内链使用绝对路径：`/zh/hardware/...` 或 `/en/hardware/...`
+- 禁止使用相对路径（`../` 或 `./`）
+- 跨语言链接仅存在于 overview.mdx 中作为 intentional bilingual mirror
+
+### 7.5 Hub 页结构模板
+
+新增顶层 hub 页（如 `governance.mdx`、`testing.mdx`）应包含：
+
+1. **Front matter**：`title` + `description`
+2. **正文若干节**：≥ 3 节，每节有 H2 标题
+3. **「与其他页面的关系」节**：5–6 个交叉链接，相关页面各一个
+4. **居中 div footer 导航链**：`<div style={{ textAlign: 'center', marginTop: '2rem' }}>` 包含指向上下 hub 的链接
+
+### 7.6 Build 验证
+
+- 每轮修改后必须在 `web/` 目录执行 `pnpm run build`，必须通过才能提交
+- build 报错时优先检查：front matter YAML 语法、`_meta.js` 的 key 是否在目录中有对应文件、是否有死链
+- Turbopack 缓存问题：删除 `web/.next` 目录后重新 `pnpm run dev`
+
+---
+
 *最后更新：对齐当前仓库中 `web/patches/nextra@4.6.1.patch` 与 `normalize-pages` 行为。*
