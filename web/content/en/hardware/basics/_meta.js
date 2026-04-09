@@ -5,7 +5,7 @@ export default {
     embedded: { title: '② Embedded & MCUs' },
     actuation: { title: '③ Actuation' },
     sensing: { title: '④ Sensing' },
-    control: { title: '⑤ Control & estimation' },
+    control: { title: '⑤ Control & Estimation' },
     communication: { title: '⑥ Buses & links' },
     '---sep-': { type: 'separator' },
     glossary: { title: 'Glossary' },
