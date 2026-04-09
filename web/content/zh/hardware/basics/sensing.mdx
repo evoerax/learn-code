@@ -37,6 +37,39 @@ description: 'IMU、磁力计、测距、编码器与视觉——为控制与定
 
 EKF 的详细内容见 [控制与估计](/zh/hardware/basics/control)。实践启示：即便中等性能的 IMU 配合良好的融合软件，也胜过高端 IMU 搭配朴素融合算法。
 
+以下流程图展示两种传感器融合方法的数据流：
+
+```mermaid
+graph LR
+    %% 传感器输入
+    GYRO["陀螺仪<br/>角速度 ω"]
+    ACC["加速度计<br/>比力 a"]
+    MAG["磁力计（可选）<br/>航向 θ"]
+
+    %% 互补滤波路径
+    GYRO -->|积分| ANGLE_G["角度估计 θ_gyro"]
+    ACC -->|低通| ANGLE_A["倾角估计 θ_acc"]
+    ANGLE_G -->|高通滤波 α| CF["互补滤波输出 θ̂"]
+    ANGLE_A -->|低通滤波 1-α|
+    CF -->|反馈| GYRO
+
+    %% EKF 路径
+    GYRO -->|预测| EKF_P["EKF 预测步骤"]
+    ACC -->|更新| EKF_U["EKF 更新步骤"]
+    MAG -->|更新|
+    EKF_P -->|状态 x̂| EKF_S["EKF 状态输出<br/>θ̂, biaŝ"]
+    EKF_U -->|卡尔曼增益 K| EKF_S
+    EKF_S -->|反馈| GYRO
+
+    style GYRO fill:#e3f2fd,stroke:#1565c0
+    style ACC fill:#e3f2fd,stroke:#1565c0
+    style MAG fill:#e3f2fd,stroke:#1565c0
+    style CF fill:#e8f5e9,stroke:#2e7d32
+    style EKF_S fill:#fff3e0,stroke:#ef6c00
+```
+
+**图解说明**：互补滤波（左支）对陀螺高通滤波以保留快速旋转，对加速度计低通滤波以获取稳定倾角；EKF（右支）通过预测-更新两步递归估计状态和零偏，比互补滤波更通用但计算开销更高。
+
 ## 关节与位姿
 
 ### 编码器
