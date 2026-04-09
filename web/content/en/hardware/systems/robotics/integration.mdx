@@ -1,10 +1,72 @@
 ---
-title: Robotics · Integration
-description: 'Stub'
+title: System Integration & Safety
+description: 'Emergency stop, interlocks, collision detection, and collaborative robot standards — whole-system integration cannot be reduced to algorithms alone'
 ---
 
-# Integration & safety
+# System Integration & Safety
 
-**[/zh/hardware/systems/robotics/integration](/zh/hardware/systems/robotics/integration)**
+This page covers the hardware and system-level concerns that sit between "the robot works in isolation" and "the robot works safely and reliably in a production environment". These are the topics that distinguish a proof-of-concept demo from an engineering-grade deployment: safety architecture, collaborative workspace design, and commissioning checklists.
 
-[Robotics](/en/hardware/systems/robotics)
+---
+
+## Industrial Scenarios
+
+Industrial robot deployments are governed by more than just performance specs — safety architecture is a first-class hardware requirement.
+
+**Safety PLC and interlocks**: A safety programmable logic controller (Safety PLC) monitors emergency stop circuits, safety zone breaches, and mode switches. It is distinct from the standard PLC that runs the production logic — safety PLCs are certified to SIL 2 or SIL 3 per IEC 62061 and run redundant logic that cannot be overridden by the main controller. Every robot cell has at minimum: an E-stop chain wired to the Safety PLC, zone light curtains or area scanners, and door interlocks that force a safety-monitored stop when a worker enters the workspace.
+
+**Risk assessment and residual risk documentation**: ISO 12100 requires a formal risk assessment for every robot installation — identifying pinch points, crush zones, and swing volumes. The output is a residual risk document that must be maintained and periodically reviewed. This is not a software task; it involves physical guards, safety distances per ISO 13855 (calculating minimum distance to hazard based on approach speed), and functional limitation documentation.
+
+**Typical safety architecture components**:
+
+| Component | Function | Standard |
+|---|---|---|
+| Safety PLC | Redundant logic, SIL 2/3 | IEC 62061, ISO 13849 |
+| E-stop chain | Wire-level hard stop, failsafe | ISO 13850 |
+| Light curtains | Area detection, instant stop | IEC 61496 |
+| Safety mat / area scanner | Presence detection in zones | IEC 61496 |
+| Door interlock switch | Guard position monitoring | ISO 14119 |
+| Safety relay | Monitors and executes stop signals | IEC 62061 |
+
+---
+
+## Collaborative Robots
+
+Collaborative robots (cobots) are designed to share a workspace with humans without physical guards — but "collaborative" does not mean "unlimited force". Force limiting is a hardware property of the joint actuators, not just a software setting.
+
+**Force and torque limiting**: ISO/TS 15066 defines power and force limits for collaborative operation across body regions. These limits are enforced by a combination of torque sensors in each joint, collision detection via current sensing, and safety-monitored speed limits. When a contact event exceeds the threshold, the robot performs a controlled retreat — not an uncontrolled drop.
+
+**Collision detection**: The simplest form is current-based: the motor controller monitors stator current and triggers a stop within milliseconds when an anomaly is detected. More advanced cobots use joint torque sensors at every axis for higher resolution. Collision detection must be tested per the robot's declared workspace and payload — a 5 kg payload creates different inertia than a 0.5 kg payload.
+
+**Teach mode and manual guidance**: In teach mode, the robot is operated at reduced speed with no payload, and the operator physically guides the end-effector through waypoints. These waypoints are recorded and can be played back. Teach mode requires a physical enable device (a deadman switch) that the operator must hold — releasing it triggers an immediate safety stop. This is fundamentally different from pure position control: the robot must actively resist gravity when the operator releases it.
+
+**Cobot vs. traditional industrial robot**: A traditional 6-axis industrial arm (e.g., Fanuc, Kuka, ABB) is faster and higher-payload but requires safety fencing and is not designed for human proximity. A cobot (e.g., Universal Robots, Franka, Techman) is inherently force-limited by design, enabling shared workspaces. The choice is an engineering trade-off: throughput and payload vs. workspace flexibility and human-robot interaction.
+
+---
+
+## Prototype Checklist
+
+Moving from "the robot can demonstrate a task" to "the robot can be commissioned in the field" requires engineering hardening. This checklist captures the hardware-level concerns that are easy to overlook in a lab environment.
+
+**Power-up sequence**: Robot cells should follow a defined power-up order: Safety PLC first, then drives, then main controller. Skipping this sequence can leave the Safety PLC in an undefined state. The shutdown sequence is equally important — controlled stop (STO) before removing power prevents motor brake wear and controller file corruption.
+
+**E-stop reachability**: Every robot cell must have E-stop buttons accessible from all normal operating positions, including any maintenance access point. ISO 13850 specifies the maximum reach time and placement criteria. E-stop buttons must be mushroom-headed, yellow/red, and physically latching — software stop buttons do not satisfy the standard.
+
+**Cable stress and maintenance access**: Robot dress packs (the bundle of cables and hoses routing from the base to the tool) experience continuous flexing during operation. Cables must be rated for the expected cycle count; using consumer-grade cables in an industrial dress pack leads to premature failure. Maintenance access panels should be positioned to allow cable replacement without disassembling the entire cell.
+
+**Commissioning gap**: A demo running on a workbench is not equivalent to a commissioned cell. The engineering gap includes: grounding and EMC compliance (CE marking), emergency return-to-home on power loss (STO does not define what "home" is), cycle time validation at ambient temperature extremes, and documentation of the safety function test log.
+
+---
+
+## How This Page Relates to Others
+
+Integration and safety sit at the intersection of the whole robotics system:
+
+- **Actuators**: The torque-limiting capability of a cobot joint is a hardware property of the joint actuator — covered in [Manipulators & Joints](/en/hardware/systems/robotics/manipulators)
+- **Mobile bases**: An AGV or AMR cell adds fleet manager safety (VDA 5050 emergency stop propagation) to the standard robot cell checklist — covered in [Mobile Bases & AGVs](/en/hardware/systems/robotics/mobile_base)
+- **Control**: The Safety PLC and E-stop chain route back to the low-level servo control loops covered in [Basics of Control & Estimation](/en/hardware/basics/control)
+- **Communication**: EtherCAT or PROFINET are the common fieldbus choices for integrating robot controllers with Safety PLCs — covered in [Basics of Communication](/en/hardware/basics/communication)
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+[← Mobile Bases & AGVs](/en/hardware/systems/robotics/mobile_base) · [Robotics Overview](/en/hardware/systems/robotics) · [Manipulators & Joints](/en/hardware/systems/robotics/manipulators)
+</div>
