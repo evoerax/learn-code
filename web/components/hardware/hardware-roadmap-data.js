@@ -143,52 +143,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L3",
-    title: "③ · 传感器与感知",
-    subtitle: "SENSORS & PERCEPTION",
-    color: "#8E6B8E",
-    accent: "#E8C4E8",
-    sections: [
-      {
-        name: "惯性与位姿",
-        topics: [
-          "IMU 六轴 · 加速度计 + 陀螺仪",
-          "磁力计 & 气压计",
-          "AHRS 姿态解算",
-          "GPS / RTK / UWB 定位",
-        ],
-      },
-      {
-        name: "视觉传感",
-        topics: [
-          "单目 / 双目 / 深度相机",
-          "鱼眼 / 全景相机标定",
-          "结构光 & ToF 原理",
-          "事件相机（DVS）",
-        ],
-      },
-      {
-        name: "激光雷达与雷达",
-        topics: [
-          "机械式 / 固态 / Flash LiDAR",
-          "点云处理与 SLAM 前端",
-          "毫米波雷达（77GHz）",
-          "超声波传感器",
-        ],
-      },
-      {
-        name: "力觉与特殊传感",
-        topics: [
-          "力/力矩传感器（六维）",
-          "触觉传感器（电容/压阻）",
-          "编码器 · 增量 / 绝对值",
-          "温湿度 / 气体 / 红外",
-        ],
-      },
-    ],
-  },
-  {
-    id: "L4",
-    title: "④ · 执行器与动力",
+    title: "③ · 执行器与动力",
     subtitle: "ACTUATORS & POWER",
     color: "#94825A",
     accent: "#E8DCC4",
@@ -230,6 +185,51 @@ export const HARDWARE_ROADMAP = [
           "压电陶瓷驱动",
           "软体气动执行器",
           "准直驱 / 关节模组",
+        ],
+      },
+    ],
+  },
+  {
+    id: "L4",
+    title: "④ · 传感器与感知",
+    subtitle: "SENSORS & PERCEPTION",
+    color: "#8E6B8E",
+    accent: "#E8C4E8",
+    sections: [
+      {
+        name: "惯性与位姿",
+        topics: [
+          "IMU 六轴 · 加速度计 + 陀螺仪",
+          "磁力计 & 气压计",
+          "AHRS 姿态解算",
+          "GPS / RTK / UWB 定位",
+        ],
+      },
+      {
+        name: "视觉传感",
+        topics: [
+          "单目 / 双目 / 深度相机",
+          "鱼眼 / 全景相机标定",
+          "结构光 & ToF 原理",
+          "事件相机（DVS）",
+        ],
+      },
+      {
+        name: "激光雷达与雷达",
+        topics: [
+          "机械式 / 固态 / Flash LiDAR",
+          "点云处理与 SLAM 前端",
+          "毫米波雷达（77GHz）",
+          "超声波传感器",
+        ],
+      },
+      {
+        name: "力觉与特殊传感",
+        topics: [
+          "力/力矩传感器（六维）",
+          "触觉传感器（电容/压阻）",
+          "编码器 · 增量 / 绝对值",
+          "温湿度 / 气体 / 红外",
         ],
       },
     ],
@@ -283,7 +283,7 @@ export const HARDWARE_ROADMAP = [
   {
     id: "L6",
     title: "⑥ · 总线与通信",
-    subtitle: "COMMUNICATION & BUS",
+    subtitle: "BUS & COMMUNICATION",
     color: "#7A5A5A",
     accent: "#E8C4C4",
     sections: [
@@ -331,7 +331,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L7",
-    title: "Ⅷ · 机械结构",
+    title: "⑦ · 机械结构",
     subtitle: "MECHANICAL DESIGN",
     color: "#5A6B94",
     accent: "#C4D0E8",
@@ -377,7 +377,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L8",
-    title: "Ⅸ · 智能算法",
+    title: "⑧ · 智能算法",
     subtitle: "AI & ALGORITHMS",
     color: "#8E8E5A",
     accent: "#E8E8C4",
@@ -425,7 +425,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L9",
-    title: "Ⅹ · 整机实战",
+    title: "⑨ · 整机实战",
     subtitle: "SYSTEM INTEGRATION",
     color: "#6B6B8E",
     accent: "#D0D0E8",
@@ -484,7 +484,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L10",
-    title: "Ⅺ · 工程素养",
+    title: "⑩ · 工程素养",
     subtitle: "ENGINEERING PRACTICE",
     color: "#6B8080",
     accent: "#C4DEDE",
