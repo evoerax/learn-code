@@ -6,11 +6,11 @@ export default {
         theme: { collapsed: false },
     },
     automotive: {
-        title: '汽车（网络 / 线控 / ADAS）',
+        title: '汽车（网络·线控·ADAS）',
         theme: { collapsed: false },
     },
     robotics: {
-        title: '机器人（臂 / 底盘 / 集成）',
+        title: '机器人（臂·底盘·集成）',
         theme: { collapsed: false },
     },
 }
