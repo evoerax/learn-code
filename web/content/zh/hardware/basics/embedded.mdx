@@ -7,10 +7,28 @@ description: 'MCU 选型、时钟与中断、外设、RTOS 入门与调试手段
 
 ## 能力阶梯
 
-1. **裸机**：GPIO、定时器、PWM、中断优先级；看懂 datasheet「时序图」。  
-2. **外设总线**：SPI / I2C / UART；DMA 减轻 CPU。  
-3. **RTOS（可选）**：任务、队列、互斥；周期性控制循环与传感器采样的对齐。  
-4. **工具链**：编译、烧录、断点、日志（RTT/串口）、简单单元测试。  
+以下四层构成嵌入式开发的递进路径，每层建立在前一层的基础上：
+
+```mermaid
+graph LR
+    L1["① 裸机<br/>GPIO / 定时器 / PWM<br/>中断优先级 / 时序图"]
+    L2["② 外设总线<br/>SPI · I2C · UART<br/>DMA 减轻 CPU 负担"]
+    L3["③ RTOS（可选）<br/>任务 / 队列 / 互斥<br/>周期控制与传感器采样对齐"]
+    L4["④ 工具链<br/>编译 / 烧录 / 断点<br/>RTT 日志 / 单元测试"]
+
+    L1 --> L2 --> L3 --> L4
+    style L1 fill:#e6f4ea,stroke:#2e7d32
+    style L2 fill:#e3f2fd,stroke:#1565c0
+    style L3 fill:#fff3e0,stroke:#ef6c00
+    style L4 fill:#fce4ec,stroke:#c62828
+```
+
+| 层级 | 核心技能 | 标志性成果 |
+|------|----------|------------|
+| ① 裸机 | GPIO / 定时器 / PWM / 中断 / 时序图 | 点亮 LED、读取按键、用输入捕获测脉宽 |
+| ② 外设总线 | SPI / I2C / UART / DMA | 驱动 IMU 读取、扩展传感器总线 |
+| ③ RTOS | 任务调度 / 队列通信 / 互斥 | 多传感器融合、周期性控制回路 |
+| ④ 工具链 | 调试器 / RTT 日志 / 单元测试 | 可维护、可诊断、可回归的固件 |  
 
 ## 中断 / DMA / 调试
 
@@ -50,4 +68,4 @@ DMA（Direct Memory Access）让外设与内存之间直接搬运数据，无需
 
 嵌入式强调：**时序确定、故障可诊断、复位可恢复**。  
 
-[基础层导读](/zh/hardware/basics) · [执行器](/zh/hardware/basics/actuation)
+[上一章：电子基础](/zh/hardware/basics/electronics) · [基础层导读](/zh/hardware/basics) · [执行器](/zh/hardware/basics/actuation)
