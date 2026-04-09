@@ -1,10 +1,103 @@
 ---
-title: Automotive · ADAS
-description: 'Stub'
+title: ADAS sensors
+description: 'mmWave radar, cameras, and ultrasonic sensors — sensor fusion, calibration, and compute placement for advanced driver assistance.'
 ---
 
-# ADAS sensors
+# ADAS Sensors
 
-**[/zh/hardware/systems/automotive/adas](/zh/hardware/systems/automotive/adas)**
+Advanced Driver Assistance Systems rely on a layered sensor stack to perceive the vehicle's environment and feed downstream decisions to braking, steering, and powertrain controllers. Unlike the simple sensing covered in [Basics · Sensing](/en/hardware/basics/sensing), ADAS must operate in the real world — across weather, lighting, and road conditions — and meet functional safety requirements defined by ISO 26262.
 
-[Automotive](/en/hardware/systems/automotive)
+---
+
+## Sensor Families
+
+### Forward Millimeter-Wave Radar
+
+Automotive radar operates at **77 GHz** (long-range) and **79 GHz** (short-range / imaging radar), with a typical range of 60–250 m for forward collision warning. Key specs:
+
+- **Angular resolution**: ±0.5° to ±0.1° depending on antenna array size — tighter resolution enables separation of adjacent objects on highway exits.
+- **Doppler velocity**: Directly measures relative radial velocity of each target, which is critical for forward collision warning and adaptive cruise control.
+- **Robustness**: Penetrates rain, fog, and dust; performance degrades only in heavy precipitation or with certain radar-absorbing materials (e.g., some vehicle underbodies).
+- **Limitation**: Poor vertical resolution — cannot easily distinguish an overpass from a vehicle directly ahead without imaging radar.
+
+### Forward and Surround-View Cameras
+
+Cameras provide the richest semantic data: **lane markings, traffic signs, object classification (pedestrian vs. vehicle vs. cyclist), and color**. Modern ADAS cameras use **1200 × 800 px** minimum at **30 fps**, with newer systems at 4 MP and 60 fps.
+
+- **Monocular forward camera**: Sufficient for lane keeping assist (LKA) and traffic sign recognition. Depth is estimated from monocular cues (perspective, shadow, known object size) — not as accurate as stereo.
+- **Stereo forward camera**: Two matched imagers with known baseline (~120–200 mm) provide true metric depth via triangulation, improving obstacle distance estimates for autonomous emergency braking (AEB).
+- **Surround-view cameras (4–8 cameras)**: Fish-eye lenses around the vehicle stitched into a top-down bird's-eye view for parking assist and low-speed maneuvering. Requires geometric correction and timestamp synchronization across all cameras.
+- **Lighting limitations**: All cameras suffer in direct sunlight (lens flare), deep shadow (compressed dynamic range), night conditions (photon shot noise), and with dirt or water on the lens. This is why camera is always fused with radar for safety-critical functions.
+
+### Ultrasonic Parking Sensors
+
+**12 acoustic transducers** per vehicle operating at **40–58 kHz**, with a range of **0.2–4.5 m**. Used for:
+
+- **Parking assist**: Audible beep distance indication and automatic emergency braking during low-speed parking maneuvers.
+- **Blind-spot monitoring**: Some systems use ultrasonic sensors to detect vehicles in adjacent lanes at close range where radar and cameras have limited coverage.
+
+Ultrasonics are cheap ($2–5 per sensor) but saturate in heavy rain and have slow update rates (~10–20 Hz), making them unsuitable for anything beyond parking and low-speed use.
+
+---
+
+## Calibration
+
+Every ADAS sensor must be calibrated so that its coordinate frame aligns with the vehicle body frame. Calibration errors directly propagate into downstream sensor fusion and vehicle control.
+
+### Intrinsic Parameters
+
+These describe the sensor's internal geometry:
+
+- **Camera intrinsic**: Focal length, principal point (optical center), lens distortion coefficients (radial and tangential). Calibrated in a lab using a checkerboard target; changes with lens age, temperature, or mechanical shock.
+- **Radar intrinsic**: Antenna mounting angle, mounting height, field of view. Some radar self-calibrates using road clutter echoes and multi-target tracking over time.
+
+### Extrinsic Parameters
+
+These describe the rigid transform from sensor to vehicle body:
+
+- **Camera extrinsic**: Rotation (pitch, yaw, roll) and translation (x, y, z) of the camera relative to the vehicle's reference point — typically defined at the mid axle. A pitch error of **0.5°** on a forward camera produces a height error of **~0.9 m at 100 m distance**, enough to make an overpass appear as a road obstacle.
+- **Radar extrinsic**: Similarly critical; mounting angle errors cause persistent angular bias in detected objects.
+
+### Production Line vs. Aftermarket Calibration
+
+- **Production line calibration**: Uses robotic arm-mounted targets or structured light scanners to achieve sub-millimeter accuracy. Performed before the vehicle leaves the factory. Includes calibration verification against known reference objects.
+- **Aftermarket / service calibration**: Required after windshield replacement, bumper repair, or sensor replacement. Uses portable calibration targets (checkerboard panels, radar reflectors) placed at a defined distance from the vehicle. This is less accurate than factory calibration — residual errors of 0.2–0.5° are typical.
+
+### Impact on Longitudinal and Lateral Control
+
+A miscalibrated camera causing a **0.2° roll error** makes the vehicle perceive a curved road as a straight road with lateral offset, causing the lane centering controller to fight the curvature. An uncorrected radar elevation bias causes false positive AEB triggers on overpasses — a well-documented failure mode in early ADAS deployments. This is why production ADAS systems run **continuous plausibility checks** against other sensors: if camera-derived distance and radar-derived distance diverge beyond a threshold for more than a few frames, a diagnostic fault is raised and the affected sensor is temporarily excluded from fusion.
+
+---
+
+## Compute Placement: Edge SoC vs. Domain Controller
+
+ADAS compute follows one of two architectural patterns:
+
+### Edge SoC (System-on-Chip)
+
+Per-sensor or per-function **Smart Sensors** perform detection locally and output processed tracks or object lists over CAN or Automotive Ethernet. Examples: a Bosch mid-range radar module with embedded object tracking, or a ZF S-Cam4 camera module with integrated vision processor. This approach reduces backbone bus load and enables sensor modularity, but limits cross-sensor fusion to a per-domain basis.
+
+### Domain Controller
+
+A centralized **Domain Controller (DCU)** receives raw or lightly processed sensor data (via Automotive Ethernet AVB/TSN or LVDS) and runs the full perception pipeline — detection, classification, tracking, and sensor fusion — on a heterogeneous SoC with CPU + NPU (Neural Processing Unit). Common platforms:
+
+- **Mobileye EyeQ4 / EyeQ6**: Camera-first perception with radar fusion; outputs object lists over CAN-FD.
+- **NVIDIA Drive Orin / Thor**: High-compute SoCs for full sensor fusion, mapping, and path planning in L2+ to L4 systems.
+- **Qualcomm Snapdragon Ride**: Heterogeneous compute with ISP, DSP, and NPU for camera + radar fusion.
+
+The domain controller approach enables **late fusion** — combining raw camera images with radar detections at the feature level — which outperforms early fusion in occlusion scenarios. However, it requires **Gigabit automotive Ethernet** with precise time synchronization (IEEE 802.1AS gPTP) and higher power consumption (20–60 W vs. 2–5 W for a smart sensor).
+
+For connection to the site's AI software stack, the domain controller's NPU runs **neural network inference** for object detection, lane segmentation, and behavior prediction. This maps to the [AI Software Stack](/en/software/overview) — specifically the inference service narrative where trained models are deployed on edge hardware. The compute latency budget for a 30 ms end-to-end detection-to-actuator cycle (camera → perception → planning → control) is typically **100–200 ms** for L2+ systems, with the inference step consuming **20–50 ms** on an Orin NPU.
+
+---
+
+## Relationship to Other Pages
+
+- **[Basics · Sensing](/en/hardware/basics/sensing)**: IMU, encoders, and environmental sensors provide the in-vehicle self-awareness complement to external perception sensors.
+- **[Onboard Networks](/en/hardware/systems/automotive/onboard_network)**: Automotive Ethernet (10BASE-T1S / 100BASE-T1) carries high-bandwidth camera and radar data to the domain controller; CAN-FD carries sensor tracks and object lists.
+- **[By-wire & Actuation](/en/hardware/systems/automotive/by_wire)**: ADAS commands — AEB braking, lane centering steering — are executed through the by-wire actuators covered in that section.
+- **[AI Software Stack](/en/software/overview)**: The inference services layer maps model deployment workflows (training → optimization → quantization → deployment) to ADAS NPU targets.
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+[← Automotive](/en/hardware/systems/automotive) · [By-wire & Actuation](/en/hardware/systems/automotive/by_wire) · [Onboard Networks →](/en/hardware/systems/automotive/onboard_network)
+</div>
