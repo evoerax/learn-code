@@ -47,7 +47,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L1",
-    title: "Ⅱ · 电子电路",
+    title: "Ⅱ · 电路与电子",
     subtitle: "CIRCUITS & ELECTRONICS",
     color: "#5A7A94",
     accent: "#C4D5E8",
@@ -143,7 +143,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L3",
-    title: "Ⅳ · 传感与感知",
+    title: "Ⅳ · 传感器与感知",
     subtitle: "SENSORS & PERCEPTION",
     color: "#8E6B8E",
     accent: "#E8C4E8",
@@ -188,7 +188,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L4",
-    title: "Ⅴ · 执行与动力",
+    title: "Ⅴ · 执行器与动力",
     subtitle: "ACTUATORS & POWER",
     color: "#94825A",
     accent: "#E8DCC4",
