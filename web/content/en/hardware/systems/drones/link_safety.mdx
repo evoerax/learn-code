@@ -1,10 +1,67 @@
 ---
-title: Drones · Links & safety
-description: 'Stub'
+title: Drones · Links & Safety
+description: 'RC protocols, failsafe behaviors, telemetry and video links, and airspace regulations — the last layer before you fly'
 ---
 
-# Links & safety
+# Links & Safety
 
-**[/zh/hardware/systems/drones/link_safety](/zh/hardware/systems/drones/link_safety)**
+This page covers the three invisible subsystems that keep a drone operational and legal: the radio-control link that ties your inputs to the aircraft, the telemetry and video downlinks that keep you informed, and the regulatory framework that defines where and how you may fly. Each layer has its own failure modes and design trade-offs.
 
-[Drones](/en/hardware/systems/drones)
+## RC Link
+
+The RC (radio control) link is the primary command path between your transmitter and the aircraft. It operates independently of the telemetry channel and must be treated as the last line of defense for aircraft control.
+
+**Protocol families.** The dominant protocols for multirotor control are:
+
+- **PWM/PPM** — the legacy analog approach: one wire per channel (throttle, roll, pitch, yaw). Simple and widely supported, but limited to 8 channels and susceptible to interference.
+- **SBUS** (Futaba) — a serial bus carrying up to 16 channels over a single wire. Most flight controllers and receivers speak SBUS natively. Inverted signal compatible with flight controller UARTs.
+- **CRSF** (Crossfire, ELRS) — a serial protocol by Team Blacksheep that carries RC data plus telemetry return (RSSI, battery voltage, flight mode) on the same wire. ELRS (ExpressLRS) is an open-source variant operating in the 2.4 GHz ISM band with link budgets tunable from 25 mW to 250 mW.
+- **FPort** (FrSky) — a unified serial protocol combining RC input and telemetry output on one UART pin, replacing the older SBUS + SmartPort dual-wire setup.
+
+**Failsafe behaviors.** When the RC link is lost, the flight controller must execute a predetermined action. The three standard failsafe modes are:
+
+- **RTL (Return to Launch)** — the aircraft climbs to a configured altitude (if not already above it) and flies a straight-line path back to the home point, then hovers in a loiter circle until battery forces a landing. Works well when GPS is healthy and the home point is clear.
+- ** Landing** — the aircraft immediately descends at its current position and lands, regardless of location. Preferred over RTL when the home point is in a hazard zone (water, crowd, trees).
+- **Throttle cut / motor stop** — immediate motor shutdown. Only use this as a last resort when the aircraft is already in an irrecoverable state (flyaway into obstacles) and you want to minimize kinetic energy on impact. It is not a recommended default.
+
+Most flight controllers implement a **failsafe state machine**: link loss detected → hold last good command for 0.5 s → if still lost, trigger configured failsafe action. Some protocols (CRSF, ELRS) carry a **link quality metric** (packet error rate or CRC failures) that can be used to trigger a pre-failsafe warning before complete link loss.
+
+**Arming state machine.** Before the motors spin, the aircraft must be disarmed (safe) and then armed. Arming requires: RC stick in low-throttle / center-yaw position, no hardware safety flag, and IMU calibration complete. Once armed, the flight controller runs closed-loop control. The disarm sequence is typically throttle low + yaw left for 2 s. Never arm near people or under conditions where a motor spin-up would be hazardous.
+
+## Telemetry & Video
+
+Telemetry is the bidirectional data channel between the aircraft and your ground station (or goggles). Video is the high-bandwidth downlink for FPV. They share the same RF environment but have very different requirements.
+
+**Telemetry links.** MAVLink over a serial radio (typically 433 MHz or 915 MHz, 100 mW–1 W) is the standard for telemetry. Key parameters:
+
+| Parameter | Typical value | Notes |
+|-----------|---------------|-------|
+| Baud rate | 57 600–115 200 bps | Higher = more telemetry pages but more radio overhead |
+| Update rate | 1–5 Hz | Position updates; higher rates increase context awareness |
+| Range | 1–10 km (LOS) | Terrain, antenna height, and interference dominate range limits |
+| Latency | 50–200 ms | One-way; dominated by airframe processing and radio codec delay |
+
+MAVLink carries battery state, GPS coordinates, ground speed, attitude, home distance, and flight mode — the minimum set for safe beyond-visual-line-of-sight (BVLOS) operation.
+
+**Video links.** Analog 5.8 GHz VTX (video transmitter) is the most common FPV system. Key trade-offs:
+
+- **Analog (40-channel 5.8G)** — sub-100 ms latency, robust to interference, but grainy image and no built-in telemetry. Popular for racing and freestyle.
+- **HD digital** (DJI O3, Avatar, HDZero) — significantly better image quality at 720p/60 fps or 1080p/60 fps, but higher latency (30–80 ms for HDZero, 100–160 ms for DJI O3) and higher power consumption. DJI O3 also carries its own embedded telemetry and control link.
+
+**Power supply sensitivity.** Video transmitters are notoriously sensitive to power supply noise. ESC noise (switching transients at 24–48 kHz) can couple into the VTX through the shared battery bus, producing horizontal banding or rolling shutter artifacts in the video image. Mitigation: use a separate BEC for the VTX, add LC filtering on the VTX power leads, or use a video capacitor board at the ESC output.
+
+## Regulations & Sites
+
+Flying a drone is not just a technical challenge — it is a legal activity subject to rules that vary by country and evolve rapidly.
+
+**Weight classification.** Most national aviation authorities classify drones by takeoff weight. In the United States, the FAA Part 107 applies to drones over 0.55 lbs (250 g); lighter drones fall under the Exception for Recreational Flyers with fewer restrictions. The European EASA regulation (EU 2019/947) uses 500 g as a key threshold. Knowing your aircraft's exact weight (including battery and payload) is the first step in determining which rules apply.
+
+**VLOS vs. BVLOS.** Visual line of sight (VLOS) is the baseline assumption for recreational and most commercial operations. BVLOS (beyond VLOS) generally requires a waiver from the aviation authority, an operational safety case, and specific equipment (detect-and-avoid or a visual observer). BVLOS is one of the most active areas of regulatory development, as it is the key enabler for drone delivery and infrastructure inspection.
+
+**Restricted airspace.** Drones may not be flown near airports (typically within 5 miles/8 km of controlled airspace without authorization), over national parks (US), near military installations, or above emergency scenes (wildfires, accidents). Many countries require registration and compliance with a digital authorization system (LAANC in the US, Altitude Angel in the UK, DJI geofencing built into firmware).
+
+**Insurance.** Third-party liability insurance is mandatory for commercial operations in most jurisdictions and strongly recommended for recreational pilots. A single drone incident involving property damage or injury can result in liability orders well beyond the aircraft's value.
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+← [Flight Control](/en/hardware/systems/drones/flight_control) · [Drones Overview](/en/hardware/systems/drones)
+</div>
