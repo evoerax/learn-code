@@ -1,0 +1,449 @@
+---
+title: AI 数据集文档索引
+description: 计算机视觉、NLP、多模态、语音、代码、数学、医学等领域重要数据集索引（由 learn-ai 迁移，持续迭代）
+---
+
+# AI 数据集文档索引
+
+本文档收录了 AI 领域最重要的数据集，涵盖计算机视觉、自然语言处理、多模态、医学等领域。
+
+---
+
+## 计算机视觉 (Vision)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| ImageNet | 大规模图像分类数据库 | 14M+ 图像, 20K+ 类别 | 2009 | [查看](./vision/imagenet.md) |
+| KITTI | 自动驾驶感知 | 15小时驾驶数据, 3D检测 | 2012 | [查看](./vision/kitti.md) |
+| LFW | 无约束人脸验证 | 13K 图像, 5.7K 人 | 2007 | [查看](./vision/lfw.md) |
+| CIFAR-10/100 | Tiny 图像分类 | 60K 32×32 图像 | 2009 | [查看](./vision/cifar.md) |
+| MNIST | 手写数字识别 | 70K 28×28 图像 | 1998 | [查看](./vision/mnist.md) |
+| Pascal VOC | 目标检测分割 | 20 类别, 11K 图像 | 2007-2012 | [查看](./vision/pascal-voc.md) |
+| ScanNet | 室内3D场景理解 | 1.5K场景, 21类别 | 2017 | [查看](./vision/scannet.md) |
+| Cityscapes | 城市街景分割 | 5K 精细标注, 20K 粗糙标注 | 2016 | [查看](./vision/cityscapes.md) |
+| CelebA | 人脸属性识别 | 202K 图像, 40 属性 | 2015 | [查看](./vision/celeba.md) |
+| Fashion-MNIST | 时尚商品图像分类 | 70K 28×28 图像, 10 类别 | 2017 | [查看](./vision/fashion-mnist.md) |
+| Open Images | 大规模物体检测 | 190万图像, 600 类别 | 2016 | [查看](./vision/open-images.md) |
+| Kinetics-400 | 人体动作识别 | 30万视频片段, 400 类别 | 2017 | [查看](./vision/kinetics-400.md) |
+| FFHQ | 高质量人脸生成 | 70K 1024×1024 图像 | 2019 | [查看](./vision/ffhq.md) |
+| BDD100K | 自动驾驶 | 100K 视频, 10+ 任务 | 2018 | [查看](./vision/bdd100k.md) |
+| nuScenes | 多传感器自动驾驶 | 1000场景, 23类别, 140万3D标注 | 2020 | [查看](./vision/nuscenes.md) |
+| SAM | 分割一切 | 1100万图像, 10亿掩码 | 2023 | [查看](./vision/sam.md) |
+| LVIS | 大词汇量实例分割 | 16万图像, 1200类别, 200万掩码 | 2019 | [查看](./vision/lvis.md) |
+| ShapeNet | 3D形状仓库 | 300万+ 模型, 55 类别 | 2015 | [查看](./vision/shapenet.md) |
+| AI2-THOR | 具身AI交互环境 | 120 室内场景, 4 房间类型 | 2018 | [查看](./vision/ai2-thor.md) |
+| Something-Something V2 | 视频动作推理 | 220K 视频, 174 类别 | 2017 | [查看](./vision/something-something-v2.md) |
+| ModelNet40 | 三维形状分类 | 12.3K 模型, 40 类别 | 2015 | [查看](./vision/modelnet40.md) |
+| UCF101 | 动作识别 | 13.3K 视频, 101 类别 | 2012 | [查看](./vision/ucf101.md) |
+| EpicKitchen | 自我视角动作识别 | 432人, 125类动作, 55小时 | 2018 | [查看](./vision/epic-kitchen.md) |
+| CUB-200 | 细粒度鸟类分类 | 200种, 1.1万图像 | 2011 | [查看](./vision/cub-200.md) |
+| Food-101 | 食品图像分类 | 101K 图像, 101 类别 | 2014 | [查看](./vision/food-101.md) |
+| HowTo100M | instructional video | 136M 视频片段, 12K 活动 | 2019 | [查看](./vision/howto100m.md) |
+| ADE20K | 场景解析 | 22K+ 图像, 150+ 类别 | 2017 | [查看](./vision/ade20k.md) |
+| Places365 | 场景分类 | 180万+ 图像, 365 类别 | 2016 | [查看](./vision/places365.md) |
+| WebVid | 视频-文本对 | 1000万 视频片段, 10万小时 | 2022 | [查看](./vision/webvid.md) |
+| YouCook2 | 烹饪视频描述 | 2000视频, 1.4万烹饪步骤 | 2018 | [查看](./vision/youcook2.md) |
+| Objaverse | 3D物体数据集 | 80万+ 3D模型, 文本描述 | 2022 | [查看](./vision/objaverse.md) |
+| STL-10 | 无监督域适应 | 500训练+100K无标签图像 | 2011 | [查看](./vision/stl-10.md) |
+| DAVIS | 视频目标分割 | 50视频, 78目标, 3.4K帧 | 2016 | [查看](./vision/davis.md) |
+| InstructPix2Pix | 图像编辑指令遵循 | 45万编辑示例对 | 2023 | [查看](./vision/instructpix2pix.md) |
+| Semantic KITTI | 点云语义分割 | 23K训练+2K验证+20K测试扫描 | 2019 | [查看](./vision/semantic-kitti.md) |
+| LSUN | 场景理解 | 1000万图像, 20场景+35物体类 | 2015 | [查看](./vision/lsun.md) |
+| nuImages | 自动驾驶图像标注 | 93.4万图像, 多类型2D标注 | 2020 | [查看](./vision/nuimages.md) |
+| SUN397 | 场景分类 | 397类别, 10.8万图像 | 2014 | [查看](./vision/sun397.md) |
+
+---
+
+## 自然语言处理 (NLP)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| SQuAD | 阅读理解 | 100K+ QA 对 | 2016 | [查看](./nlp/squad.md) |
+| GLUE | NLP 基准 | 9 任务, ~400K 样本 | 2018 | [查看](./nlp/glue.md) |
+| SuperGLUE | NLU 基准 | 8 高难度任务 | 2019 | [查看](./nlp/superglue.md) |
+| FLAN | 指令微调 | 1800+ 任务 | 2021 | [查看](./nlp/flan.md) |
+| The Pile | LLM 预训练 | 825GB, 22 子数据集 | 2020 | [查看](./nlp/the-pile.md) |
+| Alpaca | 指令遵循 | 52K 指令对 | 2023 | [查看](./nlp/alpaca.md) |
+| WizardLM | 复杂指令 | 250K 指令对 | 2023 | [查看](./nlp/wizardlm.md) |
+| Common Crawl | 网页语料 | 250B+ 网页 | 2008- | [查看](./nlp/common-crawl.md) |
+| Wikipedia | 百科语料 | 6M+ 文章, 20GB | 2001- | [查看](./nlp/wikipedia.md) |
+| Natural Questions | 真实问答 | 300K 查询 | 2019 | [查看](./nlp/natural-questions.md) |
+| MMLU | 多任务理解 | 57 领域, 16K 题 | 2020 | [查看](./nlp/mmlu.md) |
+| HellaSwag | 常识推理 | 40K 情境题 | 2019 | [查看](./nlp/hellaswag.md) |
+| SNLI | 自然语言推理 | 550K 句子对 | 2015 | [查看](./nlp/snli.md) |
+| BookCorpus | 书籍句子 | 11K 书, 74M 句子 | 2015 | [查看](./nlp/bookcorpus.md) |
+| GSM8K | 数学推理 | 8.5K 小学数学题 | 2021 | [查看](./nlp/gsm8k.md) |
+| DROP | 离散推理 | 96K 推理题 | 2019 | [查看](./nlp/drop.md) |
+| TruthfulQA | 真实性评估 | 817 问题, 38 领域 | 2022 | [查看](./nlp/truthfulqa.md) |
+| Dolly | 人类编写指令 | 15K 指令对 | 2023 | [查看](./nlp/dolly.md) |
+| OpenAssistant | 对话数据 | 161K 消息, 35 语言 | 2023 | [查看](./nlp/openassistant.md) |
+| ARC | 科学推理 | 7.8K 科学题 | 2018 | [查看](./nlp/arc.md) |
+| TyDi QA | 多语言问答 | 11 语言 | 2020 | [查看](./nlp/tydi-qa.md) |
+| BIG-bench | 200+ 任务 | 200+ 任务 | 2021 | [查看](./nlp/big-bench.md) |
+| ScienceQA | 科学问答 | 21K 科学题 | 2022 | [查看](./nlp/scienceqa.md) |
+| C4 | 清洗网页语料 | 750GB, 3500亿 token | 2019 | [查看](./nlp/c4.md) |
+| IMDb | 电影评论情感 | 50K 评论, 二分类 | 2011 | [查看](./nlp/imdb.md) |
+| MultiWOZ | 多域对话 | 10K+ 对话, 8 领域 | 2018 | [查看](./nlp/multiwoz.md) |
+| SWAG | 常识推理对抗生成 | 113K 情境选择题 | 2018 | [查看](./nlp/swag.md) |
+| PIQA | 物理常识问答 | 16K+ 物理交互问题 | 2019 | [查看](./nlp/piqa.md) |
+| BOOLQ | 布尔问答 | 15K+ 是/否问题 | 2019 | [查看](./nlp/boolq.md) |
+| TriviaQA | 阅读理解问答 | 95K+ 问题 | 2017 | [查看](./nlp/triviaqa.md) |
+| WMT | 机器翻译基准 | 4.5M 句对 (英德) | 2014 | [查看](./nlp/wmt.md) |
+| ShareGPT | 真实对话数据 | 90K+ 对话, 多轮 | 2023 | [查看](./nlp/sharegpt.md) |
+| MultiNLI | 多语体自然语言推理 | 433K 句子对, 10+ 语体 | 2017 | [查看](./nlp/multinli.md) |
+| WebText | GPT-2 训练语料 | 800亿 token, Reddit 外链 | 2019 | [查看](./nlp/webtext.md) |
+| CoNLL-2003 | 命名实体识别 | 22K 句子, 4 实体类型 | 2003 | [查看](./nlp/conll2003.md) |
+| MS MARCO | 阅读理解问答 | 100万 查询, 真实用户 | 2016 | [查看](./nlp/msmarco.md) |
+| e-SNLI | 自然语言推理+解释 | 550K 句子对+解释 | 2018 | [查看](./nlp/esnli.md) |
+| CMRC2018 | 中文阅读理解 | 300K 问题, 维基百科 | 2019 | [查看](./nlp/cmrc2018.md) |
+| HOTPOTQA | 多跳推理问答 | 113K 问答对, 支撑事实 | 2018 | [查看](./nlp/hotpqa.md) |
+| LAMBADA | 长文本语境理解 | 10K 句子对, BookCorpus | 2016 | [查看](./nlp/lambada.md) |
+| WSC | Winograd模式挑战 | 273 常识推理题 | 2011 | [查看](./nlp/wsc.md) |
+| PAWS-X | 跨语言改写识别 | 24K 句子对, 7种语言 | 2019 | [查看](./nlp/paws-x.md) |
+| OLMo | 完全开源LLM训练语料 | 2T token, 完全开源 | 2024 | [查看](./nlp/olmo.md) |
+| Falcon | 精炼网页语料 | 5T token, 高质量过滤 | 2023 | [查看](./nlp/falcon.md) |
+| GPQA | 研究生级问答基准 | 4.5K 题, Google-proof | 2023 | [查看](./nlp/gpqa.md) |
+| UltraChat | 多轮对话指令数据 | 150万+ 对话轮次 | 2023 | [查看](./nlp/ultrachat.md) |
+| ConstitutionalAI | AI对齐训练数据 | RLHF+批评修订数据 | 2022 | [查看](./nlp/constitutionalai.md) |
+| RealToxicityPrompts | 毒性检测评估 | 100万+ 提示 | 2022 | [查看](./nlp/realtoxicityprompts.md) |
+| Quoref | 指代消解阅读理解 | 15K QA 对, 维基百科 | 2019 | [查看](./nlp/quoref.md) |
+| HH-RLHF | 人类偏好RLHF数据 | 16万 偏好对比对 | 2022 | [查看](./nlp/hh-rlhf.md) |
+| TabMWP | 表格数学推理 | 9.5万 数学应用题 | 2022 | [查看](./nlp/tabmwp.md) |
+| PersonaChat | 个性化对话 | 1万对话, 角色画像 | 2018 | [查看](./nlp/persona-chat.md) |
+| CNN/DailyMail | 文本摘要 | 28.7万文章, 新闻摘要 | 2017 | [查看](./nlp/cnn-dailymail.md) |
+
+---
+
+## 多模态 (Multimodal)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| LAION-5B | 图文对 | 58.5B 图像-文本对 | 2022 | [查看](./multimodal/laion5b.md) |
+| COCO | 检测分割描述 | 330K 图像 | 2014 | [查看](./multimodal/coco.md) |
+| VQAv2 | 视觉问答 | 1M+ QA 对 | 2017 | [查看](./multimodal/vqav2.md) |
+| Visual Genome | 场景图 | 108K 图像, 3.8M QA | 2017 | [查看](./multimodal/visual-genome.md) |
+| Flickr30k | 图像描述 | 31K 图像, 5 描述/图 | 2014 | [查看](./multimodal/flickr30k.md) |
+| MMbench | MLLM 评估 | 3K 问题, 20 维度 | 2023 | [查看](./multimodal/mmbench.md) |
+| SEED-Bench | MLLM 评估 | 19K+ 问题 | 2023 | [查看](./multimodal/seed-bench.md) |
+| RedCaps | Reddit 图文 | 12M 图像-文本对 | 2021 | [查看](./multimodal/redcaps.md) |
+| COYO-700M | 图文对 | 747M 图像-文本对 | 2022 | [查看](./multimodal/coyo-700m.md) |
+| CLIP | 图文对比学习 | 400M 图像-文本对 | 2021 | [查看](./multimodal/clip.md) |
+| GQA | 视觉推理问答 | 1.2M QA 对, 22K 图像 | 2019 | [查看](./multimodal/gqa.md) |
+| RefCOCO | 指代表达理解 | 142K 表达式, 50K 图像 | 2016 | [查看](./multimodal/refcoco.md) |
+| TextVQA | 文本视觉问答 | 28K 图像, 45K 问题 | 2019 | [查看](./multimodal/textvqa.md) |
+| OK-VQA | 外部知识视觉问答 | 14K 问题, 20+ 知识领域 | 2019 | [查看](./multimodal/ok-vqa.md) |
+| DocVQA | 文档视觉问答 | 50K 问题, 12K 文档 | 2020 | [查看](./multimodal/docvqa.md) |
+| Hateful Memes | meme 仇恨言论检测 | 10K meme 图像-文本对 | 2020 | [查看](./multimodal/hateful-memes.md) |
+| MathVista | 视觉数学推理 | 9.5K 问题, 6任务类型 | 2023 | [查看](./multimodal/mathvista.md) |
+| LLaVA | 视觉指令微调 | 150万 图像-文本对话 | 2023 | [查看](./multimodal/llava.md) |
+| Flickr8k | 图像描述 | 8K图像, 5描述/图 | 2014 | [查看](./multimodal/flickr8k.md) |
+| ChartQA | 图表理解问答 | 32K+ 问题, 多图表类型 | 2022 | [查看](./multimodal/chartqa.md) |
+
+---
+
+## 语音 (Speech)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| LibriSpeech | 语音识别 | 1000+ 小时英语音频 | 2015 | [查看](./speech/librispeech.md) |
+| Common Voice | 多语言语音语料 | 100+ 语言, 30K+ 小时 | 2020 | [查看](./speech/common-voice.md) |
+| AudioSet | 音频事件分类 | 2M+ 片段, 632 类别 | 2017 | [查看](./speech/audioset.md) |
+| SpeechCommands | 语音命令识别 | 105K 音频, 35 命令词 | 2018 | [查看](./speech/speechcommands.md) |
+| VoxCeleb | 说话人验证 | 1251人, 15.3万语音片段 | 2017 | [查看](./speech/voxceleb.md) |
+
+---
+
+## 推荐系统 (Recommendation)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| Criteo | 点击率预测 | 4500万样本, 39特征 | 2014 | [查看](./recommendation/criteo.md) |
+
+---
+
+## 机器人 (Robotics)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| RoboNet | 机器人学习视频 | 1500万帧, 7 机器人平台 | 2019 | [查看](./robotics/robonet.md) |
+
+---
+
+## 医学 (Medical)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| MedQA | USMLE 医学考试 | 35K 题 | 2021 | [查看](./medical/medqa.md) |
+| MedMCQA | 医学多选 | 194K+ 题 | 2022 | [查看](./medical/medmcqa.md) |
+| PubMedQA | 医学文献QA | 1K+ 问答对 | 2019 | [查看](./medical/pubmedqa.md) |
+| ChestX-ray14 | 胸部X光分类 | 112K 图像, 14 疾病 | 2017 | [查看](./medical/chestxray14.md) |
+
+---
+
+## 代码 (Code)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| HumanEval | 代码生成 | 164 编程问题 | 2021 | [查看](./code/humaneval.md) |
+| APPS | 代码生成评估 | 10K+ 编程问题 | 2021 | [查看](./code/apps.md) |
+| MBPP | Python 编程基准 | 974 编程问题 | 2021 | [查看](./code/mbpp.md) |
+| Codeforces | 竞赛编程题目 | 1万+ 竞赛题目, 真实评分 | 2010 | [查看](./code/codeforces.md) |
+
+---
+
+## 数学 (Math)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| MATH | 数学竞赛 | 12.5K 竞赛题目 | 2021 | [查看](./math/math.md) |
+| MGSM | 多语言小学数学 | 10 语言, 250+ 题 | 2023 | [查看](./math/mgsm.md) |
+
+---
+
+## 其他 (Other)
+
+| 数据集 | 简介 | 规模 | 发布时间 | 文档 |
+|--------|------|------|----------|------|
+| HELM | LLM 综合评估 | 30+ 模型, 42 基准 | 2022 | [查看](./other/helm.md) |
+
+---
+
+## 字母索引 (Alphabetical Index)
+
+### A
+
+[ADE20K](./vision/ade20k.md) · [AI2-THOR](./vision/ai2-thor.md) · [Alpaca](./nlp/alpaca.md) · [APPS](./code/apps.md) · [ARC](./nlp/arc.md) · [AudioSet](./speech/audioset.md)
+
+### B
+
+[BDD100K](./vision/bdd100k.md) · [BIG-bench](./nlp/big-bench.md) · [BookCorpus](./nlp/bookcorpus.md) · [BOOLQ](./nlp/boolq.md)
+
+### C
+
+[C4](./nlp/c4.md) · [CelebA](./vision/celeba.md) · [ChartQA](./multimodal/chartqa.md) · [ChestX-ray14](./medical/chestxray14.md) · [CIFAR-10/100](./vision/cifar.md) · [Cityscapes](./vision/cityscapes.md) · [CLIP](./multimodal/clip.md) · [CMRC2018](./nlp/cmrc2018.md) · [CNN/DailyMail](./nlp/cnn-dailymail.md) · [CoNLL-2003](./nlp/conll2003.md) · [COCO](./multimodal/coco.md) · [Common Crawl](./nlp/common-crawl.md) · [Common Voice](./speech/common-voice.md) · [ConstitutionalAI](./nlp/constitutionalai.md) · [COYO-700M](./multimodal/coyo-700m.md) · [Criteo](./recommendation/criteo.md) · [CUB-200](./vision/cub-200.md)
+
+### D
+
+[DAVIS](./vision/davis.md) · [DocVQA](./multimodal/docvqa.md) · [Dolly](./nlp/dolly.md) · [DROP](./nlp/drop.md)
+
+### E
+
+[e-SNLI](./nlp/esnli.md) · [EpicKitchen](./vision/epic-kitchen.md)
+
+### F
+
+[Falcon](./nlp/falcon.md) · [Fashion-MNIST](./vision/fashion-mnist.md) · [FFHQ](./vision/ffhq.md) · [Flickr8k](./multimodal/flickr8k.md) · [Flickr30k](./multimodal/flickr30k.md) · [FLAN](./nlp/flan.md) · [Food-101](./vision/food-101.md)
+
+### G
+
+[GLUE](./nlp/glue.md) · [GPQA](./nlp/gpqa.md) · [GQA](./multimodal/gqa.md) · [GSM8k](./nlp/gsm8k.md)
+
+### H
+
+[HELM](./other/helm.md) · [HellaSwag](./nlp/hellaswag.md) · [HH-RLHF](./nlp/hh-rlhf.md) · [HOTPOTQA](./nlp/hotpqa.md) · [HowTo100M](./vision/howto100m.md)
+
+### I
+
+[ImageNet](./vision/imagenet.md) · [IMDb](./nlp/imdb.md) · [InstructPix2Pix](./vision/instructpix2pix.md)
+
+### K
+
+[Kinetics-400](./vision/kinetics-400.md) · [KITTI](./vision/kitti.md)
+
+### L
+
+[LAION-5B](./multimodal/laion5b.md) · [LAMBADA](./nlp/lambada.md) · [LFW](./vision/lfw.md) · [LibriSpeech](./speech/librispeech.md) · [LLaVA](./multimodal/llava.md) · [LSUN](./vision/lsun.md) · [LVIS](./vision/lvis.md)
+
+### M
+
+[MathVista](./multimodal/mathvista.md) · [MATH](./math/math.md) · [MBPP](./code/mbpp.md) · [MedMCQA](./medical/medmcqa.md) · [MedQA](./medical/medqa.md) · [MGSM](./math/mgsm.md) · [MMLU](./nlp/mmlu.md) · [MNIST](./vision/mnist.md) · [ModelNet40](./vision/modelnet40.md) · [MS MARCO](./nlp/msmarco.md) · [MultiNLI](./nlp/multinli.md) · [MultiWOZ](./nlp/multiwoz.md) · [nuImages](./vision/nuimages.md) · [nuScenes](./vision/nuscenes.md)
+
+### N
+
+[Natural Questions](./nlp/natural-questions.md)
+
+### O
+
+[Objaverse](./vision/objaverse.md) · [OK-VQA](./multimodal/ok-vqa.md) · [OLMo](./nlp/olmo.md) · [Open Images](./vision/open-images.md) · [OpenAssistant](./nlp/openassistant.md)
+
+### P
+
+[PAWS-X](./nlp/paws-x.md) · [Pascal VOC](./vision/pascal-voc.md) · [PersonaChat](./nlp/persona-chat.md) · [PIQA](./nlp/piqa.md) · [Places365](./vision/places365.md) · [PubMedQA](./medical/pubmedqa.md)
+
+### Q
+
+[Quoref](./nlp/quoref.md)
+
+### R
+
+[RealToxicityPrompts](./nlp/realtoxicityprompts.md) · [RedCaps](./multimodal/redcaps.md) · [RefCOCO](./multimodal/refcoco.md) · [RoboNet](./robotics/robonet.md)
+
+### S
+
+[SAM](./vision/sam.md) · [ScanNet](./vision/scannet.md) · [ScienceQA](./nlp/scienceqa.md) · [Semantic KITTI](./vision/semantic-kitti.md) · [ShareGPT](./nlp/sharegpt.md) · [ShapeNet](./vision/shapenet.md) · [SNLI](./nlp/snli.md) · [SpeechCommands](./speech/speechcommands.md) · [SQuAD](./nlp/squad.md) · [STL-10](./vision/stl-10.md) · [SUN397](./vision/sun397.md) · [SuperGLUE](./nlp/superglue.md) · [SWAG](./nlp/swag.md)
+
+### T
+
+[TabMWP](./nlp/tabmwp.md) · [TextVQA](./multimodal/textvqa.md) · [The Pile](./nlp/the-pile.md) · [TriviaQA](./nlp/triviaqa.md) · [TruthfulQA](./nlp/truthfulqa.md) · [TyDi QA](./nlp/tydi-qa.md)
+
+### U
+
+[UCF101](./vision/ucf101.md) · [UltraChat](./nlp/ultrachat.md)
+
+### V
+
+[Visual Genome](./multimodal/visual-genome.md) · [VQAv2](./multimodal/vqav2.md) · [VoxCeleb](./speech/voxceleb.md)
+
+### W
+
+[WebText](./nlp/webtext.md) · [WebVid](./vision/webvid.md) · [Wikipedia](./nlp/wikipedia.md) · [WizardLM](./nlp/wizardlm.md) · [WMT](./nlp/wmt.md) · [WSC](./nlp/wsc.md)
+
+### Y
+
+[YouCook2](./vision/youcook2.md)
+
+---
+
+## 任务类型索引 (Task Type Index)
+
+### 图像分类 (Image Classification)
+
+ImageNet · CIFAR-10/100 · MNIST · Fashion-MNIST · STL-10 · Food-101 · CUB-200 · SUN397 · Places365 · LFW · CelebA
+
+### 目标检测 (Object Detection)
+
+Pascal VOC · COCO · Open Images · LVIS · KITTI · BDD100K
+
+### 语义/实例分割 (Segmentation)
+
+ADE20K · Cityscapes · LVIS · SAM · DAVIS · Semantic KITTI · ScanNet
+
+### 图像生成 (Image Generation)
+
+FFHQ · CelebA · LAION-5B · COYO-700M · InstructPix2Pix
+
+### 场景理解 (Scene Understanding)
+
+ScanNet · Cityscapes · Places365 · SUN397 · ADE20K
+
+### 动作识别 (Action Recognition)
+
+Kinetics-400 · UCF101 · Something-Something V2 · EpicKitchen
+
+### 3D视觉 (3D Vision)
+
+ShapeNet · ModelNet40 · Objaverse · KITTI · nuScenes
+
+### 视频理解 (Video Understanding)
+
+Kinetics-400 · YouCook2 · HowTo100M · WebVid
+
+### 文本分类 (Text Classification)
+
+IMDb · GLUE · SNLI · MultiNLI · BookCorpus
+
+### 阅读理解 (Reading Comprehension)
+
+SQuAD · SQuAD 2.0 · TriviaQA · DROP · Natural Questions · MS MARCO · HotpotQA · Quoref · CMRC2018
+
+### 问答系统 (Question Answering)
+
+MMLU · ARC · TruthfulQA · GPQA · ScienceQA · TyDi QA · BoolQ
+
+### 对话系统 (Dialogue)
+
+MultiWOZ · PersonaChat · OpenAssistant · ShareGPT · UltraChat · HH-RLHF
+
+### 文本生成 (Text Generation)
+
+The Pile · C4 · Common Crawl · WebText · Dolly · Alpaca · WizardLM · Falcon
+
+### 指令微调 (Instruction Tuning)
+
+FLAN · Alpaca · WizardLM · Dolly · UltraChat · ConstitutionalAI
+
+### 机器翻译 (Machine Translation)
+
+WMT · TyDi QA
+
+### 文本摘要 (Summarization)
+
+CNN/DailyMail
+
+### 命名实体识别 (NER)
+
+CoNLL-2003
+
+### 语音识别 (Speech Recognition)
+
+LibriSpeech · Common Voice · SpeechCommands · VoxCeleb
+
+### 音频分类 (Audio Classification)
+
+AudioSet · SpeechCommands
+
+### 代码生成 (Code Generation)
+
+HumanEval · APPS · MBPP · Codeforces
+
+### 数学推理 (Math Reasoning)
+
+GSM8K · MATH · MGSM · DROP · TabMWP
+
+### 多模态问答 (Multimodal QA)
+
+VQAv2 · OK-VQA · GQA · TextVQA · DocVQA · Visual Genome · ChartQA · MathVista
+
+### 图像描述 (Image Captioning)
+
+COCO · Flickr30k · Flickr8k
+
+### 图文对比学习 (Image-Text Contrastive)
+
+CLIP · LAION-5B · COYO-700M · RedCaps
+
+### 指代表达 (Referring Expression)
+
+RefCOCO
+
+### 对齐/偏好 (Alignment/Preference)
+
+HH-RLHF · ConstitutionalAI · RealToxicityPrompts
+
+### 推荐系统 (Recommendation)
+
+Criteo
+
+### 医学 (Medical)
+
+MedQA · MedMCQA · PubMedQA · ChestX-ray14
+
+### 机器人 (Robotics)
+
+RoboNet
+
+### 评估基准 (Evaluation)
+
+HELM · GLUE · SuperGLUE · BIG-bench · MMLU
+
+---
+
+## 统计概览
+
+| 类别 | 数据集数量 |
+|------|-----------|
+| 计算机视觉 | 38 |
+| 自然语言处理 | 53 |
+| 多模态 | 20 |
+| 医学 | 4 |
+| 语音 | 5 |
+| 代码 | 4 |
+| 数学 | 2 |
+| 机器人 | 1 |
+| 推荐系统 | 1 |
+| 其他 | 1 |
+| **总计** | **129** |
+
+---
+
+*最后更新：2026年4月5日 - 新增任务类型索引*

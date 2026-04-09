@@ -1,0 +1,25 @@
+---
+title: Inference & serving
+description: 'Production inference — latency, throughput, KV-cache memory, batching, and serving runtimes behind chat APIs'
+---
+
+# Inference & serving
+
+**Scope:** turning checkpoints into **reliable online services**: scheduling, batching, quantization (weight/activation), speculative decoding, disaggregated prefill/decode, and observability hooks.
+
+---
+
+## Problems this layer optimizes
+
+- **Time-to-first-token (TTFT)** vs **inter-token latency**
+- **KV-cache** footprint at long context
+- **Hardware utilization** under bursty traffic
+- **Versioning** — multiple checkpoints, A/B prompts, safe rollback
+
+---
+
+## Placeholder — expand iteratively
+
+Candidate topics: **continuous batching**, **tensor-parallel inference**, **speculative decoding**, **vLLM / TGI-class servers**, **ONNX/TensorRT-style export paths**, **streaming HTTP/SSE** patterns.
+
+Back to **[Overview](/en/software/overview)**

@@ -1,0 +1,25 @@
+---
+title: 推理与服务
+description: '线上推理：延迟与吞吐、KV Cache 内存、批处理，以及聊天 API 背后的 serving runtime'
+---
+
+# 推理与服务
+
+**范围：** 把 checkpoint 变成 **可依赖的在线服务**：调度、批处理、量化（权重量化/激活量化）、投机解码、prefill/decode 分离，以及可观测性埋点。
+
+---
+
+## 这一层典型优化目标
+
+- **首 token 时延（TTFT）** 与 **token 间时延**
+- **长上下文下 KV Cache** 占用
+- **突发流量** 下的硬件利用率
+- **多版本共存** — 多 checkpoint、提示词 A/B、安全回滚
+
+---
+
+## 待展开（可迭代补充）
+
+可写：**连续批处理**、**张量并行推理**、**投机解码**、**vLLM / TGI 类服务**、**ONNX/TensorRT 类导出路径**、**流式 HTTP/SSE** 等。
+
+返回 [总览](/zh/software/overview)

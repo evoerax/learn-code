@@ -1,0 +1,76 @@
+diff --git a/dist/client/normalize-pages.js b/dist/client/normalize-pages.js
+index 944bd742d13c8dac12056b435251f0ea2ddaf258..a2b790fd8e7796f26a291867a8c55e3757dbaae7 100644
+--- a/dist/client/normalize-pages.js
++++ b/dist/client/normalize-pages.js
+@@ -34,6 +34,18 @@ function findFirstRoute(items) {
+     }
+   }
+ }
++function itemBelongsToTopSegment(item, topSegment) {
++  const prefix = `/${topSegment.toLowerCase()}`;
++  const r = item.route?.toLowerCase();
++  if (r && (r === prefix || r.startsWith(`${prefix}/`))) {
++    return true;
++  }
++  if ("href" in item && typeof item.href === "string") {
++    const h = item.href.toLowerCase().replace(/\/$/, "");
++    return h === prefix || h.startsWith(`${prefix}/`);
++  }
++  return false;
++}
+ function normalizePages({
+   list,
+   route,
+@@ -62,8 +74,9 @@ function normalizePages({
+     const extendedMeta = extendMeta(meta[currentItem.name], fallbackMeta, currentItem.frontMatter);
+     const {
+       display,
+-      type = "doc"
++      type: metaType
+     } = extendedMeta;
++    const type = metaType ?? ("type" in currentItem ? currentItem.type : void 0) ?? "doc";
+     const extendedPageThemeContext = {
+       ...pageThemeContext,
+       ...extendedMeta.theme
+@@ -102,9 +115,7 @@ function normalizePages({
+     }
+     const pageItem = getItem();
+     docsItem.isUnderCurrentDocsTree = underCurrentDocsRoot;
+-    if (type === "separator") {
+-      item.isUnderCurrentDocsTree = underCurrentDocsRoot;
+-    }
++    item.isUnderCurrentDocsTree = underCurrentDocsRoot;
+     if (currentItem.route === route) {
+       activePath = [item];
+       activeType = type;
+@@ -214,6 +225,21 @@ function normalizePages({
+     }
+   }
+   const activeMetadata = activePath.at(-1)?.frontMatter;
++  let scopedDocsDirectories = docsDirectories.filter((item) => item.isUnderCurrentDocsTree);
++  if (docsRoot === "") {
++    const normalizedRoute = (route.replace(/\/$/, "") || "/").toLowerCase();
++    if (normalizedRoute !== "/") {
++      const topSegment = normalizedRoute.split("/").filter(Boolean)[0];
++      if (topSegment) {
++        const hasModuleRoot = items.some(
++          (i) => "name" in i && i.name === topSegment && "children" in i && Array.isArray(i.children) && i.children.length > 0 && "route" in i && typeof i.route === "string"
++        );
++        if (hasModuleRoot) {
++          scopedDocsDirectories = scopedDocsDirectories.filter((item) => itemBelongsToTopSegment(item, topSegment));
++        }
++      }
++    }
++  }
+   const result = {
+     activeType,
+     activeIndex,
+@@ -221,7 +247,7 @@ function normalizePages({
+     activeMetadata,
+     activePath,
+     directories,
+-    docsDirectories: docsDirectories.filter((item) => item.isUnderCurrentDocsTree),
++    docsDirectories: scopedDocsDirectories,
+     flatDocsDirectories,
+     topLevelNavbarItems
+   };

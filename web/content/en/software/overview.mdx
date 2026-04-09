@@ -1,0 +1,37 @@
+---
+title: AI Software Overview
+description: 'Software stack around modern AI — training frameworks, inference runtimes, agent layers, and engineering tooling (not chip-level hardware)'
+---
+
+# AI software stack
+
+This section focuses on **software above the hardware**: libraries and runtimes that turn models into trainable artifacts, **deployable services**, **agentic workflows**, and **measurable systems**.
+
+It complements **[AI models](/en/ais/overview)** (what shipped), **[AI datasets](/en/datasets/overview)** (benchmarks and corpora), and **[AGI stack](/en/agi/overview)** (architectural themes). For **language-level history**, see **[Programming languages](/en/timeline)**; for **electronics-to-robots hardware path**, see **[Hardware](/en/hardware/overview)**; for **product and cloud operators**, see **[Tech giants](/en/companies/overview)**.
+
+---
+
+## How the topics split
+
+| Topic | What belongs here |
+|------|-------------------|
+| [Frameworks & libraries](/en/software/frameworks) | Training stacks, autograd, distributed training glue, core numerical layers wrapping CUDA/ROCm |
+| [Inference & serving](/en/software/serving) | Low-latency runtimes, batching, quantization stacks, vLLM-style serving, API gateways |
+| [Agents & orchestration](/en/software/agents) | Tool use, planners, memory stores, multi-agent rigs, workflow engines atop models |
+| [Tooling & evaluation](/en/software/devtools) | [Dataset catalogs](/en/datasets/overview), benchmarks, observability, tracing, CI for prompts and model versions |
+
+---
+
+## Boundary (intentional blur)
+
+- **Models vs software:** a *weight release* lives under **AI models**; the *default way people fine-tune or serve it* lives here.
+- **Software vs companies:** vendor roadmaps and business context stay under **Tech giants**; portable open-source layers and patterns stay here unless the page is explicitly company-scoped.
+
+---
+
+## Read next
+
+- [Frameworks & libraries](/en/software/frameworks)
+- [Inference & serving](/en/software/serving)
+- [Agents & orchestration](/en/software/agents)
+- [Tooling & evaluation](/en/software/devtools)

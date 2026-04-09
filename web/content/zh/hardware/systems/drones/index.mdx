@@ -1,0 +1,27 @@
+---
+title: 无人机（多旋翼脉络）
+description: '机架桨机配平、飞控回路、电调电池与安全链——从套件到自制'
+---
+
+# 无人机（二级总览）
+
+侧栏 **三级**：[机架与动力](/zh/hardware/systems/drones/airframe) · [飞控与回路](/zh/hardware/systems/drones/flight_control) · [链路与安全](/zh/hardware/systems/drones/link_safety)
+
+## 子系统清单
+
+机架 ↔ 电调 ↔ 无刷电机 ↔ 桨 ↔ 电池（BMS）↔ 飞控 ↔ IMU ↔ 遥控/数传 ↔ GPS（可选）
+
+## 控制层次（概念）
+
+- **内环**：角速率 / 姿态。  
+- **外环**：位置 / 航迹（需良好观测与抗风模型认知）。  
+
+## 安全与法规
+
+解锁逻辑、失控降落、桨罩与试验场；各国对**空域、重量、视距**要求不同，量产另涉认证。
+
+## 学习路径建议
+
+套件调试 → 日志分析 → 换桨/配平理解 → 再考虑自研飞控软件。  
+
+[整机导读](/zh/hardware/systems) · [汽车](/zh/hardware/systems/automotive)

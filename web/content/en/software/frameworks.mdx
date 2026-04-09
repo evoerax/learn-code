@@ -1,0 +1,30 @@
+---
+title: Frameworks & libraries
+description: 'Training-oriented stacks — autograd, distributed training, and GPU kernels exposed through Python-first APIs'
+---
+
+# Frameworks & libraries
+
+**Scope:** software used to **train** and **research** models: tensor runtimes, automatic differentiation, optimizers, and distributed strategies (data/tensor/pipeline parallel, ZeRO-style sharding, etc.).
+
+---
+
+## Typical layers (conceptual)
+
+1. **Kernel / compiler layer** — fused ops, custom CUDA/ROCm, graph capture, compiler stacks (e.g. XLA/Inductor-style paths) when surfaced through a framework.
+2. **Core library** — eager + graph modes, mixed precision, checkpointing.
+3. **Higher-level training** — trainers, schedulers, integration with data pipelines and experiment trackers.
+
+---
+
+## How this differs from “AI models”
+
+Model pages answer *what shipped* and *how it behaves*; this section answers *what toolchain most teams use to reproduce or extend that behavior*.
+
+---
+
+## Placeholder — expand iteratively
+
+Candidate clusters: **PyTorch ecosystem**, **JAX/Flax**, **TensorFlow/Keras**, **distributed frameworks** (DeepSpeed, Megatron-class patterns), **on-device / edge training** stacks.
+
+Back to **[Overview](/en/software/overview)**
