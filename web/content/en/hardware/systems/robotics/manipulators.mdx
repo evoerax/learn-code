@@ -1,10 +1,148 @@
 ---
 title: Robotics · Manipulators
-description: 'Stub'
+description: 'Joint reducers, encoders, joint modules, and singularities — forward/inverse kinematics entry and the control layering from current to position loops.'
 ---
 
 # Manipulators
 
-**[/zh/hardware/systems/robotics/manipulators](/zh/hardware/systems/robotics/manipulators)**
+Industrial manipulators are the backbone of modern automation — from automotive assembly to semiconductor packaging. Unlike the actuator systems covered in [Basics · Actuation](/en/hardware/basics/actuation), a manipulator arm must solve the full kinematic chain: converting end-effector Cartesian goals into joint-space trajectories while respecting torque limits, joint limits, and singularity constraints. This page covers the hardware and kinematic foundations.
 
-[Robotics](/en/hardware/systems/robotics)
+---
+
+## Joint Hardware
+
+### Harmonic Drives
+
+A **harmonic drive** ( strain wave gear) consists of three components: a circular spline (fixed outer ring with internal teeth), a flex spline (thin-walled flexible outer ring with slightly fewer teeth), and a wave generator (elliptical bearing that flexes the flex spline). At any instant, only about 30 percent of the teeth are engaged, allowing high reduction ratios (30:1 to 320:1) in a compact package with near-zero backlash.
+
+Key characteristics:
+- **Reduction ratio**: Single-stage reduction from 30:1 to 160:1 is common in industrial arms; multi-stage can reach 320:1.
+- **Backlash**: Essentially zero — critical for precision positioning in pick-and-place and welding.
+- **Torque density**: High relative to size, making it the dominant reducer for 6-DOF articulated arms.
+- **Lifetime**: Typically 10,000 to 20,000 hours, limited by flex spline fatigue.
+- **Preload**: Must be preloaded to eliminate deadband; increases starting torque but is necessary for precision.
+
+### Planetary Gearboxes
+
+**Planetary gearboxes** use sun, planet, and ring gears to achieve reduction. They offer higher torque capacity and simpler construction than harmonic drives but exhibit some backlash (typically 1–5 arc-min for precision planetary reducers). They are common in SCARA arms and in the base joints of large articulated arms where backlash is less critical.
+
+Key characteristics:
+- **Reduction ratio**: Multi-stage planetary typically provides 3:1 to 100:1 per stage.
+- **Backlash**: 1–5 arc-min for precision planetary vs. near-zero for harmonic.
+- **Cost**: Lower than harmonic drives for equivalent torque — preferred in cost-sensitive applications.
+- **Efficiency**: 90–97 percent per stage, slightly higher efficiency than harmonic drives.
+
+### Integrated Joint Modules
+
+Modern collaborative robot (cobot) arms increasingly use **integrated joint modules** (also called家政 joint actuators or joint kits): a single package containing motor, driver, reducer, encoder, and brake. Examples include the RoboMagic joint module and various integrated actuators from suppliers like SureRobot. These simplify assembly and wiring but make field repair harder.
+
+An integrated joint module typically includes:
+- **Brushless DC motor** (BLDC) withKv rating suited to the reducer output
+- **Absolute encoder** (magnetic or optical) for joint position feedback
+- **Driver**: CAN or EtherCAT interface; current loop runs inside the module
+- **Harmonic or planetary reducer** pre-integrated
+- **Holding brake** for gravity safety when powered off
+
+### Backlash and Stiffness
+
+**Backlash** ( clearance between mating teeth) causes positioning error when reversing direction — a known source of "chatter" or oscillation in slow, precise moves. Mitigation strategies:
+- Preloaded harmonic drives eliminate backlash at the cost of higher starting torque.
+- Dual-drive systems (two motors on one joint) can compensate for backlash through differential control.
+- Calibration routines that measure and compensate for backlash offset in the controller.
+
+**Stiffness** (the inverse of compliance) determines how much a joint deflects under load. High stiffness is required for precision tasks (welding, machining); lower stiffness (more compliant arms) is desirable for collaborative robots where contact with humans must be force-limited.
+
+---
+
+## Kinematics Entry
+
+### Forward Kinematics
+
+**Forward kinematics (FK)** computes the end-effector pose (position and orientation) from given joint angles. In a 6-DOF articulated arm, this requires chaining four-by-four homogeneous transformation matrices through each joint link. The Denavit-Hartenberg (DH) convention is the standard method for assigning coordinate frames to each joint.
+
+For each joint i:
+1. Link length a_i: distance along the previous joint axis to the new joint axis.
+2. Link offset d_i: distance along the new joint axis from the previous link to the current link.
+3. Joint angle theta_i: rotation about the new joint axis.
+4. Twist angle alpha_i: angle between the two joint axes.
+
+The final transformation is the product of all individual link transforms.
+
+### Inverse Kinematics
+
+**Inverse kinematics (IK)** solves for the joint angles that achieve a desired end-effector pose. For a 6-DOF arm with a spherical wrist ( last three axes intersecting), IK can be decomposed into position IK (first three joints) and orientation IK (last three joints), making it computationally tractable in real time.
+
+Key challenges:
+- **Multiple solutions**: Most 6-DOF arms have up to eight valid IK solutions (elbow-up/elbow-down, shoulder-left/right, wrist flip).
+- **Singularities**: Certain joint configurations make IK ill-posed (see below).
+- **Workspace boundaries**: Solutions exist only within the arm's reachable workspace.
+
+### Workspace
+
+The **reachable workspace** is the set of all end-effector positions reachable with at least one orientation. The **dexterous workspace** (a subset) is where all orientations are achievable. Workspace analysis is critical for cell layout — a robot may be unable to reach certain fixture positions if they fall outside its dexterous workspace.
+
+For a typical 6-DOF industrial arm (500 mm reach):
+- Reachable sphere radius equals maximum reach.
+- Dexterous workspace is typically 30–50 percent of reachable volume, concentrated near the robot base.
+
+### Singularities
+
+A **singularity** occurs when the robot's Jacobian matrix loses rank — the arm gains or loses a degree of freedom relative to end-effector motion. At singularities, some Cartesian directions become uncontrollable (or require infinite joint velocity).
+
+Three common singularity types:
+- **Wrist singularity**: When the wrist center lies on a line passing through the shoulder axes — the wrist orientation becomes ambiguous.
+- **Shoulder singularity**: When the shoulder axis aligns with the elbow axis — the elbow configuration becomes indeterminate.
+- **Reaching singularity**: Near the edge of the reachable workspace, where small Cartesian motions require large joint motions.
+
+Industrial controllers handle singularities by:
+- **Joint velocity limiting** near singularities to prevent physically impossible commands.
+- **Task-frame reorientation** — shifting the motion so the problematic direction is avoided.
+- **Full stop** if a singularity is approached too closely.
+
+---
+
+## Connection to Control
+
+### Three-Loop Layering
+
+Manipulator control follows the same three-loop architecture as other precision systems, scaled to the mechanical load:
+
+1. **Current loop** ( innermost, fastest): Controls motor phase current using PWM and Park/Clarke transforms. Typical bandwidth 500–2000 Hz. The current loop is usually entirely inside the joint driver.
+2. **Velocity loop** (middle): Closes on motor shaft angular velocity using the encoder. Typical bandwidth 100–300 Hz. Provides damping and handles friction.
+3. **Position loop** (outermost, slowest): Commands velocity based on the error between desired and measured end-effector or joint position. Typical bandwidth 10–50 Hz.
+
+### Gravity Compensation
+
+Gravity acts continuously on each link. Without compensation, a joint may not hold position when stationary — the integral term in the PID would wind up trying to fight gravity continuously. **Gravity compensation** calculates the torque required at each joint to counteract the weight of each link at the current pose and adds it as a feedforward term:
+
+```
+tau_g = J^T * F_gravity
+```
+
+where J is the Jacobian transpose and F_gravity is the gravitational force vector at the end-effector. With gravity compensation, the position loop only needs to handle inertial and friction loads, dramatically reducing integral wind-up.
+
+### Feedforward and Friction Compensation
+
+Beyond gravity, **friction** (Coulomb and viscous) causes steady-state errors at low velocities. Simple feedforward friction terms can improve tracking accuracy. More advanced friction models (Stribeck model) are used in high-performance motion control.
+
+For trajectory following, a **feedforward term** based on desired acceleration can also be added:
+
+```
+tau_ff = M(q) * q_ddot + C(q, q_dot) + G(q)
+```
+
+where M is the inertia matrix, C is the Coriolis/centrifugal term, and G is gravity. This is the computed-torque control law.
+
+---
+
+## Relationship to Other Pages
+
+- **[Basics · Actuation](/en/hardware/basics/actuation)**: Motor and reducer fundamentals apply here; manipulators are a specialized application of the general actuation principles.
+- **[Basics · Control](/en/hardware/basics/control)**: The three-loop PID architecture and state estimation described here apply to manipulator joint control.
+- **[Basics · Sensing](/en/hardware/basics/sensing)**: Encoders (absolute, multi-turn) provide the joint position feedback for FK and closed-loop control.
+- **[Mobile Bases & AGVs](/en/hardware/systems/robotics/mobile_base)**: Mobile manipulators combine arm kinematics with mobile base locomotion — both sub-systems must be coordinated.
+- **[System Integration & Safety](/en/hardware/systems/robotics/integration)**: Safety-rated torque monitoring, force limiting, and ISO 10218 compliance are especially critical in collaborative applications.
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+[← Robotics](/en/hardware/systems/robotics) · [Mobile Bases & AGVs](/en/hardware/systems/robotics/mobile_base) · [System Integration & Safety →](/en/hardware/systems/robotics/integration)
+</div>
