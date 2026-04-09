@@ -47,7 +47,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L1",
-    title: "Ⅱ · 电路与电子",
+    title: "① · 电路与电子",
     subtitle: "CIRCUITS & ELECTRONICS",
     color: "#5A7A94",
     accent: "#C4D5E8",
@@ -95,7 +95,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L2",
-    title: "Ⅲ · 嵌入式系统",
+    title: "② · 嵌入式系统",
     subtitle: "EMBEDDED & FIRMWARE",
     color: "#6B8E6B",
     accent: "#C4E8C4",
@@ -143,7 +143,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L3",
-    title: "Ⅳ · 传感器与感知",
+    title: "③ · 传感器与感知",
     subtitle: "SENSORS & PERCEPTION",
     color: "#8E6B8E",
     accent: "#E8C4E8",
@@ -188,7 +188,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L4",
-    title: "Ⅴ · 执行器与动力",
+    title: "④ · 执行器与动力",
     subtitle: "ACTUATORS & POWER",
     color: "#94825A",
     accent: "#E8DCC4",
@@ -236,7 +236,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L5",
-    title: "Ⅵ · 控制与估计",
+    title: "⑤ · 控制与估计",
     subtitle: "CONTROL & ESTIMATION",
     color: "#5A8E8E",
     accent: "#C4E8E8",
@@ -282,7 +282,7 @@ export const HARDWARE_ROADMAP = [
   },
   {
     id: "L6",
-    title: "Ⅶ · 总线与通信",
+    title: "⑥ · 总线与通信",
     subtitle: "COMMUNICATION & BUS",
     color: "#7A5A5A",
     accent: "#E8C4C4",
