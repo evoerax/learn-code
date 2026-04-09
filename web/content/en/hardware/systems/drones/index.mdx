@@ -11,7 +11,13 @@ The **Drones** section (无人机脉络) is the aerospace track of the [Whole Sy
 
 ## Subsystem Chain
 
-Airframe ↔ ESC ↔ Brushless motor ↔ Propeller ↔ Battery (BMS) ↔ Flight controller ↔ IMU ↔ RC / data link ↔ GPS (optional)
+The drone subsystem chain runs in both directions — mechanical loads drive motor and battery requirements, while the flight controller closes loops through the ESC to command torque output at the propellers:
+
+**Mechanical path:** Airframe → Brushless motor → ESC → Propeller → Battery (BMS) → Connectors and power distribution
+
+**Control path:** Flight controller → IMU → ESC → Motor → Propeller thrust → Airframe dynamics → IMU (closes loop)
+
+Each link has its own design trade-offs covered in the three-level pages: [Airframe & propulsion](/en/hardware/systems/drones/airframe) covers motor KV, propeller pitch, C-rate, and connector sizing; [Flight control](/en/hardware/systems/drones/flight_control) covers IMU damping, nested loop bandwidth, and log analysis; [Links & safety](/en/hardware/systems/drones/link_safety) covers RC protocol selection, failsafe state machines, and airspace compliance.
 
 ---
 
@@ -33,3 +39,7 @@ Arming logic, fail-safe landing, propeller guards, and test-site discipline vary
 Kit assembly → log analysis → propeller tuning → frame balancing → custom flight controller firmware. Resist writing your own flight controller before understanding why the existing firmware fails.
 
 [Whole Systems](/en/hardware/systems) · [Automotive](/en/hardware/systems/automotive)
+
+---
+
+[← Airframe & Propulsion](/en/hardware/systems/drones/airframe) · [Flight Control](/en/hardware/systems/drones/flight_control) · [Links & Safety](/en/hardware/systems/drones/link_safety)
