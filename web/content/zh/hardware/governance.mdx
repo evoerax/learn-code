@@ -47,8 +47,22 @@ EMC 关注两个方向：**发射**（设备对外的电磁干扰）和**抗扰*
 
 ---
 
+## 与其他页面的关系
+
+工程与合规处于整机硬件的知识交叉点：
+
+- **功能安全与汽车**：ISO 26262 ASIL 等级直接影响制动/转向的冗余架构选型——见 [线控系统](/zh/hardware/systems/automotive/by_wire)
+- **功能安全与机器人**：Safety PLC 和 E-stop 链是机器人工作站安全的核心——见 [系统集成与安全](/zh/hardware/systems/robotics/integration)
+- **EMC 与硬件基础**：PCB 布局和层叠设计是 EMC 整改成本的关键——见 [电路与电子基础](/zh/hardware/basics/electronics)
+- **认证与无人机**：各国法规差异是无人机产品化的第一道门槛——见 [链路与安全](/zh/hardware/systems/drones/link_safety)
+- **认证与整机系统**：功能安全文档和 EMC 测试报告是认证审计的核心证据——见 [整机脉络总览](/zh/hardware/overview)
+
 ## 工程与合规小结
 
 功能安全、EMC、认证三者构成整机合规的铁三角。功能安全回答「失效后是否安全」，EMC 回答「是否干扰他人也不被他扰」，认证则是用第三方测试和文档化把前两者的结论变成可信任的市场准入凭证。
 
 工程师在设计早期就应把合规纳入考量——架构阶段决定 ASIL 分解和冗余策略，PCB 布局阶段决定 EMC 整改成本，样机阶段才做认证测试。越晚发现合规缺口，改造成本越高。
+
+<div style={{ textAlign: 'center', marginTop: '2rem' }}>
+[← 整机脉络总览](/zh/hardware/overview) · [硬件模块总览](/zh/hardware/systems)
+</div>
