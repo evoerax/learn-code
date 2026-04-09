@@ -1,10 +1,55 @@
 ---
 title: Robotics
-description: 'Stub hub'
+description: 'Manipulators, mobile bases, and AGVs — kinematic configurations, joint modules, system integration, and safety boundaries'
 ---
 
 # Robotics
 
-**[/zh/hardware/systems/robotics](/zh/hardware/systems/robotics)**
+The **Robotics** section (机器人脉络) is the robotics track of the [Whole Systems](/en/hardware/systems) layer. The sidebar **third-level** pages drill into: [Manipulators & Joints](/en/hardware/systems/robotics/manipulators) · [Mobile Bases & AGVs](/en/hardware/systems/robotics/mobile_base) · [System Integration & Safety](/en/hardware/systems/robotics/integration)
 
-[Systems](/en/hardware/systems)
+---
+
+## How Robotics Differs from Drones / Automotive
+
+- **Kinematic complexity**: Unlike drones (thrust-vectored thrust) or automotive (primarily wheeled), robotics spans serial arms, SCARA, parallel structures, and omnidirectional mobile platforms — each with fundamentally different kinematics and control semantics.
+- **Safety**: Collaborative robots (cobots) operate in human-shared workspaces under ISO 10218 and ISO/TS 15066 — force limiting, collision detection, and safety-monitored stops are first-class requirements, not add-ons.
+- **System integration**: Robots are almost always part of a larger workflow (MES, PLC, conveyor tracking, vision inspection) — the "whole system" boundary extends to factory-floor orchestration, not just the robot itself.
+
+---
+
+## Configurations (Kinematic Types)
+
+- **Serial manipulators**: 6-DOF articulated arms — most common in industrial assembly, welding, and painting. Forward/inverse kinematics, joint limits, and singularity regions are core design concerns.
+- **SCARA**: Selective Compliance Assembly Robot Arm — planar motion, high speed, and precision for pick-and-place on 2D planes.
+- **Parallel (Delta/Stewart)**: High-speed pick-and-place; moving platform suspended by three or more parallel chains — excellent for cleanrooms and packaging.
+- **Mobile bases**: Differential drive, Ackermann steering, omnidirectional (omni-wheel / Mecanum), and tracked — chosen based on floor environment and maneuverability needs.
+- **Composite AGVs / AMRs**: Mobile bases combined with manipulator arms; automated guided vehicles (AGV) follow fixed paths while autonomous mobile robots (AMR) use SLAM for dynamic navigation.
+
+---
+
+## Hardware Key Points
+
+- **Joint reducers**: Harmonic drives (high reduction ratio, zero backlash) and planetary gearboxes — sized by reflected inertia and required torque density.
+- **Torque sensors**: Optional joint torque sensing enables admittance control and collision detection; common in cobot end-effectors.
+- **End-effector IO**: Tool-changing systems, pneumatic or electric grippers, and force/torque sensors at the wrist — the interface to the actual task.
+- **Safety fencing and light curtains**: Industrial场景 requires physical guards or optoelectronic curtains; cobots rely on force-limited joints and safety-monitored stops within the workspace boundary.
+
+---
+
+## Control, Software, and System Integration
+
+Joint servo control and trajectory planning belong to the **robot controller** — this is fundamentally a **systems integration problem**: the embedded layer still routes back to [Control](/en/hardware/basics/control) and [Communication](/en/hardware/basics/communication) for low-level loops and bus protocols.
+
+- **Robot controller**: Executes trajectory plans (joint-space / Cartesian), manages tool-center-point (TCP) frames, and enforces velocity/acceleration limits.
+- **Upper-level scheduling**: Integration with MES, PLC, conveyor tracking, and vision inspection systems — the "whole system" boundary in robotics extends well beyond the robot itself.
+- **Safety architecture**: Safety-rated monitored stop (STO), safe torque off (STO), and force limiting per ISO 10218 — these are hardware-level safety functions, not just software settings.
+
+---
+
+## What an Individual Can Do
+
+- **Desktop manipulator kits**: Low-cost 4–6 DOF arms (SG90, MG996, or similar) for learning inverse kinematics, joint-space trajectory planning, and ROS MoveIt.
+- **Progression path**: Single-axis PID identification → multi-axis interpolation → integration with gripper and vision → choose mobile base or collaborative arm depending on interest.
+- **Research / industrial**: After the kit stage, ISO 10218 safety architecture, robot controller selection (EtherCAT-based), and SLAM for mobile bases represent the transition from prototype to production.
+
+[Whole Systems](/en/hardware/systems) · [Drones](/en/hardware/systems/drones)
