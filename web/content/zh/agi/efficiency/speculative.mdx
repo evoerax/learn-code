@@ -47,6 +47,36 @@ def speculative_decoding(model, draft_model, prompt, gamma=4):
 
 ---
 
+## 时间线对比
+
+```
+无投机解码:
+Token 1: 目标模型前向 (100ms)
+Token 2: 目标模型前向 (100ms)
+Token 3: 目标模型前向 (100ms)
+...
+
+有投机解码 (gamma=4):
+Step 1: Draft x4 (25ms) + 目标验证 (100ms) ≈ 4 tokens
+Step 2: Draft x4 (25ms) + 目标验证 (100ms) ≈ 4 tokens
+...
+
+接受率高时加速: ~2-3x
+```
+
+---
+
+## 接受率影响因素
+
+| 因素 | 影响 |
+|------|------|
+| **Draft/目标相似** | 接受率更高 |
+| **高熵上下文** | 接受率更低 |
+| **重复模式** | 接受率更高 |
+| **gamma** | 权衡：更多计算 vs 并行性 |
+
+---
+
 ## 条件
 
 - Draft model 与大模型分布接近

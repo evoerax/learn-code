@@ -13,10 +13,12 @@ PagedAttention 实现的高效推理。
 
 | 特性 | 说明 |
 |------|------|
-| PagedAttention | KV Cache 分页管理 |
-| 连续批处理 | 动态批次 |
-| CUDA Graph | 减少 kernel 调用 |
-| 量化支持 | AWQ, GPTQ, FP8 |
+| PagedAttention | KV Cache 分页管理，减少内存碎片 |
+| 连续批处理 | 动态批次，最大化 GPU 利用率 |
+| 异步抢占 | OOM 时优雅处理 |
+| 量化支持 | INT8/FP16/BF16 |
+| 张量并行 | 多 GPU 推理 |
+| 流式输出 | Token 级输出 |
 
 ---
 
@@ -40,15 +42,39 @@ outputs = llm.generate(prompts, sampling_params)
 
 ---
 
-## 性能
+## 架构
 
-| 模型 | 吞吐量 (tok/s) |
-|------|----------------|
-| LLaMA 2 7B | ~1000 |
-| LLaMA 2 70B | ~300 |
-| Mixtral 8x7B | ~400 |
+```python
+# vLLM 内部组件
 
-对比 HuggingFace 提升 10-24x。
+class LLMEp:
+    def __init__(self):
+        self.scheduler = Scheduler()      # 连续批处理
+        self.model_runner = ModelRunner()  # PagedAttention
+        self.kv_cache = KVCacheManager()   # 虚拟内存管理
+
+    def forward(self, seq_group):
+        # 1. 调度序列
+        scheduled = self.scheduler.schedule(seq_group)
+
+        # 2. 使用 PagedAttention 执行模型
+        output = self.model_runner(scheduled)
+
+        # 3. 更新 KV cache
+        self.kv_cache.update(scheduled)
+
+        return output
+```
+
+---
+
+## 性能对比
+
+| 引擎 | 吞吐量 | 延迟 |
+|------|--------|------|
+| **HuggingFace** | 1x | 1x |
+| **TGI** | 3-5x | 0.5x |
+| **vLLM** | 10-24x | 0.1-0.2x |
 
 ---
 

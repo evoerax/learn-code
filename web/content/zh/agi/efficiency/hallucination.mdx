@@ -51,6 +51,27 @@ def calibrate_confidence(model, prompt):
     uncertain = [i for i, c in enumerate(confidences) if c < threshold]
 ```
 
+### 4. Chain-of-Verification
+
+```python
+def verify_generate(model, query):
+    # 生成初始回复
+    response = model.generate(query)
+
+    # 验证步骤
+    verification_prompt = f"""Given this response:
+    {response}
+
+    Verify each factual claim. List any issues."""
+
+    issues = model.generate(verification_prompt)
+
+    # 修复问题后重新生成
+    fixed = model.generate(f"Original: {response}\nIssues: {issues}")
+
+    return fixed
+```
+
 ---
 
 ## 评估指标
@@ -65,7 +86,10 @@ def calibrate_confidence(model, prompt):
 
 ## 最佳实践
 
-- 使用 RAG 提供最新信息
-- 要求模型引用来源
-- 设置不确定性表达
-- Chain-of-Thought 验证
+| 方法 | 效果 | 成本 |
+|------|------|------|
+| **RAG** | 高 | 中等 |
+| **自我一致性** | 高 | 高（n 次采样） |
+| **CoVe** | 高 | 很高 |
+| **不确定性量化** | 中等 | 低 |
+| **事实性微调** | 高 | 高 |

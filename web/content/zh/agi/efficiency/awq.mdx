@@ -59,12 +59,33 @@ def awq_quantize(W, bits=4, alpha=1.0):
 
 | 特性 | GPTQ | AWQ |
 |------|------|-----|
-| 关注点 | 权重误差 | 激活敏感性 |
-| 精度 | 良好 | 更好 |
-| 速度 | 较快 | 相当 |
+| 关注点 | 仅权重误差 | 激活感知 |
+| 精度 | 良好 | 更好（下游任务） |
+| 速度 | 快 | 略慢 |
 | 适用 | 通用 | LLM 最佳 |
+| 量化方式 | W4: 4bit | W4A16: 4bit |
 
 ---
+
+## 生产使用
+
+```python
+# 使用 autoawq 库
+from awq import AutoAWQForCausalLM
+from transformers import AutoTokenizer
+
+model = AutoAWQForCausalLM.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+quant_config = {
+    "zero_point": True,
+    "q_group_size": 128,
+    "w_bit": 4,
+    "version": "GEMM"
+}
+
+model.quantize(tokenizer, quant_config=quant_config)
+```
 
 ## 效果
 
