@@ -20,37 +20,52 @@ description: 'Denoising Diffusion Implicit Models'
 
 ---
 
-## 非马尔可夫反向过程
+## 马尔可夫 vs 非马尔可夫
 
 ```python
-def ddim_step(x_t, model, alpha_t, alpha_s, sigma):
-    # s < t, 跳步采样
-    noise = torch.randn_like(x_t)
+# DDPM (马尔可夫): q(x_{t-1} | x_t, x_0) 是高斯分布
+# DDIM: q(x_{t-1} | x_t, x_0) 可以是任意分布
+
+def ddim_step(x_t, t, t_prev, noise_pred, eta=0.0):
+    """
+    eta 控制随机性:
+    - eta=0: 确定性 (DDIM)
+    - eta=1: 等价于 DDPM
+    """
+    alpha = sqrt(alpha_bar[t])
+    alpha_prev = sqrt(alpha_bar[t_prev])
     
-    # 预测
-    pred_x0 = model(x_t, t)
+    # 预测 x_0
+    x_0_pred = (x_t - sqrt(1-alpha_bar[t]) * noise_pred) / alpha
     
-    # 方向估计
-    direction = torch.sqrt(1 - alpha_s) * noise_pred
+    # 指向 x_t 的方向
+    dir_xt = sqrt(1 - alpha_bar[t_prev] - eta * sigma**2) * noise_pred
     
-    # 去噪
-    x_s = torch.sqrt(alpha_s) * pred_x0 + direction
+    # 随机噪声 (eta=0 时为 0)
+    sigma = eta * sqrt(1 - alpha_bar[t_prev])
     
-    # 添加噪声 (可选)
-    if sigma > 0:
-        x_s = x_s + sigma * noise
+    x_{t_prev} = alpha_prev * x_0_pred + dir_xt + sigma * torch.randn_like(x_t)
     
-    return x_s
+    return x_{t_prev}
 ```
 
 ---
 
-## 加速比
+## eta 参数
 
-| 步数 | DDPM | DDIM |
-|------|------|------|
-| 1000 | ~50 分钟 | - |
-| 100 | - | ~3 秒 |
-| 50 | - | ~1.5 秒 |
+| eta | 采样方式 | 多样性 |
+|-----|----------|--------|
+| 0.0 | 确定性 | 较低 |
+| 0.5 | 半随机 | 平衡 |
+| 1.0 | 完全随机 (DDPM) | 较高 |
 
-质量损失 < 5%。
+---
+
+## 采样加速效果
+
+| 方法 | 步数 | 时间 | 质量 |
+|------|------|------|------|
+| **DDPM** | 1000 | 60s | 100% |
+| **DDIM** | 50 | 3s | 95% |
+| **DDIM** | 20 | 1.2s | 90% |
+| **DPMSolver** | 10 | 0.6s | 85% |

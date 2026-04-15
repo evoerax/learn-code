@@ -48,10 +48,37 @@ dx = [f(x, t) - g(t)^2 * score(x, t)] dt + g(t) * dw
 
 ---
 
+## 概率流 ODE
+
+```python
+# 与 SDE 等价的确定性 ODE
+dx = [-0.5 * beta(t) * x - beta(t) * ∇log p(x)] dt
+
+# 使用黑盒 ODE 求解器
+# 比随机采样更快
+```
+
+---
+
+## 三者联系
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   DDPM      │────▶│  Score      │────▶│    SDE      │
+│  (离散)     │     │  Matching   │     │  (连续)     │
+└─────────────┘     └─────────────┘     └─────────────┘
+```
+
+- **DDPM**: 离散的噪声预测模型
+- **Score Matching**: 学习 score function 的框架
+- **SDE**: 连续的随机微分方程 formulation
+
+---
+
 ## 数值求解
 
 | 方法 | 特点 |
 |------|------|
 | Euler-Maruyama | 简单但慢 |
 | Ancestral Sampling | 快速 |
-| ODE 求解 | 确定性格 |
+| ODE 求解 | 确定性，效率高 |

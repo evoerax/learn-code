@@ -56,6 +56,17 @@ def sample(cnf, noise):
 
 ---
 
+## 与扩散模型对比
+
+| 方面 | Diffusion | Flow Matching |
+|------|-----------|--------------|
+| **目标** | 噪声预测 | 速度预测 |
+| **轨迹** | 任意路径 | 最优传输 |
+| **采样** | SDE 或 ODE | 单次 ODE 求解 |
+| **代表模型** | DDPM, ADM | MDM, IF |
+
+---
+
 ## 优势
 
 | 特性 | Flow Matching | Diffusion |

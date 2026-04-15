@@ -11,22 +11,39 @@ description: 'Consistency Models 单步生成'
 
 ## 核心思想
 
+学习"一致性函数"，将任意点映射到轨迹终点：
+
+```
+F(x) = x_0  对任意 t ∈ [0, T]
+```
+
+单步生成: x_T → F(x_T) = x_0
+
+---
+
+## 训练
+
 ```python
 class ConsistencyModel(nn.Module):
-    def __init__(self, noise_pred_net):
-        self.net = noise_pred_net
+    def __init__(self, unet):
+        super().__init__()
+        self.net = unet
     
-    def forward(self, x_t, t):
-        # 预测 x_0
-        x_0_pred = self.net(x_t, t)
-        return x_0_pred
+    def forward(self, x, t):
+        # 从 (x_t, t) 预测 x_0
+        return self.net(x, t)
     
-    def consistency_loss(self, x_t, x_prev, teacher_model):
-        # 师生一致性
+    def consistency_loss(self, x):
+        t = torch.randint(0, self.T, (1,))
+        noise = torch.randn_like(x)
+        
+        x_t = self.noise_image(x, t, noise)
+        x_0_pred = self(x_t, t)
+        
         with torch.no_grad():
-            target = teacher_model(x_prev, teacher_t)
-        student = self(x_t, t)
-        return F.mse_loss(student, target)
+            x_0_target = self(x_t, t + 1)  # 来自下一步的目标
+        
+        return mse(x_0_pred, x_0_target)
 ```
 
 ---
@@ -48,6 +65,17 @@ def sample(cm, noise, num_steps=1):
         x = cm(x, torch.tensor([epsilon]))  # epsilon 是起始噪声水平
     return x
 ```
+
+---
+
+## vs Diffusion
+
+| 方面 | Diffusion | Consistency |
+|------|-----------|-------------|
+| **采样** | 20-50 步 | 1-2 步 |
+| **质量** | 高 | 相近 |
+| **微调** | 有限 | 可微调 |
+| **蒸馏** | 无 | 从扩散模型 |
 
 ---
 
