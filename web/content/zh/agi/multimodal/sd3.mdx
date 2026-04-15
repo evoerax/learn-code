@@ -1,59 +1,77 @@
 ---
 title: SD3 与 FLUX
-description: '现代扩散架构'
+description: '现代大规模扩散模型'
 ---
 
 # SD3 与 FLUX
 
-最新一代扩散模型。
+最新一代高质量扩散模型。
 
 ---
 
-## SD3 (Stable Diffusion 3)
+## Stable Diffusion 3 (SD3)
+
+| 特性 | 值 |
+|------|-----|
+| **架构** | MMDiT (多模态扩散 Transformer) |
+| **参数** | 8B |
+| **文本编码器** | CLIP + T5-XXL |
+| **训练** | 修正流 |
+| **分辨率** | 最高 1024² |
+
+---
+
+## MMDiT 架构
 
 ```python
-class SD3(nn.Module):
+class MMDiT(nn.Module):
     def __init__(self):
-        # MMDiT: 多模态 DiT
-        self.text_encoder = T5()
-        self.image_encoder = CLIP()
-        self.mmdavit = MMDiT()  # 共享注意力
+        # 文本和图像分离的 transformers
+        self.text_transformer = Transformer()
+        self.image_transformer = Transformer()
+        
+        # 跨模态注意力
+        # ...
     
-    def forward(self, x_t, prompt_embeds, timestep):
-        # 文本和图像联合注意
-        text_emb, img_emb = self.encode(prompt_embeds)
-        return self.mmdavit(x_t, text_emb, img_emb, timestep)
+    def forward(self, x_t, t, text_emb):
+        # 并行处理, 在注意力层合并
+        h_text = self.text_transformer(text_emb, t)
+        h_image = self.image_transformer(x_t, t)
+        
+        # 联合注意力
+        h = joint_attention(h_text, h_image)
+        
+        return self.final_layer(h)
 ```
-
----
-
-## 特点
-
-| 特性 | SDXL | SD3 |
-|------|------|-----|
-| 架构 | UNet | MMDiT |
-| 文本编码 | CLIP | T5 + CLIP |
-| 参数 | 6.6B | 8B |
-| 文字渲染 | 差 | 显著提升 |
 
 ---
 
 ## FLUX
 
-```python
-class Flux(nn.Module):
-    def __init__(self):
-        # MMDiT 变体
-        self.t5 = T5-xxl
-        self.clip = CLIP-L
-        self.denoiser = DiT()
-```
+| 特性 | 值 |
+|------|-----|
+| **架构** | Multi-rundit (类似 MMDiT) |
+| **参数** | 12B |
+| **开发** | Black Forest Labs |
+| **优势** | 文字渲染, 提示词遵循 |
 
 ---
 
-## FLUX 技术
+## 关键改进
 
-- 流匹配替代扩散
-- 60 亿参数
-- 专家噪声预测器
-- 双耳文字渲染能力
+| 方面 | SD 1.5/2.x | SD3/FLUX |
+|------|-------------|----------|
+| **文字渲染** | 差 | 优秀 |
+| **提示词遵循** | 中等 | 非常好 |
+| **人体结构** | 手部问题 | 大幅改善 |
+| **构图** | 有时随机 | 更好的控制 |
+
+---
+
+## 采样
+
+```python
+# FLUX 使用 DPM-Solver++ 2M
+# 典型: 20-28 步高质量
+# 引导 scale: 3.5-4.5
+```

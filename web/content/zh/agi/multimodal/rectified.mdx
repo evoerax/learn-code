@@ -1,75 +1,79 @@
 ---
 title: 修正流
-description: 'Rectified Flow 线性轨迹'
+description: '线性轨迹用于直线流的 Rectified Flow'
 ---
 
 # 修正流
 
-优化轨迹以加速采样。
+Rectified Flow (Liu et al., 2022) 优化流量以遵循直线轨迹。
 
 ---
 
-## 问题
+## 曲线路径问题
 
-标准 Flow Matching 轨迹可能不是最优：
+```
+标准流: noise → data 通过曲线路径
+        曲线: 复杂, 难以采样
 
-```python
-# 线性插值
-x_t = (1-t) * x_0 + t * x_1
-# 但中间点可能不合理
+修正流: 投影到直线
+        直线: 直接, 快速
 ```
 
 ---
 
-## 修正
+## 修正算法
 
 ```python
-class RectifiedFlow(nn.Module):
-    def __init__(self, velocity_net):
-        self.velocity = velocity_net
+def rectify_flow(flow, data_loader, num_steps=1000):
+    """
+    迭代细化流使其更直
+    """
+    for iteration in range(num_iterations):
+        # 采样配对
+        x_0 ~ noise, x_1 ~ data
+        
+        # 当前轨迹
+        t = torch.rand(1)
+        x_t = flow.interpolate(x_0, x_1, t)
+        v_t = flow.velocity(x_t, t)
+        
+        # 拟合残差以拉直
+        target_v = x_1 - x_0  # 直线速度
+        
+        loss = mse(v_t, target_v)
+        loss.backward()
+        optimizer.step()
     
-    def get_velocity(self, x_t, t):
-        # 预测速度
-        return self.velocity(x_t, t)
-    
-    def training_loss(self, x_0, x_1):
-        t = torch.rand(B)
-        
-        # 修正轨迹 (不一定是直线)
-        x_t = interpolate(x_0, x_1, t)
-        
-        # 速度目标
-        v = self.velocity(x_t, t)
-        
-        # 如果修正了轨迹,目标也要调整
-        target = (x_1 - x_0) * correction_factor
-        
-        return F.mashed_loss(v, target)
+    return flow
 ```
 
 ---
 
-## 采样
+## 直线采样
 
 ```python
-def sample(rf, noise, num_steps=10):
+def rectified_sample(model, x_T, num_steps=1):
+    """
+    完全直线流的单步采样
+    """
+    t = 1.0
     dt = 1.0 / num_steps
-    x = noise
-    for i in range(num_steps):
-        t = 1.0 - i * dt
-        v = rf(x, torch.tensor([t]))
-        x = x - v * dt  # 反向积分
+    
+    x = x_T
+    for step in range(num_steps):
+        t_current = step * dt
+        v = model(x, t_current)
+        x = x - v * dt  # 沿直线欧拉积分
+    
     return x
 ```
 
 ---
 
-## 效果
+## 性能
 
-| 方法 | 步数 | FID |
-|------|------|-----|
-| 标准 FM | 50 | 4.2 |
-| Rectified | 10 | 3.8 |
-| Rectified | 5 | 4.5 |
-
-修正流在少步数下效果更好。
+| 模型 | FID (50 步) | FID (1 步) |
+|------|-------------|-----------|
+| **ADM** | 2.07 | N/A |
+| **修正流** | 2.11 | 7.47 |
+| **InstaFlow** | 2.12 | 4.21 |

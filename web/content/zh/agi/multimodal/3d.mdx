@@ -1,46 +1,78 @@
 ---
 title: 3D 表示
-description: '3D 表示学习方法概述'
+description: '稀疏卷积, 哈希表, NeRF, 高斯溅射'
 ---
 
 # 3D 表示
 
-学习三维世界的表示。
+各种表示和渲染 3D 场景的方法。
 
 ---
 
-## 表示类型
-
-| 类型 | 特点 | 示例 |
-|------|------|------|
-| 显式网格 | 精确但大 | OBJ, PLY |
-| 体素 | 结构化 | 3D CNN |
-| 点云 | 稀疏 | PointNet |
-| NeRF | 连续可微 | 神经辐射场 |
-| 高斯 | 渲染快 | 3D Gaussian |
-
----
-
-## 应用
+## 3D 稀疏卷积
 
 ```python
-# 3D 重建
-scene = reconstruct_3d(images)
-
-# 3D 生成
-mesh = generate_3d(text_prompt)
-
-# 3D 理解
-features = encode_3d(point_cloud)
+class SparseConv3d(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=3):
+        super().__init__()
+        self.conv = nn.Conv3d(
+            in_channels, out_channels, 
+            kernel_size,
+            padding=kernel_size//2,
+            bias=False
+        )
+    
+    def forward(self, x, coords):
+        """
+        x: 特征 (N, C)
+        coords: 坐标 (N, 3)
+        """
+        # 构建 3D 网格
+        voxel_grid = self.scatter(x, coords)  # 哈希表查询
+        
+        # 在密集网格上卷积
+        out = self.conv(voxel_grid)
+        
+        # 聚合回点
+        return out, coords
 ```
 
 ---
 
-## 挑战
+## 哈希表 + 规则本
 
-| 问题 | 说明 |
-|------|------|
-| 遮挡 | 部分可见 |
-| 尺度 | 多尺度物体 |
-| 纹理 | 外观变化 |
-| 计算 | 内存占用大 |
+```python
+# 3D 点 → 哈希表 → 特征查询
+# 实现高效的稀疏操作
+
+def hash_query(coords, resolution, hash_size):
+    # 多尺度哈希
+    for scale in resolutions:
+        scaled = coords // scale
+        hash_key = (scaled.x * 73856093 ^ scaled.y * 19349663 ^ scaled.z * 83492791) % hash_size
+        yield hash_key, scale
+```
+
+---
+
+## 隐式函数
+
+```
+传统: 显式 3D 网格/体素
+隐式: f(x, y, z) → density/color
+
+示例:
+- NeRF: f(x,y,z) → RGB, density
+- 符号距离函数: f(x,y,z) → 到表面的距离
+```
+
+---
+
+## 性能对比
+
+| 方法 | 质量 | 速度 | 内存 |
+|------|------|------|------|
+| **网格** | 高 | 快 | 低 |
+| **NeRF** | 非常高 | 非常慢 | 高 |
+| **Instant-NGP** | 高 | 实时 | 中 |
+| **高斯** | 高 | 快 | 中 |
