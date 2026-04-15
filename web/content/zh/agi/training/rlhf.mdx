@@ -11,12 +11,21 @@ description: '人类反馈强化学习'
 
 ## 三阶段流程
 
-```
-1. 预训练 SFT
-       ↓
-2. 训练 Reward Model
-       ↓
-3. PPO 强化学习
+```mermaid
+graph LR
+    subgraph "1. 预训练"
+        P[预训练 LM] --> SFT[SFT 模型]
+    end
+
+    subgraph "2. Reward Model"
+        SFT --> RM[奖励模型]
+        RM --> RM_TRAIN[训练 RM]
+    end
+
+    subgraph "3. RLHF (PPO)"
+        RM_TRAIN --> PPO[PPO 微调]
+        PPO --> ALIGNED[对齐模型]
+    end
 ```
 
 ---
