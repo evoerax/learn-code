@@ -5,68 +5,76 @@ description: 'Diffusion Models 基础'
 
 # 扩散模型
 
-通过逐步加噪和去噪生成图像。
+扩散模型通过逐步对随机信号去噪来生成数据。
 
 ---
 
-## 前向过程
+## 前向过程（加噪）
 
 ```python
-def forward_diffusion(x_0, t):
-    # 逐步加噪
-    # q(x_t | x_{t-1}) = N(x_t; sqrt(1-beta_t) * x_{t-1}, beta_t * I)
+def forward_process(x_0, t, beta_schedule):
+    """
+    在 t 步内对图像添加噪声
+    x_0: 干净图像
+    t: 时间步（0 = 干净，T = 最大噪声）
+    """
+    alpha_bar = (1 - beta_schedule[:t]).prod()
     noise = torch.randn_like(x_0)
-    alphas_bar = torch.cumprod(1 - betas, dim=0)
-    x_t = torch.sqrt(alphas_bar[t]) * x_0 + torch.sqrt(1 - alphas_bar[t]) * noise
-    return x_t
+
+    x_t = sqrt(alpha_bar) * x_0 + sqrt(1 - alpha_bar) * noise
+    return x_t, noise
 ```
 
 ---
 
-## 反向过程
+## 反向过程（去噪）
 
 ```python
 class UNet(nn.Module):
-    def __init__(self):
-        self.down = nn.ModuleList([...])  # 编码器
-        self.up = nn.ModuleList([...])    # 解码器
-    
-    def forward(self, x, t):
-        # t 是时间步 embedding
-        t_embed = time_embedding(t)
-        # ... 编码解码
-        return noise_pred
-```
+    def forward(self, x_t, t):
+        # t 是时间步嵌入
+        # 预测噪声或 x_0
+        return self.network(x_t, t)
 
----
+def reverse_process(model, x_T, beta_schedule):
+    x_t = x_T
 
-## 训练目标
-
-```python
-def diffusion_loss(model, x_0):
-    # 随机时间步
-    t = torch.randint(0, T, (B,))
-    
-    # 加噪
-    x_t = forward_diffusion(x_0, t)
-    
-    # 预测噪声
-    noise_pred = model(x_t, t)
-    noise = torch.randn_like(x_0)
-    
-    # MSE 损失
-    return F.mse_loss(noise_pred, noise)
-```
-
----
-
-## 采样
-
-```python
-def sample(model, shape):
-    x = torch.randn(shape)
     for t in reversed(range(T)):
-        # 逐步去噪
-        x = model(x, t)
-    return x
+        # 预测噪声
+        noise_pred = model(x_t, t)
+
+        # 计算 x_{t-1}
+        alpha = 1 - beta_schedule[t]
+        alpha_bar = alpha_bar_schedule[t]
+
+        mean = (x_t - noise_pred * sqrt(1-alpha)) / sqrt(alpha)
+        variance = beta_schedule[t]
+
+        if t > 0:
+            x_t = mean + sqrt(variance) * torch.randn_like(x_t)
+        else:
+            x_t = mean
+
+    return x_t  # 干净图像
 ```
+
+---
+
+## DDPM vs Score Matching
+
+| 方面 | DDPM | Score Matching |
+|------|------|----------------|
+| **目标** | 预测噪声 ε | 预测分数 ∇log p(x) |
+| **损失** | MSE(ε - εθ) | MSE(\|\|∇log p - sθ\|\|²) |
+| **采样** | 多步 | SDE 可更少步 |
+
+---
+
+## 现代扩散模型
+
+| 模型 | 架构 | 采样步数 |
+|------|------|----------|
+| **DDPM** | U-Net | 1000 步 |
+| **DDIM** | U-Net | 50 步 |
+| **Stable Diffusion** | 潜空间 U-Net | 20-50 步 |
+| **SDXL** | 更大 U-Net | 20-30 步 |

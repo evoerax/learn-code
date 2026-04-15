@@ -5,45 +5,58 @@ description: 'Masked Autoencoder 自监督'
 
 # MAE 掩码自编码器
 
-高比例掩码重建图像。
+MAE (He et al., 2021) 通过重建随机掩码的块来预训练 ViT。
 
 ---
 
-## 掩码策略
+## 训练
 
 ```python
-def mae_encode(self, x):
-    # 随机掩码 75% 的块
-    mask = torch.rand(B, num_patches) > 0.75
-    x = x * mask.unsqueeze(-1)
-    return self.encoder(x)
+def mae_loss(model, images, mask_ratio=0.75):
+    B, C, H, W = images.shape
 
-def mae_decode(self, x):
-    return self.decoder(x)
+    # 分块
+    patches = patchify(images)  # (B, N, patch_dim)
+
+    # 随机掩码
+    num_masked = int(N * mask_ratio)
+    noise = torch.rand(B, N)
+    ids_shuffle = torch.argsort(noise, dim=-1)
+    ids_restore = torch.argsort(ids_shuffle, dim=-1)
+    ids_keep = ids_shuffle[:, :N - num_masked]
+
+    # 保留可见块
+    patches_keep = patches.gather(1, ids_keep.unsqueeze(-1).expand_as(patches))
+
+    # 仅编码可见块
+    visible_emb = model.encoder(patches_keep)
+
+    # 解码器重建所有块（带掩码 token）
+    pred = model.decoder(visible_emb, ids_restore)  # (B, N, patch_dim)
+
+    # 仅在掩码块上计算损失
+    loss = F.mse_loss(pred[:, N - num_masked:], patches[:, N - num_masked:])
+
+    return loss
 ```
 
 ---
 
-## 非对称编码器-解码器
+## 掩码为何有效
 
-```python
-class MAE(nn.Module):
-    def __init__(self):
-        self.encoder = ViT(patch_size=16, dim=768)
-        self.decoder = nn.Sequential(
-            nn.Linear(768, 512),
-            nn.GELU(),
-            nn.Linear(512, 256),  # 预测像素
-        )
-```
+| 设计选择 | 原理 |
+|----------|------|
+| **高掩码率（75%）** | 强制全局理解 |
+| **解码器重建像素** | 低级特征，非语义 |
+| **微调时不掩码** | 标准监督训练 |
+| **ViT-Large 效果好** | 更多容量有帮助 |
 
 ---
 
-## 训练效率
+## 结果
 
-| 掩码率 | GPU 利用率 |
-|--------|------------|
-| 0% | 100% |
-| 75% | ~25% (仅编码可见块) |
-
-75% 掩码可实现 4x 训练加速。
+| 模型 | ImageNet | COCO | ADE20K |
+|------|----------|------|--------|
+| **MAE ViT-B** | 83.6% | 46.3 mAP | 47.4 mIoU |
+| **MAE ViT-L** | 85.9% | 49.3 mAP | 51.2 mIoU |
+| **监督 ViT-L** | 84.3% | 45.8 mAP | 48.4 mIoU |

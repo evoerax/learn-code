@@ -5,36 +5,30 @@ description: '对比语言图像预训练'
 
 # CLIP
 
-对比学习连接文本与图像。
+CLIP (Radford et al., 2021) 通过自然语言监督学习视觉概念。
 
 ---
 
-## 双塔架构
+## 训练目标
 
 ```python
-class CLIP(nn.Module):
-    def __init__(self, image_encoder, text_encoder):
-        self.image_encoder = image_encoder
-        self.text_encoder = text_encoder
-        self.temperature = nn.Parameter(torch.ones([]) * 0.07)
-    
-    def forward(self, images, texts):
-        image_embeds = self.image_encoder(images)
-        text_embeds = self.text_encoder(texts)
-        # 对比损失
-        logits = (image_embeds @ text_embeds.t()) / self.temperature
-        return logits
-```
+def clip_loss(image_emb, text_emb, temperature):
+    """
+    image_emb: (B, d) 图像嵌入
+    text_emb: (B, d) 文本嵌入
+    """
+    # 归一化
+    image_emb = F.normalize(image_emb, dim=-1)
+    text_emb = F.normalize(text_emb, dim=-1)
 
----
+    # 相似度矩阵
+    logits = (image_emb @ text_emb.T) / temperature
 
-## 损失函数
+    # 对称损失
+    labels = torch.arange(len(image_emb)).to(device)
+    loss_i = F.cross_entropy(logits, labels)  # 图像 → 文本
+    loss_t = F.cross_entropy(logits.T, labels)  # 文本 → 图像
 
-```python
-def clip_loss(image_logits, text_logits):
-    # 对称交叉熵
-    loss_i = cross_entropy(image_logits, torch.arange(len(images)))
-    loss_t = cross_entropy(text_logits, torch.arange(len(texts)))
     return (loss_i + loss_t) / 2
 ```
 
@@ -43,18 +37,34 @@ def clip_loss(image_logits, text_logits):
 ## 零样本分类
 
 ```python
-# CLIP 可以做零样本分类
-classnames = ["cat", "dog", "bird"]
-texts = [f"a photo of a {c}" for c in classnames]
-text_embeds = clip.encode_text(texts)
+def zero_shot_classify(image, model, class_names):
+    # 将类别名编码为提示
+    texts = [f"a photo of a {c}" for c in class_names]
+    text_emb = model.encode_text(texts)
+    image_emb = model.encode_image(image)
 
-# 图像分类
-image_embed = clip.encode_image(image)
-similarity = (image_embed @ text_embeds.t()).softmax(dim=-1)
+    # 余弦相似度
+    similarity = (image_emb @ text_emb.T).softmax(dim=-1)
+
+    return similarity
 ```
 
 ---
 
-## 训练数据
+## 架构
 
-4 亿图文对，来自互联网。
+```
+图像 → ViT → image_emb → 对比损失 ← text_emb ← 文本 → Transformer
+```
+
+---
+
+## 结果
+
+| 数据集 | CLIP 零样本 | SOTA 监督学习 |
+|--------|-------------|---------------|
+| **ImageNet** | 76.2% | 85.9%（使用 1.3M 标签） |
+| **Oxford Pets** | 91.1% | 95.0% |
+| **UCF101** | 59.4% | 91.2% |
+
+CLIP 以零样本方式匹配监督学习 ResNet50 的性能！
