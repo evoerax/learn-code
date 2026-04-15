@@ -1,0 +1,40 @@
+---
+title: Hidden Markov Models
+description: 'Sequential latent variable models'
+---
+
+# Hidden Markov Models
+
+---
+
+## Structure
+
+```python
+class HMM:
+    def __init__(self, num_states, num_observations):
+        # Initial state distribution
+        self.pi = torch.randn(num_states)
+        
+        # Transition matrix A[i,j] = P(s_t=j | s_{t-1}=i)
+        self.A = torch.randn(num_states, num_states)
+        
+        # Emission matrix B[j,k] = P(o_t=k | s_t=j)
+        self.B = torch.randn(num_states, num_observations)
+    
+    def forward(self, observations):
+        # Forward algorithm to compute P(o_1,...,o_T)
+        alpha = self.pi * self.B[:, observations[0]]
+        for obs in observations[1:]:
+            alpha = (alpha @ self.A) * self.B[:, obs]
+        return alpha.sum()
+```
+
+---
+
+## Three Problems
+
+| Problem | Algorithm |
+|---------|-----------|
+| **Likelihood** | Forward algorithm |
+| **Decoding** | Viterbi algorithm |
+| **Learning** | Baum-Welch (EM) |
