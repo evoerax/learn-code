@@ -19,45 +19,49 @@ FlashAttention processes in **tiles** that fit in SRAM, reducing memory reads/wr
 
 ## Algorithm
 
+FlashAttention processes in tiles/blocks that fit in SRAM, keeping attention matrix in fast memory:
+
 ```python
-def flash_attention(Q, K, V, BlockSize=128):
+def flash_attention(Q, K, V, block_size=128):
     """
     Q, K, V: (seq_len, d_k)
-    Processes in blocks to reduce memory.
+    Processes in blocks to reduce HBM reads/writes.
     """
     seq_len = Q.shape[0]
-    output = zeros(seq_len, d_v)
-    row_sum = zeros(seq_len)
-    row_max = zeros(seq_len)
-    
-    # Outer loop over blocks of Q
-    for i in range(0, seq_len, BlockSize):
-        Qi = Q[i:i+BlockSize]
-        Oi = zeros(BlockSize, d_v)
-        Li = zeros(BlockSize)
-        mi = full(BlockSize, -inf)
-        
-        # Inner loop over blocks of K, V
-        for j in range(0, seq_len, BlockSize):
-            Kj = K[j:j+BlockSize]
-            Vj = V[j:j+BlockSize]
-            
+    d_k = Q.shape[1]
+    output = zeros(seq_len, d_k)
+
+    # Block-wise online softmax accumulation
+    for i in range(0, seq_len, block_size):
+        Qi = Q[i:i+block_size]
+        mi_max = full(block_size, -inf)
+        Li = zeros(block_size)
+        Oi = zeros(block_size, d_k)
+
+        for j in range(0, seq_len, block_size):
+            Kj = K[j:j+block_size]
+            Vj = V[j:j+block_size]
+
             # Compute attention block
-            Sij = Qi @ Kj.T / sqrt(d_k)  # (BlockSize, BlockSize)
+            Sij = Qi @ Kj.T / sqrt(d_k)
             mij = Sij.max(dim=-1).values
+
+            # Online softmax update
             Pij = exp(Sij - mij[:, None])
-            
+            Pij_Vj = Pij @ Vj
+
             # Safe normalization
-            Pij_rowsum = Pij.sum(dim=-1)
-            
-            # Online softmax trick
-            ...
-        
-        Oi = Oi / Li[:, None]
-        output[i:i+BlockSize] = Oi
-    
+            Li_new = exp(mij - mi_max) * Li + Pij.sum(dim=-1)
+            Oi = exp(mij - mi_max)[:, None] * Oi + Pij_Vj
+
+            mi_max = max(mi_max, mij)
+
+        output[i:i+block_size] = Oi / Li[:, None]
+
     return output
 ```
+
+**Key insight:** Instead of materializing N×N matrix, accumulate statistics (max, sum) block-wise using online softmax.
 
 ---
 

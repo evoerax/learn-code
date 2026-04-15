@@ -5,60 +5,77 @@ description: '高效注意力机制'
 
 # FlashAttention
 
-通过 IO-Aware 注意力算法加速训练。
+FlashAttention (Dao et al., 2022) 通过 IO-Aware 和分块计算，在保持精确注意力的同时实现 2-4x 加速。
 
 ---
 
 ## 标准注意力的痛点
 
-- O(N^2) 内存占用
-- GPU HBM 访问慢
+标准注意力需要物化完整的 N×N 注意力矩阵（O(N²) 内存），导致：
+- 内存占用大
+- GPU HBM 带宽成为瓶颈
+- 长序列下几乎不可用
 
 ---
 
 ## FlashAttention 算法
 
+核心思想：将 Q、K、V 分块处理，每块 fits in SRAM，避免频繁访问 HBM。
+
 ```python
 def flash_attention(Q, K, V, block_size=128):
-    # 分块计算，避免存储完整注意力矩阵
-    Tr = Q.shape[0]  # 行数
-    Tc = K.shape[0]  # 列数
-    
-    # 按块处理
-    for i in range(0, Tr, block_size):
+    seq_len = Q.shape[0]
+    d_k = Q.shape[1]
+    output = zeros(seq_len, d_k)
+
+    # 分块在线 softmax 累加
+    for i in range(0, seq_len, block_size):
         Qi = Q[i:i+block_size]
-        Oi = torch.zeros_like(Qi)
-        
-        ri = torch.zeros(Qi.shape[0], 1)
-        lij = torch.zeros(Qi.shape[0], 1)
-        
-        for j in range(0, Tc, block_size):
+        mi_max = full(block_size, -inf)
+        Li = zeros(block_size)
+        Oi = zeros(block_size, d_k)
+
+        for j in range(0, seq_len, block_size):
             Kj = K[j:j+block_size]
             Vj = V[j:j+block_size]
-            
+
+            # 计算注意力分块
+            Sij = Qi @ Kj.T / sqrt(d_k)
+            mij = Sij.max(dim=-1).values
+
             # 在线 softmax 更新
-            Sij = Qi @ Kj.T / sqrt(d)
-            mi_j = Sij.max(dim=-1, keepdim=True)
-            Pi_j = torch.exp(Sij - mi_j)
-            aj = Pi_j.sum(dim=-1, keepdim=True)
-            
-            lij = lij * torch.exp(mi_j - mi_ij) + aj
-            Oi = Oi * torch.exp(mi_j - mi_ij) + Pi_j @ Vj
+            Pij = exp(Sij - mij[:, None])
+            Pij_Vj = Pij @ Vj
+
+            # 安全归一化
+            Li_new = exp(mij - mi_max) * Li + Pij.sum(dim=-1)
+            Oi = exp(mij - mi_max)[:, None] * Oi + Pij_Vj
+
+            mi_max = max(mi_max, mij)
+
+        output[i:i+block_size] = Oi / Li[:, None]
+
+    return output
 ```
+
+**关键洞察：** 不物化完整的 N×N 矩阵，而是分块累积统计量（最大值、和），最后归一化。
 
 ---
 
-## 效果
+## 效果对比
 
 | 指标 | 标准 Attention | FlashAttention |
 |------|----------------|----------------|
-| 内存 | O(N^2) | O(N) |
+| 内存 | O(N²) | O(N) |
 | 速度 | 1x | 2-4x |
-| 精度 | 基准 | 无损 |
+| 精度 | 精确 | 精确 |
+| 训练 | 内存瓶颈 | 可处理长序列 |
 
 ---
 
-## 变体
+## 变体版本
 
-- FlashAttention-2: 进一步优化
-- FlashAttention-3: FP8 支持
+| 版本 | 改进 |
+|------|------|
+| FlashAttention-2 | 更好的并行性（沿序列维度切分）、更优的工作划分，比 FA1 快 1.5-2x |
+| FlashAttention-3 | 支持 FP8，进一步提升速度 |

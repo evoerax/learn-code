@@ -5,64 +5,99 @@ description: 'Multi-Head Attention 核心机制'
 
 # 多头注意力机制
 
-注意力机制允许模型在处理序列时动态关注不同位置。
+多头注意力机制（Multi-Head Attention）允许模型同时关注来自不同表示子空间的信息，是 Transformer 架构的核心组件。
+
+---
+
+## 公式
+
+```
+MultiHead(Q, K, V) = Concat(head₁, ..., headₕ)Wᴼ
+where headᵢ = Attention(QWᵢᵠ, KWᵢᵏ, VWᵢᵛ)
+         = softmax(QKᵀ / √dₖ)V
+```
+
+**核心思想：** 将 Q、K、V 分别投影到 h 个子空间，在每个子空间中独立计算注意力，最后拼接输出。
 
 ---
 
 ## Scaled Dot-Product Attention
 
+缩放点积注意力的计算流程：
+
 ```python
 def attention(Q, K, V, mask=None):
     d_k = Q.size(-1)
     scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
-    
+
     if mask is not None:
         scores = scores.masked_fill(mask == 0, -1e9)
-    
+
     attn_weights = F.softmax(scores, dim=-1)
     return torch.matmul(attn_weights, V), attn_weights
 ```
 
+**为什么除以 √dₖ？** 当 dₖ 较大时，点积的数值会很大，导致 softmax 进入饱和区域，梯度接近于零。除以 √dₖ 可以保持点积结果的方差稳定。
+
+**因果掩码（Causal Mask）：** 对于自回归模型，需要阻止注意力看到未来的 token：
+
+```python
+seq_len = Q.size(1)
+causal_mask = torch.tril(torch.ones(seq_len, seq_len, device=Q.device))
+```
+
 ---
 
-## Multi-Head Attention
+## Multi-Head Attention 实现
 
 ```python
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, num_heads):
         super().__init__()
-        self.h = num_heads
+        assert d_model % num_heads == 0
+        self.num_heads = num_heads
         self.d_k = d_model // num_heads
-        
+
         self.W_q = nn.Linear(d_model, d_model)
         self.W_k = nn.Linear(d_model, d_model)
         self.W_v = nn.Linear(d_model, d_model)
         self.W_o = nn.Linear(d_model, d_model)
-    
+
     def split_heads(self, x):
-        x = x.view(x.size(0), -1, self.h, self.d_k)
-        return x.transpose(1, 2)
-    
-    def forward(self, query, key, value, mask=None):
-        Q = self.split_heads(self.W_q(query))
-        K = self.split_heads(self.W_k(key))
-        V = self.split_heads(self.W_v(value))
-        
+        # x: (batch, seq, d_model) -> (batch, heads, seq, d_k)
+        return x.view(x.size(0), -1, self.num_heads, self.d_k).transpose(1, 2)
+
+    def forward(self, Q, K, V, mask=None):
+        Q = self.split_heads(self.W_q(Q))
+        K = self.split_heads(self.W_k(K))
+        V = self.split_heads(self.W_v(V))
+
         attn, attn_weights = attention(Q, K, V, mask)
-        
+
         attn = attn.transpose(1, 2).contiguous()
-        attn = attn.view(attn.size(0), -1, self.h * self.d_k)
-        
+        attn = attn.view(attn.size(0), -1, self.num_heads * self.d_k)
+
         return self.W_o(attn), attn_weights
 ```
 
 ---
 
-## 复杂度
+## 复杂度分析
 
-| 阶段 | 复杂度 |
+| 操作 | 复杂度 |
 |------|--------|
-| 单头 | O(d^2) |
-| 多头 | O(d^2 * h) |
+| Q, K, V 投影 | O(3 × d_model²) |
+| 注意力计算 | O(2 × d_model × seq_len²) |
+| 输出投影 | O(d_model²) |
 
-通常 d=512 或 768，h=8 或 12。
+典型配置：d_model=512 或 768，num_heads=8 或 12。
+
+---
+
+## 多头注意力的优势
+
+| 优势 | 说明 |
+|------|------|
+| **多子空间** | 每个头可以关注不同方面的信息 |
+| **鲁棒性** | 冗余表示提供容错能力 |
+| **可解释性** | 不同头可以学习专门化的注意力模式 |

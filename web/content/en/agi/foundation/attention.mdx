@@ -9,23 +9,49 @@ Multi-Head Attention allows the model to jointly attend to information from diff
 
 ---
 
-## Formula
+## Scaled Dot-Product Attention
+
+The core attention mechanism computes weighted sum of values based on query-key compatibility:
 
 ```
-MultiHead(Q, K, V) = Concat(head₁, ..., headₕ)Wᴼ
-
-where headᵢ = Attention(QWᵢᵠ, KWᵢᵏ, VWᵢᵛ)
-         = softmax(QKᵀ/√dₖ)V
+Attention(Q, K, V) = softmax(QKᵀ / √dₖ)V
 ```
+
+**Why scale by √dₖ?** When dₖ is large, dot products grow in magnitude, pushing softmax into regions with tiny gradients. Scaling by √dₖ prevents this.
+
+**Softmax normalization:** Each output position attends to all input positions, with weights summing to 1.
 
 ## Single Head Attention
 
 ```python
-def attention(Q, K, V, d_k):
+def attention(Q, K, V, mask=None):
+    d_k = Q.size(-1)
     scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, -1e9)
+
     weights = F.softmax(scores, dim=-1)
     return torch.matmul(weights, V)
 ```
+
+**Causal mask:** For autoregressive models, apply lower-triangular mask to prevent attending to future tokens:
+
+```python
+seq_len = Q.size(1)
+causal_mask = torch.tril(torch.ones(seq_len, seq_len, device=Q.device))
+```
+
+## Multi-Head Attention
+
+Multi-head attention projects Q, K, V into h subspaces, attend independently, then concatenate:
+
+```
+MultiHead(Q, K, V) = Concat(head₁, ..., headₕ)Wᴼ
+where headᵢ = Attention(QWᵢᵠ, KWᵢᵏ, VWᵢᵛ)
+```
+
+**Key insight:** Each head learns different attention patterns—one may focus on syntactic relationships, another on semantic similarity.
 
 ## Multi-Head Implementation
 
@@ -33,34 +59,43 @@ def attention(Q, K, V, d_k):
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, num_heads):
         super().__init__()
+        assert d_model % num_heads == 0
         self.num_heads = num_heads
         self.d_k = d_model // num_heads
-        
+
         self.W_q = nn.Linear(d_model, d_model)
         self.W_k = nn.Linear(d_model, d_model)
         self.W_v = nn.Linear(d_model, d_model)
         self.W_o = nn.Linear(d_model, d_model)
-    
+
     def split_heads(self, x):
         # x: (batch, seq, d_model) -> (batch, heads, seq, d_k)
         return x.view(x.size(0), -1, self.num_heads, self.d_k).transpose(1, 2)
-    
+
     def forward(self, Q, K, V, mask=None):
         Q = self.split_heads(self.W_q(Q))
         K = self.split_heads(self.W_k(K))
         V = self.split_heads(self.W_v(V))
-        
+
         scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.d_k)
         if mask is not None:
             scores = scores.masked_fill(mask == 0, -1e9)
         weights = F.softmax(scores, dim=-1)
-        
+
         out = torch.matmul(weights, V)
         out = out.transpose(1, 2).contiguous().view(out.size(0), -1, self.num_heads * self.d_k)
         return self.W_o(out)
 ```
 
----
+## Complexity
+
+| Operation | Complexity |
+|-----------|------------|
+| Q, K, V projection | O(3 × d_model²) |
+| Attention scores | O(2 × d_model × seq_len²) |
+| Output projection | O(d_model²) |
+
+For typical transformer: d_model=512 or 768, num_heads=8 or 12.
 
 ## Why Multi-Head?
 
