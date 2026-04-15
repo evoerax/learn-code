@@ -1,0 +1,157 @@
+---
+title: Solana
+description: 'High-performance blockchain with Proof of History consensus'
+---
+
+# Solana
+
+Solana is a high-performance Layer 1 blockchain designed for speed and low costs, created by Anatoly Yakovenko in 2017. It uses a unique combination of Proof of History and Proof of Stake to achieve throughput far exceeding other general-purpose blockchains.
+
+---
+
+## Key innovation: Proof of History
+
+Proof of History (PoH) is a cryptographic clock that allows the network to process transactions in parallel while maintaining ordering:
+
+```rust
+// Simplified PoH concept
+struct ProofOfHistory {
+    sequence: u64,
+    previous_hash: Hash,
+    timestamp: u64,
+}
+
+impl ProofOfHistory {
+    fn tick(&mut self) -> Hash {
+        self.sequence += 1;
+        self.timestamp = clock::timestamp();
+        self.hash = sha256::hash(&[
+            self.previous_hash.as_bytes(),
+            &self.sequence.to_le_bytes(),
+            &self.timestamp.to_le_bytes(),
+        ]);
+        self.previous_hash = self.hash;
+        self.hash
+    }
+}
+```
+
+### Why PoH matters
+
+| Without PoH | With PoH |
+|-------------|----------|
+| Nodes must communicate to agree on time | Pre-verified timestamps in each transaction |
+| Sequential processing required | Parallel transaction processing |
+| Higher latency | Lower latency (~400ms finality) |
+
+---
+
+## Tower BFT
+
+Solana's optimized Byzantine Fault Tolerance variant:
+
+```rust
+// Tower BFT: validators lock votes for a slot
+struct Vote {
+    slot: u64,
+    hash: Hash,
+    lockout: u64,  // Exponential lockout
+}
+
+impl TowerBFT {
+    fn vote(&mut self, vote: Vote) {
+        // Lockout doubles each vote for same slot
+        // To revert, need 2/3+1 validators to agree
+        let lockout = self.last_vote.lockout * 2;
+        self.last_vote = Vote { lockout, ..vote };
+    }
+}
+```
+
+---
+
+## Technical specifications
+
+| Metric | Solana | Ethereum (L1) |
+|--------|--------|----------------|
+| **TPS** | ~65,000 | ~15-30 |
+| **Finality** | ~0.4 seconds | ~12 minutes |
+| **Avg transaction fee** | $0.00025 | ~$1-5 |
+| **Block time** | 400ms | 12 seconds |
+
+---
+
+## Account model
+
+Unlike Ethereum, Solana uses an account-based model:
+
+```rust
+// Every piece of state is an account
+pub struct Account {
+    pub lamports: u64,           // Rent + balance
+    pub data: Vec<u8>,           // Program state
+    pub owner: Pubkey,           // Program that owns this account
+    pub executable: bool,        // Is this a program?
+    pub rent_epoch: u64,
+}
+```
+
+### Programs (smart contracts)
+
+Programs are stateless — all data lives in separate accounts:
+
+```rust
+// Solana program structure
+use solana_program::{
+    account_info::AccountInfo,
+    entrypoint::ProgramResult,
+    program_error::ProgramError,
+    pubkey::Pubkey,
+};
+
+entrypoint!(process_instruction);
+
+pub fn process_instruction(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
+) -> ProgramResult {
+    // All state passed via accounts
+    // Program logic here
+    Ok(())
+}
+```
+
+---
+
+## Solana programs (ecosystem)
+
+| Category | Examples |
+|----------|----------|
+| **DeFi** | Raydium, Jupiter, Marinade |
+| **NFT** | Magic Eden, Tensor, Holly |
+| **Gaming** | Star Atlas, Aurory |
+| **Liquid staking** | Jito, Marinade |
+
+---
+
+##争议与挑战
+
+| Issue | Description |
+|-------|-------------|
+| **Downtime** | Network outages in 2022 |
+| **Centralization concerns** | High hardware requirements |
+| **Validator requirements** | 128GB RAM, fast SSD needed |
+| **Hack incidents** | Multiple exploits in 2022-2023 |
+
+---
+
+## Tooling
+
+| Tool | Purpose |
+|------|---------|
+| **Anchor** | Rust framework for Solana programs |
+| **Solana CLI** | Wallet, staking, program deployment |
+| **Solana/web3.js** | JavaScript SDK |
+| **Solders** | Rust SDK |
+| **Phantom** | Main wallet |

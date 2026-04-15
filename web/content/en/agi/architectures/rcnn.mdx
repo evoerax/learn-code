@@ -1,0 +1,37 @@
+---
+title: R-CNN Family
+description: 'Two-stage object detectors'
+---
+
+# R-CNN Family
+
+Two-stage object detection: region proposal + classification.
+
+---
+
+## R-CNN Evolution
+
+| Model | Year | Innovation |
+|-------|------|-----------|
+| **R-CNN** | 2014 | Selective search + CNN |
+| **Fast R-CNN** | 2015 | RoI pooling, end-to-end |
+| **Faster R-CNN** | 2015 | RPN replaces SS |
+| **Mask R-CNN** | 2017 | Instance segmentation |
+
+---
+
+## Faster R-CNN
+
+```python
+# 1. Backbone extracts features
+features = backbone(images)
+
+# 2. Region Proposal Network
+proposals = rpn(features)
+
+# 3. RoI Align extracts features per proposal
+roi_features = roi_align(features, proposals)
+
+# 4. Heads predict class + bbox
+class_logits, bbox_pred = detection_head(roi_features)
+```

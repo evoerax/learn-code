@@ -1,0 +1,60 @@
+---
+title: GPTQ 量化
+description: 'GPTQ Post-Training Quantization'
+---
+
+# GPTQ 量化
+
+Frantar et al. 2023 提出的后训练量化方法。
+
+---
+
+## 核心思想
+
+逐层量化，保持输出接近原始模型。
+
+```python
+def gptq_quantize(W, bits=4, per_channel=True):
+    # 校准数据
+    num_samples = 128
+    
+    # 初始化
+    if per_channel:
+        scales = W.abs().max(dim=1).values / (2**(bits-1) - 1)
+    else:
+        scales = W.abs().max() / (2**(bits-1) - 1)
+    
+    # 逐层量化
+    for i in range(W.shape[0]):
+        # 计算误差
+        w_quant = (W[i] / scales[i]).round() * scales[i]
+        error = W[i] - w_quant
+        
+        # 误差反馈给后续权重
+        if i + 1 < W.shape[0]:
+            W[i+1:] += error @ pseudoinverse(W[i:i+1])
+```
+
+---
+
+## 特点
+
+| 特性 | 说明 |
+|------|------|
+| 后训练 | 无需重新训练 |
+| 低比特 | 支持 INT4 |
+| 精度 | 接近原始 |
+| 速度 | 显著加速 |
+
+---
+
+## 使用方式
+
+```python
+from auto_gptq import AutoGPTQForCausalLM
+
+model = AutoGPTQForCausalLM.from_pretrained(
+    "model_name", 
+    quantization_config={"bits": 4}
+)
+```

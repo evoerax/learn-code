@@ -1,0 +1,78 @@
+---
+title: 3D Representations
+description: 'Sparse conv, Hash Map, NeRF, Gaussian Splatting'
+---
+
+# 3D Representations
+
+Various approaches to representing and rendering 3D scenes.
+
+---
+
+## 3D Sparse Convolutions
+
+```python
+class SparseConv3d(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=3):
+        super().__init__()
+        self.conv = nn.Conv3d(
+            in_channels, out_channels, 
+            kernel_size,
+            padding=kernel_size//2,
+            bias=False
+        )
+    
+    def forward(self, x, coords):
+        """
+        x: features (N, C)
+        coords: coordinates (N, 3)
+        """
+        # Build 3D grid
+        voxel_grid = self.scatter(x, coords)  # Hash table lookup
+        
+        # Convolve on dense grid
+        out = self.conv(voxel_grid)
+        
+        # Gather back to points
+        return out, coords
+```
+
+---
+
+## Hash Map + Rulebook
+
+```python
+# 3D point → Hash table → Feature lookup
+# Enables efficient sparse operations
+
+def hash_query(coords, resolution, hash_size):
+    # Multi-scale hash
+    for scale in resolutions:
+        scaled = coords // scale
+        hash_key = (scaled.x * 73856093 ^ scaled.y * 19349663 ^ scaled.z * 83492791) % hash_size
+        yield hash_key, scale
+```
+
+---
+
+## Implicit Functions
+
+```
+Traditional: explicit 3D mesh/volume
+Implicit: f(x, y, z) → density/color
+
+Examples:
+- NeRF: f(x,y,z) → RGB, density
+- Signed Distance Functions: f(x,y,z) → distance to surface
+```
+
+---
+
+## Performance Comparison
+
+| Method | Quality | Speed | Memory |
+|--------|---------|-------|--------|
+| **Mesh** | High | Fast | Low |
+| **NeRF** | Very High | Very Slow | High |
+| **Instant-NGP** | High | Real-time | Medium |
+| **Gaussian** | High | Fast | Medium |

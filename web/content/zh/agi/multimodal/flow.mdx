@@ -1,0 +1,66 @@
+---
+title: Flow Matching
+description: '连续归一化流'
+---
+
+# Flow Matching
+
+通过常微分方程学习变换。
+
+---
+
+## 核心思想
+
+```python
+def flow_matching_loss(model, x_0, x_1):
+    # 插值路径
+    t = torch.rand(B)
+    x_t = t * x_1 + (1 - t) * x_0  # 线性插值
+    
+    # 速度场目标
+    v_target = x_1 - x_0
+    
+    # 预测速度
+    v_pred = model(x_t, t)
+    
+    return F.mse_loss(v_pred, v_target)
+```
+
+---
+
+## 连续正则化流
+
+```python
+class CNF(nn.Module):
+    def __init__(self, velocity_net):
+        self.velocity = velocity_net
+    
+    def forward(self, x, t):
+        # dx/dt = v(x, t)
+        return self.velocity(x, t)
+    
+    def ode_solve(self, x0, t_span):
+        # 数值 ODE 求解
+        return solve_ode(lambda t, x: self.velocity(x, t), x0, t_span)
+```
+
+---
+
+## 采样
+
+```python
+def sample(cnf, noise):
+    # 从噪声流向数据
+    return cnf.ode_solve(noise, [1.0, 0.0])
+```
+
+---
+
+## 优势
+
+| 特性 | Flow Matching | Diffusion |
+|------|---------------|-----------|
+| 采样 | ODE | SDE |
+| 轨迹 | 确定 | 随机 |
+| 损失 | 直接 MSE | 噪声预测 |
+| 效率 | 较高 | 中 |

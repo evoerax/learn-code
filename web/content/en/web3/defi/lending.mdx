@@ -1,0 +1,172 @@
+---
+title: Lending & Borrowing
+description: 'Collateralized loans, interest rate models, and liquidation mechanisms'
+---
+
+# Lending & Borrowing
+
+DeFi lending protocols enable users to earn interest on deposits or borrow assets against collateral — all without banks. The key innovation is **overcollateralization**: borrowers must deposit more than they borrow.
+
+---
+
+## How lending works
+
+### Deposit (lender perspective)
+
+```solidity
+interface ILendingPool {
+    function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
+    function withdraw(address asset, uint256 amount, address to) external returns (uint256);
+}
+```
+
+When you deposit:
+1. You receive **aTokens** (yield-bearing tokens)
+2. aTokens accrue interest in real-time
+3. You can withdraw at any time (subject to liquidity)
+
+### Borrow (borrower perspective)
+
+```solidity
+interface ILendingPool {
+    function borrow(
+        address asset,
+        uint256 amount,
+        uint256 interestRateMode,
+        uint16 referralCode,
+        address onBehalfOf
+    ) external;
+    
+    function repay(
+        address asset,
+        uint256 amount,
+        uint256 rateMode,
+        address onBehalfOf
+    ) external returns (uint256);
+}
+```
+
+When you borrow:
+1. Must deposit collateral (often ETH or other tokens)
+2. Interest accrues based on borrow rate
+3. Must maintain **health factor** above threshold
+
+---
+
+## Health Factor
+
+Health factor determines if position can be liquidated:
+
+```
+Health Factor = (Collateral × Liquidation Threshold) / Borrowed Value
+```
+
+| Health Factor | Status |
+|--------------|--------|
+| > 1.0 | Safe |
+| = 1.0 | Liquidation threshold |
+| < 1.0 | Liquidation eligible |
+
+**Example:**
+- Deposit 10 ETH at $2000 = $20,000 collateral
+- Liquidation threshold = 82.5%
+- Borrow $10,000 DAI
+- Health Factor = (20000 × 0.825) / 10000 = **1.65**
+
+---
+
+## Interest rate models
+
+### Variable rates
+
+Interest rate adjusts continuously based on utilization:
+
+```solidity
+function getBorrowRate(uint256 utilization) public pure returns (uint256) {
+    // Piecewise linear model
+    if (utilization < U_OPTIMAL) {
+        return UR_BASE + (utilization * SLOPE_1) / U_OPTIMAL;
+    } else {
+        return UR_BASE + SLOPE_1 + 
+            ((utilization - U_OPTIMAL) * SLOPE_2) / (1 - U_OPTIMAL);
+    }
+}
+```
+
+| Parameter | Description |
+|-----------|-------------|
+| **U_OPTIMAL** | Target utilization (e.g., 80%) |
+| **SLOPE_1** | Rate of increase below optimal |
+| **SLOPE_2** | Rate of increase above optimal |
+
+### Stable rates
+
+- Fixed initially, but can be rebalanced
+- Lower volatility for borrowers
+- Higher than variable in normal conditions
+
+---
+
+## Liquidation
+
+When health factor drops below 1.0, anyone can liquidate:
+
+```solidity
+function liquidationCall(
+    address collateralAsset,
+    address borrowAsset,
+    address user,
+    uint256 debtToCover,
+    bool receiveAToken
+) external {
+    // Position is unhealthy
+    require(getUserAccountData(user).healthFactor < HEALTH_FACTOR_LIQUIDATION_THRESHOLD);
+    
+    // Liquidator pays off debt, receives collateral at discount
+    uint256 collateralReceived = _liquidationCall(
+        collateralAsset,
+        borrowAsset,
+        user,
+        debtToCover,
+        receiveAToken
+    );
+}
+```
+
+**Liquidation bonus** — liquidators receive assets at a discount (typically 5-10%).
+
+---
+
+## Major lending protocols
+
+| Protocol | Chain | TVL | Collateral |
+|----------|-------|-----|------------|
+| **Aave** | Multi-chain | ~$10B | ETH, BTC, stablecoins |
+| **Compound** | Ethereum | ~$3B | ETH, USDC, etc. |
+| **MakerDAO** | Ethereum | ~$5B | ETH (生成 DAI) |
+| **Euler** | Ethereum | ~$500M | Multi-collateral |
+| **Solend** | Solana | ~$200M | SOL, BTC, USDH |
+
+---
+
+## Flash loans
+
+Flash loans allow borrowing without collateral — if you don't return it in the same transaction, the whole tx reverts:
+
+```solidity
+function executeOperation(
+    address[] calldata assets,
+    uint256[] calldata amounts,
+    uint256[] calldata premiums,
+    address initiator,
+    bytes calldata params
+) external override {
+    // Arbitrage, liquidations, etc.
+    // Must return borrowed + interest before tx ends
+}
+
+uint256 amountToRepay = amount + (amount * 9 / 10000); // ~0.09% fee
+IERC20(asset).approve(address(POOL), amountToRepay);
+```
+
+**Use cases:** Arbitrage, collateral swap, self-liquidation

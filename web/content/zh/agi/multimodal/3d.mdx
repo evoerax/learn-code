@@ -1,0 +1,46 @@
+---
+title: 3D 表示
+description: '3D 表示学习方法概述'
+---
+
+# 3D 表示
+
+学习三维世界的表示。
+
+---
+
+## 表示类型
+
+| 类型 | 特点 | 示例 |
+|------|------|------|
+| 显式网格 | 精确但大 | OBJ, PLY |
+| 体素 | 结构化 | 3D CNN |
+| 点云 | 稀疏 | PointNet |
+| NeRF | 连续可微 | 神经辐射场 |
+| 高斯 | 渲染快 | 3D Gaussian |
+
+---
+
+## 应用
+
+```python
+# 3D 重建
+scene = reconstruct_3d(images)
+
+# 3D 生成
+mesh = generate_3d(text_prompt)
+
+# 3D 理解
+features = encode_3d(point_cloud)
+```
+
+---
+
+## 挑战
+
+| 问题 | 说明 |
+|------|------|
+| 遮挡 | 部分可见 |
+| 尺度 | 多尺度物体 |
+| 纹理 | 外观变化 |
+| 计算 | 内存占用大 |

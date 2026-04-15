@@ -8,4 +8,5 @@ export default {
   'multi-lang-balanced-tree': { title: 'AVL 树与 Token 对比' },
   'cs-resources': { title: 'CS 学习资源' },
   'ai-resources': { title: 'AI 学习资源' },
+  'memory-leaks-go-python': { title: '内存泄漏（Go 与 Python）' },
 }

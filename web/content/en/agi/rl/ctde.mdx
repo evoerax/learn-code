@@ -1,0 +1,50 @@
+---
+title: CTDE MAPPO QMIX
+description: 'Centralized training with decentralized execution'
+---
+
+# CTDE, MAPPO, QMIX
+
+Centralized Training, Decentralized Execution frameworks.
+
+---
+
+## QMIX (Value Decomposition)
+
+```python
+class QMIX(nn.Module):
+    def __init__(self, state_dim, num_agents, action_dim):
+        # Agent networks (decentralized)
+        self.agents = [Agent(state_dim, action_dim) for _ in range(num_agents)]
+        
+        # Mixing network (centralized)
+        self.mixer = MixingNetwork(num_agents, state_dim)
+    
+    def forward(self, states, agent_qs):
+        """
+        agent_qs: [Q1, Q2, ..., Qn] - one per agent
+        Returns: Q_total satisfying IGM
+        """
+        return self.mixer(agent_qs, states)
+```
+
+---
+
+## MAPPO
+
+```python
+class MAPPO:
+    """
+    Multi-Agent PPO
+    - Centralized critic during training
+    - Decentralized actors during execution
+    """
+    def update(self, batch):
+        for agent_id in range(num_agents):
+            # Centralized value for this agent
+            V = self.critics[agent_id](batch.state, agent_id)
+            
+            # PPO update for agent
+            advantages = batch.rewards + gamma * V_next - V
+            loss = ppo_loss(self.actors[agent_id], advantages)
+```

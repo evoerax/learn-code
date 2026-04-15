@@ -1,0 +1,59 @@
+---
+title: SD3 与 FLUX
+description: '现代扩散架构'
+---
+
+# SD3 与 FLUX
+
+最新一代扩散模型。
+
+---
+
+## SD3 (Stable Diffusion 3)
+
+```python
+class SD3(nn.Module):
+    def __init__(self):
+        # MMDiT: 多模态 DiT
+        self.text_encoder = T5()
+        self.image_encoder = CLIP()
+        self.mmdavit = MMDiT()  # 共享注意力
+    
+    def forward(self, x_t, prompt_embeds, timestep):
+        # 文本和图像联合注意
+        text_emb, img_emb = self.encode(prompt_embeds)
+        return self.mmdavit(x_t, text_emb, img_emb, timestep)
+```
+
+---
+
+## 特点
+
+| 特性 | SDXL | SD3 |
+|------|------|-----|
+| 架构 | UNet | MMDiT |
+| 文本编码 | CLIP | T5 + CLIP |
+| 参数 | 6.6B | 8B |
+| 文字渲染 | 差 | 显著提升 |
+
+---
+
+## FLUX
+
+```python
+class Flux(nn.Module):
+    def __init__(self):
+        # MMDiT 变体
+        self.t5 = T5-xxl
+        self.clip = CLIP-L
+        self.denoiser = DiT()
+```
+
+---
+
+## FLUX 技术
+
+- 流匹配替代扩散
+- 60 亿参数
+- 专家噪声预测器
+- 双耳文字渲染能力

@@ -1,0 +1,76 @@
+---
+title: FCN 与 SAM
+description: '全卷积网络与分割任意物体'
+---
+
+# FCN 与 SAM
+
+语义/实例分割网络。
+
+---
+
+## FCN
+
+```python
+class FCN(nn.Module):
+    def __init__(self, num_classes):
+        super().__init__()
+        self.encoder = VGG16()
+        self.decoder = nn.ConvTranspose2d(512, num_classes, 64, stride=32)
+    
+    def forward(self, x):
+        feat = self.encoder(x)
+        out = self.decoder(feat)
+        return out
+```
+
+---
+
+## 语义分割流程
+
+```
+输入图像 → 编码器 → 特征图 → 解码器 → 像素级分类 → 分割掩码
+```
+
+---
+
+## SAM (Segment Anything Model)
+
+```python
+class SAM(nn.Module):
+    def __init__(self):
+        self.image_encoder = ViT()
+        self.prompt_encoder = PromptEncoder()
+        self.mask_decoder = MaskDecoder()
+    
+    def forward(self, image, prompts):
+        # 图像编码
+        img_emb = self.image_encoder(image)
+        
+        # 提示编码
+        prompt_emb = self.prompt_encoder(prompts)
+        
+        # 解码生成掩码
+        masks = self.mask_decoder(img_emb, prompt_emb)
+        return masks
+```
+
+---
+
+## 提示类型
+
+| 提示 | 说明 |
+|------|------|
+| 点 | 单点 |
+| 框 | 边界框 |
+| 掩码 | 上一掩码 |
+| 文本 | 文本描述 |
+
+---
+
+## 应用
+
+- 自动驾驶
+- 医学影像
+- 图像编辑
+- AR/VR

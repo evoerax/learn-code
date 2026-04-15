@@ -1,0 +1,63 @@
+---
+title: SentencePiece
+description: 'Unigram tokenization with subword regularization'
+---
+
+# SentencePiece
+
+SentencePiece (Kudo & Richardson, 2018) is an unsupervised text tokenizer used by many LLMs.
+
+---
+
+## Key Features
+
+| Feature | Benefit |
+|---------|---------|
+| **Language agnostic** | Works on raw text without tokenization |
+| **Subword regularization** | Enables multiple segmentations during training |
+| **Byte-level BPE** | Handles any Unicode character |
+| **Custom vocab** | Train on domain-specific data |
+
+---
+
+## Unigram Language Model
+
+SentencePiece uses the Unigram model, which assigns probability to each subword:
+
+```python
+def train_sentencepiece(corpus, vocab_size=32000):
+    # Start with all possible subwords
+    tokens = generate_initial_subwords(corpus)
+    
+    # EM algorithm to optimize token probabilities
+    for _ in range(10):
+        # E-step: compute subword counts
+        for sentence in corpus:
+            segmentations = viterbi_segment(sentence, tokens)
+            for seg in segmentations:
+                for token in seg:
+                    token_counts[token] += 1
+        
+        # M-step: update probabilities
+        total = sum(token_counts.values())
+        for token in tokens:
+            tokens[token].prob = token_counts[token] / total
+    
+    # Prune to vocab_size
+    while len(tokens) > vocab_size:
+        # Remove least likely token, merge in segmentation
+        tokens = prune_and_remerge(tokens)
+    
+    return tokens
+```
+
+---
+
+## vs BPE
+
+| Aspect | BPE | SentencePiece |
+|--------|-----|---------------|
+| **Segmentation** | Deterministic | Multiple hypotheses |
+| **Regularization** | No | Yes (subword regularization) |
+| **Unicode** | UTF-8 required | Byte-level |
+| **Used by** | GPT-2, GPT-4 | Llama, T5, mT5 |

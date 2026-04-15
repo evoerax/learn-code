@@ -1,0 +1,92 @@
+---
+title: Wallets & Identity
+description: 'Private keys, seed phrases, EOAs, and smart contract wallets'
+---
+
+# Wallets & Identity
+
+In Web3, a wallet is not a container of tokens — it is a **cryptographic keypair** that proves ownership of assets on the blockchain. Understanding wallets is essential for understanding ownership, security, and identity in Web3.
+
+---
+
+## Types of wallets
+
+### Externally Owned Accounts (EOAs)
+
+The standard blockchain account controlled by a private key.
+
+- Created by generating a random private key
+- Used to send transactions, interact with smart contracts
+- **Risk:** If private key is lost, account is permanently inaccessible
+
+### Smart Contract Wallets
+
+Wallets implemented as smart contracts, providing additional features:
+
+- **Multi-signature (multisig)** — requires multiple keys to authorize
+- **Social recovery** —找回 access through trusted guardians
+- **Transaction batching** — multiple operations in one transaction
+- **Spend limits & time locks** — additional security layers
+
+**Examples:** Gnosis Safe, Argent, Safe (formerly SafeMoon)
+
+---
+
+## Seed phrases (Mnemonic phrases)
+
+A seed phrase is a human-readable representation of a private key, generated from a standardized word list (BIP-39 — typically 12 or 24 words).
+
+```
+Example 12-word:  abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about
+```
+
+**Critical security notes:**
+- The seed phrase IS the private key — whoever has it controls the wallet
+- Store offline (paper, metal) — never digitally, never in cloud
+- Never share with anyone, including "support" personnel
+- Loss = permanent loss of funds
+- Unauthorized access = complete drain of assets
+
+---
+
+## Hierarchical Deterministic (HD) wallets
+
+HD wallets derive all addresses from a single seed phrase, enabling:
+
+- **One backup** — seed phrase restores all addresses
+- **Multiple accounts** — generate unlimited addresses from one seed
+- **Auditing** — known derivation paths allow recovery even if wallet app disappears
+
+**Derivation path example:** `m/44'/60'/0'/0/0`
+- Purpose 44' — BIP-44 standard
+- Coin 60' — Ethereum
+- Account 0 — First account
+- Change 0 — External (receiving) addresses
+- Index 0 — First address
+
+---
+
+## Wallet connectivity
+
+DApps (decentralized applications) connect to wallets via standard protocols:
+
+| Standard | Description |
+|----------|-------------|
+| **EIP-1193** | Standard for Ethereum wallet-provider communication |
+| **EIP-6963** | Multi Injected Provider Discovery (announces multiple wallets) |
+| **WalletConnect** | Connect mobile wallets to desktop DApps via QR |
+| **Web3Modal** | Unified connection UI across multiple wallets |
+
+---
+
+## Self-custody vs Custodial
+
+| Aspect | Self-custody | Custodial (Exchange) |
+|--------|--------------|---------------------|
+| Private key | User controls | Exchange controls |
+| Recovery | User's responsibility | Exchange handles |
+| Security | User's risk | Exchange security |
+| Access | Only with key | Email/password |
+| Regulation | Minimal | Heavy |
+
+**Rule of thumb:** Not your keys, not your coins.

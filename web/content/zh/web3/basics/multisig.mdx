@@ -1,0 +1,111 @@
+---
+title: 多签名钱包
+description: '多签钱包如何工作以及为什么对 DAO 国库至关重要'
+---
+
+# 多签名钱包
+
+多签名（multi-sig）钱包需要多个私钥来授权交易。它们对 DAO 国库、机构托管、以及任何不应由单一人完全控制的场景至关重要。
+
+---
+
+## 工作原理
+
+### M-of-N 配置
+
+```
+3-of-5 钱包：
+├── 需要任意 3 个签名者
+├── 共有 5 个私钥
+└── 10 种可能组合 (C(5,3) = 10)
+
+4-of-7 钱包：
+├── 需要任意 4 个签名者
+├── 35 种可能组合 (C(7,4) = 35)
+└── 更高安全性，更多协调
+```
+
+---
+
+## Gnosis Safe 合约架构
+
+```solidity
+contract GnosisSafe {
+    uint256 public threshold;
+    address[] public owners;
+    uint256 public nonce;
+    
+    function execTransaction(
+        address to,
+        uint256 value,
+        bytes memory data,
+        Enum.Operation operation,
+        bytes memory signatures
+    ) public returns (bool success) {
+        bytes32 txHash = getTransactionHash(to, value, data, operation, nonce);
+        
+        checkSignatures(txHash, signatures);
+        nonce++;
+    }
+}
+```
+
+---
+
+## 使用场景
+
+### DAO 国库
+
+```
+Uniswap DAO：
+├── 7-of-9 多签 (Gnosis Safe)
+├── 签名者：社区选举产生
+├── 控制：~30 亿美元的代币
+└── 行动：资助、投资、紧急情况
+```
+
+### 机构托管
+
+```
+家族办公室：
+├── 3-of-5 多签
+├── 密钥分布：
+│   ├── 1：主要（银行保险箱）
+│   ├── 2：次要（律师）
+│   └── 3：信任的家庭成员
+└── 大额交易 48 小时时间锁
+```
+
+---
+
+## 时间锁保护
+
+许多多签包含时间延迟以增加安全性：
+
+```solidity
+contract TimelockedMultiSig {
+    uint256 public constant DELAY = 2 days;
+    
+    struct PendingTransaction {
+        uint256 eta;
+        address target;
+        uint256 value;
+    }
+    
+    function queue(address target, uint256 value) public returns (bytes32) {
+        // 交易进入队列，需要等待 DELAY 才能执行
+    }
+}
+```
+
+---
+
+## 多签 vs 智能合约钱包
+
+| 特性 | 多签 | 智能合约钱包 |
+|------|------|--------------|
+| **安全模型** | N-of-M 密钥 | 代码逻辑 + 监护人 |
+| **社交恢复** | 否 | 是 |
+| **灵活性** | 固定阈值 | 可编程规则 |
+| **Gas 成本** | 较高 | 较低 |
+| **示例** | Gnosis Safe | Argent, Safe (ERC-4337) |

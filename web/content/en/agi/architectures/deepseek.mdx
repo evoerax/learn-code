@@ -1,0 +1,45 @@
+---
+title: DeepSeek Series
+description: "DeepSeek's efficient and open models"
+---
+
+# DeepSeek Series
+
+DeepSeek's series of efficient, open-source models with innovations.
+
+---
+
+## Evolution
+
+| Model | Year | Innovation |
+|-------|------|-----------|
+| **DeepSeek 1** | 2024 | 67B, MoE architecture |
+| **DeepSeek LLM** | 2024 | 7B-67B, full training |
+| **DeepSeek 2** | 2024 | 236B, massive MoE |
+| **DeepSeek Coder** | 2024 | Code-specialized |
+| **DeepSeek Math** | 2024 | Math-specialized |
+| **DeepSeek 3** | 2025 | Multi-head latent attention |
+
+---
+
+## Key Innovations
+
+| Innovation | Description |
+|------------|-------------|
+| **Multi-head Latent Attention** | Compresses KV cache |
+| **MLA** | Reduces memory 5x |
+| **DeepSeekMoE** | Fine-grained expert splitting |
+| **GRPO** | Alternative to PPO |
+
+---
+
+## DeepSeek Coder
+
+```python
+# Specialized for code
+config = {
+    "vocab_size": 100352,  # Optimized for code
+    "context_length": 128K,
+    "specialized_tokens": True,  # Code tokens
+}
+```

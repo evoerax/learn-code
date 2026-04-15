@@ -1,0 +1,103 @@
+---
+title: Tool Calling and MCP
+description: 'Function calling protocols for LLMs'
+---
+
+# Tool Calling & MCP
+
+Tool calling enables LLMs to use external functions and services.
+
+---
+
+## Function Calling
+
+```python
+# OpenAI-style function calling
+messages = [
+    {"role": "user", "content": "What's the weather in Tokyo?"}
+]
+
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "City name"
+                    },
+                    "unit": {
+                        "type": "string", 
+                        "enum": ["celsius", "fahrenheit"]
+                    }
+                }
+            }
+        }
+    }
+]
+
+# Model returns:
+# {"name": "get_weather", "arguments": {"location": "Tokyo", "unit": "celsius"}}
+```
+
+---
+
+## MCP Model Context Protocol
+
+MCP (Anthropic) is a standard protocol for tool discovery and execution:
+
+```python
+class MCPClient:
+    def __init__(self, server_url):
+        self.server_url = server_url
+    
+    async def list_tools(self):
+        # Discover available tools
+        response = await self.http_get(f"{self.server_url}/tools")
+        return response["tools"]
+    
+    async def call_tool(self, tool_name, arguments):
+        # Execute tool
+        response = await self.http_post(
+            f"{self.server_url}/call",
+            {"tool": tool_name, "args": arguments}
+        )
+        return response["result"]
+    
+    async def chat(self, messages):
+        response = await self.openai.chat.completions.create(
+            messages=messages,
+            tools=await self.list_tools()
+        )
+        
+        if response.tool_calls:
+            for call in response.tool_calls:
+                result = await self.call_tool(
+                    call.function.name,
+                    call.function.arguments
+                )
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": call.id,
+                    "content": str(result)
+                })
+        
+        # Continue with result
+        return self.chat(messages)
+```
+
+---
+
+## Common Tools
+
+| Tool | Purpose |
+|------|---------|
+| **Web search** | Real-time information |
+| **Calculator** | Math operations |
+| **Code execution** | Run Python/JS |
+| **API calls** | External services |
+| **File system** | Read/write files |
+| **Database** | Query data |

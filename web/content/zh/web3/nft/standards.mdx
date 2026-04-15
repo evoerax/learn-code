@@ -1,0 +1,78 @@
+---
+title: NFT 代币标准
+description: 'ERC-721, ERC-1155, ERC-4907 及数字所有权标准演进'
+---
+
+# NFT 代币标准
+
+代币标准定义了在 Ethereum 和 EVM 兼容链上的 NFT 接口和行为。
+
+---
+
+## ERC-721 — 原始 NFT 标准
+
+2017 年 CryptoKitties 团队创建的首个标准：
+
+```solidity
+interface IERC721 {
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    
+    function balanceOf(address owner) external view returns (uint256);
+    function ownerOf(uint256 tokenId) external view returns (address);
+    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+}
+```
+
+---
+
+## ERC-1155 — 多代币标准
+
+单一合约可管理多种代币类型（可替代和不可替代）：
+
+```solidity
+interface IERC1155 {
+    function balanceOf(address account, uint256 id) external view returns (uint256);
+    function safeTransferFrom(address from, address to, uint256 id, uint256 value, bytes calldata data) external;
+}
+```
+
+### 优势
+
+| 方面 | ERC-721 | ERC-1155 |
+|------|---------|----------|
+| **Gas 效率** | 较高 | 铸造降低约 50% |
+| **用例** | 1/1 艺术, 收藏品 | 游戏物品, 可替代资产 |
+
+---
+
+## ERC-4907 — 租赁 NFT 标准
+
+添加有时间限制的使用权而不转移所有权：
+
+```solidity
+interface IERC4907 {
+    struct UserInfo {
+        address user;
+        uint64 expires;
+    }
+    function setUser(uint256 tokenId, address user, uint64 expires) external payable;
+}
+```
+
+---
+
+## 元数据
+
+NFT 元数据通常存储在链下（IPFS/Arweave）：
+
+```json
+{
+  "name": "Bored Ape #1234",
+  "description": "The Bored Ape Yacht Club...",
+  "image": "ipfs://QmCpz1c5xNp8...",
+  "attributes": [
+    { "trait_type": "Background", "value": "Blue" }
+  ]
+}
+```

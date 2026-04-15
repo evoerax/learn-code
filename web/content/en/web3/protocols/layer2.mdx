@@ -1,0 +1,134 @@
+---
+title: Layer 2 Scaling
+description: 'Rollups, validity proofs, and scaling Ethereum'
+---
+
+# Layer 2 Scaling
+
+Layer 2 (L2) solutions are protocols built on top of Layer 1 blockchains that inherit security while providing higher throughput and lower costs. Ethereum's rollup-centric roadmap makes L2s the primary scaling strategy.
+
+---
+
+## Why Layer 2?
+
+| Metric | Ethereum L1 | Typical L2 |
+|--------|-------------|------------|
+| **TPS** | ~15-30 | ~1,000-10,000 |
+| **Transaction fee** | $1-100 | $0.01-0.10 |
+| **Finality** | ~12 min | Minutes (trustless) |
+| **Security** | Full security | Inherited from L1 |
+
+---
+
+## Types of rollups
+
+### Optimistic rollups
+
+Assume transactions are valid by default, allow fraud proofs:
+
+```solidity
+// Simplified optimistic rollup contract
+contract Rollup {
+    uint256 public constant CHALLENGE_PERIOD = 7 days;
+    
+    struct Batch {
+        bytes32 stateRoot;
+        uint256 timestamp;
+        address sequencer;
+        bytes32 signature;
+    }
+    
+    mapping(bytes32 => Batch) public batches;
+    mapping(bytes32 => bool) public disputed;
+    
+    function submitBatch(bytes32 stateRoot, bytes32 signature) external {
+        batches[stateRoot] = Batch({
+            stateRoot: stateRoot,
+            timestamp: block.timestamp,
+            sequencer: msg.sender,
+            signature: signature
+        });
+    }
+    
+    function challenge(bytes32 stateRoot) external {
+        require(block.timestamp < batches[stateRoot].timestamp + CHALLENGE_PERIOD);
+        disputed[stateRoot] = true;
+    }
+    
+    function finalize(bytes32 stateRoot) external {
+        require(!disputed[stateRoot], "disputed");
+        require(block.timestamp >= batches[stateRoot].timestamp + CHALLENGE_PERIOD);
+        // Apply state root
+    }
+}
+```
+
+| Feature | Optimistic | ZK |
+|---------|------------|-----|
+| **Proof type** | Fraud proof (if challenged) | Validity proof (always) |
+| **Finality** | 7 days (challenge period) | Minutes |
+| **EVM compatibility** | Easier | Harder (ZK-EVM) |
+| **Gas cost** | Lower (no proof) | Higher (proof generation) |
+
+---
+
+## Major L2s
+
+| Rollup | Type | TVL | Chain |
+|--------|------|-----|-------|
+| **Arbitrum One** | Optimistic | ~$3B | Ethereum |
+| **Optimism** | Optimistic | ~$2B | Ethereum |
+| **Base** | Optimistic | ~$2B | Ethereum |
+| **ZKsync Era** | ZK | ~$1B | Ethereum |
+| **StarkNet** | ZK | ~$500M | Ethereum |
+| **Polygon zkEVM** | ZK | ~$300M | Ethereum |
+
+---
+
+## ZK-EVM types
+
+| Type | EVM compatibility | Proof time | Examples |
+|------|-------------------|------------|----------|
+| **Type 1** | Full Ethereum equivalent | Very slow | ZKsync Era (的一部分) |
+| **Type 2** | Full EVM | Slow | Scroll, Polygon's zkEVM |
+| **Type 3** | Almost full EVM | Medium | ZKsync Era |
+| **Type 4** | Language-level | Fast | StarkNet (Cairo) |
+
+---
+
+## EIP-4844: Proto-danksharding
+
+Implemented in March 2024, EIP-4844 adds "blob" data to blocks:
+
+```solidity
+// Blob transaction (4844)
+struct BlobTransaction {
+    uint256 maxFeePerBlobGas;
+    bytes32[] blobVersionedHashes;
+    uint256 maxFeePerGas;
+    uint256 maxPriorityFeePerGas;
+    // ... other fields
+}
+
+// Blob space is ~10x cheaper than calldata
+// L2s post data to blobs instead of calldata
+```
+
+### Impact
+
+| Metric | Before 4844 | After 4844 |
+|--------|--------------|------------|
+| **L2 fees** | ~$0.10-1 | ~$0.01-0.05 |
+| **Blob space** | 0 | 3 per block (expandable) |
+| **Data availability** | On-chain | Blob (cheaper) |
+
+---
+
+## Cross-L2 communication
+
+| Protocol | Type | Purpose |
+|----------|------|---------|
+| **LayerZero** | Omnichain | Message passing |
+| ** Wormhole** | Bridge | Cross-chain assets |
+| **Hyperlane** | Modular | Custom security models |
+| **CCIP** | Chainlink | Oracle-based |

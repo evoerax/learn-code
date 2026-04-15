@@ -1,0 +1,47 @@
+---
+title: CQL and IQL
+description: 'Conservative and Implicit Q-Learning'
+---
+
+# CQL and IQL
+
+Offline RL algorithms for learning from fixed datasets.
+
+---
+
+## CQL (Conservative Q-Learning)
+
+```python
+def cql_loss(q_values, actions, target_q, alpha=5.0):
+    # Standard RL loss
+    data_q = q_values.gather(1, actions.unsqueeze(1)).mean()
+    
+    # Conservative regularizer
+    # Push down Q-values for out-of-distribution actions
+    random_q = q_values.mean()
+    
+    # CQL(H) - conservative penalty
+    loss = -data_q + alpha * (random_q - data_q)
+    
+    return loss
+```
+
+---
+
+## IQL (Implicit Q-Learning)
+
+```python
+def iql_expectile(rewards, values, tau=0.7):
+    """
+    Asymmetric MSE for expectile regression
+    """
+    advantage = rewards - values.detach()
+    
+    weight = torch.where(
+        advantage >= 0,
+        tau * advantage ** 2,
+        (1 - tau) * advantage ** 2
+    )
+    
+    return weight.mean()
+```

@@ -1,0 +1,71 @@
+---
+title: 幻觉缓解
+description: 'Hallucination Mitigation'
+---
+
+# 幻觉缓解
+
+减少 LLM 生成虚假内容。
+
+---
+
+## 幻觉类型
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| 事实性 | 错误的事实 | "2024 年 Obama 是总统" |
+| 语义 | 逻辑不一致 | 自相矛盾 |
+| 配置性 | 越狱提示 | 绕过安全 |
+
+---
+
+## 缓解方法
+
+### 1. RAG 检索增强
+
+```python
+def rag_answer(query, model, retriever):
+    docs = retriever.search(query)
+    context = "\n".join([d.text for d in docs])
+    prompt = f"Based on: {context}\n\nQuestion: {query}"
+    return model.generate(prompt)
+```
+
+### 2. 自我一致性
+
+```python
+def self_consistency(prompt, model, n=5):
+    # 多次生成
+    responses = [model.generate(prompt) for _ in range(n)]
+    # 投票选择
+    return most_common(responses)
+```
+
+### 3. 置信度校准
+
+```python
+def calibrate_confidence(model, prompt):
+    tokens = model.generate_tokens(prompt)
+    confidences = [t.logprob for t in tokens]
+    # 低置信度标记
+    uncertain = [i for i, c in enumerate(confidences) if c < threshold]
+```
+
+---
+
+## 评估指标
+
+| 指标 | 说明 |
+|------|------|
+| TruthfulQA | 事实性问答 |
+| HaluEval | 幻觉检测 |
+| FACTOR | 长文本事实性 |
+
+---
+
+## 最佳实践
+
+- 使用 RAG 提供最新信息
+- 要求模型引用来源
+- 设置不确定性表达
+- Chain-of-Thought 验证

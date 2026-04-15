@@ -1,0 +1,68 @@
+---
+title: 多头注意力机制
+description: 'Multi-Head Attention 核心机制'
+---
+
+# 多头注意力机制
+
+注意力机制允许模型在处理序列时动态关注不同位置。
+
+---
+
+## Scaled Dot-Product Attention
+
+```python
+def attention(Q, K, V, mask=None):
+    d_k = Q.size(-1)
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+    
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, -1e9)
+    
+    attn_weights = F.softmax(scores, dim=-1)
+    return torch.matmul(attn_weights, V), attn_weights
+```
+
+---
+
+## Multi-Head Attention
+
+```python
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, num_heads):
+        super().__init__()
+        self.h = num_heads
+        self.d_k = d_model // num_heads
+        
+        self.W_q = nn.Linear(d_model, d_model)
+        self.W_k = nn.Linear(d_model, d_model)
+        self.W_v = nn.Linear(d_model, d_model)
+        self.W_o = nn.Linear(d_model, d_model)
+    
+    def split_heads(self, x):
+        x = x.view(x.size(0), -1, self.h, self.d_k)
+        return x.transpose(1, 2)
+    
+    def forward(self, query, key, value, mask=None):
+        Q = self.split_heads(self.W_q(query))
+        K = self.split_heads(self.W_k(key))
+        V = self.split_heads(self.W_v(value))
+        
+        attn, attn_weights = attention(Q, K, V, mask)
+        
+        attn = attn.transpose(1, 2).contiguous()
+        attn = attn.view(attn.size(0), -1, self.h * self.d_k)
+        
+        return self.W_o(attn), attn_weights
+```
+
+---
+
+## 复杂度
+
+| 阶段 | 复杂度 |
+|------|--------|
+| 单头 | O(d^2) |
+| 多头 | O(d^2 * h) |
+
+通常 d=512 或 768，h=8 或 12。

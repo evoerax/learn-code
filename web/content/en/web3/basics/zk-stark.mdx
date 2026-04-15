@@ -1,0 +1,153 @@
+---
+title: ZK-STARKs
+description: 'Scalable Transparent Arguments of Knowledge — quantum-resistant and trustless'
+---
+
+# ZK-STARKs
+
+ZK-STARKs (Zero-Knowledge Scalable Transparent Arguments of Knowledge) are a newer zero-knowledge proof system that requires no trusted setup and is quantum-resistant.
+
+---
+
+## Key differences from SNARKs
+
+| Feature | zkSNARK | zkSTARK |
+|---------|---------|---------|
+| **Trusted setup** | Required (ceremony) | **None** |
+| **Quantum resistance** | No (uses elliptic curves) | **Yes** (uses hash functions) |
+| **Proof size** | Small (~200 bytes) | Large (~100KB) |
+| **Verification time** | Fast | Slower |
+| **Proof generation** | Faster | Slower |
+
+---
+
+## How STARKs work
+
+### Low-degree testing (LDL)
+
+STARKs use error-correcting codes:
+
+```text
+1. Encode computation trace as polynomial
+2. Create low-degree extension (LDE)
+3. Query random points
+4. Verify polynomial degree bound
+```
+
+### Merkle tree commitments
+
+```rust
+struct STARKProof {
+    // Polynomial commitments (Merkle roots)
+    commitment: MerkleRoot,
+    
+    // Query responses
+    query_responses: Vec<FieldElement>,
+    
+    // FRI proof (for low-degree verification)
+    fri_proof: FRIMerkleProof,
+    
+    // Random seed (for queries)
+    seed: [u8; 32],
+}
+```
+
+### Fast Reed-Solomon IOP (FRI)
+
+For proving polynomial low degree:
+
+```text
+Query random point r
+Request evaluation at r, r*ω, r*ω²...
+
+Use FRI to prove all evaluations lie on low-degree polynomial
+```
+
+---
+
+## StarkEx (StarkWare)
+
+StarkWare's production STARK implementation powers:
+
+| Protocol | Volume (peak) |
+|----------|----------------|
+| **dYdX** | $100B+ |
+| **Immutable** | $50B+ |
+| **Sorare** | $1B+ |
+| ** rhino.fi** | $5B+ |
+
+### Cairo language
+
+StarkNet uses Cairo (CPU Algebraic Intermediate Representation):
+
+```cairo
+// Cairo program for zkProver
+%builtins output pedersen range_check
+
+func main(output: felt*) {
+    alloc_locals;
+    
+    // Verify: a * b = c
+    let a = 3;
+    let b = 4;
+    let c = 12;
+    
+    assert a * b = c;
+    
+    // Return proof of computation
+    assert output[0] = a;
+    assert output[1] = b;
+    assert output[2] = c;
+    
+    return ();
+}
+```
+
+---
+
+## StarkNet architecture
+
+```mermaid
+graph TB
+    subgraph "StarkNet Sequencer"
+        T1[User transactions]
+        T2[Cairo execution]
+        T3[Generate STARK proof]
+    end
+    
+    subgraph "Ethereum Mainnet"
+        V1[StarkNet Verifier]
+        V2[StarkNet Core}
+    end
+    
+    T1 --> T2 --> T3 --> V1
+    T2 --> V2
+```
+
+### SHARP (Shared Prover)
+
+Multiple programs share proof generation:
+
+```
+┌─────────────┐
+│  dYdX       │────┐
+└─────────────┘    │
+┌─────────────┐    │    ┌─────────────┐
+│  Immutable  │────┼───▶│   SHARP     │──▶ Ethereum
+└─────────────┘    │    └─────────────┘
+┌─────────────┐    │
+│  Sorare     │────┘
+└─────────────┘
+```
+
+---
+
+## Comparison: SNARK vs STARK ecosystems
+
+| Aspect | SNARK (Groth16/PLONK) | STARK |
+|--------|------------------------|-------|
+| **Production users** | zkSync, Polygon, Scroll, Aztec | StarkNet, StarkEx |
+| **Language** | Solidity, Rust | Cairo |
+| **EVM compatibility** | Easier (zkEVM) | Harder (Warp, Stylus) |
+| **Development maturity** | More mature | Growing |
+| **Cost (L1 verification)** | ~300K gas | ~5M gas |

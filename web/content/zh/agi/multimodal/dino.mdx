@@ -1,0 +1,57 @@
+---
+title: DINO 自蒸馏
+description: '无标签自监督学习'
+---
+
+# DINO 自蒸馏
+
+通过动量教师实现无监督 ViT。
+
+---
+
+## 架构
+
+```python
+class DINO(nn.Module):
+    def __init__(self, student, teacher):
+        self.student = student
+        self.teacher = teacher
+    
+    def forward(self, student_out, teacher_out):
+        # 学生: 标准 softmax
+        student_prob = F.softmax(student_out / T_s, dim=-1)
+        # 教师: 带 centering 的 softmax
+        teacher_prob = F.softmax((teacher_out - self.center) / T_t, dim=-1)
+        # 交叉熵蒸馏
+        loss = -torch.sum(teacher_prob * torch.log(student_prob), dim=-1)
+        return loss.mean()
+```
+
+---
+
+## 动量更新
+
+```python
+def momentum_update(self, m=0.999):
+    for ps, pt in zip(self.student.parameters(), self.teacher.parameters()):
+        pt.data = m * pt.data + (1 - m) * ps.data
+```
+
+---
+
+## 多裁剪
+
+```python
+# 2 全局 (224) + 10 局部 (96)
+# 局部裁剪只训练学生
+```
+
+---
+
+## vs MoCo
+
+| 特性 | MoCo | DINO |
+|------|------|------|
+| 教师 | 键编码器 | 学生 + centering |
+| 损失 | InfoNCE | 交叉熵 |
+| 队列 | 动态字典 | 无 |

@@ -1,0 +1,68 @@
+---
+title: DQN 及其变体
+description: 'Deep Q-Network'
+---
+
+# DQN 及其变体
+
+深度 Q 网络突破性工作。
+
+---
+
+## DQN
+
+```python
+class DQN(nn.Module):
+    def __init__(self, state_dim, action_dim):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, action_dim)
+        )
+    
+    def forward(self, x):
+        return self.net(x)
+```
+
+---
+
+## 经验回放
+
+```python
+class ReplayBuffer:
+    def __init__(self, capacity=100000):
+        self.buffer = deque(maxlen=capacity)
+    
+    def push(self, s, a, r, s_next, done):
+        self.buffer.append((s, a, r, s_next, done))
+    
+    def sample(self, batch_size):
+        return random.sample(self.buffer, batch_size)
+```
+
+---
+
+## 目标网络
+
+```python
+# 双网络减少过估计
+target_net = DQN(state_dim, action_dim)
+target_net.load_state_dict(policy_net.state_dict())
+
+# 定期同步
+target_net.load_state_dict(policy_net.state_dict())
+```
+
+---
+
+## DQN 变体
+
+| 名称 | 改进 |
+|------|------|
+| Double DQN | 减少 Q 值过估计 |
+| Dueling DQN | 分离 V 和 A |
+| Prioritized ER | 优先经验回放 |
+| NoisyNet | 探索驱动 |

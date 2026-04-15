@@ -1,0 +1,63 @@
+---
+title: ZK-STARKs
+description: '可扩展透明知识论证 — 抗量子且无需信任'
+---
+
+# ZK-STARKs
+
+ZK-STARKs（零知识可扩展透明知识论证）是一种较新的零知识证明系统，不需要信任设置且抗量子。
+
+---
+
+## 与 SNARKs 的主要区别
+
+| 特性 | zkSNARK | zkSTARK |
+|------|---------|---------|
+| **信任设置** | 需要（仪式） | **无** |
+| **抗量子** | 否（使用椭圆曲线） | **是**（使用哈希函数） |
+| **证明大小** | 小（~200 字节） | 大（~100KB） |
+| **验证时间** | 快 | 较慢 |
+
+---
+
+## STARKs 工作原理
+
+### 低次测试 (LDL)
+
+STARKs 使用纠错码：
+
+```
+1. 将计算轨迹编码为多项式
+2. 创建低次扩展 (LDE)
+3. 查询随机点
+4. 验证多项式次数界
+```
+
+---
+
+## StarkEx 应用
+
+| 协议 | 交易量（峰值） |
+|------|----------------|
+| **dYdX** | $1000 亿+ |
+| **Immutable** | $500 亿+ |
+| **Sorare** | $10 亿+ |
+
+---
+
+## Cairo 语言
+
+StarkNet 使用 Cairo：
+
+```cairo
+// Cairo 程序
+%builtins output pedersen range_check
+
+func main(output: felt*) {
+    let a = 3;
+    let b = 4;
+    let c = 12;
+    assert a * b = c;
+    return ();
+}
+```

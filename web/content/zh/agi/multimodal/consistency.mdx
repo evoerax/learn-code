@@ -1,0 +1,63 @@
+---
+title: 一致性模型
+description: 'Consistency Models 单步生成'
+---
+
+# 一致性模型
+
+蒸馏扩散模型为单步生成。
+
+---
+
+## 核心思想
+
+```python
+class ConsistencyModel(nn.Module):
+    def __init__(self, noise_pred_net):
+        self.net = noise_pred_net
+    
+    def forward(self, x_t, t):
+        # 预测 x_0
+        x_0_pred = self.net(x_t, t)
+        return x_0_pred
+    
+    def consistency_loss(self, x_t, x_prev, teacher_model):
+        # 师生一致性
+        with torch.no_grad():
+            target = teacher_model(x_prev, teacher_t)
+        student = self(x_t, t)
+        return F.mse_loss(student, target)
+```
+
+---
+
+## 蒸馏
+
+```
+扩散模型 (多步) → 一致性模型 (单步)
+```
+
+---
+
+## 采样
+
+```python
+def sample(cm, noise, num_steps=1):
+    x = noise
+    for i in range(num_steps):
+        x = cm(x, torch.tensor([epsilon]))  # epsilon 是起始噪声水平
+    return x
+```
+
+---
+
+## 效果
+
+| 模型 | 步数 | FID |
+|------|------|-----|
+| DDPM | 1000 | 3.2 |
+| Consistency | 1 | 4.5 |
+| Consistency | 2 | 3.5 |
+| Consistency | 4 | 2.9 |
+
+两步即可接近 DDPM。

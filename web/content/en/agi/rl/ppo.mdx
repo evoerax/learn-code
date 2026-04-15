@@ -1,0 +1,75 @@
+---
+title: PPO Proximal Policy Optimization
+description: 'Clipped policy updates for stable RL'
+---
+
+# PPO
+
+PPO (Schulman et al., 2017) constrains policy updates to prevent destructively large changes.
+
+---
+
+## Clipped Surrogate Objective
+
+```python
+def ppo_loss(old_log_probs, new_log_probs, advantages, clip_eps=0.2):
+    """
+    PPO's key innovation: clip the probability ratio
+    """
+    ratio = torch.exp(new_log_probs - old_log_probs)
+    
+    # Clipped objective
+    clipped = torch.clamp(ratio, 1 - clip_eps, 1 + clip_eps)
+    
+    # Take minimum to prevent large updates
+    loss = -torch.min(
+        ratio * advantages,
+        clipped * advantages
+    )
+    
+    return loss.mean()
+```
+
+---
+
+## Complete Algorithm
+
+```python
+def ppo(env, policy, value_net, num_steps=2048, ppo_epochs=10, 
+        clip_eps=0.2, gamma=0.99, lambda_=0.95):
+    
+    batch = collect_trajectories(env, policy, num_steps)
+    
+    for _ in range(ppo_epochs):
+        # Compute advantages (GAE)
+        advantages = compute_gae(batch.rewards, batch.values, 
+                                batch.next_values, gamma, lambda_)
+        
+        # PPO update
+        for _ in range(num_steps // mini_batch_size):
+            indices = torch.randint(0, num_steps, (mini_batch_size,))
+            
+            new_log_probs = policy.get_log_probs(batch.states[indices], 
+                                                batch.actions[indices])
+            
+            loss = ppo_loss(batch.old_log_probs[indices],
+                          new_log_probs,
+                          advantages[indices])
+            
+            optimizer.step()
+```
+
+---
+
+## Why It Works
+
+```
+Without clipping:      With clipping:
+                      
+L(θ) = r(θ) * A       L(θ) = min(r(θ), clip(r(θ), 1-ε, 1+ε)) * A
+
+r(θ) = π_new/π_old
+
+If r(θ) becomes too large (>1+ε), gradient → 0
+This prevents destructive updates!
+```

@@ -1,0 +1,67 @@
+---
+title: LLaMA 系列
+description: 'Meta 开源 LLM'
+---
+
+# LLaMA 系列
+
+Meta 的开源 LLM 系列。
+
+---
+
+## LLaMA 1 (2023.2)
+
+| 模型 | 参数 | 位置 |
+|------|------|------|
+| LLaMA 7B | 7B | 65B |
+| LLaMA 13B | 13B | 65B |
+| LLaMA 33B | 33B | 65B |
+| LLaMA 65B | 65B | 65B |
+
+---
+
+## LLaMA 2 (2023.7)
+
+- 2T tokens 训练
+- 允许商业使用
+- Llama 2 Chat
+
+---
+
+## Llama 3 (2024.4)
+
+```python
+# 8B, 70B, 405B
+# 15T tokens 训练
+# Groq 推理优化
+# 支持 128K 上下文
+```
+
+---
+
+## 技术特点
+
+| 组件 | LLaMA 3 |
+|------|---------|
+| 架构 | Decoder-only Transformer |
+| 位置编码 | RoPE |
+| 激活 | SwiGLU |
+| 归一化 | RMSNorm |
+| 词表 | 128K |
+
+---
+
+## Llama 3.1 405B
+
+- 128K 上下文
+- 8x7B MoE
+- 训练数据 15T tokens
+
+---
+
+## 开源生态
+
+- Ollama 本地运行
+- llama.cpp 量化
+- vLLM 高效推理
+- PEFT 微调

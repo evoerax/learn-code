@@ -1,0 +1,64 @@
+---
+title: 优化器 SGD, Adam, AdamW
+description: '优化器对比'
+---
+
+# 优化器 SGD, Adam, AdamW
+
+深度学习优化器。
+
+---
+
+## SGD
+
+```python
+def sgd_update(params, grads, lr, momentum=0):
+    for p, g in zip(params, grads):
+        if momentum > 0:
+            v = momentum * p.momentum - lr * g
+            p.data += v
+        else:
+            p.data -= lr * g
+```
+
+---
+
+## Adam
+
+```python
+def adam_update(params, grads, lr, beta1=0.9, beta2=0.999, eps=1e-8):
+    for p, g in zip(params, grads):
+        # 动量
+        m = beta1 * m + (1 - beta1) * g
+        # 二阶矩
+        v = beta2 * v + (1 - beta2) * g ** 2
+        
+        # 偏差修正
+        m_hat = m / (1 - beta1 ** t)
+        v_hat = v / (1 - beta2 ** t)
+        
+        p.data -= lr * m_hat / (torch.sqrt(v_hat) + eps)
+```
+
+---
+
+## 对比
+
+| 优化器 | 收敛 | 泛化 | 速度 |
+|--------|------|------|------|
+| SGD | 慢 | 好 | 快 |
+| Adam | 快 | 差 | 中 |
+| AdamW | 快 | 改进 | 中 |
+
+---
+
+## LLaMA 使用 AdamW
+
+```python
+optimizer = torch.optim.AdamW(
+    model.parameters(),
+    lr=1e-4,
+    weight_decay=0.1,
+    betas=(0.9, 0.95)
+)
+```

@@ -1,0 +1,57 @@
+---
+title: Kernel Methods and SVM
+description: 'Dual optimization and kernel trick'
+---
+
+# Kernel Methods and SVM
+
+---
+
+## Kernel Trick
+
+```python
+# Instead of computing Φ(x) explicitly:
+K(x, z) = Φ(x) · Φ(z)
+
+# Common kernels:
+def linear_kernel(x, z):
+    return x @ z
+
+def polynomial_kernel(x, z, d=3):
+    return (x @ z) ** d
+
+def rbf_kernel(x, z, sigma=1.0):
+    return exp(-||x - z||² / (2 * sigma²))
+```
+
+---
+
+## SVM Dual Problem
+
+```python
+# Primal: min ½||w||² + C Σξᵢ
+# Dual:   max Σαᵢ - ½ΣαᵢαⱼyᵢyⱼK(xᵢ,xⱼ)
+#         s.t. 0 ≤ αᵢ ≤ C, Σαᵢyᵢ = 0
+
+def svm_dual(X, y, C=1.0):
+    n = len(X)
+    K = rbf_kernel(X, X)
+    
+    # Solve QP:
+    # max Σαᵢ - ½αᵀ(yyᵀ ⊙ K)α
+    # subject to constraints...
+    
+    return alphas
+```
+
+---
+
+## Support Vector Regression
+
+```python
+def svr_loss(predictions, targets, alphas, X, epsilon=0.1):
+    # ε-insensitive loss: only penalize errors > ε
+    errors = (predictions - targets).abs()
+    loss = torch.clamp(errors - epsilon, min=0)
+    return loss.sum()
+```

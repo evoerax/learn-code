@@ -1,0 +1,74 @@
+---
+title: CTDE 与 MAPPO/QMIX
+description: '集中式训练分布式执行'
+---
+
+# CTDE 与 MAPPO/QMIX
+
+CTDE 结合中心训练和分布式执行。
+
+---
+
+## CTDE 架构
+
+```
+训练阶段: 中心化 Critic
+         ↓
+执行阶段: 分布式 Actor
+```
+
+---
+
+## QMIX 值分解
+
+```python
+class QMIX(nn.Module):
+    def __init__(self, agents, obs_dims, n_actions):
+        # 每智能体 Q 网络
+        self.agents = nn.ModuleList([
+            QNetwork(obs_dims[i], n_actions) for i in range(n_agents)
+        ])
+        # 混合网络
+        self.mixer = MixerNetwork()
+    
+    def forward(self, obs, hidden_states):
+        # 每智能体 Q 值
+        qs = [agent(obs[i], hidden[i]) for i, agent in enumerate(self.agents)]
+        
+        # 混合为全局 Q
+        return self.mixer(qs, state)  # state 是全局状态
+```
+
+---
+
+## MAPPO
+
+```python
+class MAPPO:
+    def update(self, data):
+        # 中心化 Critic
+        advantages = compute_advantages(
+            self.critic(data.state, data.action),
+            data.reward,
+            data.done
+        )
+        
+        # 分布式 Actor
+        for _ in range(PPO_EPOCHS):
+            log_probs = self.actor(data.state, data.action)
+            ratio = torch.exp(log_probs - data.old_log_probs)
+            
+            clipped = torch.clamp(ratio, 1-eps, 1+eps)
+            loss = -torch.min(ratio, clipped) * advantages
+```
+
+---
+
+## 效果对比
+
+| 算法 | 收敛性 | 通信需求 |
+|------|--------|----------|
+| QMIX | 良好 | 无 |
+| VDN | 良好 | 无 |
+| MAPPO | 优秀 | 无 |
+| MADDPG | 中等 | 全局信息 |

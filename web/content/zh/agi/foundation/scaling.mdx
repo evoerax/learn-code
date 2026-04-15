@@ -1,0 +1,48 @@
+---
+title: Scaling Laws
+description: '模型 scaling 规律'
+---
+
+# Scaling Laws
+
+Kaplan et al. 2020 发现的 scaling 规律。
+
+---
+
+## 核心发现
+
+损失与模型大小、数据量、计算量呈幂律关系：
+
+```
+L(N) ~ N^(-0.076)    # 模型参数
+L(D) ~ D^(-0.095)    # 数据 tokens
+L(C) ~ C^(-0.050)    # 计算量
+```
+
+---
+
+## 计算最优训练
+
+Chinchilla 2022 指出：
+
+```
+optimal_tokens = 20 * parameters
+```
+
+| 模型 | 参数 | 推荐 tokens |
+|------|------|-------------|
+| GPT-3 | 175B | 3.5T |
+| Chinchilla | 70B | 1.4T |
+| LLaMA 2 | 70B | 2T |
+
+---
+
+## 样本效率
+
+| 模型 | 参数 | tokens | benchmark |
+|------|------|--------|----------|
+| GPT-3 | 175B | 300B | 基准 |
+| Chinchilla | 70B | 1.4T | 相当 |
+| LLaMA 2 | 70B | 2T | 更好 |
+
+Chinchilla 发现同等算力下，更小的模型配合更多数据效果更好。

@@ -1,0 +1,70 @@
+---
+title: KV Cache
+description: 'Accelerating autoregressive generation with cached keys and values'
+---
+
+# KV Cache
+
+KV Cache stores previously computed keys and values to avoid recomputation during autoregressive generation.
+
+---
+
+## Without KV Cache
+
+```
+Token 1: compute K₁, V₁ → attend
+Token 2: recompute K₁, V₁, K₂, V₂ → attend
+Token 3: recompute K₁, V₁, K₂, V₂, K₃, V₃ → attend
+...
+
+Complexity: O(n²) per token
+```
+
+## With KV Cache
+
+```
+Token 1: compute K₁, V₁ → cache, attend
+Token 2: compute K₂, V₂ → cache, attend with [K₁, K₂]
+Token 3: compute K₃, V₃ → cache, attend with [K₁, K₂, K₃]
+...
+
+Complexity: O(n) per token + O(n²) initial
+```
+
+---
+
+## Implementation
+
+```python
+class AttentionWithCache(nn.Module):
+    def __init__(self):
+        self.kv_cache = {}
+    
+    def forward(self, x, layer_idx, past_kv=None):
+        q = self.W_q(x)
+        k = self.W_k(x)
+        v = self.W_v(x)
+        
+        if past_kv is not None:
+            k = torch.cat([past_kv['k'], k], dim=-2)
+            v = torch.cat([past_kv['v'], v], dim=-2)
+        
+        self.kv_cache[layer_idx] = (k, v)
+        
+        # Only attend to latest for generation
+        scores = torch.matmul(q, k[..., -1:].transpose(-2, -1))
+        return torch.matmul(F.softmax(scores, dim=-1), v[..., -1:])
+```
+
+---
+
+## Memory Usage
+
+```
+KV cache per token ≈ 2 × num_layers × 2 × d_head × precision
+
+For 70B model, 4096 context, BF16:
+- KV cache ≈ 2 × 80 × 2 × 128 × 2 bytes × 4096
+- ≈ 320 MB per layer
+- ≈ 26 GB total
+```

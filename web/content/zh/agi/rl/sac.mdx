@@ -1,0 +1,63 @@
+---
+title: SAC 软演员评论家
+description: 'Soft Actor-Critic 最大熵 RL'
+---
+
+# SAC 软演员评论家
+
+最大熵强化学习。
+
+---
+
+## 最大熵目标
+
+```python
+def sac_loss(policy, Q1, Q2, alpha, states):
+    # 最大熵目标
+    probs = policy(states)
+    log_probs = torch.log(probs + 1e-8)
+    
+    #熵正则化
+    entropy = -(probs * log_probs).sum(dim=-1).mean()
+    
+    # Q 值目标
+    Q_target = torch.min(Q1(states), Q2(states))
+    
+    # 策略损失
+    loss = alpha * entropy + (probs * (Q_target - alpha * log_probs)).sum(dim=-1).mean()
+    return loss
+```
+
+---
+
+## 自动熵调节
+
+```python
+class AutoAlpha(nn.Module):
+    def __init__(self, target_entropy):
+        self.log_alpha = nn.Parameter(torch.zeros(1))
+        self.target_entropy = target_entropy
+    
+    def get_alpha(self):
+        return self.log_alpha.exp()
+    
+    def loss(self, entropy):
+        return -self.log_alpha * (entropy - self.target_entropy)
+```
+
+---
+
+## 效果
+
+| 特性 | SAC | PPO |
+|------|-----|-----|
+| 熵正则化 | 有 | 无 |
+| 探索 | 自动平衡 | epsilon |
+| 离散/连续 | 两者 | 主要连续 |
+| 稳定性 | 高 | 中 |
+
+---
+
+## 应用
+
+适合机器人控制等连续动作任务。

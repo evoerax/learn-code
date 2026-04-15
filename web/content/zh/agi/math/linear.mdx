@@ -1,0 +1,71 @@
+---
+title: 线性代数基础
+description: 'LLM 所需的线性代数'
+---
+
+# 线性代数基础
+
+LLM 核心数学工具。
+
+---
+
+## 矩阵运算
+
+```python
+import torch
+
+# 矩阵乘法
+A = torch.randn(512, 768)
+B = torch.randn(768, 1024)
+C = A @ B  # (512, 1024)
+
+# 逐元素乘法
+D = A * B  # 广播
+```
+
+---
+
+## 注意力中的矩阵运算
+
+```python
+# Q, K, V 矩阵
+Q = X @ W_q  # (B, T, d)
+K = X @ W_k  # (B, T, d)
+V = X @ W_v  # (B, T, d)
+
+# 注意力分数
+scores = Q @ K.transpose(-2, -1)  # (B, T, T)
+
+# Softmax
+attn_weights = F.softmax(scores / math.sqrt(d), dim=-1)
+
+# 输出
+output = attn_weights @ V  # (B, T, d)
+```
+
+---
+
+## 范数
+
+| 范数 | 公式 | 用途 |
+|------|------|------|
+| L1 | |x||_1 | 稀疏性 |
+| L2 | |x||_2 | 梯度正则 |
+| Frobenius | ||A||_F | 矩阵范数 |
+| 谱范数 | ||A||_2 | 矩阵范数 |
+
+---
+
+## 分解
+
+```python
+# SVD
+U, S, Vh = torch.svd(A)
+
+# 特征值
+eigenvalues, eigenvectors = torch.linalg.eig(A)
+
+# 低秩近似
+k = 64
+A_k = U[:, :k] @ torch.diag(S[:k]) @ Vh[:k, :]
+```

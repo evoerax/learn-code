@@ -1,0 +1,52 @@
+---
+title: 批归一化
+description: 'Batch Normalization'
+---
+
+# 批归一化
+
+稳定神经网络训练。
+
+---
+
+## 公式
+
+```python
+def batch_norm(x, gamma, beta, eps=1e-5):
+    # x: (B, C, H, W)
+    mean = x.mean(dim=(0, 2, 3), keepdim=True)
+    var = x.var(dim=(0, 2, 3), keepdim=True)
+    
+    x_norm = (x - mean) / torch.sqrt(var + eps)
+    return gamma * x_norm + beta
+```
+
+---
+
+## 训练 vs 推理
+
+| 阶段 | 行为 |
+|------|------|
+| 训练 | 使用 batch 统计 |
+| 推理 | 使用移动平均 |
+
+---
+
+## 问题
+
+| 问题 | 说明 | 解决方案 |
+|------|------|----------|
+| Batch 大小 | 小 batch 效果差 | LayerNorm, GroupNorm |
+| 分布偏移 | 训练/推理差异 | 足够的 warm-up |
+| RNN | 序列数据 | LayerNorm |
+
+---
+
+## 替代方案
+
+| 方法 | 适用场景 |
+|------|----------|
+| LayerNorm | NLP, RNN |
+| InstanceNorm | 风格迁移 |
+| GroupNorm | 小 batch |
+| SyncBN | 多卡训练 |

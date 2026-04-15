@@ -1,0 +1,52 @@
+---
+title: Move
+description: "Meta 开发的资源导向语言，用于 Aptos、Sui、Diem/Libra"
+---
+
+# Move
+
+Move 是 Meta 为 Diem（原 Libra）区块链开发的 Rust 风格智能合约语言。它强调**资源安全**——数字资产不能被复制或意外销毁。
+
+---
+
+## 核心创新：资源类型
+
+Move 的定义特性是**资源类型**——一种首类资产：
+
+- 只能在不同存储位置之间移动
+- 不能被复制
+- 不能隐式丢弃（必须显式销毁）
+
+```move
+module 0x1::Coin {
+    struct Coin has store {
+        value: u64
+    }
+    
+    public fun merge(coin1: Coin, coin2: Coin): Coin {
+        Coin { 
+            value: coin1.value + coin2.value 
+        }
+    }
+}
+```
+
+---
+
+## Solidity vs Move
+
+| 方面 | Solidity | Move |
+|------|----------|------|
+| **资产处理** | ERC-20 模式（余额映射） | 原生资源类型 |
+| **类型安全** | 编译器警告，运行时检查 | 线性类型系统 |
+| **存储** | 键值映射 | 全局存储配地址 |
+| **并行执行** | 顺序执行 | 更安全的并行化 |
+
+---
+
+## 生态系统
+
+| 链 | 使用 Move |
+|------|-----------|
+| **Aptos** | 原始 Diem Move |
+| **Sui** | 修改版 Move，面向对象 |

@@ -1,0 +1,89 @@
+---
+title: 3D Gaussian Splatting
+description: 'Point-based rendering with differentiable Gaussians'
+---
+
+# 3D Gaussian Splatting
+
+3D Gaussian Splatting (Kerbl et al., 2023) achieves real-time rendering using differentiable point-based rendering.
+
+---
+
+## Gaussian Representation
+
+Each point becomes an ellipsoid (covariance matrix):
+
+```python
+class Gaussian3D:
+    def __init__(self, position, covariance, color, alpha):
+        self.mean = position  # (3,)
+        self.cov = covariance  # (3, 3) positive semi-def
+        self.color = color     # (3,) RGB
+        self.alpha = alpha     # opacity
+    
+    @property
+    def matrix(self):
+        # For rendering: decompose to scale * rotation
+        scale, rotation = self.cov.eig()
+        return scale, rotation
+```
+
+---
+
+## Differentiable Rendering
+
+```python
+def gaussian_render(cameras, gaussians):
+    # Project Gaussians to 2D
+    screenspace = project(gaussians, cameras)
+    
+    # Sort by depth (painter's algorithm)
+    sorted_idx = screenspace.sort(descending=True)
+    
+    # Alpha blending
+    color = torch.zeros(3)
+    alpha = torch.zeros(1)
+    
+    for g in sorted_gaussians:
+        if alpha > 0.99: break
+        
+        contribution = g.alpha * g.color * (1 - alpha)
+        color += contribution
+        alpha += contribution * g.alpha
+    
+    return color
+```
+
+---
+
+## Training
+
+```python
+def train(gaussians, images, cameras):
+    for iteration in range(num_iterations):
+        # Render
+        rendered = render(cameras, gaussians)
+        
+        # Compute loss
+        loss = mse(rendered, target_images)
+        
+        # Density control
+        if iteration % 100 == 0:
+            densify_and_prune(gaussians)
+        
+        # Update Gaussians
+        loss.backward()
+        optimizer.step()
+```
+
+---
+
+## vs NeRF
+
+| Aspect | NeRF | 3D Gaussian |
+|--------|------|------------|
+| **Representation** | Implicit MLP | Explicit Gaussians |
+| **Rendering** | Ray marching | Splatting |
+| **Speed** | Slow | Real-time |
+| **Quality** | Excellent | Excellent |
+| **Editability** | Poor | Good |

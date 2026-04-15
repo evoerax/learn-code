@@ -1,0 +1,64 @@
+---
+title: 多智能体强化学习
+description: 'Multi-Agent RL'
+---
+
+# 多智能体强化学习
+
+多个智能体协同或竞争。
+
+---
+
+## 分类
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| 合作 | 共同目标 | 机器人足球 |
+| 竞争 | 零和博弈 | 围棋 |
+| 混合 | 同时合作竞争 | 商户竞争 |
+
+---
+
+## 挑战
+
+```python
+# 非静态环境
+# 其他智能体也在学习
+# 信用分配问题
+```
+
+---
+
+## CTDE 范式
+
+```python
+class CTDE:
+    def update(self, trajectories):
+        # 中心式训练
+        global_loss = compute_global_loss(trajectories)
+        
+        # 分布式执行
+        for agent in agents:
+            agent.act(agent.local_obs)
+```
+
+---
+
+## 算法
+
+| 算法 | 类型 | 特点 |
+|------|------|------|
+| MADDPG | CTDE | 连续动作 |
+| QMIX | CTDE | 值分解 |
+| MAPPO | CTDE | PPO 变体 |
+| 独立 Q | 独立 | 简单 |
+| VDN | CTDE | 值分解 |
+
+---
+
+## 应用
+
+- 自动驾驶
+- 机器人集群
+- 游戏 AI
+- 资源调度

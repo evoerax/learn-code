@@ -1,0 +1,62 @@
+---
+title: Score Matching and SDE
+description: 'SDE-based generative models'
+---
+
+# Score Matching & SDE
+
+Score matching provides a principled framework for learning score functions.
+
+---
+
+## Score Function
+
+The score of a distribution: ∇ₓ log p(x)
+
+```python
+def score_matching_loss(model, data):
+    """Estimate score without normalizing constant"""
+    score = model(data)  # Should output ∇log p(x)
+    
+    # Score matching loss: E[tr(∇score(x)) + 0.5 ||score(x)||²]
+    loss = 0.5 * (score ** 2).sum(-1) + trace_jacobian(score, data)
+    return loss.mean()
+```
+
+---
+
+## SDE Formulation
+
+```python
+# Continuous-time diffusion as SDE
+dx = f(x, t)dt + g(t)dw
+
+# Example: VP (Variance Preserving) SDE
+dx = -0.5 * beta(t) * x * dt + sqrt(beta(t)) * dw
+
+# Reverse-time SDE for generation:
+dx = [-0.5 * beta(t) * x - beta(t) * ∇log p(x)] dt + sqrt(beta(t)) * dw̄
+```
+
+---
+
+## Connections
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   DDPM      │────▶│  Score      │────▶│    SDE      │
+│  (discrete) │     │  Matching   │     │  (continuous)│
+└─────────────┘     └─────────────┘     └─────────────┘
+```
+
+---
+
+## Probability Flow ODE
+
+```python
+# Deterministic ODE equivalent to SDE
+dx = [-0.5 * beta(t) * x - beta(t) * ∇log p(x)] dt
+
+# Solve with black-box ODE solver
+# Faster than stochastic sampling
+```

@@ -1,0 +1,48 @@
+---
+title: Fourier Series and FFT
+description: 'Frequency domain analysis'
+---
+
+# Fourier Series and FFT
+
+---
+
+## Fourier Series
+
+```python
+# Any periodic function can be represented as:
+f(x) = a₀ + Σ(aₙcos(nx) + bₙsin(nx))
+
+# Coefficients:
+aₙ = (1/π) ∫ f(x)cos(nx) dx
+bₙ = (1/π) ∫ f(x)sin(nx) dx
+```
+
+---
+
+## FFT (Fast Fourier Transform)
+
+```python
+# O(n log n) instead of O(n²)
+import torch.fft
+
+# 1D FFT
+X = torch.fft.fft(x)
+
+# 2D FFT (for images)
+X = torch.fft.fft2(image)
+
+# Inverse
+x_reconstructed = torch.fft.ifft2(X)
+```
+
+---
+
+## Applications
+
+| Application | Use |
+|------------|-----|
+| **Signal processing** | Filter design |
+| **Image processing** | Compression |
+| **Neural networks** | Fourier features |
+| **Audio** | Spectrograms |

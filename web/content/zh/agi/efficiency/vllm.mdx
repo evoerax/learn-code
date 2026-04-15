@@ -1,0 +1,64 @@
+---
+title: vLLM
+description: '高效 LLM 推理引擎'
+---
+
+# vLLM
+
+PagedAttention 实现的高效推理。
+
+---
+
+## 核心特性
+
+| 特性 | 说明 |
+|------|------|
+| PagedAttention | KV Cache 分页管理 |
+| 连续批处理 | 动态批次 |
+| CUDA Graph | 减少 kernel 调用 |
+| 量化支持 | AWQ, GPTQ, FP8 |
+
+---
+
+## 使用方式
+
+```python
+from vllm import LLM, SamplingParams
+
+llm = LLM(model="meta-llama/Llama-2-70b-hf",
+          tensor_parallel_size=4,
+          gpu_memory_utilization=0.9)
+
+sampling_params = SamplingParams(
+    temperature=0.8,
+    top_p=0.95,
+    max_tokens=256
+)
+
+outputs = llm.generate(prompts, sampling_params)
+```
+
+---
+
+## 性能
+
+| 模型 | 吞吐量 (tok/s) |
+|------|----------------|
+| LLaMA 2 7B | ~1000 |
+| LLaMA 2 70B | ~300 |
+| Mixtral 8x7B | ~400 |
+
+对比 HuggingFace 提升 10-24x。
+
+---
+
+## 分布式
+
+```python
+# 多 GPU 张量并行
+tensor_parallel_size=4
+
+# 多节点
+nnodes=2
+num_gpus_per_node=8
+```

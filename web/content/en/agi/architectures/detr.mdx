@@ -1,0 +1,91 @@
+---
+title: DETR
+description: 'End-to-end object detection with transformers'
+---
+
+# DETR
+
+DETR (Carion et al., 2020) applies transformers to object detection.
+
+---
+
+## Architecture
+
+```python
+class DETR(nn.Module):
+    def __init__(self, num_classes=91, num_queries=100):
+        super().__init__()
+        self.num_queries = num_queries
+        
+        # Backbone
+        self.backbone = ResNet50()
+        
+        # Transformer
+        self.transformer = Transformer(
+            d_model=256,
+            nhead=8,
+            num_encoder_layers=6,
+            num_decoder_layers=6
+        )
+        
+        # Object queries
+        self.query_embed = nn.Embedding(num_queries, 256)
+        
+        # Detection heads
+        self.class_embed = nn.Linear(256, num_classes + 1)  # +1 for no object
+        self.bbox_embed = nn.Linear(256, 4)
+    
+    def forward(self, x):
+        # Extract features
+        features = self.backbone(x)[-1]  # C5
+        batch_size = x.size(0)
+        
+        # Encoder
+        src = self.input_proj(features).flatten(1).transpose(0, 1)
+        memory = self.transformer.encoder(src)
+        
+        # Decoder with object queries
+        query_emb = self.query_embed.weight.unsqueeze(0).repeat(batch_size, 1, 1)
+        hs = self.transformer.decoder(query_emb, memory)
+        
+        # Predictions
+        pred_logits = self.class_embed(hs)
+        pred_boxes = self.bbox_embed(hs).sigmoid()
+        
+        return pred_logits, pred_boxes
+```
+
+---
+
+## Training
+
+```python
+def detr_loss(pred_logits, pred_boxes, targets):
+    # Classification loss (CE)
+    loss_ce = F.cross_entropy(
+        pred_logits.transpose(1, 2),
+        target_classes,
+        num_classes=num_classes
+    )
+    
+    # Bounding box loss (L1 + GIoU)
+    loss_box = F.l1_loss(pred_boxes, target_boxes)
+    loss_giou = 1 - torch.diag(generalized_box_iou(pred_boxes, target_boxes))
+    
+    # Hungarian matching for assignment
+    # ...
+    
+    return loss_ce + loss_box + loss_giou
+```
+
+---
+
+## vs CNN Detectors
+
+| Aspect | DETR | YOLO/Faster-RCNN |
+|--------|------|------------------|
+| **Architecture** | Transformer | CNN |
+| **Detection** | Global attention | Local + NMS |
+| **Training** | Longer | Shorter |
+| **Small objects** | Weaker | Stronger |
+| **Query-based** | ✓ Set prediction | ✗ |

@@ -1,0 +1,59 @@
+---
+title: MDP 与贝尔曼方程
+description: 'Markov Decision Process'
+---
+
+# MDP 与贝尔曼方程
+
+强化学习的问题框架。
+
+---
+
+## MDP 定义
+
+```python
+class MDP:
+    def __init__(self, S, A, P, R, gamma):
+        self.S = S      # 状态空间
+        self.A = A      # 动作空间
+        self.P = P      # 转移概率 P(s'|s,a)
+        self.R = R      # 奖励函数 R(s,a)
+        self.gamma = gamma  # 折扣因子
+```
+
+---
+
+## 状态转移
+
+```
+(s, a) → P(s'|s,a) → s'
+```
+
+---
+
+## 贝尔曼方程
+
+```python
+# 状态价值函数
+V(s) = max_a [ R(s,a) + gamma * sum_s' P(s'|s,a) * V(s') ]
+
+# 动作价值函数
+Q(s,a) = R(s,a) + gamma * sum_s' P(s'|s,a) * max_a' Q(s', a')
+```
+
+---
+
+## 最优策略
+
+```python
+def optimal_value(P, R, gamma, num_iter=100):
+    V = torch.zeros(len(S))
+    for _ in range(num_iter):
+        V_new = torch.zeros_like(V)
+        for s in range(len(S)):
+            for a in range(len(A)):
+                q = R[s,a] + gamma * (P[s,a] * V).sum()
+                V_new[s] = max(V_new[s], q)
+        V = V_new
+    return V
+```

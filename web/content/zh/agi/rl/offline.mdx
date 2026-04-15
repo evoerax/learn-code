@@ -1,0 +1,74 @@
+---
+title: 离线强化学习
+description: 'Offline RL 批量强化学习'
+---
+
+# 离线强化学习
+
+从固定数据集中学习策略。
+
+---
+
+## 问题
+
+```python
+# 行为策略分布偏移
+# 数据中某些 (s,a) 可能未覆盖
+# 外推误差导致价值估计过高
+```
+
+---
+
+## 方法分类
+
+| 方法 | 思想 |
+|------|------|
+| 约束 | 限制策略接近数据分布 |
+| 悲观 | 低估分布外价值 |
+| 集成 | 减少估计方差 |
+| 模仿 | 近似行为策略 |
+
+---
+
+## CQL (Conservative Q-Learning)
+
+```python
+def cql_loss(Q, data, policy):
+    # 标准 Q 损失
+    q_loss = F.mse_loss(Q(data.s, data.a), data.q_target)
+    
+    # 保守项：增加分布外 Q 值
+    num_samples = 10000
+    random_actions = sample_random_actions(num_samples)
+    
+    # 强制 Q(s,a) 对随机动作低
+    conservative = Q(data.s, random_actions).mean()
+    
+    return q_loss + alpha * conservative
+```
+
+---
+
+## IQL (Implicit Q-Learning)
+
+```python
+def iql_loss(Q, data, expectile=0.9):
+    # 只学习高 expectile 的 Q 值
+    advantage = data.q_target - Q(data.s, data.a)
+    
+    # 指数加权
+    weight = torch.exp(advantage * expectile / temperature)
+    
+    # 损失
+    return (weight * advantage ** 2).mean()
+```
+
+---
+
+## 数据集
+
+| 数据集 | 来源 | 质量 |
+|--------|------|------|
+| D4RL | 人工设计 | 多样 |
+| OpenXR-eval | 混合策略 | 中 |
+| RL Unplugged | 离线收集 | 真实 |

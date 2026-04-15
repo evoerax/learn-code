@@ -1,0 +1,60 @@
+---
+title: R-CNN 家族
+description: '区域卷积网络目标检测'
+---
+
+# R-CNN 家族
+
+两阶段目标检测器。
+
+---
+
+## R-CNN 流程
+
+```
+图像 → Selective Search → 2000 区域 → CNN 特征 → SVM 分类 → 边界框回归
+```
+
+---
+
+## Fast R-CNN
+
+```python
+# 共享卷积计算
+# ROI Pooling 提取区域特征
+class ROIPool(nn.Module):
+    def forward(self, feature_map, rois):
+        # 将不同大小的 ROI 池化到固定大小
+        return F.adaptive_max_pool2d(feature_map, output_size=(7, 7))
+```
+
+---
+
+## Faster R-CNN
+
+```python
+# RPN (Region Proposal Network) 替代 Selective Search
+class RPN(nn.Module):
+    def __init__(self):
+        self.conv = nn.Conv2d(512, 512, 3)
+        self.cls_head = nn.Conv2d(512, 18, 1)   # 9 anchors * 2 classes
+        self.reg_head = nn.Conv2d(512, 36, 1)  # 9 anchors * 4 coords
+    
+    def forward(self, x):
+        feat = F.relu(self.conv(x))
+        cls = self.cls_head(feat)  # 前景/背景
+        reg = self.reg_head(feat)   # 边界框偏移
+        return cls, reg
+```
+
+---
+
+## 演进
+
+| 版本 | 改进 |
+|------|------|
+| R-CNN | 开创性, 但慢 |
+| Fast R-CNN | ROI Pooling, 端到端 |
+| Faster R-CNN | RPN 替代 SS |
+| Cascade R-CNN | 多阶段精炼 |
+| Sparse R-CNN | DETR 风格 |

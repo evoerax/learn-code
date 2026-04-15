@@ -1,0 +1,84 @@
+---
+title: Decision Transformer
+description: 'RT-1, trajectory modeling, and autoregressive RL'
+---
+
+# Decision Transformer
+
+Decision Transformer treats RL as sequence modeling problem.
+
+---
+
+## Idea
+
+```python
+# Instead of:
+# Q(s) → a
+
+# Decision Transformer models:
+# (R_1, s_1, a_1, R_2, s_2, a_2, ...) → a_t
+
+class DecisionTransformer(nn.Module):
+    def __init__(self, state_dim, action_dim, embed_dim=128):
+        super().__init__()
+        self.state_embed = nn.Linear(state_dim, embed_dim)
+        self.action_embed = nn.Linear(action_dim, embed_dim)
+        self.return_embed = nn.Linear(1, embed_dim)
+        
+        self.transformer = nn.Transformer(embed_dim, nhead=8, num_layers=6)
+        self.action_head = nn.Linear(embed_dim, action_dim)
+    
+    def forward(self, states, actions, returns_to_go, timestep):
+        # Embed all inputs
+        s_emb = self.state_embed(states)
+        a_emb = self.action_embed(actions)
+        r_emb = self.return_embed(returns_to_go)
+        t_emb = self.timestep_embed(timestep)
+        
+        # Interleave embeddings: R, s, a, R, s, a, ...
+        x = torch.stack([r_emb, s_emb, a_emb], dim=-1).flatten(0, 1)
+        
+        # Transformer processes sequence
+        x = self.transformer(x)
+        
+        # Predict action from state and return embeddings
+        # Only use positions that need action prediction
+        action_logits = self.action_head(x)
+        
+        return action_logits
+```
+
+---
+
+## Training
+
+```python
+def decision_transformer_loss(model, batch):
+    states, actions, returns = batch
+    
+    # Pad sequences
+    states = pad_sequence(states)
+    actions = pad_sequence(actions)
+    
+    # Predict actions (teacher forcing)
+    action_logits = model(states[:-1], actions[:-1], returns[:-1])
+    
+    # Cross-entropy loss on actions
+    loss = F.cross_entropy(
+        action_logits.reshape(-1, action_dim),
+        actions[1:].flatten()
+    )
+    
+    return loss
+```
+
+---
+
+## Advantages
+
+| Aspect | DT | Traditional RL |
+|--------|----|-----------------|
+| **Sequence modeling** | ✓ Transformer | ✗ |
+| **Offline RL** | Natural fit | Needs constraints |
+| **Long-horizon** | ✓ | ✗ |
+| **Parallelism** | ✓ | Sequential |

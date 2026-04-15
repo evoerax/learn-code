@@ -1,0 +1,71 @@
+---
+title: ResNet
+description: 'Deep residual networks with skip connections'
+---
+
+# ResNet
+
+ResNet (He et al., 2016) introduced skip connections enabling training of very deep networks.
+
+---
+
+## Residual Block
+
+```python
+class ResidualBlock(nn.Module):
+    def __init__(self, dim, expansion=4):
+        super().__init__()
+        mid_dim = dim // expansion
+        
+        self.conv1 = nn.Conv2d(dim, mid_dim, 1)
+        self.bn1 = nn.BatchNorm2d(mid_dim)
+        self.conv2 = nn.Conv2d(mid_dim, mid_dim, 3, padding=1)
+        self.bn2 = nn.BatchNorm2d(mid_dim)
+        self.conv3 = nn.Conv2d(mid_dim, dim, 1)
+        self.bn3 = nn.BatchNorm2d(dim)
+        
+        self.relu = nn.ReLU()
+    
+    def forward(self, x):
+        identity = x
+        
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+        
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out = self.relu(out)
+        
+        out = self.conv3(out)
+        out = self.bn3(out)
+        
+        out += identity  # Skip connection
+        out = self.relu(out)
+        
+        return out
+```
+
+---
+
+## Why Skip Connections Work
+
+```
+Without skip:    F(x) must learn identity mapping
+With skip:       F(x) + x = output
+                  F(x) can learn to push residual toward 0
+
+This is easier than learning identity!
+```
+
+---
+
+## Depth Comparison
+
+| Network | Depth | Top-5 Error (ImageNet) |
+|---------|-------|------------------------|
+| **VGG-19** | 19 | 8.0% |
+| **ResNet-34** | 34 | 7.0% |
+| **ResNet-50** | 50 | 6.0% |
+| **ResNet-101** | 101 | 5.5% |
+| **ResNet-152** | 152 | 5.0% |

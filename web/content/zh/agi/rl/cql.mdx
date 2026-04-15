@@ -1,0 +1,73 @@
+---
+title: CQL 与 IQL
+description: '保守离线 RL'
+---
+
+# CQL 与 IQL
+
+两种主流离线强化学习方法。
+
+---
+
+## CQL
+
+```python
+class CQL:
+    def __init__(self, q_network, policy):
+        self.Q = q_network
+        self.policy = policy
+        self.alpha = 1.0
+    
+    def update(self, data):
+        # Critic 更新
+        q_pred = self.Q(data.s, data.a)
+        q_target = data.r + gamma * self.Q(data.s_next, data.a_next).max()
+        
+        # 标准损失
+        critic_loss = F.mse_loss(q_pred, q_target)
+        
+        # CQL 惩罚
+        random_a = torch.randint(0, A, (B,))
+        q_random = self.Q(data.s, random_a)
+        
+        # 强制减少分布外 Q
+        cql_loss = q_random.mean() - q_pred.mean()
+        
+        self.Q.optimizer.zero_grad()
+        (critic_loss + self.alpha * cql_loss).backward()
+        self.Q.optimizer.step()
+```
+
+---
+
+## IQL
+
+```python
+def iql_update(Q, data, tau=0.9, beta=3.0):
+    # 计算优势
+    target_Q = data.reward + gamma * data.next_Q.max()
+    advantage = target_Q - Q(data.state, data.action)
+    
+    # 指数加权
+    weight = torch.exp(torch.clamp(advantage / beta, -20, 20))
+    
+    # 只在高优势处学习
+    critic_loss = (weight * advantage.pow(2)).mean()
+    
+    # 策略更新
+    with torch.no_grad():
+        exp_adv = torch.exp(torch.clamp(advantage / beta, -20, 20))
+        policy_target = exp_adv / exp_adv.sum() * data.action.one_hot()
+    
+    policy_loss = (policy_target * Q(data.state).log_softmax()).sum(-1).mean()
+```
+
+---
+
+## 对比
+
+| 特性 | CQL | IQL |
+|------|-----|-----|
+| 思想 | 保守 Q | 剪裁数据 |
+| 稳定性 | 高 | 高 |
+| 效率 | 中 | 高 |

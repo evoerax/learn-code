@@ -1,0 +1,52 @@
+---
+title: KV Cache
+description: '键值缓存加速推理'
+---
+
+# KV Cache
+
+缓存已计算的键值对，避免重复计算。
+
+---
+
+## 标准的自回归生成
+
+```python
+# 每个 token 都需要重新计算所有历史
+for i in range(seq_len):
+    output = transformer(tokens[:, :i+1])
+    next_token = output[:, -1:]
+    tokens = torch.cat([tokens, next_token], dim=1)
+```
+
+---
+
+## 使用 KV Cache
+
+```python
+# 缓存 K, V，每次只计算新 token
+k_cache = torch.zeros(1, num_heads, max_len, head_dim)
+v_cache = torch.zeros(1, num_heads, max_len, head_dim)
+
+for i in range(seq_len):
+    q = embed(tokens[:, i:i+1])  # 只查新 token
+    k, v = embed_kv(tokens[:, :i+1])  # 全量 K, V
+    
+    # 更新缓存
+    k_cache[:, :, i:i+1] = k
+    v_cache[:, :, i:i+1] = v
+    
+    output = attention(q, k_cache[:, :, :i+1], v_cache[:, :, :i+1])
+```
+
+---
+
+## 内存占用
+
+| 模型 | FP16 KV Cache/Token |
+|------|---------------------|
+| 7B | ~0.5 MB |
+| 13B | ~1 MB |
+| 70B | ~5 MB |
+
+1000 tokens 上下文约需 1GB（13B 模型）。

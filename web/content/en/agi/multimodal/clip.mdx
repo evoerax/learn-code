@@ -1,0 +1,70 @@
+---
+title: CLIP Contrastive Language Image Pretraining
+description: 'Learning image-text alignment at scale'
+---
+
+# CLIP
+
+CLIP (Radford et al., 2021) learns visual concepts from natural language supervision.
+
+---
+
+## Training Objective
+
+```python
+def clip_loss(image_emb, text_emb, temperature):
+    """
+    image_emb: (B, d) image embeddings
+    text_emb: (B, d) text embeddings
+    """
+    # Normalize
+    image_emb = F.normalize(image_emb, dim=-1)
+    text_emb = F.normalize(text_emb, dim=-1)
+    
+    # Similarity matrix
+    logits = (image_emb @ text_emb.T) / temperature
+    
+    # Symmetric loss
+    labels = torch.arange(len(image_emb)).to(device)
+    loss_i = F.cross_entropy(logits, labels)  # Image → Text
+    loss_t = F.cross_entropy(logits.T, labels)  # Text → Image
+    
+    return (loss_i + loss_t) / 2
+```
+
+---
+
+## Zero-shot Classification
+
+```python
+def zero_shot_classify(image, model, class_names):
+    # Encode class names as prompts
+    texts = [f"a photo of a {c}" for c in class_names]
+    text_emb = model.encode_text(texts)
+    image_emb = model.encode_image(image)
+    
+    # Cosine similarity
+    similarity = (image_emb @ text_emb.T).softmax(dim=-1)
+    
+    return similarity
+```
+
+---
+
+## Architecture
+
+```
+Image → ViT → image_emb → Contrastive loss ← text_emb ← Text → Transformer
+```
+
+---
+
+## Results
+
+| Dataset | CLIP Zero-shot | SOTA Supervised |
+|---------|----------------|-----------------|
+| **ImageNet** | 76.2% | 85.9% (with 1.3M labels) |
+| **Oxford Pets** | 91.1% | 95.0% |
+| **UCF101** | 59.4% | 91.2% |
+
+CLIP matches supervised ResNet50 with zero-shot!

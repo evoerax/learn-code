@@ -1,0 +1,66 @@
+---
+title: Grouped Query Attention
+description: 'Efficient attention with shared KV across query groups'
+---
+
+# Grouped Query Attention (GQA)
+
+GQA, introduced in "GQA: Training Generalized Multi-Query Transformer" (Ainslie et al., 2023), reduces KV cache size while maintaining quality.
+
+---
+
+## Comparison with MHA and MQA
+
+| Configuration | Query Heads | KV Heads | KV Cache Size |
+|--------------|-------------|----------|---------------|
+| **Multi-Head (MHA)** | h | h | O(h × n × d) |
+| **Multi-Query (MQA)** | h | 1 | O(n × d) |
+| **Grouped Query (GQA)** | h | g (g much less than h) | O(g × n × d) |
+
+Where h = number of heads, g = number of KV groups, n = sequence length, d = dimension
+
+---
+
+## GQA Speedup
+
+```
+MHA:  Pre-fill 100ms, Decode 200ms, Memory 10GB
+GQA:  Pre-fill 100ms, Decode 80ms, Memory 4GB
+
+Decode speedup: ~2.5x
+Memory reduction: ~2.5x
+```
+
+---
+
+## Implementation
+
+```python
+class GroupedQueryAttention(nn.Module):
+    def __init__(self, d_model, num_heads, num_kv_heads):
+        super().__init__()
+        self.num_heads = num_heads
+        self.num_kv_heads = num_kv_heads
+        self.num_queries_per_kv = num_heads // num_kv_heads
+        self.d_k = d_model // num_heads
+        
+        # Fewer KV projections
+        self.W_kv = nn.Linear(d_model, 2 * num_kv_heads * self.d_k)
+        self.W_q = nn.Linear(d_model, d_model)
+        self.W_o = nn.Linear(d_model, d_model)
+    
+    def forward(self, Q, K, V, mask=None):
+        batch_size, seq_len, _ = Q.shape
+        
+        Q = self.W_q(Q).view(batch_size, seq_len, self.num_heads, self.d_k)
+        kv = self.W_kv(K)
+        K, V = kv.chunk(2, dim=-1)
+        K = K.view(batch_size, -1, self.num_kv_heads, self.d_k)
+        V = V.view(batch_size, -1, self.num_kv_heads, self.d_k)
+        
+        # Repeat K,V for each query group
+        K = K.repeat_interleave(self.num_queries_per_kv, dim=1)
+        V = V.repeat_interleave(self.num_queries_per_kv, dim=1)
+        
+        # Standard attention...
+```

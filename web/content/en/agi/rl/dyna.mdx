@@ -1,0 +1,55 @@
+---
+title: Dyna and MBPO
+description: 'Model-based RL with world models'
+---
+
+# Dyna and MBPO
+
+Model-based RL uses learned world models to improve sample efficiency.
+
+---
+
+## Dyna Algorithm
+
+```python
+def dyna(env, model, policy, num_planning_steps=10):
+    """
+    Dyna: Learn model, use it to plan
+    """
+    for _ in range(num_episodes):
+        # Real interaction
+        state = env.reset()
+        for _ in range(max_steps):
+            action = policy(state)
+            next_state, reward, done = env.step(action)
+            
+            # Update model
+            model.update(state, action, reward, next_state)
+            
+            # Update policy using simulated experience
+            for _ in range(num_planning_steps):
+                sim_state, sim_action = random_sample(model)
+                simulated_transition = model.predict(sim_state, sim_action)
+                policy.update_from_model(simulated_transition)
+```
+
+---
+
+## MBPO (Model-Based Policy Optimization)
+
+```python
+def mbpo(env, model, policy, horizon=5):
+    # Collect real data
+    real_data = collect_trajectories(env, policy)
+    
+    # Update model
+    model.fit(real_data)
+    
+    # Rollout with model (up to horizon)
+    for _ in range(num_batches):
+        state = random.choice(real_data.states)
+        model_rollout = model.rollout(state, horizon)
+        
+        # Update policy on model rollouts
+        policy.update(model_rollout)
+```

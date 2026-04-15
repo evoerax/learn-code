@@ -1,0 +1,91 @@
+---
+title: Consensus Mechanisms
+description: 'How blockchains agree on the single source of truth without a central authority'
+---
+
+# Consensus Mechanisms
+
+Consensus mechanisms are the protocols that allow distributed nodes to agree on the state of the blockchain. They solve the **Byzantine General's Problem** — how to achieve agreement in a network where some nodes may be faulty or malicious.
+
+---
+
+## Why consensus matters
+
+In a centralized system, a single authority decides what is true. In blockchain:
+
+- Thousands of nodes may propose different versions of history
+- Some nodes may be offline, buggy, or malicious
+- Consensus ensures every honest node agrees on the same state
+
+The choice of consensus affects:
+- **Security** — resistance to attacks
+- **Speed** — transaction throughput and finality
+- **Energy** — resources required to operate
+- **Decentralization** — how many validators are needed
+
+---
+
+## Proof of Work (PoW)
+
+Miners compete to solve a computationally intensive puzzle. The first to find a valid hash wins the right to add the next block.
+
+**Pros:**
+- Battle-tested security (Bitcoin has never been successfully attacked)
+- Simple and well-understood
+- High resistance to censorship
+
+**Cons:**
+- Massive energy consumption
+- Hardware requirements limit participation
+- Slower throughput
+
+**Examples:** Bitcoin, Ethereum (pre-2022), Dogecoin, Litecoin
+
+---
+
+## Proof of Stake (PoS)
+
+Validators stake (lock up) cryptocurrency as collateral. The protocol randomly selects a validator to propose the next block, with probability weighted by stake amount.
+
+**Pros:**
+- ~99% less energy than PoW
+- Lower hardware barriers to participation
+- Faster block times and higher throughput
+
+**Cons:**
+- "Nothing at stake" security concerns (mitigated by slashing)
+- Tendency toward validator centralization
+- More complex protocol design
+
+**Examples:** Ethereum (post-2022), Cardano, Solana, Algorand
+
+---
+
+## Other consensus mechanisms
+
+| Mechanism | Description | Examples |
+|-----------|-------------|----------|
+| **Delegated PoS (DPoS)** | Token holders vote for a small number of delegates to validate | EOS, Tron |
+| **Proof of Authority (PoA)** | Approved validators known by identity | VeChain, xDai |
+| **Proof of History (PoH)** | Time-stamping mechanism that orders events | Solana |
+| **Byzantine Fault Tolerance (BFT)** | Classic分布式 consensus, tolerating f faulty nodes from 3f+1 | Tendermint, Cosmos SDK |
+
+---
+
+## Finality types
+
+| Type | Description | Time |
+|------|-------------|------|
+| **Probabilistic** | Transaction becomes more secure as more blocks are added | ~6 blocks for Bitcoin |
+| **Instant** | Transaction is final immediately after confirmation | Some PoS chains |
+| **Economic** | Reversing a transaction would cost more than the transaction value | Rollups |
+
+---
+
+## Ethereum's consensus evolution
+
+Ethereum transitioned from PoW to PoS ("The Merge") in September 2022:
+
+1. **PoW era (2015-2022)** — Energy intensive mining
+2. **The Merge (2022)** — Transition to PoS, ~99.95% energy reduction
+3. **The Surge (2023+)** — Rollup-centric scaling roadmap

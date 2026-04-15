@@ -1,0 +1,38 @@
+---
+title: Scheduler
+description: 'Learning rate scheduling strategies'
+---
+
+# Learning Rate Schedulers
+
+---
+
+## Common Schedules
+
+```python
+# Step LR
+scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
+
+# Multi-step LR  
+scheduler = MultiStepLR(optimizer, milestones=[30, 60, 90], gamma=0.1)
+
+# Cosine annealing
+scheduler = CosineAnnealingLR(optimizer, T_max=50)
+
+# Warmup + cosine
+scheduler = CosineAnnealingWarmRestarts(optimizer)
+
+# OneCycleLR
+scheduler = OneCycleLR(optimizer, max_lr=1e-3, total_steps=10000)
+```
+
+---
+
+## Warmup
+
+```python
+# Linear warmup
+for step in range(warmup_steps):
+    lr = base_lr * step / warmup_steps
+    optimizer.param_groups[0]['lr'] = lr
+```

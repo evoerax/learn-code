@@ -1,0 +1,83 @@
+---
+title: AWQ Activation-Aware Quantization
+description: 'Quantization based on activation magnitudes'
+---
+
+# AWQ Quantization
+
+AWQ (Lin et al., 2024) protects significant weights by quantizing based on activation magnitudes.
+
+---
+
+## Key Insight
+
+Not all weights matter equally. AWQ finds the **0.1% of weights** that contribute most to output and keeps them at higher precision.
+
+---
+
+## Algorithm
+
+```python
+def awq_find_scaling(W, act, num_bits=4, percentile=99.9):
+    """
+    W: weight matrix
+    act: activation statistics (mean, std)
+    """
+    # Compute "importance" = activation magnitude
+    # Weights connected to high-activation neurons matter more
+    importance = act.std()  # or other metric
+    
+    # Find clipping threshold
+    threshold = np.percentile(importance, percentile)
+    
+    # Scale factor for protected weights
+    scale = (threshold / (importance + 1e-8)).clamp(max=1.0)
+    
+    return scale
+
+def awq_quantize(W, scales, num_bits=4):
+    # Scale weights
+    W_scaled = W * scales.unsqueeze(-1)
+    
+    # Quantize scaled weights
+    W_quant = torch.round(W_scaled).clamp(-2**(num_bits-1), 2**(num_bits-1)-1)
+    
+    # Dequantize for inference
+    W_dequant = W_quant / scales.unsqueeze(-1)
+    
+    return W_dequant
+```
+
+---
+
+## AWQ vs GPTQ
+
+| Aspect | GPTQ | AWQ |
+|--------|------|-----|
+| **Calibration** | Weight-only | Activation-aware |
+| **Weight selection** | Uniform | Non-uniform |
+| **Accuracy** | Good | Better for下游任务 |
+| **Speed** | Fast | Slightly slower |
+| **Memory** | W4: 4 bits | W4A16: 4 bits |
+
+---
+
+## Production Use
+
+```python
+# Using autoawq library
+from awq import AutoAWQForCausalLM
+from transformers import AutoTokenizer
+
+model = AutoAWQForCausalLM.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+quant_config = {
+    "zero_point": True,
+    "q_group_size": 128,
+    "w_bit": 4,
+    "version": "GEMM"
+}
+
+model.quantize(tokenizer, quant_config=quant_config)
+```

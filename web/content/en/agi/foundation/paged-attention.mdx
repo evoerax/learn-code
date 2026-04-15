@@ -1,0 +1,61 @@
+---
+title: PagedAttention
+description: 'Virtual memory management for KV cache'
+---
+
+# PagedAttention
+
+PagedAttention, from vLLM (Kwon et al., 2023), applies OS-style paging to KV cache management.
+
+---
+
+## Problem: Memory Fragmentation
+
+```
+Standard allocation: 
+[Token 1 KV | Token 2 KV | Token 3 KV | ... | Token 4096 KV]
+- Fixed allocation per sequence
+- Pre-allocates for max context
+- Severe memory waste when sequences are short
+```
+
+---
+
+## Solution: Paging
+
+```
+Virtual KV cache (per sequence):
+┌──────┬──────┬──────┬──────┐
+│ Blk0 │ Blk1 │ Blk2 │ Blk3 │ ... (sparse)
+└──────┴──────┴──────┴──────┘
+         ↓          ↓
+Physical memory:
+┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
+│ Seq1 │ Seq3 │ Seq2 │ Seq1 │ Seq4 │ Seq3 │ Seq2 │ Seq1 │
+│ Blk0 │ Blk0 │ Blk0 │ Blk1 │ Blk0 │ Blk1 │ Blk1 │ Blk2 │
+└──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┘
+```
+
+---
+
+## Key Features
+
+| Feature | Benefit |
+|---------|---------|
+| **Block size 16** | 64x fewer blocks than token-level |
+| **Shared blocks** | Common prefixes share KV |
+| **Copy-on-write** | Fork with minimal copy |
+| **Memory sharing** | 1.6-2.2x more throughput |
+
+---
+
+## Results
+
+```
+Throughput comparison (A100, 70B model):
+- HuggingFace:  12 req/s
+- Text-generation inference: 45 req/s
+- vLLM (PagedAttention):  98 req/s
+```
+
+Memory efficiency enables larger batch sizes and longer contexts.

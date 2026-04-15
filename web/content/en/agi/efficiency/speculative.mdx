@@ -1,0 +1,78 @@
+---
+title: Speculative Decoding
+description: 'Draft-and-verify for faster autoregressive generation'
+---
+
+# Speculative Decoding
+
+Speculative decoding (Leviathan et al., 2023) uses a small "draft" model to propose tokens, verified in parallel by the large model.
+
+---
+
+## How It Works
+
+```python
+def speculative_decode(
+    draft_model,      # Small, fast model
+    target_model,     # Large, accurate model  
+    prompt,          # Input tokens
+    gamma=4,          # Draft tokens per step
+):
+    # Draft model generates gamma tokens
+    draft_tokens = []
+    x = prompt
+    
+    for _ in range(gamma):
+        logits = draft_model(x)
+        next_tok = torch.argmax(logits[-1])
+        draft_tokens.append(next_tok)
+        x = torch.cat([x, next_tok.unsqueeze(0)])
+    
+    # Target model evaluates ALL positions at once
+    target_logits = target_model(x)
+    
+    # Verify draft tokens
+    accepted = []
+    for i, draft_tok in enumerate(draft_tokens):
+        target_prob = F.softmax(target_logits[i+len(prompt)], dim=-1)
+        
+        # Accept if draft is good enough
+        if torch.rand() < target_prob[draft_tok]:
+            accepted.append(draft_tok)
+        else:
+            # Reject and sample from corrected distribution
+            corrected = torch.multinomial(target_prob, 1)
+            break
+    
+    return accepted
+```
+
+---
+
+## Speedup
+
+```
+Without speculative decoding:
+Token 1: Target model forward (100ms)
+Token 2: Target model forward (100ms)
+Token 3: Target model forward (100ms)
+...
+
+With speculative decoding (gamma=4):
+Step 1: Draft x4 (25ms) + Target verify (100ms) ≈ 4 tokens
+Step 2: Draft x4 (25ms) + Target verify (100ms) ≈ 4 tokens
+...
+
+Speedup: ~2-3x when acceptance rate is high
+```
+
+---
+
+## Acceptance Rate Factors
+
+| Factor | Effect |
+|--------|--------|
+| **Similar draft/target** | Higher acceptance |
+| **High entropy contexts** | Lower acceptance |
+| **Repetitive patterns** | Higher acceptance |
+| **gamma** | Tradeoff: more computation vs parallelism |

@@ -1,0 +1,63 @@
+---
+title: DQN and Variants
+description: 'Deep Q-Networks and improvements'
+---
+
+# DQN and Variants
+
+DQN combines Q-learning with deep neural networks.
+
+---
+
+## Basic DQN
+
+```python
+class DQN(nn.Module):
+    def __init__(self, state_dim, action_dim):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, action_dim)
+        )
+    
+    def forward(self, state):
+        return self.net(state)
+
+def train_dqn(env, num_episodes=500):
+    policy_net = DQN(state_dim, action_dim)
+    target_net = DQN(state_dim, action_dim)
+    target_net.load_state_dict(policy_net.state_dict())
+    
+    replay_buffer = ReplayBuffer(capacity=10000)
+    optimizer = torch.optim.Adam(policy_net.parameters(), lr=1e-3)
+```
+
+---
+
+## Target Network
+
+```python
+def compute_td_loss(policy_net, target_net, batch):
+    states, actions, rewards, next_states, dones = batch
+    
+    q_values = policy_net(states).gather(1, actions.unsqueeze(1)).squeeze()
+    
+    with torch.no_grad():
+        next_q = target_net(next_states).max(1).values
+        target = rewards + gamma * next_q * (1 - dones)
+    
+    return F.mse_loss(q_values, target)
+```
+
+---
+
+## Double DQN
+
+```python
+# Use policy net to select action, target net to evaluate
+next_actions = policy_net(next_states).argmax(1)
+next_q = target_net(next_states).gather(1, next_actions.unsqueeze(1)).squeeze()
+```

@@ -1,0 +1,79 @@
+---
+title: Q-Learning and SARSA
+description: 'Temporal difference learning for value functions'
+---
+
+# Q-Learning and SARSA
+
+TD learning algorithms that learn value functions from experience.
+
+---
+
+## Q-Learning (Off-Policy)
+
+```python
+def q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=1000):
+    Q = defaultdict(lambda: np.zeros(env.action_space.n))
+    
+    for _ in range(num_episodes):
+        state = env.reset()
+        done = False
+        
+        while not done:
+            # Epsilon-greedy
+            if np.random.random() < epsilon:
+                action = env.action_space.sample()
+            else:
+                action = np.argmax(Q[state])
+            
+            next_state, reward, done, _ = env.step(action)
+            
+            # TD update (off-policy)
+            td_target = reward + gamma * np.max(Q[next_state])
+            td_error = td_target - Q[state][action]
+            Q[state][action] += alpha * td_error
+            
+            state = next_state
+    
+    return Q
+```
+
+---
+
+## SARSA (On-Policy)
+
+```python
+def sarsa(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=1000):
+    Q = defaultdict(lambda: np.zeros(env.action_space.n))
+    
+    for _ in range(num_episodes):
+        state = env.reset()
+        action = epsilon_greedy(Q, state, epsilon)
+        done = False
+        
+        while not done:
+            next_state, reward, done, _ = env.step(action)
+            next_action = epsilon_greedy(Q, next_state, epsilon)
+            
+            # TD update (on-policy) - uses actual next action
+            td_target = reward + gamma * Q[next_state][next_action]
+            td_error = td_target - Q[state][action]
+            Q[state][action] += alpha * td_error
+            
+            state = next_state
+            action = next_action
+    
+    return Q
+```
+
+---
+
+## Q-Learning vs SARSA
+
+| Aspect | Q-Learning | SARSA |
+|--------|------------|-------|
+| **Policy** | Off-policy | On-policy |
+| **Exploration** | Greedy + ε | ε-greedy |
+| **Convergence** | Faster | More stable during learning |
+| **Final policy** | Greedy | ε-greedy |
+| **Safe exploration** | May try risky actions | More conservative |

@@ -1,0 +1,57 @@
+---
+title: Score Matching 与 SDE
+description: '分数匹配与随机微分方程'
+---
+
+# Score Matching 与 SDE
+
+通过学习 score function 生成样本。
+
+---
+
+## Score Matching
+
+```python
+def score_matching_loss(model, x):
+    # 学习 log p(x) 的梯度 (score)
+    score = model(x)
+    
+    # Score matching 损失
+    # E[||score(x)||^2 + tr(Jac(score)(x))]
+    loss = (score ** 2).sum(dim=-1) + jacobian_trace(score, x)
+    return loss.mean()
+```
+
+---
+
+## SDE 形式
+
+```python
+# 连续时间扩散
+dx = f(x, t) dt + g(t) dw
+
+# VP SDE (Variance Preserving)
+dx = -0.5 * beta(t) * x * dt + sqrt(beta(t)) * dw
+
+# VE SDE (Variance Exploding)
+dx = sqrt(d[sigma^2]/dt) * dw
+```
+
+---
+
+## 逆向 SDE
+
+```python
+# 从噪声恢复数据
+dx = [f(x, t) - g(t)^2 * score(x, t)] dt + g(t) * dw
+```
+
+---
+
+## 数值求解
+
+| 方法 | 特点 |
+|------|------|
+| Euler-Maruyama | 简单但慢 |
+| Ancestral Sampling | 快速 |
+| ODE 求解 | 确定性格 |

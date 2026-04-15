@@ -1,0 +1,80 @@
+---
+title: Diffusion Models
+description: 'Score-based and diffusion probabilistic models'
+---
+
+# Diffusion Models
+
+Diffusion models generate data by gradually denoising a random signal.
+
+---
+
+## Forward Process (Noising)
+
+```python
+def forward_process(x_0, t, beta_schedule):
+    """
+    Add noise to image over t timesteps
+    x_0: clean image
+    t: timestep (0 = clean, T = max noise)
+    """
+    alpha_bar = (1 - beta_schedule[:t]).prod()
+    noise = torch.randn_like(x_0)
+    
+    x_t = sqrt(alpha_bar) * x_0 + sqrt(1 - alpha_bar) * noise
+    return x_t, noise
+```
+
+---
+
+## Reverse Process (Denoising)
+
+```python
+class UNet(nn.Module):
+    def forward(self, x_t, t):
+        # t is timestep embedding
+        # Predict noise or x_0
+        return self.network(x_t, t)
+
+def reverse_process(model, x_T, beta_schedule):
+    x_t = x_T
+    
+    for t in reversed(range(T)):
+        # Predict noise
+        noise_pred = model(x_t, t)
+        
+        # Compute x_{t-1}
+        alpha = 1 - beta_schedule[t]
+        alpha_bar = alpha_bar_schedule[t]
+        
+        mean = (x_t - noise_pred * sqrt(1-alpha)) / sqrt(alpha)
+        variance = beta_schedule[t]
+        
+        if t > 0:
+            x_t = mean + sqrt(variance) * torch.randn_like(x_t)
+        else:
+            x_t = mean
+    
+    return x_t  # Clean image
+```
+
+---
+
+## DDPM vs Score Matching
+
+| Aspect | DDPM | Score Matching |
+|--------|------|---------------|
+| **Objective** | Predict noise ε | Predict score ∇log p(x) |
+| **Loss** | MSE(ε - εθ) | MSE(||∇log p - sθ||²) |
+| **Sampling** | Many steps | Fewer with SDE |
+
+---
+
+## Modern Diffusion
+
+| Model | Architecture | Sampling |
+|-------|--------------|----------|
+| **DDPM** | U-Net | 1000 steps |
+| **DDIM** | U-Net | 50 steps |
+| **Stable Diffusion** | Latent U-Net | 20-50 steps |
+| **SDXL** | Larger U-Net | 20-30 steps |

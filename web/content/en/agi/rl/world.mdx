@@ -1,0 +1,91 @@
+---
+title: World Models
+description: 'Learning a model of the world for imagination-based planning'
+---
+
+# World Models
+
+World models learn a predictive model of the environment for planning.
+
+---
+
+## Architecture
+
+```python
+class WorldModel(nn.Module):
+    def __init__(self, obs_dim, action_dim, hidden_dim=512, latent_dim=32):
+        super().__init__()
+        
+        # Observation encoder (vae encoder)
+        self.encoder = VAE(obs_dim, latent_dim)
+        
+        # Transition model (dynamics)
+        self.dynamics = nn.Sequential(
+            nn.Linear(latent_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.Linear(hidden_dim, latent_dim)
+        )
+        
+        # Reward predictor
+        self.reward = nn.Sequential(
+            nn.Linear(latent_dim + action_dim, hidden_dim),
+            nn.Linear(hidden_dim, 1)
+        )
+        
+        # Observation decoder
+        self.decoder = nn.Linear(latent_dim, obs_dim)
+```
+
+---
+
+## Dreamer-style Training
+
+```python
+def dreamer_loss(world_model, obs_sequence, actions, rewards):
+    # Encode observations
+    latents = world_model.encoder(obs_sequence)
+    
+    # Predicted sequence
+    pred_latents = []
+    for t in range(len(actions) - 1):
+        z_t = latents[t]
+        a_t = actions[t]
+        z_next = world_model.dynamics(torch.cat([z_t, a_t], dim=-1))
+        pred_latents.append(z_next)
+    
+    # Compute imagination rewards
+    imagined_rewards = [world_model.reward(torch.cat([z, a], dim=-1)) 
+                        for z, a in zip(pred_latents, actions[1:])]
+    
+    # Optimize world model to predict accurately
+    return loss
+```
+
+---
+
+## Planning with World Model
+
+```python
+def plan_with_world_model(world_model, current_obs, num_actions=10, horizon=5):
+    best_reward = -float('inf')
+    best_action_sequence = None
+    
+    # Try random action sequences
+    for _ in range(num_actions):
+        action_seq = [random_action() for _ in range(horizon)]
+        imagined_obs = current_obs
+        
+        total_reward = 0
+        for a in action_seq:
+            pred_next = world_model.imagine(imagined_obs, a)
+            reward = world_model.predict_reward(pred_next, a)
+            total_reward += reward
+            imagined_obs = pred_next
+        
+        if total_reward > best_reward:
+            best_reward = total_reward
+            best_action_sequence = action_seq
+    
+    return best_action_sequence[0]  # Execute first action
+```

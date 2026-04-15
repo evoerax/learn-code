@@ -1,0 +1,84 @@
+---
+title: NeRF Neural Radiance Fields
+description: 'Implicit neural representation of 3D scenes'
+---
+
+# NeRF
+
+NeRF (Mildenhall et al., 2020) represents scenes as neural fields for novel view synthesis.
+
+---
+
+## Core Idea
+
+A 5D function F(x, y, z, θ, φ) → (RGB, density)
+
+```python
+class NeRF(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # Input: 3D position + 2D viewing direction
+        self.fc1 = nn.Linear(3 + 3, 256)
+        self.fc2 = nn.Linear(256, 256)
+        self.fc3 = nn.Linear(256, 256)
+        self.fc4 = nn.Linear(256, 4)  # RGB + density
+        
+        # Direction encoding
+        self.dir_fc = nn.Linear(256 + 3, 128)
+        self.fc5 = nn.Linear(128, 1)
+    
+    def forward(self, x, d):
+        # Position encoding for x
+        x_enc = positional_encoding(x, 10)  # 3*10*2 = 60 dims
+        
+        h = F.relu(self.fc1(x_enc))
+        h = F.relu(self.fc2(h))
+        h = F.relu(self.fc3(h))
+        rgb_density = self.fc4(h)  # Skip connection to dir
+        
+        h = F.relu(self.dir_fc(torch.cat([rgb_density, d_enc], dim=-1)))
+        density = torch.sigmoid(self.fc5(h))
+        
+        return torch.cat([rgb_density[:, :3], density], dim=-1)
+```
+
+---
+
+## Volume Rendering
+
+```python
+def render(ray_origin, ray_direction, model, t_near=0, t_far=10, num_samples=100):
+    # Sample points along ray
+    t_vals = torch.linspace(t_near, t_far, num_samples)
+    points = ray_origin + t_vals * ray_direction
+    
+    # Query model
+    rgbs, densities = [], []
+    for p in points:
+        out = model(p, ray_direction)
+        rgbs.append(out[:3])
+        densities.append(out[3])
+    
+    # Volume rendering integral
+    rgbs = torch.stack(rgbs)
+    densities = torch.stack(densities)
+    
+    # Compute transmittance
+    delta = t_vals[1] - t_vals[0]
+    alphas = 1 - torch.exp(-densities * delta)
+    weights = alphas * torch.cumprod(1 - alphas, dim=0)
+    
+    rgb_final = (weights * rgbs).sum(dim=0)
+    return rgb_final
+```
+
+---
+
+## Issues and Solutions
+
+| Issue | Solution |
+|-------|----------|
+| **Slow training** | Hash encoding (Instant-NGP) |
+| **Slow rendering** | CUDA acceleration |
+| **Poor topology** | Free space sculpting |
+| **Large scenes** | Scene graphs, MegaNeRF |

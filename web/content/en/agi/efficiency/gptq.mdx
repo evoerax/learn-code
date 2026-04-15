@@ -1,0 +1,83 @@
+---
+title: GPTQ Quantization
+description: 'Post-training quantization with approximate Hessian'
+---
+
+# GPTQ Quantization
+
+GPTQ (Frantar et al., 2022) is a post-training quantization method for 4-bit weights with minimal accuracy loss.
+
+---
+
+## Key Idea
+
+GPTQ quantizes weights **row-by-row** using second-order information:
+
+```python
+def gptq_quantize(W, bits=4, blocksize=128):
+    """
+    W: weight matrix (out_features, in_features)
+    """
+    out_features, in_features = W.shape
+    scales = torch.zeros(out_features)
+    zeros = torch.zeros(out_features)
+    
+    W = W.float()
+    quant_w = torch.zeros_like(W)
+    
+    for i in range(0, out_features, blocksize):
+        end = min(i + blocksize, out_features)
+        block = W[i:end]
+        
+        # Compute "Hessian" inverse for this block
+        # Using approximate Newton step
+        for j in range(in_features):
+            if not has_valid_cols(block[:, :j]):
+                continue
+            
+            # Quantize column j
+            q = torch.round(block[:, j] / scales[i])
+            quant_w[i:end, j] = q
+            block[:, j:] -= q.unsqueeze(-1) @ W[i:end, j:].mean(dim=-1, keepdim=True)
+    
+    return quant_w, scales, zeros
+```
+
+---
+
+## Layer-by-Layer Algorithm
+
+```python
+def gptq_layer(W, num_bits=4):
+    # Initialize
+    W = W.float()
+    nrows, ncols = W.shape
+    Q = torch.zeros_like(W)
+    H = torch.eye(nrows)  # Hessian approximation
+    bias = torch.zeros(nrows)
+    
+    for j in range(ncols):
+        # Get column
+        w = W[:, j] - H @ (W[:, :j] @ Q[:, :j].T)
+        
+        # Quantize
+        q = torch.round(w.abs().max() / (2**(num_bits-1)) * torch.sign(w))
+        Q[:, j] = q
+        
+        # Update inverse Hessian
+        h = H @ q.unsqueeze(-1)
+        H -= (h @ h.T) / (q @ h + 1e-8)
+    
+    return Q
+```
+
+---
+
+## Results
+
+| Model | W4 | W8 | W16 | Avg LogProb |
+|-------|-----|-----|-----|------------|
+| **OPT-175B** | 53.5 | 54.5 | 55.0 | |
+| **BLOOM-176B** | 46.4 | 47.1 | 47.5 | |
+
+Only ~0.5 bits/parameter degradation with W4.

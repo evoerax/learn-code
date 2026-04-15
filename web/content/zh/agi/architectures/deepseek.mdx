@@ -1,0 +1,68 @@
+---
+title: DeepSeek 系列
+description: 'DeepSeek 开源模型'
+---
+
+# DeepSeek 系列
+
+幻方量化的开源 LLM。
+
+---
+
+## DeepSeek LLM
+
+| 版本 | 特点 |
+|------|------|
+| DeepSeek 7B | 首个开源 |
+| DeepSeek 67B | 70B 对标 |
+| DeepSeek Coder | 代码专项 |
+
+---
+
+## DeepSeek 2 (2024.5)
+
+```python
+# 236B 参数 (21B 激活)
+# 128K 上下文
+# 8K 训练上下文
+# MoE 架构
+```
+
+---
+
+## DeepSeek 3 (2025.1)
+
+- DeepSeek-V3: 236B (MoE)
+- DeepSeek-R1: 推理专项
+- 671B 总参数
+
+---
+
+## 核心技术
+
+| 技术 | 说明 |
+|------|------|
+| MoE | 稀疏激活 |
+| FP8 训练 | 低精度优化 |
+| DualPipe | 流水线并行 |
+| 跨节点专家并行 | 分布式 |
+
+---
+
+## DeepSeek-R1 (2025.1)
+
+```python
+# 推理能力对标 OpenAI o1
+# GRPO 训练
+# 验证器学习
+# 冷启动数据
+```
+
+---
+
+## 开源贡献
+
+- 完全开源
+- 训练代码
+- 数据配比
+- 工程细节

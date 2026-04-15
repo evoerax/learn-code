@@ -1,0 +1,67 @@
+---
+title: Reward Model 奖励模型
+description: '训练奖励模型预测人类偏好'
+---
+
+# Reward Model 奖励模型
+
+学习人类偏好的模型。
+
+---
+
+## 训练数据
+
+```python
+# 偏好数据格式
+preference_data = [
+    {
+        "prompt": "解释量子纠缠",
+        "chosen": "量子纠缠是...",
+        "rejected": "量子纠缠很复杂..."
+    },
+    ...
+]
+```
+
+---
+
+## 模型架构
+
+```python
+class RewardModel(nn.Module):
+    def __init__(self, base_model):
+        super().__init__()
+        self.base = base_model
+        self.value_head = nn.Linear(hidden_size, 1)
+    
+    def forward(self, input_ids, attention_mask=None):
+        outputs = self.base(input_ids, attention_mask=attention_mask)
+        # 使用最后一个非 padding token
+        logits = outputs.last_hidden_state
+        reward = self.value_head(logits).squeeze(-1)
+        return reward
+```
+
+---
+
+## 损失函数
+
+```python
+def reward_model_loss(chosen_reward, rejected_reward):
+    """
+    偏好 pair 的对比损失
+    chosen_reward > rejected_reward
+    """
+    loss = -F.logsigmoid(chosen_reward - rejected_reward).mean()
+    return loss
+```
+
+---
+
+## 训练技巧
+
+| 技巧 | 作用 |
+|------|------|
+| 归一化 | 稳定 reward scale |
+| 加权采样 | 难例更频繁 |
+| 多样性 | 避免 reward hacking |

@@ -1,0 +1,50 @@
+---
+title: SwiGLU 激活函数
+description: 'Swish-Gated Linear Unit'
+---
+
+# SwiGLU 激活函数
+
+SwiGLU 结合 Swish 激活和门控机制。
+
+---
+
+## 公式
+
+```python
+def swiglu(x):
+    return x * torch.sigmoid(x)
+
+# SwiGLU 版本
+def swiglu(x, gate):
+    return swiglu(x) * gate
+```
+
+---
+
+## 在 FFN 中使用
+
+```python
+class SwiGLU(nn.Module):
+    def __init__(self, d_model, d_ffn):
+        super().__init__()
+        self.w1 = nn.Linear(d_model, d_ffn)
+        self.w2 = nn.Linear(d_model, d_ffn)
+        self.w3 = nn.Linear(d_ffn, d_model)
+    
+    def forward(self, x):
+        # SwiGLU: x * sigmoid(w1(x)) * w3
+        return self.w3(self.w1(x) * torch.sigmoid(self.w2(x)))
+```
+
+---
+
+## 效果
+
+| 模型 | 激活函数 | 效果 |
+|------|----------|------|
+| GPT-2 | GELU | 基准 |
+| LLaMA | SwiGLU | 显著提升 |
+| Mistral | SwiGLU | 最佳表现 |
+
+SwiGLU 已成为 LLM 的标准激活函数。

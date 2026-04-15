@@ -1,0 +1,48 @@
+---
+title: Backpropagation
+description: 'Gradient computation through neural networks'
+---
+
+# Backpropagation
+
+---
+
+## Chain Rule
+
+```
+∂L/∂W = ∂L/∂y · ∂y/∂W
+```
+
+---
+
+## Forward vs Backward
+
+```python
+def forward(x):
+    h1 = x @ W1 + b1
+    a1 = ReLU(h1)
+    h2 = a1 @ W2 + b2
+    return h2
+
+def backward(x, grad_output):
+    grad_h2 = grad_output
+    grad_W2 = a1.T @ grad_h2
+    
+    grad_a1 = grad_h2 @ W2.T
+    grad_h1 = grad_a1 * (h1 > 0)  # ReLU derivative
+    
+    grad_W1 = x.T @ grad_h1
+    
+    return grad_W1, grad_b1, grad_W2, grad_b2
+```
+
+---
+
+## Autograd
+
+```python
+# PyTorch computes gradients automatically
+x = torch.randn(10, requires_grad=True)
+y = x ** 2 + 3 * x
+y.sum().backward()  # Computes x.grad
+```

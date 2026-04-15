@@ -1,0 +1,59 @@
+---
+title: RoPE Rotary Position Encoding
+description: 'Rotary position encoding for better length extrapolation'
+---
+
+# RoPE Rotary Position Encoding
+
+RoPE, introduced in "RoFormer: Enhanced Transformer with Rotary Position Embedding" (Su et al., 2022), encodes position information by rotating query and key vectors.
+
+---
+
+## Core Idea
+
+RoPE multiplies query and key vectors with rotation matrices based on their positions:
+
+```
+R(θ,m) = cos(mθ) + i·sin(mθ)
+```
+
+For 2D vectors:
+```
+qₘ = R(θ,m) · q
+kₙ = R(θ,n) · k
+
+qₘ · kₙ = (R(θ,m)q) · (R(θ,n)k)
+        = q · k rotated by (m-n)θ
+```
+
+The dot product depends only on **relative position (m-n)**!
+
+---
+
+## Multi-dimensional Extension
+
+For dimensions d, apply rotations in pairs:
+
+```python
+def rotate_half(x):
+    """Rotate half the hidden dims."""
+    x1 = x[..., :x.shape[-1] // 2]
+    x2 = x[..., x.shape[-1] // 2:]
+    return torch.cat([-x2, x1], dim=-1)
+
+def apply_rotary_pos_emb(q, k, cos, sin):
+    q_embed = (q * cos) + (rotate_half(q) * sin)
+    k_embed = (k * cos) + (rotate_half(k) * sin)
+    return q_embed, k_embed
+```
+
+---
+
+## Advantages
+
+| Property | Benefit |
+|----------|---------|
+| **Relative encoding** | Naturally captures relative positions |
+| **Length extrapolation** | Works beyond training context |
+| **Efficiency** | No additional parameters for position |
+| **Decay** | Attention naturally decays with distance |

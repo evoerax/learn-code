@@ -1,0 +1,54 @@
+---
+title: KL Divergence
+description: 'Measuring distribution difference'
+---
+
+# KL Divergence
+
+KL divergence measures how different one distribution is from another.
+
+---
+
+## Definition
+
+```
+KL(P || Q) = Σ P(x) · log(P(x) / Q(x))
+           = E_P[log P - log Q]
+           = H(P, Q) - H(P)  (cross entropy - entropy)
+```
+
+---
+
+## Properties
+
+| Property | Value |
+|----------|-------|
+| **Non-negative** | KL(P\|\|Q) ≥ 0 |
+| **Asymmetric** | KL(P\|\|Q) ≠ KL(Q\|\|P) |
+| **Zero iff same** | KL(P\|\|P) = 0 |
+| **Not a metric** | Fails triangle inequality |
+
+---
+
+## Forward vs Reverse
+
+```python
+def forward_kl(p, q):
+    """KL(P || Q) - mean seeking"""
+    return (p * (p / q).log()).sum()
+
+def reverse_kl(p, q):
+    """KL(Q || P) - mode seeking"""
+    return (q * (q / p).log()).sum()
+```
+
+---
+
+## In ML
+
+| Use Case | KL Application |
+|----------|----------------|
+| **Variational inference** | Minimize KL(q||p) to approximate posterior |
+| **RLHF** | KL penalty to stay close to SFT policy |
+| **Autoencoders** | VAE loss term |
+| **Knowledge distillation** | Student approximates teacher |

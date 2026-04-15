@@ -1,0 +1,70 @@
+---
+title: 决策Transformer
+description: 'Decision Transformer 将 RL 视为序列建模'
+---
+
+# 决策Transformer
+
+用 GPT 风格的模型做 RL。
+
+---
+
+## 核心思想
+
+```python
+class DecisionTransformer(nn.Module):
+    def __init__(self, state_dim, action_dim, hidden=256):
+        super().__init__()
+        self.model = GPT(
+            embed_dim=hidden,
+            num_heads=8,
+            num_layers=6
+        )
+        self.state_embed = nn.Linear(state_dim, hidden)
+        self.action_embed = nn.Embedding(action_dim, hidden)
+        self.return_embed = nn.Linear(1, hidden)
+        self.timestep_embed = nn.Embedding(100, hidden)
+    
+    def forward(self, states, actions, returns_to_go, timesteps):
+        # 嵌入
+        s_emb = self.state_embed(states)
+        a_emb = self.action_embed(actions)
+        r_emb = self.return_embed(returns_to_go)
+        t_emb = self.timestep_embed(timesteps)
+        
+        # 序列建模
+        x = s_emb + a_emb + r_emb + t_emb
+        return self.model(x)
+```
+
+---
+
+## 轨迹建模
+
+```
+R_1, s_1, a_1, R_2, s_2, a_2, ... → 预测 a_t
+```
+
+---
+
+## 训练
+
+```python
+def dt_loss(model, trajectory):
+    # 轨迹: [R_1, s_1, a_1, R_2, s_2, a_2, ...]
+    # 目标: 在每个位置预测下一个动作
+    
+    # 预测动作与实际动作的交叉熵
+    pred_action = model(states[:-1], actions[:-1], returns[:-1])
+    loss = F.cross_entropy(pred_action, actions[1:])
+```
+
+---
+
+## vs 传统 RL
+
+| 特性 | 传统 RL | DT |
+|------|---------|-----|
+| 训练 | 交互 | 离线 |
+| 探索 | 需要 | 不需要 |
+| 序列 | 逐步 | 整体 |

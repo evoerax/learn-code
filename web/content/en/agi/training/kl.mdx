@@ -1,0 +1,77 @@
+---
+title: Forward and Reverse KL Divergence
+description: 'Understanding KL directions in alignment and diffusion'
+---
+
+# Forward and Reverse KL
+
+KL divergence measures the difference between two distributions, with important directional differences.
+
+---
+
+## Definition
+
+```
+KL(P || Q) = Σ P(x) · log(P(x) / Q(x))
+           = E_P[log P/Q]
+```
+
+---
+
+## Forward KL vs Reverse KL
+
+| Aspect | Forward KL(P||Q) | Reverse KL(Q||P) |
+|--------|------------------|------------------|
+| **Direction** | "P to Q" | "Q to P" |
+| **Minimization** | Q's mass covers P's mass | Q concentrates in P's modes |
+| **Mode behavior** | Mean-seeking | Mode-seeking |
+| **Formula** | ΣP log P/Q | ΣQ log Q/P |
+
+---
+
+## Visualization
+
+```
+Forward KL: minimizes  ΣP log P/Q
+┌─────────────────┐
+│     P:          │  Q must put mass everywhere P has mass
+│   ████          │
+│       ████      │  Q will average across modes
+│          ████   │
+│             ████│
+│                 │
+│  Q: ░░░░░░░░░░░░░│  (smoothed out)
+└─────────────────┘
+
+Reverse KL: minimizes ΣQ log Q/P  
+┌─────────────────┐
+│     P:          │  Q picks ONE mode of P
+│   ████          │
+│       ████      │  Q concentrates, ignores other modes
+│          ████   │
+│             ████│
+│                 │
+│  Q: ████░░░░░░░░│  (picks left mode)
+└─────────────────┘
+```
+
+---
+
+## In Alignment
+
+| Algorithm | KL Used | Behavior |
+|-----------|---------|----------|
+| **RLHF (PPO)** | Reverse KL | Model picks dominant response pattern |
+| **DPO** | Implicit reverse KL | Same |
+| **SLiC** | Forward KL-like | Supervised on preferred, ignores rejected |
+| **KTO** | Both | Balanced mean+mode seeking |
+
+---
+
+## In Diffusion
+
+| Direction | Use Case |
+|-----------|----------|
+| **Forward KL** | Training: model predicts noise added to clean image |
+| **Reverse KL | DDPM: model predicts noise to remove (mean-seeking) |
+| **Reverse KL** | DMQE: mode-seeking for higher quality |

@@ -1,0 +1,97 @@
+---
+title: 公钥密码学
+description: 'Web3 中密钥、签名和所有权背后的数学'
+---
+
+# 公钥密码学
+
+公钥密码学是区块链所有权的基础。每个钱包都是一个密钥对：私钥证明所有权，公钥生成地址，数字签名授权交易。
+
+---
+
+## 密钥生成
+
+### 从私钥到公钥
+
+```
+私钥 (256 bits)
+       │
+       ▼
+   [ECDSA / EdDSA]
+       │
+       ▼
+公钥 (512 bits / 64 字节未压缩)
+       │
+       ▼
+   [Hash + Encode]
+       │
+       ▼
+   地址 (160 bits / 20 字节)
+```
+
+---
+
+## 地址派生
+
+### Ethereum 地址
+
+```solidity
+function deriveAddress(bytes32 privateKey) pure returns (address) {
+    // 1. 获取公钥（未压缩，64 字节）
+    (uint256 x, uint256 y) = derivePublicKey(privateKey);
+    
+    // 2. 取公钥的最后 32 字节
+    bytes32 hash = keccak256(abi.encodePacked(x, y));
+    
+    // 3. 取最后 20 字节
+    return address(uint256(hash));
+}
+```
+
+---
+
+## 数字签名
+
+### ECDSA 签名 (Ethereum, Bitcoin)
+
+```solidity
+struct Signature {
+    uint256 r;
+    uint256 s;
+    uint8 v;  // 恢复 id (27 或 28)
+}
+
+function verify(
+    bytes32 messageHash,
+    uint8 v,
+    uint256 r,
+    uint256 s,
+    address signer
+) pure returns (bool) {
+    address recovered = ecrecover(messageHash, v, r, s);
+    return recovered == signer;
+}
+```
+
+---
+
+## HD 钱包
+
+BIP-32 定义了分层确定性密钥派生：
+
+```
+主种子 (128/256 bits)
+       │
+       ▼
+   HMAC-SHA512
+       │
+       ▼
+   主密钥 (256 bits) │ 主链码 (256 bits)
+```
+
+### 派生路径
+
+| 路径 | 用途 |
+|------|------|
+| `m/44'/60'/0'/0/0` | Ethereum 第一个账户 |
+| `m/44'/0'/0'/0/0` | Bitcoin 第一个账户 |

@@ -1,0 +1,119 @@
+---
+title: Stablecoins
+description: 'Pegged currencies — collateralized vs algorithmic stablecoins'
+---
+
+# Stablecoins
+
+Stablecoins are cryptocurrencies designed to maintain a fixed value (typically $1.00). They bridge the volatility of crypto with the utility of fiat currency, enabling trading, savings, and payments without converting to traditional banking.
+
+---
+
+## Types of stablecoins
+
+### 1. Fiat-collateralized
+
+| Coin | Collateral | Issuer | Reserve model |
+|------|------------|--------|---------------|
+| **USDC** | USD | Circle | 1:1 cash + equivalents |
+| **USDT** | USD | Tether | Partial reserve (controversial) |
+| **BUSD** | USD | Paxos | 1:1 regulated |
+
+**Pros:** Simple, reliable $1 peg
+**Cons:** Centralized, requires trust in issuer
+
+### 2. Crypto-collateralized
+
+Backed by other cryptocurrencies (overcollateralized):
+
+| Coin | Collateral | Mechanism |
+|------|------------|-----------|
+| **DAI** | ETH, etc. | Overcollateralized Vaults |
+| **LUSD** | ETH | PETH pool |
+
+**Mechanism:**
+```solidity
+// Simplified DAI minting
+function mint(uint256 collateralAmount) external {
+    require(collateralRatio > MIN_RATIO, "insufficient collateral");
+    
+    uint256 daiToMint = collateralAmount * price / 1e18;
+    _mint(msg.sender, daiToMint);
+}
+```
+
+**Pros:** Decentralized, transparent
+**Cons:** Overcollateralization required, volatile during crashes
+
+### 3. Algorithmic (elastic)
+
+No direct collateral — stability maintained through supply adjustments:
+
+| Coin | Mechanism |
+|------|-----------|
+| **FRAX** | Partial reserve + algorithmic |
+| **USDD** | Algorithmic with incentives |
+
+**Example (rebase model):**
+```solidity
+// Simplified rebase: expand supply when price > $1
+function rebase() internal {
+    if (price() > 1.01 * target) {
+        // Expand: everyone gets more tokens
+        uint256 expansion = totalSupply * (price() - target) / target;
+        _supply = _supply + expansion;
+        emit Expansion(expansion);
+    } else if (price() < 0.99 * target) {
+        // Contract: everyone loses tokens proportionally
+        uint256 contraction = totalSupply * (target - price()) / target;
+        _supply = _supply - contraction;
+        emit Contraction(contraction);
+    }
+}
+```
+
+**Note:** Pure algorithmic stablecoins (like original UST) have failed repeatedly.
+
+---
+
+## Depeg events
+
+When stablecoins lose their peg:
+
+| Event | Cause | Impact |
+|-------|-------|--------|
+| **UST/LUNA collapse (2022)** | Death spiral — algorithmic unwinding | $60B wiped out |
+| **USDC depeg (2023)** | Silicon Valley Bank reserves | Temporary, recovered |
+| **DAI depeg (2022)** | USDC depeg contagion | Minimal, contained |
+
+---
+
+## Stablecoin regulation
+
+| Region | Status |
+|--------|--------|
+| **EU (MiCA)** | Stablecoins allowed, reserve requirements |
+| **US** | No comprehensive regulation yet |
+| **Stablecoin Act** | Proposed US legislation |
+
+---
+
+## Cross-chain stablecoins
+
+| Protocol | Bridge | Mechanism |
+|----------|--------|-----------|
+| **Circle CCTP** | Native burns/mints | Cross-chain transfer |
+| **axlUSDC** | Axelar | Lock/unlock |
+| **moreUSD** | Morph | Restaking-backed |
+
+---
+
+## Stablecoin use cases
+
+| Use case | Description |
+|----------|-------------|
+| **Trading** | Park profits without leaving crypto |
+| **Payments** | Dollar-denominated, instant, global |
+| **Savings** | Earn yield (Aave, Compound) |
+| **DeFi collateral** | Power lending, derivatives |
+| **Remittance** | Send dollars globally, minutes |

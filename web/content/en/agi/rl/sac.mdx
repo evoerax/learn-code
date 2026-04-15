@@ -1,0 +1,43 @@
+---
+title: SAC Soft Actor Critic
+description: 'Maximum entropy reinforcement learning'
+---
+
+# SAC
+
+SAC (Haarnoja et al., 2018) maximizes expected return plus entropy.
+
+---
+
+## Maximum Entropy Objective
+
+```python
+def sac_loss(log_probs, q_values, alpha=0.1):
+    """
+    J(π) = E[Q(s,a) + α·H(π(·|s))]
+    """
+    entropy_bonus = alpha * log_probs
+    
+    # Maximize Q + entropy
+    return -(q_values + entropy_bonus).mean()
+```
+
+---
+
+## Soft Q-Function
+
+```python
+class SoftQNetwork(nn.Module):
+    def __init__(self, state_dim, action_dim):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_dim + action_dim, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Linear(256, 1)
+        )
+    
+    def forward(self, state, action):
+        return self.net(torch.cat([state, action], dim=-1))
+```

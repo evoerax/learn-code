@@ -1,0 +1,38 @@
+---
+title: DeiT 数据高效图像 Transformer
+description: '知识蒸馏训练 ViT'
+---
+
+# DeiT 数据高效图像 Transformer
+
+通过蒸馏提升 ViT 训练效率。
+
+---
+
+## 蒸馏 Token
+
+```python
+class DeiT(nn.Module):
+    def __init__(self, ...):
+        super().__init__()
+        self.dist_token = nn.Parameter(torch.randn(1, 1, dim))
+        self.dist_head = nn.Linear(dim, num_classes)
+    
+    def forward(self, x):
+        x = self.patch_embed(x).flatten(2).transpose(1, 2)
+        cls_tokens = self.cls_token.expand(x.size(0), -1, -1)
+        dist_tokens = self.dist_token.expand(x.size(0), -1, -1)
+        x = torch.cat([cls_tokens, dist_tokens, x], dim=1)
+        # ... transformer
+        return self.head(x[:, 0]), self.dist_head(x[:, 1])
+```
+
+---
+
+## vs ViT
+
+| 特性 | ViT | DeiT |
+|------|-----|------|
+| 训练数据 | ImageNet-21k/JFT-300M | ImageNet-1k |
+| 教师 | 无 | CNN |
+| 训练时间 | 高 | 降低 3x |

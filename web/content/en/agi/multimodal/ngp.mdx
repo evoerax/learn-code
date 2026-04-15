@@ -1,0 +1,78 @@
+---
+title: Instant-NGP
+description: 'Fast NeRF with hash encoding'
+---
+
+# Instant-NGP
+
+Instant-NGP (Müller et al., 2022) achieves real-time NeRF using hash encoding.
+
+---
+
+## Hash Encoding
+
+```python
+class HashEncoding(nn.Module):
+    def __init__(self, num_levels=16, hash_size=2**19):
+        super().__init__()
+        self.embed = nn.ModuleList([
+            nn.Embedding(hash_size, f_dim) for _ in range(num_levels)
+        ])
+        self.resolutions = [16, 32, 64, 128, 256, 512, 1024, 2048]
+    
+    def forward(self, x):
+        # x: (N, 3) in [-1, 1]
+        features = []
+        for level, embed in enumerate(self.embed):
+            # Get voxel center
+            scale = self.resolutions[level]
+            coords = (x + 1) * scale / 2  # [0, scale]
+            coords_floor = coords.floor().long().clamp(0, scale - 2)
+            
+            # Hash to index
+            idx = (coords_floor[:, 0] * 73856093 ^ 
+                   coords_floor[:, 1] * 19349663 ^ 
+                   coords_floor[:, 2] * 83492791) % self.hash_sizes[level]
+            
+            features.append(embed(idx))
+        
+        return torch.cat(features, dim=-1)
+```
+
+---
+
+## Architecture
+
+```python
+class InstantNGP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.hash_encoding = HashEncoding()
+        
+        # Small MLP
+        self.mlp = nn.Sequential(
+            nn.Linear(32 * 16, 128), nn.ReLU(),
+            nn.Linear(128, 128), nn.ReLU(),
+            nn.Linear(128, 4)  # RGB + density
+        )
+    
+    def forward(self, x, d):
+        f = self.hash_encoding(x)
+        out = self.mlp(f)
+        
+        # Direction prediction
+        rgb = out[:, :3]
+        density = torch.relu(out[:, 3:4])
+        
+        return torch.cat([rgb, density], dim=-1)
+```
+
+---
+
+## Performance
+
+| Method | Compile | Render | Quality |
+|--------|---------|--------|---------|
+| **Original NeRF** | 12 hours | ~30s/img | 100% |
+| **Instant-NGP** | 5 seconds | 10ms/img | 95% |
+| **Speedup** | ~8600x | ~3000x | |

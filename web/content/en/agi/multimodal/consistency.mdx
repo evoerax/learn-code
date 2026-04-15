@@ -1,0 +1,73 @@
+---
+title: Consistency Models
+description: 'One-step generation with distillation'
+---
+
+# Consistency Models
+
+Consistency Models (Song et al., 2023) achieve one-step generation by distilling diffusion models.
+
+---
+
+## Goal
+
+Learn the "consistency function" that maps any point to the trajectory's endpoint:
+
+```
+F(x) = x_0 for any t in [0, T]
+```
+
+Then one step: x_T → F(x_T) = x_0
+
+---
+
+## Training
+
+```python
+class ConsistencyModel(nn.Module):
+    def __init__(self, unet):
+        super().__init__()
+        self.net = unet
+    
+    def forward(self, x, t):
+        # Predict x_0 from (x_t, t)
+        return self.net(x, t)
+    
+    def consistency_loss(self, x):
+        t = torch.randint(0, self.T, (1,))
+        noise = torch.randn_like(x)
+        
+        x_t = self.noise_image(x, t, noise)
+        x_0_pred = self(x_t, t)
+        
+        with torch.no_grad():
+            x_0_target = self(x_t, t + 1)  # Target from next timestep
+        
+        return mse(x_0_pred, x_0_target)
+```
+
+---
+
+## Sampling
+
+```python
+# One-step (distilled)
+x_0 = model(x_T, T=epsilon)
+
+# Multi-step (refinement)
+x = x_T
+for t in [T, T-1, ..., 1]:
+    x = model(x, t)
+x_0 = x
+```
+
+---
+
+## vs Diffusion
+
+| Aspect | Diffusion | Consistency |
+|--------|-----------|-------------|
+| **Sampling** | 20-50 steps | 1-2 steps |
+| **Quality** | High | Comparable |
+| **Fine-tuning** | Limited | Can fine-tune |
+| **Distillation** | None | From diffusion |

@@ -1,0 +1,75 @@
+---
+title: 修正流
+description: 'Rectified Flow 线性轨迹'
+---
+
+# 修正流
+
+优化轨迹以加速采样。
+
+---
+
+## 问题
+
+标准 Flow Matching 轨迹可能不是最优：
+
+```python
+# 线性插值
+x_t = (1-t) * x_0 + t * x_1
+# 但中间点可能不合理
+```
+
+---
+
+## 修正
+
+```python
+class RectifiedFlow(nn.Module):
+    def __init__(self, velocity_net):
+        self.velocity = velocity_net
+    
+    def get_velocity(self, x_t, t):
+        # 预测速度
+        return self.velocity(x_t, t)
+    
+    def training_loss(self, x_0, x_1):
+        t = torch.rand(B)
+        
+        # 修正轨迹 (不一定是直线)
+        x_t = interpolate(x_0, x_1, t)
+        
+        # 速度目标
+        v = self.velocity(x_t, t)
+        
+        # 如果修正了轨迹,目标也要调整
+        target = (x_1 - x_0) * correction_factor
+        
+        return F.mashed_loss(v, target)
+```
+
+---
+
+## 采样
+
+```python
+def sample(rf, noise, num_steps=10):
+    dt = 1.0 / num_steps
+    x = noise
+    for i in range(num_steps):
+        t = 1.0 - i * dt
+        v = rf(x, torch.tensor([t]))
+        x = x - v * dt  # 反向积分
+    return x
+```
+
+---
+
+## 效果
+
+| 方法 | 步数 | FID |
+|------|------|-----|
+| 标准 FM | 50 | 4.2 |
+| Rectified | 10 | 3.8 |
+| Rectified | 5 | 4.5 |
+
+修正流在少步数下效果更好。

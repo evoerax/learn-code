@@ -1,0 +1,77 @@
+---
+title: 隐马尔可夫模型
+description: 'Hidden Markov Models'
+---
+
+# 隐马尔可夫模型
+
+序列建模的基础模型。
+
+---
+
+## HMM 定义
+
+```python
+class HMM:
+    def __init__(self, n_states, n_obs):
+        self.n_states = n_states
+        self.n_obs = n_obs
+        self.A = torch.rand(n_states, n_states)  # 转移概率
+        self.B = torch.rand(n_states, n_obs)    # 发射概率
+        self.pi = torch.rand(n_states)          # 初始概率
+    
+    def forward(self, obs):
+        # 前向算法
+        alpha = self.pi * self.B[:, obs[0]]
+        for t in range(1, len(obs)):
+            alpha = (alpha @ self.A) * self.B[:, obs[t]]
+        return alpha.sum()  # 边际似然
+```
+
+---
+
+## 三个问题
+
+| 问题 | 算法 | 用途 |
+|------|------|------|
+| 似然 | 前向/后向 | 评估 |
+| 解码 | Viterbi | 最优路径 |
+| 学习 | EM (Baum-Welch) | 参数估计 |
+
+---
+
+## Viterbi 算法
+
+```python
+def viterbi(hmm, obs):
+    n_states = hmm.n_states
+    T = len(obs)
+    
+    # 初始化
+    delta = torch.zeros(T, n_states)
+    delta[0] = hmm.pi * hmm.B[:, obs[0]]
+    
+    # 递归
+    psi = torch.zeros(T, n_states, dtype=torch.long)
+    for t in range(1, T):
+        trans = delta[t-1].unsqueeze(1) * hmm.A
+        delta[t] = trans.max(dim=0).values * hmm.B[:, obs[t]]
+        psi[t] = trans.argmax(dim=0)
+    
+    # 回溯
+    path = torch.zeros(T, dtype=torch.long)
+    path[-1] = delta[-1].argmax()
+    for t in range(T-2, -1, -1):
+        path[t] = psi[t+1, path[t+1]]
+    
+    return path
+```
+
+---
+
+## 应用
+
+- 语音识别
+- 基因序列分析
+- 时间序列预测
+- POS 标注

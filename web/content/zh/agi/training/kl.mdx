@@ -1,0 +1,63 @@
+---
+title: Forward/Reverse KL
+description: 'KL 散度在分布对齐中的应用'
+---
+
+# Forward/Reverse KL
+
+两种不同的分布对齐方式。
+
+---
+
+## 定义
+
+```python
+# Forward KL: D_KL(P || Q)
+# 最小化 P 的均值与 Q 的均值的差异
+# 倾向于覆盖所有 P 的支撑集
+
+# Reverse KL: D_KL(Q || P)
+# 最小化 Q 匹配单个 P 模态
+# 倾向于选择一个峰
+
+def forward_kl(p, q):
+    return (p * (p / q).log()).sum()
+
+def reverse_kl(p, q):
+    return (q * (q / p).log()).sum()
+```
+
+---
+
+## 对比
+
+| 特性 | Forward KL | Reverse KL |
+|------|------------|------------|
+| 模式 | 覆盖所有模态 | 选择单一模态 |
+| 零概率 | 避免 | 容忍 |
+| 训练稳定性 | 较高 | 较低 |
+| 模糊度 | 保留 | 消除 |
+
+---
+
+## 在 LLM 中的应用
+
+```python
+# SFT 使用 Forward KL
+# 最大化似然，覆盖所有正确回复
+
+# RLHF 奖励使用 Reverse KL
+# 鼓励生成高奖励回复
+
+# DPO 隐式平衡两者
+```
+
+---
+
+## 实际选择
+
+| 场景 | 推荐 |
+|------|------|
+| 生成多样性 | Forward KL |
+| 生成确定性 | Reverse KL |
+| 对齐人类偏好 | 混合 |

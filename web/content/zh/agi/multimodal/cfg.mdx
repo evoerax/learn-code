@@ -1,0 +1,61 @@
+---
+title: 无分类器引导
+description: 'Classifier-Free Guidance'
+---
+
+# 无分类器引导
+
+在无条件模型上实现条件生成。
+
+---
+
+## 训练
+
+```python
+def train():
+    # 随机丢弃条件
+    if random() < cfg_prob:
+        cond = None  # 无条件
+    else:
+        cond = text_embed
+    
+    output = model(noise, cond)
+```
+
+---
+
+## 推理
+
+```python
+def cfg_sample(model, noise, cond_emb, guidance_scale=7.5):
+    # 条件和无条件预测
+    cond_out = model(noise, cond_emb)
+    uncond_out = model(noise, None)
+    
+    # 引导
+    out = uncond_out + guidance_scale * (cond_out - uncond_out)
+    return out
+```
+
+---
+
+## 效果
+
+| guidance_scale | 效果 |
+|-----------------|------|
+| 1 | 多样但模糊 |
+| 5-7.5 | 平衡 |
+| 10-15 | 精确但低多样性 |
+| >20 | 伪影 |
+
+---
+
+## 计算量
+
+条件和无条件推理需要两次前向传播。
+
+可以用 classifier guidance 替代计算：
+```python
+# 单次前向 + 分类器梯度
+cond_out + w * classifier_gradient
+```

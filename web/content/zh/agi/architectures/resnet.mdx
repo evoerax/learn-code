@@ -1,0 +1,59 @@
+---
+title: ResNet
+description: '残差网络'
+---
+
+# ResNet
+
+残差连接解决深层网络训练困难。
+
+---
+
+## 残差块
+
+```python
+class ResidualBlock(nn.Module):
+    def __init__(self, channels):
+        super().__init__()
+        self.conv1 = nn.Conv2d(channels, channels, 3, padding=1)
+        self.bn1 = nn.BatchNorm2d(channels)
+        self.conv2 = nn.Conv2d(channels, channels, 3, padding=1)
+        self.bn2 = nn.BatchNorm2d(channels)
+    
+    def forward(self, x):
+        residual = x
+        out = F.relu(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))
+        out += residual  # 残差连接
+        return F.relu(out)
+```
+
+---
+
+## 问题
+
+深层网络退化：
+- 梯度消失
+- 准确率下降
+- 不是过拟合，而是退化
+
+---
+
+## 解决
+
+```
+x → Conv → BN → ReLU → Conv → BN → + → ReLU → 输出
+                        ↑
+                   恒等映射 (x)
+```
+
+---
+
+## ResNet 变体
+
+| 变体 | 特点 |
+|------|------|
+| ResNet-50 | 50 层, Bottleneck |
+| ResNet-101 | 101 层 |
+| ResNeXt | 分组卷积 |
+| SE-ResNet | 通道注意力 |

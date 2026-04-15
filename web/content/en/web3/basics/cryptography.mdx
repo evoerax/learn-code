@@ -1,0 +1,106 @@
+---
+title: Cryptography in Web3
+description: 'Hash functions, digital signatures, Merkle trees, and zero-knowledge proofs'
+---
+
+# Cryptography in Web3
+
+Cryptography is the mathematical foundation of blockchain. It enables secure transactions, ownership verification, and privacy — all without trusting a central party.
+
+---
+
+## Hash functions
+
+A hash function maps arbitrary-length input to fixed-length output. Blockchain uses them to:
+
+- Link blocks together (each block contains the previous block's hash)
+- Verify data integrity
+- Compute account addresses from public keys
+
+**Properties required:**
+- **Deterministic** — same input always produces same output
+- **One-way** — cannot derive input from output
+- **Collision-resistant** — practically impossible to find two inputs with same output
+- **Avalanche** — small input change produces completely different output
+
+**Examples:** SHA-256 (Bitcoin), Keccak-256 (Ethereum), Blake2 (Zcash)
+
+---
+
+## Public key cryptography
+
+Every blockchain account has a key pair:
+
+| Key Type | Purpose | Visibility |
+|----------|---------|------------|
+| **Private key** | Sign transactions, prove ownership | Secret — never share |
+| **Public key** | Derive address, verify signatures | Public |
+| **Address** | Identifies the account on-chain | Public |
+
+The relationship: **Private Key → Public Key → Address**
+
+---
+
+## Digital signatures
+
+When you send a transaction, you:
+
+1. Create the transaction data
+2. Hash the data
+3. Sign the hash with your private key
+4. Attach the signature to the transaction
+
+Anyone can verify:
+1. The transaction was not tampered with (hash matches)
+2. Only the private key holder could have produced the signature
+
+**Algorithm examples:** ECDSA (Bitcoin, Ethereum), EdDSA (Solana)
+
+---
+
+## Merkle trees
+
+A Merkle tree organizes many transactions into a single root hash:
+
+```
+        Root (Merkle Root)
+           /        \
+      Hash AB      Hash CD
+      /    \       /    \
+   Hash A  Hash B Hash C  Hash D
+     |       |      |       |
+   Tx 1    Tx 2   Tx 3    Tx 4
+```
+
+**Benefits:**
+- Single hash proves entire block integrity
+- Light clients can verify transactions without full node data
+- Efficient membership proofs
+
+---
+
+## Zero-Knowledge Proofs (ZKPs)
+
+A zero-knowledge proof allows proving knowledge of something without revealing the something itself.
+
+**Applications in blockchain:**
+| Use Case | Description |
+|----------|-------------|
+| **Privacy** | Zcash shields transaction amounts and parties |
+| **Scaling** | ZK-rollups prove validity off-chain, on-chain |
+| **Bridge security** | Prove state transitions without trusting relayers |
+
+**Types:**
+- **ZK-SNARKs** — Succinct, non-interactive proofs (Zcash, most rollups)
+- **ZK-STARKs** — Transparent, post-quantum secure (StarkNet)
+
+---
+
+## Encryption vs Signing
+
+| Operation | Uses | Result |
+|-----------|------|--------|
+| **Encrypt** | Recipient's public key | Only recipient can read with their private key |
+| **Sign** | Your private key | Anyone can verify with your public key |
+
+Blockchain transactions use **signing**, not encryption — everyone can verify validity, but only you can create valid signatures.

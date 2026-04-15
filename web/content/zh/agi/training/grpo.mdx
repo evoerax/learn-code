@@ -1,0 +1,51 @@
+---
+title: GRPO
+description: 'Group Relative Policy Optimization'
+---
+
+# GRPO
+
+DeepSeek 提出的群体相对策略优化。
+
+---
+
+## 核心思想
+
+```python
+def grpo_loss(model, prompts, beta=0.1):
+    # 对每个 prompt 生成多个响应
+    responses = [model.generate(prompt) for _ in range(G)]
+    
+    # 计算每组内的相对偏好
+    rewards = [reward_model(prompt, resp) for resp in responses]
+    
+    # 组内归一化
+    group_mean = torch.stack(rewards).mean()
+    group_std = torch.stack(rewards).std()
+    normalized_rewards = (rewards - group_mean) / (group_std + 1e-8)
+    
+    # 相对策略优化
+    for resp, norm_r in zip(responses, normalized_rewards):
+        loss = -norm_r * model.log_prob(resp)
+    
+    return loss
+```
+
+---
+
+## vs PPO
+
+| 特性 | PPO | GRPO |
+|------|-----|------|
+| 样本来源 | 旧策略 | 当前策略 |
+| 优势估计 | GAE | 组内相对 |
+| 效率 | 较低 | 较高 |
+| 稳定性 | 中等 | 较高 |
+
+---
+
+## DeepSeekMath 实践
+
+- 使用 GRPO 替代 PPO
+- 减少 50% 训练时间
+- 数学推理能力显著提升

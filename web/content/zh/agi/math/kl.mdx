@@ -1,0 +1,76 @@
+---
+title: KL 散度
+description: 'KL Divergence 分布差异度量'
+---
+
+# KL 散度
+
+衡量两个分布的差异。
+
+---
+
+## 定义
+
+```python
+def kl_divergence(p, q):
+    """
+    D_KL(P || Q) = sum P(x) * log(P(x) / Q(x))
+    """
+    # 确保归一化
+    p = p / p.sum()
+    q = q / q.sum()
+    
+    # 避免 log(0)
+    mask = (p > 0) & (q > 0)
+    return (p[mask] * torch.log(p[mask] / q[mask])).sum()
+```
+
+---
+
+## 不对称性
+
+```python
+# Forward KL: D(P||Q) - 覆盖所有 P 的质量
+# Reverse KL: D(Q||P) - 匹配单个 P 模态
+
+# Forward KL: 最小化 Q 避免在 P 高概率处给低概率
+# Reverse KL: 最小化 Q 匹配 P 的一个峰
+```
+
+---
+
+## 在机器学习中的应用
+
+```python
+# VAE 损失
+# ELBO = log p(x) - D_KL(q(z|x) || p(z|x))
+#      = E[log p(x|z)] - D_KL(q(z|x) || p(z))
+
+# GAN 损失
+# min_G max_D E[log D(x)] + E[log(1-D(G(z)))]
+# 实际上是 log D 的 KL 散度相关
+
+# RLHF
+# D_KL(policy || reference) 作为 KL 惩罚
+```
+
+---
+
+## 与其他散度
+
+| 散度 | 公式 | 性质 |
+|------|------|------|
+| KL | D(P||Q) | 非对称, 非负 |
+| JS | 0.5*KL(P||M) + 0.5*KL(Q||M) | 对称, 有界 |
+| W | 最优传输距离 | 度量 |
+
+---
+
+## 数值稳定
+
+```python
+def kl_divergence_stable(p, q, eps=1e-8):
+    p = torch.clamp(p, eps, 1)
+    q = torch.clamp(q, eps, 1)
+    return (p * (torch.log(p) - torch.log(q))).sum(-1)
+```

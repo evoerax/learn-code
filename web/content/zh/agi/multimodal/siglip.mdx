@@ -1,0 +1,43 @@
+---
+title: SigLIP
+description: 'Sigmoid 损失的 CLIP'
+---
+
+# SigLIP
+
+使用 Sigmoid 损失替代 InfoNCE。
+
+---
+
+## Sigmoid 损失
+
+```python
+def sigmoid_loss(image_emb, text_emb):
+    scores = image_emb @ text_emb.t()
+    labels = torch.eye(B, dtype=torch.float)
+    # 每对独立 sigmoid
+    loss = -torch.log(torch.sigmoid(labels * scores))
+    return loss.mean()
+```
+
+---
+
+## vs CLIP (InfoNCE)
+
+| 特性 | CLIP | SigLIP |
+|------|------|--------|
+| 归一化 | 全局 softmax | 成对 |
+| 复杂度 | O(B log B) | O(B) |
+| 负样本 | 隐式 | 显示 |
+| 内存 | 较高 | 较低 |
+
+---
+
+## 规模扩展
+
+| 模型 | 批量大小 | ImageNet |
+|------|----------|----------|
+| CLIP-B/16 | 32k | 81.3% |
+| SigLIP-B/16 | 64k | 84.5% |
+
+4096 批量即可达到 82.6%。

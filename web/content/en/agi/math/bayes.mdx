@@ -1,0 +1,48 @@
+---
+title: Bayesian Inference
+description: 'Posterior computation and probabilistic reasoning'
+---
+
+# Bayesian Inference
+
+---
+
+## Bayes Theorem
+
+```python
+# P(θ|D) = P(D|θ) · P(θ) / P(D)
+
+# Posterior ∝ Likelihood × Prior
+posterior ∝ likelihood × prior
+```
+
+---
+
+## Posterior Computation
+
+| Method | When |
+|--------|------|
+| **Exact** | Conjugate priors only |
+| **MCMC** | General, but slow |
+| **VI** | Approximate, scalable |
+| **Laplace** | Quick approximation |
+
+---
+
+## Variational Inference
+
+```python
+def vi(data, prior, q_params):
+    """
+    Approximate posterior with q(θ)
+    Minimize: KL(q(θ) || p(θ|D)) ∝ -ELBO
+    """
+    for _ in range(num_iterations):
+        # E-step: sample from q
+        theta = sample_from_q(q_params)
+        
+        # M-step: update q params
+        elbo = compute_elbo(theta, data, prior)
+        elbo.backward()
+        optimizer.step()
+```

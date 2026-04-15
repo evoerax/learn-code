@@ -1,0 +1,58 @@
+---
+title: Rust
+description: '用于 Solana、Near、Polygon 的高性能智能合约'
+---
+
+# Rust
+
+Rust 因其内存安全保证和零成本抽象成为高性能区块链智能合约的首选语言。
+
+---
+
+## 为什么用 Rust？
+
+| 特性 | 优势 |
+|------|------|
+| **内存安全** | 无段错误、无数据竞争 |
+| **所有权模型** | 资源访问的编译时验证 |
+| **无垃圾回收** | 确定执行，无暂停 |
+| **代数类型** | 表达力强、可验证的状态机 |
+
+---
+
+## Solana 与 Rust
+
+Solana 使用 Rust 编写链上程序（智能合约）。
+
+### 程序结构
+
+```rust
+use solana_program::{
+    account_info::{AccountInfo, Context},
+    entrypoint::ProgramResult,
+    msg,
+    program_error::ProgramError,
+    pubkey::Pubkey,
+};
+
+entrypoint!(process_instruction);
+
+pub fn process_instruction(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
+) -> ProgramResult {
+    msg!("Hello, Solana!");
+    Ok(())
+}
+```
+
+---
+
+## 工具
+
+| 工具 | 用途 |
+|------|------|
+| **Anchor** | Solana 框架，IDL 生成 |
+| **near-sdk-rs** | Near 智能合约库 |
+| **Solang** | Solidity 转 Rust 编译器 |

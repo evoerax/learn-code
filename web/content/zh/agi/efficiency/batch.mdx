@@ -1,0 +1,62 @@
+---
+title: 连续批处理
+description: 'Continuous Batching / Iteration-Level Scheduling'
+---
+
+# 连续批处理
+
+动态批处理提高 GPU 利用率。
+
+---
+
+## 传统批处理
+
+```python
+# 所有序列等长处理
+batch = [seq1, seq2, seq3]  # 必须等所有完成
+# GPU 利用率低，很多线程空闲
+```
+
+---
+
+## 连续批处理
+
+```python
+def continuous_batching(scheduler, new_requests):
+    while True:
+        # 尝试填满当前批次
+        current_batch = scheduler.get_ready_batch()
+        
+        # 前向传播
+        outputs = model.forward(current_batch)
+        
+        # 检测完成的序列
+        finished = scheduler.process_outputs(outputs)
+        
+        # 移除完成的，添加新的
+        for seq in finished:
+            scheduler.free_sequence(seq)
+        
+        for req in new_requests:
+            if scheduler.has_capacity():
+                scheduler.add_request(req)
+        
+        if scheduler.is_empty():
+            break
+```
+
+---
+
+## 效果
+
+| 指标 | 静态批处理 | 连续批处理 |
+|------|------------|------------|
+| GPU 利用率 | 30-50% | 80-95% |
+| 吞吐量 | 1x | 5-10x |
+| 延迟 | 固定 | 可变 |
+
+---
+
+## Orca 论文
+
+首次提出 iteration-level scheduling，实现 10x+ 吞吐提升。

@@ -1,0 +1,72 @@
+---
+title: Swin Transformer
+description: 'Hierarchical vision transformer with shifted windows'
+---
+
+# Swin Transformer
+
+Swin Transformer (Liu et al., 2021) uses a hierarchical structure with shifted windows for efficient attention.
+
+---
+
+## Hierarchical Structure
+
+```
+Stage 1: H/4  x  W/4   windows (M=7)
+Stage 2: H/8  x  W/8   windows
+Stage 3: H/16 x  W/16  windows
+Stage 4: H/32 x  W/32  windows
+```
+
+Each stage reduces resolution by 2x while increasing channels.
+
+---
+
+## Shifted Window Attention
+
+Standard ViT: global attention O(HW)^2
+
+Swin: window attention O(HW * M^2) where M is window size (typically 7)
+
+```python
+def shifted_window_attention(x, window_size=7, shift_size=3):
+    B, H, W, C = x.shape
+    
+    # Pad to multiple of window size
+    x = pad_to_multiple(x, window_size)
+    _, H_pad, W_pad, _ = x.shape
+    
+    # Calculate shifted position
+    shift = (shift_size, shift_size) if shift_size > 0 else (0, 0)
+    
+    # Attention within each window
+    attn_mask = compute_mask(H_pad, W_pad, shift, window_size)
+    
+    x = window_partition(x, window_size)
+    x = x.view(-1, window_size * window_size, C)
+    
+    # Standard attention within windows
+    x = attention(x, x, x, attn_mask)
+    
+    x = window_reverse(x, window_size, H_pad, W_pad)
+    return x
+```
+
+---
+
+## vs ViT
+
+| Aspect | ViT | Swin |
+|--------|-----|------|
+| **Structure** | Single scale | Hierarchical |
+| **Attention** | Global | Local windows + shifted |
+| **Complexity** | O((HW)^2) | O(HW * M^2) |
+| **Fine-grained tasks** | May struggle | Native support |
+
+---
+
+## Applications
+
+- Object detection (Swin-T, Swin-S, Swin-B, Swin-L)
+- Semantic segmentation (UperNet)
+- Instance segmentation

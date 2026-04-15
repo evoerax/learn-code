@@ -1,0 +1,307 @@
+---
+title: 内存泄漏典型案例（Go 与 Python）
+description: 从 Goroutine、channel 到引用计数与循环引用：内存泄漏成因、对比与检测思路
+---
+
+# 内存泄漏典型案例（Go 与 Python）
+
+**内存泄漏**指程序中**已不再使用**的内存仍被「可达」引用持有，长期无法被回收，导致占用单调上升，最终可能拖垮性能或触发 OOM。
+
+下面分 **Go**、**共通特征与其他语言对照**、**Python** 三部分整理；两语言机制不同，但底层直觉一致：**本不该再活着的对象，仍被认为还活着**。
+
+---
+
+## 一、Go 语言中的典型案例
+
+### 1. Goroutine 泄漏（最常见）
+
+```go
+func handleRequest() {
+	ch := make(chan int)
+
+	go func() {
+		val := <-ch // 若无发送方，将永久阻塞
+		println(val)
+	}()
+
+	// 函数返回后，channel 无引用，但 goroutine 仍在等数据 → 无法退出
+}
+```
+
+**问题**：每调用一次就留下一个（或多个）永不结束的 goroutine；其栈与相关结构会持续占用内存。
+
+**缓解**：保证配对发送/接收、`close(ch)`、使用带缓冲 channel、`select` 加超时、或 `context` 取消。
+
+---
+
+### 2. 全局 Map 无限增长
+
+```go
+var cache = make(map[string][]byte)
+
+func process(data []byte) {
+	key := generateKey(data)
+	cache[key] = data // 只写不删
+}
+```
+
+**问题**：进程级表无限膨胀，没有淘汰策略即表现成泄漏。
+
+**缓解**：LRU/TTL、定期裁剪、或把缓存放到有上限的组件（如 Redis 并设策略）。
+
+---
+
+### 3. 闭包捕获循环变量（经典坑；Go 1.22+ 已改进语言语义）
+
+```go
+func createHandlers() []func() {
+	var handlers []func()
+	for i := 0; i < 10; i++ {
+		handlers = append(handlers, func() {
+			println(i) // Go 1.21 及以前：多闭包常共享同一个 i
+		})
+	}
+	return handlers
+}
+```
+
+**说明**：在 **Go 1.22 起**，`for` 循环变量每次迭代为**新变量**，上述模式通常不再踩坑；旧版本需 `i := i` 复制一份再进闭包。若闭包长期存活且引用大对象，仍可能拖住大块堆内存。
+
+---
+
+### 4. HTTP 响应 Body 未关闭
+
+```go
+func fetchData(url string) {
+	resp, _ := http.Get(url)
+	// 遗漏：defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+	println(len(body))
+}
+```
+
+**问题**：连接与读缓冲可能无法归还连接池，表现为连接/内存持续增长。
+
+**缓解**：`defer resp.Body.Close()`（或读完由 `io.ReadAll` 消费后仍需关闭，视客户端实现而定；习惯上总是 `defer`）。
+
+---
+
+### 5. `time.Ticker` 未停止
+
+```go
+func startTimer() {
+	ticker := time.NewTicker(time.Second)
+	go func() {
+		for range ticker.C {
+			doSomething()
+		}
+	}()
+	// 若无人调用 ticker.Stop()，且接收循环无法退出 → 长期占用
+}
+```
+
+**问题**：`Ticker` 与关联的 goroutine 生命周期未收敛。
+
+**缓解**：在适当路径调用 `ticker.Stop()`，并用 `done` channel 或 `context` 结束 `for` 循环。
+
+---
+
+## 二、其他语言的典型对照（简要）
+
+| 语言 | 典型模式 | 常见根因 |
+| :--- | :--- | :--- |
+| **C/C++** | `malloc`/`new` 无对应 `free`/`delete` | 手动分配未配对释放 |
+| **Java** | 静态集合、线程本地变量长期持有对象 | 引用链不断，GC 无法回收 |
+| **JavaScript** | 未移除的监听器、闭包挂住 DOM | 宿主图仍可达 |
+| **Python** | 长生命周期容器、环 + `__del__`、C 扩展 | 见下文 |
+
+---
+
+## 三、内存泄漏的共通链条（直观模型）
+
+```
+┌─────────────────────────────────────────┐
+│  1. 仍存在「被遗忘」的引用                │
+│            ↓                             │
+│  2. 运行时认为对象仍可达                 │
+│            ↓                             │
+│  3. 回收器无法（或推迟） reclaim         │
+│            ↓                             │
+│  4. 占用持续上升 → 延迟或 OOM            │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## 四、Go 侧如何排查
+
+| 手段 | 用途 |
+| :--- | :--- |
+| **`net/http/pprof`** | `heap`、`goroutine` 采样；`/debug/pprof/goroutine` 看泄漏协程栈 |
+| **`go tool pprof`** | 分析 heap 分配热点与驻留 |
+| **`runtime.ReadMemStats`** | 进程级内存统计，观察 `Sys`、`HeapInuse` 等趋势 |
+
+**值得警觉的信号**：业务负载平稳而 RSS/堆却单调涨；goroutine 数量只升不降；GC 更勤但堆曲线不回落。
+
+**一句总结（Go）**：  
+> 很多「Go 内存泄漏」本质是 **goroutine 或连接没有生命周期收尾**，连带堆对象无法释放。
+
+---
+
+## 五、Python：机制与典型场景
+
+### 1. 引用计数 + 循环检测（心里要有这张「分层图」）
+
+```
+┌─────────────────────────────────────────┐
+│  Python 对象生存期（简化）：              │
+│  • 引用计数降为 0 → 立即释放（主路径）    │
+│  • 存在循环引用 → 依赖分代 GC 打破环      │
+│                                         │
+│  仍可能「像泄漏」的情况：                │
+│  • 全局/缓存/Singleton 让计数永不为 0    │
+│  • 环 + __del__ 等导致 GC 保守            │
+│  • 扩展模块在 C 层分配未释放              │
+└─────────────────────────────────────────┘
+```
+
+**说明**：仅有环、且**没有** `__del__` 时，对象在外部引用消失后通常仍会被循环 GC 回收，但会有**滞后**与额外 CPU；性能敏感路径仍应避免无意义的大环。
+
+---
+
+### 2. 循环引用（教学上最常讲）
+
+```python
+class Node:
+    def __init__(self):
+        self.parent = None
+        self.children = []
+
+    def add_child(self, child):
+        self.children.append(child)
+        child.parent = self
+
+
+a = Node()
+b = Node()
+a.add_child(b)
+del a, b
+```
+
+**缓解**：`weakref` 打破一侧强引用、在释放前手写 `cleanup()` 断开父子、或缩短对象图深度。
+
+```python
+import weakref
+
+class Node:
+    def __init__(self):
+        self.parent = None
+        self.children = []
+
+    def add_child(self, child):
+        self.children.append(child)
+        child.parent = weakref.ref(self)
+```
+
+---
+
+### 3. `__del__` 与循环引用
+
+```python
+class Bad:
+    def __init__(self):
+        self.ref = None
+
+    def __del__(self):
+        print("析构")
+
+
+x, y = Bad(), Bad()
+x.ref, y.ref = y, x
+del x, y
+```
+
+**要点**：参与环且定义了 `__del__` 时，历史上容易出现**回收顺序不确定或长期滞留**；现代 CPython 仍建议**避免用 `__del__` 做资源释放**，改用上下文管理器或 `weakref.finalize`。
+
+---
+
+### 4. 全局/类级容器只增不减
+
+```python
+_global_cache = {}
+
+def process(data):
+    _global_cache[id(data)] = data
+```
+
+**缓解**：`functools.lru_cache(maxsize=...)`、TTL、WeakValueDictionary（按需）等。
+
+---
+
+### 5. 监听器或回调未解除
+
+```python
+class Button:
+    _callbacks = []  # 类属性：所有实例共享
+
+    def on_click(self, cb):
+        self._callbacks.append(cb)
+```
+
+若只注册不清理，列表无限增长并可能间接挂住大对象。
+
+---
+
+### 6. C 扩展 / 原生库
+
+Python 对象被释放，但底层 C 层手动分配的缓冲区未配对释放时，进程 RSS 仍会涨；需借助**分配器统计、Valgrind、库文档**排查。
+
+---
+
+### 7. 生成器未关闭
+
+```python
+def big_gen():
+    huge = [0] * 10_000_000
+    for x in huge:
+        yield x
+
+
+g = big_gen()
+_ = next(g)
+g.close()  # 显式收尾更稳妥；或耗尽迭代
+```
+
+---
+
+## 六、Python 检测工具（速查）
+
+| 工具 | 作用 |
+| :--- | :--- |
+| **`tracemalloc`** | 分配栈与峰值对比 |
+| **`objgraph`** | 引用图、反向引用 |
+| **`gc`** | `gc.collect()`、`gc.get_objects()`、`gc.garbage`（调试） |
+| **`memory_profiler`** | 行级增量 |
+| **`pympler`** | 对象与容器体量估计 |
+
+---
+
+## 七、Python vs Go（对照）
+
+| 维度 | Python | Go |
+| :--- | :--- | :--- |
+| **典型根因** | 全局缓存、长生命容器、`__del__`+环、C 扩展 | Goroutine/channel/`Ticker`、未关 Body、全局 map |
+| **观测** | RSS、tracemalloc、引用图 | pprof heap/goroutine |
+| **心智模型** | 引用计数 + 分代 GC | 并发 + 非 GC 的资源必须显式释放 |
+
+**一句总结（Python）**：  
+> 多数「像泄漏」来自 **对象仍被某条看不见的引用链挂住**；环与 `__del__` 叠加时最讨厌。
+
+---
+
+## 八、延伸阅读
+
+- Go：`net/http/pprof` 官方说明、**Go 1.22 release notes**（循环变量语义）。  
+- Python：`gc` 模块文档、`tracemalloc`、`weakref`、`contextlib`（资源管理）。  
+- 通用：对比 **可达性**、**资源（_fd/连接）泄漏** 与 **纯堆增长**，排查时分开看。

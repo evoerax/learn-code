@@ -1,0 +1,77 @@
+---
+title: SD3 and FLUX
+description: 'Modern large-scale diffusion models'
+---
+
+# SD3 and FLUX
+
+The latest generation of high-quality diffusion models.
+
+---
+
+## Stable Diffusion 3 (SD3)
+
+| Feature | Value |
+|---------|-------|
+| **Architecture** | MMDiT (Multi-Modal Diffusion Transformer) |
+| **Parameters** | 8B |
+| **Text Encoder** | CLIP + T5-XXL |
+| **Training** | Rectified Flow |
+| **Resolution** | Up to 1024² |
+
+---
+
+## MMDiT Architecture
+
+```python
+class MMDiT(nn.Module):
+    def __init__(self):
+        # Separate transformers for text and image
+        self.text_transformer = Transformer()
+        self.image_transformer = Transformer()
+        
+        # Cross-attention between modalities
+        # ...
+    
+    def forward(self, x_t, t, text_emb):
+        # Process in parallel, combine at attention
+        h_text = self.text_transformer(text_emb, t)
+        h_image = self.image_transformer(x_t, t)
+        
+        # Joint attention
+        h = joint_attention(h_text, h_image)
+        
+        return self.final_layer(h)
+```
+
+---
+
+## FLUX
+
+| Feature | Value |
+|---------|-------|
+| **Architecture** | Multi-rundit (similar to MMDiT) |
+| **Parameters** | 12B |
+| **Dev** | Black Forest Labs |
+| **Strengths** | Typography, prompt adherence |
+
+---
+
+## Key Improvements
+
+| Aspect | SD 1.5/2.x | SD3/FLUX |
+|--------|-------------|----------|
+| **Text rendering** | Poor | Excellent |
+| **Prompt following** | Moderate | Very good |
+| **Anatomy** | Hand issues | Much improved |
+| **Composition** | Sometimes random | Better control |
+
+---
+
+## Sampling
+
+```python
+# FLUX uses DPM-Solver++ 2M
+# Typical: 20-28 steps for high quality
+# Guidance: 3.5-4.5
+```

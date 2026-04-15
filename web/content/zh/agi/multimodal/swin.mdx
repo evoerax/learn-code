@@ -1,0 +1,49 @@
+---
+title: Swin Transformer
+description: '分层视觉 Transformer 与移位窗口'
+---
+
+# Swin Transformer
+
+分层结构配合移位窗口注意力。
+
+---
+
+## 分层结构
+
+```
+阶段 1: H/4 × W/4   窗口 (7x7)
+阶段 2: H/8 × W/8   窗口
+阶段 3: H/16 × W/16 窗口
+阶段 4: H/32 × W/32 窗口
+```
+
+---
+
+## 移位窗口注意力
+
+```python
+def shifted_window_attention(x, window_size=7, shift_size=3):
+    # 填充、移位、分块注意力
+    x = pad_to_multiple(x, window_size)
+    shift = (shift_size, shift_size)
+    # ... 标准窗口注意力
+    return x
+```
+
+---
+
+## 复杂度
+
+| 方案 | 复杂度 |
+|------|--------|
+| ViT 全局 | O((HW)^2) |
+| Swin 窗口 | O(HW × M^2) |
+
+---
+
+## 应用
+
+- 目标检测 (Swin-T/S/B/L)
+- 语义分割 (UperNet)
+- 实例分割

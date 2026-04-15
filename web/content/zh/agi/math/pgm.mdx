@@ -1,0 +1,73 @@
+---
+title: 概率图模型
+description: 'Probabilistic Graphical Models'
+---
+
+# 概率图模型
+
+用图表示概率依赖关系。
+
+---
+
+## 图模型分类
+
+| 类型 | 边类型 | 推断 |
+|------|--------|------|
+| 有向图 (Bayes) | 条件独立 | 可能困难 |
+| 无向图 (MRF) | 团势 | 近似 |
+| 因子图 | 因子分解 | 消息传递 |
+
+---
+
+## 条件独立
+
+```python
+# X -> Z -> Y
+# X ⊥ Y | Z (给定 Z, X 和 Y 条件独立)
+
+# 验证
+# P(X, Y | Z) = P(X|Z) * P(Y|Z)
+```
+
+---
+
+## 因子图
+
+```python
+class FactorGraph:
+    def __init__(self):
+        self.factors = {}  # factor -> 变量
+        self.variables = {}  # variable -> factors
+    
+    def add_factor(self, factor, variables):
+        self.factors[factor] = variables
+        for v in variables:
+            if v not in self.variables:
+                self.variables[v] = []
+            self.variables[v].append(factor)
+```
+
+---
+
+## 消息传递
+
+```python
+def sum_product(node, variable):
+    # 变量节点的消息 = 乘积所有邻接因子消息
+    messages = []
+    for factor in self.variables[variable]:
+        msg = factor_message(factor, variable)
+        messages.append(msg)
+    return product(messages)
+```
+
+---
+
+## 应用
+
+| 领域 | 模型 |
+|------|------|
+| 计算机视觉 | CRF |
+| 语音 | GMM-HMM |
+| NLP | CRF, Neural CRFs |
+| 推荐系统 | Factorization Machines |

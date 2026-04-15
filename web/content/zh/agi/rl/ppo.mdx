@@ -1,0 +1,61 @@
+---
+title: PPO 近端策略优化
+description: 'Proximal Policy Optimization'
+---
+
+# PPO
+
+简化版 TRPO，广泛应用。
+
+---
+
+## PPO 损失
+
+```python
+def ppo_loss(old_log_probs, new_log_probs, advantages, clip_eps=0.2):
+    # 比率
+    ratio = torch.exp(new_log_probs - old_log_probs)
+    
+    # 剪切
+    clipped = torch.clamp(ratio, 1 - clip_eps, 1 + clip_eps)
+    
+    # 最小化
+    loss = -torch.min(ratio * advantages, clipped * advantages)
+    return loss.mean()
+```
+
+---
+
+## PPO 算法
+
+```python
+class PPO:
+    def __init__(self, env, policy, clip_eps=0.2, k_epochs=4):
+        self.env = env
+        self.policy = policy
+        self.clip_eps = clip_eps
+        self.k_epochs = k_epochs
+    
+    def update(self, buffer):
+        for _ in range(self.k_epochs):
+            for s, a, r, s_next, done in buffer:
+                # 计算 advantage
+                advantage = compute_gae(r, done, self.policy)
+                
+                # PPO 更新
+                loss = ppo_loss(old_probs, new_probs, advantage)
+                self.policy.optimizer.zero_grad()
+                loss.backward()
+                self.policy.optimizer.step()
+```
+
+---
+
+## 超参数
+
+| 参数 | 典型值 |
+|------|--------|
+| clip_eps | 0.2 |
+| k_epochs | 4-10 |
+| mini_batch | 64 |
+| entropy_coef | 0.01 |

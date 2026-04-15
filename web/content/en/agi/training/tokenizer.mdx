@@ -1,0 +1,70 @@
+---
+title: Tokenizer BPE
+description: 'Byte Pair Encoding subword tokenization'
+---
+
+# Tokenizer & BPE
+
+Tokenizers convert raw text into token sequences for LLMs.
+
+---
+
+## BPE Algorithm
+
+```python
+def learn_bpe(vocab_size=32000):
+    # Start with character-level vocabulary
+    vocab = {chr(i): i for i in range(256)}
+    
+    # Count pairs
+    def get_pairs(word_counts):
+        pairs = defaultdict(int)
+        for word, freq in word_counts.items():
+            symbols = word.split()
+            for i in range(len(symbols) - 1):
+                pairs[(symbols[i], symbols[i+1])] += freq
+        return pairs
+    
+    # Merge most frequent pair until vocab_size
+    while len(vocab) < vocab_size:
+        pairs = get_pairs(word_counts)
+        best = max(pairs, key=pairs.get)
+        vocab[merge(best)] = len(vocab)
+        word_counts = merge_pair(best, word_counts)
+    
+    return vocab
+```
+
+---
+
+## Tokenization Process
+
+```python
+def tokenize(text, vocab):
+    tokens = list(text.encode('utf-8'))
+    
+    while len(tokens) >= 2:
+        # Find best pair to merge
+        pairs = [(tokens[i], tokens[i+1]) for i in range(len(tokens)-1)]
+        pair_scores = [(vocab.get(pair, 0), i, pair) for i, pair in enumerate(pairs)]
+        best = max(pair_scores, key=lambda x: x[0])[1]
+        
+        if vocab.get(pairs[best], 0) == 0:
+            break
+        
+        tokens = tokens[:best] + [merge(pairs[best])] + tokens[best+2:]
+    
+    return tokens
+```
+
+---
+
+## Comparison
+
+| Tokenizer | Vocab Size | Language | Notes |
+|-----------|------------|----------|-------|
+| **GPT-2** | 50,257 | English | BPE |
+| **GPT-4** | ~100K | Multilingual | BPE variant |
+| **Claude** | ~64K | Multilingual | SentencePiece |
+| **Llama** | 32,000 | Multilingual | SentencePiece |
+| **Qwen** | 151,936 | Chinese-heavy | BPE |

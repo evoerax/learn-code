@@ -1,0 +1,67 @@
+---
+title: PPO 在对齐中的应用
+description: 'Proximal Policy Optimization'
+---
+
+# PPO 在对齐中的应用
+
+PPO 是 RLHF 的核心强化学习算法。
+
+---
+
+## PPO 目标函数
+
+```python
+def ppo_loss(old_log_probs, new_log_probs, rewards, eps=0.2):
+    # 策略比率
+    ratio = torch.exp(new_log_probs - old_log_probs)
+    
+    # 剪切
+    clipped_ratio = torch.clamp(ratio, 1-eps, 1+eps)
+    
+    # 优势
+    advantage = rewards - rewards.mean() / (rewards.std() + 1e-8)
+    
+    # PPO 损失
+    loss = -torch.min(ratio * advantage, clipped_ratio * advantage)
+    return loss.mean()
+```
+
+---
+
+## 在 LLM 对齐中的应用
+
+```python
+class PPOTrainer:
+    def __init__(self, policy, ref_policy, reward_model):
+        self.policy = policy
+        self.ref_policy = ref_policy
+        self.reward_model = reward_model
+    
+    def step(self, prompts):
+        # 生成响应
+        responses = self.policy.generate(prompts)
+        
+        # 计算奖励
+        rewards = self.reward_model(prompts, responses)
+        
+        # KL 惩罚（防止偏离 SFT）
+        kl = self.compute_kl(prompts, responses)
+        
+        # 组合奖励
+        final_rewards = rewards - beta * kl
+        
+        # PPO 更新
+        self.policy.update(old_log_probs, new_log_probs, final_rewards)
+```
+
+---
+
+## 超参数
+
+| 参数 | 典型值 |
+|------|--------|
+| clip_eps | 0.2 |
+| kl_coeff (beta) | 0.04 |
+| ppo_epochs | 4 |
+| mini_batch_size | 4-8 |

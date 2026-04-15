@@ -1,0 +1,70 @@
+---
+title: Differentiable Rendering
+description: 'Rendering as a differentiable operation'
+---
+
+# Differentiable Rendering
+
+Differentiable rendering enables gradient-based optimization of rendered images.
+
+---
+
+## Traditional vs Differentiable
+
+```python
+# Traditional: non-differentiable
+image = rasterize(mesh)  # Can't backprop to vertices
+
+# Differentiable: soft rasterization
+def differentiable_rasterize(vertices, faces, features):
+    # Instead of hard assignment, compute soft weights
+    # Each pixel influenced by nearby triangles
+    
+    for pixel in image:
+        contributions = []
+        for face in nearby_faces(pixel):
+            weight = soft_z_buffer(face, pixel)
+            contributions.append(weight * face.color)
+        
+        pixel.color = sum(contributions)
+    
+    return image
+```
+
+---
+
+## Soft Rasterization
+
+```python
+def soft_rasterize(face_vertices, pixel_coords, sigma=1.0):
+    """
+    face_vertices: (3, 3) in screen space
+    pixel_coords: (2,)
+    """
+    # Barycentric coordinates with softness
+    bary = barycentric_coords(face_vertices, pixel_coords)
+    
+    # Only contribute if inside triangle
+    in_triangle = all(bary > 0)
+    
+    # Weight by proximity
+    if in_triangle:
+        weight = exp(bary.sum() / sigma)
+    else:
+        # Partial coverage
+        weight = exp(min(bary) / sigma)
+    
+    return weight
+```
+
+---
+
+## Applications
+
+| Application | Use Case |
+|------------|---------|
+| **Inverse graphics** | Fit mesh to image |
+| **GANs** | Differentiable image generation |
+| **Neural rendering** | NeRF, 3D Gaussian |
+| **Material capture** | Estimate BRDF from photos |
+| **Mesh optimization** | Fit to silhouettes |

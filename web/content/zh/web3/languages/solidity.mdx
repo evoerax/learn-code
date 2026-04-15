@@ -1,0 +1,89 @@
+---
+title: Solidity
+description: "Ethereum 主要智能合约语言 — JavaScript 风格，EVM 目标"
+---
+
+# Solidity
+
+Solidity 是 Ethereum 虚拟机 (EVM) 链的主导语言。由 Gavin Wood 于 2014 年创建，结合了类似 JavaScript 的语法和区块链特定功能。
+
+---
+
+## Hello World
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract HelloWorld {
+    string public greeting;
+    
+    constructor(string memory _greeting) {
+        greeting = _greeting;
+    }
+    
+    function greet() public view returns (string memory) {
+        return greeting;
+    }
+}
+```
+
+---
+
+## 关键概念
+
+### 数据位置
+
+| 位置 | 用途 | 持久性 | Gas |
+|------|------|--------|-----|
+| **storage** | 合约状态 | 永久 | 最高 |
+| **memory** | 临时变量 | 仅交易 | 中等 |
+| **calldata** | 函数参数 | 仅交易 | 便宜 |
+
+### 可见性
+
+```solidity
+function foo() external { }     // 仅外部调用
+function bar() public { }      // 外部 + 内部
+function baz() internal { }     // 仅此合约
+function qux() private { }      // 仅此合约（不包括派生）
+```
+
+---
+
+## 常见模式
+
+### Ownable (访问控制)
+
+```solidity
+abstract contract Ownable {
+    address public owner;
+    
+    modifier onlyOwner() {
+        require(msg.sender == owner, "not owner");
+        _;
+    }
+}
+```
+
+---
+
+## 安全考虑
+
+| 漏洞 | 预防 |
+|------|------|
+| **重入攻击** | Checks-Effects-Interactions 模式 |
+| **整数溢出** | Solidity 0.8+ 内置检查 |
+| **抢先交易** | 提交-揭示方案 |
+| **访问控制** | 显式可见性 |
+
+---
+
+## 工具
+
+| 工具 | 用途 |
+|------|------|
+| **Hardhat** | 开发环境、测试、部署 |
+| **Foundry** | 快速测试 (Forge)、调试 |
+| **OpenZeppelin** | 战斗测试的合约库 |
+| **Slither** | 静态分析漏洞 |

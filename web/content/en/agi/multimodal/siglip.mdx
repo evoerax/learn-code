@@ -1,0 +1,64 @@
+---
+title: SigLIP
+description: 'Scalable Language-Image Pre-training with Sigmoid Loss'
+---
+
+# SigLIP
+
+SigLIP (Zhai et al., 2023) replaces standard contrastive loss with a sigmoid loss for improved scalability.
+
+---
+
+## Sigmoid Loss
+
+Standard CLIP uses InfoNCE loss requiring global softmax normalization:
+
+```python
+# CLIP: symmetric cross-entropy with global softmax
+def clip_loss(image_emb, text_emb, temperature):
+    logits = (image_emb @ text_emb.t()) / temperature
+    loss = cross_entropy(logits, labels) + cross_entropy(logits.t(), labels)
+    return loss
+```
+
+SigLIP uses pairwise sigmoid loss (binary classification per pair):
+
+```python
+def sigmoid_loss(image_emb, text_emb, margin=0.5):
+    """
+    image_emb: (B, D), text_emb: (B, D)
+    Each (image, text) pair is labeled 1 (matched) or 0 (mismatched)
+    """
+    scores = image_emb @ text_emb.t()  # (B, B)
+    
+    # Positive pairs: image_i with text_i
+    pos_mask = torch.eye(B, dtype=torch.bool)
+    
+    # Sigmoid cross-entropy per pair
+    labels = pos_mask.float() * 2 - 1  # 1 for positive, -1 for negative
+    loss = -torch.log(torch.sigmoid(labels * scores))
+    
+    return loss.mean()
+```
+
+---
+
+## Benefits
+
+| Aspect | CLIP (InfoNCE) | SigLIP (Sigmoid) |
+|--------|----------------|------------------|
+| **Normalization** | Global softmax | Per-pair |
+| **Scale** | O(B log B) | O(B) |
+| **Negative sampling** | Implicit via softmax | Explicit |
+| **Memory** | Higher | Lower |
+
+---
+
+## Batch Size Scaling
+
+SigLIP enables training with larger batches without the log(B) overhead of InfoNCE:
+
+- CLIP-B/16: batch 32k, ImageNet 81.3%
+- SigLIP-B/16: batch 64k, ImageNet 84.5%
+
+Training at 4096 batch size achieves 82.6% on ImageNet with only 4B images.

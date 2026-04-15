@@ -1,0 +1,90 @@
+---
+title: MuZero
+description: '无模型自适应规划'
+---
+
+# MuZero
+
+通过学习模型进行规划。
+
+---
+
+## 核心思想
+
+学习一个可用于规划的隐模型：
+
+```python
+class MuZero:
+    def __init__(self):
+        self.representation = R()  # 编码状态
+        self.dynamics = D()       # 隐模型
+        self.prediction = P()     # 价值/策略头
+    
+    def forward(self, obs):
+        # 编码观察
+        s = self.representation(obs)
+        
+        # MCTS 规划
+        action = self.mcts(s)
+        return action
+    
+    def train(self, batch):
+        s_0 = self.representation(batch.obs)
+        
+        # 隐状态转移
+        s_1 = self.dynamics(s_0, batch.action)
+        
+        # 预测
+        policy, value = self.prediction(s_1)
+        
+        # 损失
+        loss = policy_loss(policy, batch.policy) + \
+               value_loss(value, batch.value) + \
+               reconstruction_loss(s_0, batch.obs)
+```
+
+---
+
+## MCTS 规划
+
+```python
+def mcts(root_s, num_simulations=50):
+    for _ in range(num_simulations):
+        s = root_s
+        node = tree[root_s]
+        
+        while not node.is_leaf():
+            # 选择
+            action = node.uct_child()
+            s, node = expand(s, action)
+        
+        # 评估
+        v = evaluate(s)  # 通过预测网络
+        
+        # 回传
+        node.backup(v)
+    
+    return tree[root_s].best_action()
+```
+
+---
+
+## 无根原化
+
+```python
+# 不需要观察模型，使用隐状态
+s_t = dynamics(s_{t-1}, a_{t-1})
+# s_t 直接用于预测，不依赖真实观察
+```
+
+---
+
+## 效果
+
+| 游戏 | AlphaZero | MuZero |
+|------|-----------|--------|
+| 围棋 | 超越人类 | 超越人类 |
+| Atari | 需要模型 | 超越人类 |
+| 国际象棋 | 超越人类 | 超越人类 |
+
+MuZero 首次在 Atari 上超越人类专家。

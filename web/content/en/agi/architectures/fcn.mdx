@@ -1,0 +1,47 @@
+---
+title: FCN and SAM
+description: 'Fully convolutional networks and Segment Anything'
+---
+
+# FCN and SAM
+
+Fully convolutional networks for pixel-level prediction.
+
+---
+
+## FCN (Fully Convolutional Networks)
+
+```python
+class FCN(nn.Module):
+    def __init__(self, num_classes):
+        super().__init__()
+        # Encoder (any CNN without FC)
+        self.backbone = ResNet50()
+        
+        # Replace final FC with 1x1 conv
+        self.score = nn.Conv2d(2048, num_classes, 1)
+        
+        # Upsample to original size
+        self.upsample = nn.ConvTranspose2d(num_classes, num_classes, 64, stride=32)
+```
+
+---
+
+## SAM (Segment Anything Model)
+
+```python
+# Meta's promptable segmentation model
+class SAM(nn.Module):
+    def __init__(self, image_encoder, prompt_encoder, mask_decoder):
+        self.image_encoder = image_encoder  # ViT or ResNet
+        self.prompt_encoder = prompt_encoder  # Points, boxes, masks
+        self.mask_decoder = mask_decoder  # Transformer decoder
+    
+    def forward(self, image, prompts):
+        image_emb = self.image_encoder(image)
+        prompt_emb = self.prompt_encoder(prompts)
+        
+        # Cross-attention between image and prompts
+        masks = self.mask_decoder(image_emb, prompt_emb)
+        return masks
+```

@@ -1,0 +1,45 @@
+---
+title: Qwen Series
+description: "Alibaba's open multilingual LLM"
+---
+
+# Qwen Series
+
+Alibaba's Qwen models have become major open-source performers.
+
+---
+
+## Evolution
+
+| Model | Year | Params | Context | Notes |
+|-------|------|--------|---------|-------|
+| **Qwen 1** | 2023 | 7B-72B | 2K | First Qwen |
+| **Qwen 1.5** | 2024 | 7B-110B | 32K | Improved |
+| **Qwen 2** | 2024 | 0.5B-72B | 128K | SwiGLU, GQA |
+| **Qwen 2.5** | 2024 | 7B-72B | 128K | Best open |
+| **Qwen 3** | 2025 | 0.6B-32B | 128K | Thinking mode |
+
+---
+
+## Qwen 2.5 Technical
+
+```python
+config = {
+    "hidden_size": 3584,
+    "num_attention_heads": 28,
+    "num_key_value_heads": 4,  # GQA
+    "intermediate_size": 18944,  # SwiGLU
+    "vocab_size": 151936,  # Large for Chinese
+}
+```
+
+---
+
+## Strengths
+
+| Strength | Description |
+|----------|-------------|
+| **Multilingual** | Strong Chinese + English |
+| **Code** | Excellent coding ability |
+| **Math** | Strong mathematical reasoning |
+| **Open** | Fully open weights |

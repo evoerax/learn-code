@@ -1,0 +1,78 @@
+---
+title: Offline RL
+description: 'Learning from static datasets without interaction'
+---
+
+# Offline RL
+
+Offline RL learns from fixed datasets without online interaction.
+
+---
+
+## Challenge: Distribution Shift
+
+```python
+# In offline RL:
+# - Dataset: {(s, a, r, s')} collected by behavior policy πβ
+# - We want to learn optimal πθ ≠ πβ
+
+# Problem: Out-of-distribution actions
+# Q(s, a not in dataset) may be overestimated!
+```
+
+---
+
+## CQL (Conservative Q-Learning)
+
+```python
+def cql_loss(q_values, actions, target_q, alpha=1.0):
+    """
+    CQL adds a conservative regularizer:
+    - Maximize Q on data actions (standard)
+    - Minimize Q on out-of-distribution actions
+    """
+    # Standard RL loss
+    data_q = q_values.gather(1, actions.unsqueeze(1)).mean()
+    
+    # Conservative regularizer
+    # Minimize expected Q under uniform distribution
+    random_q = q_values.mean()
+    
+    # CQL loss: maximize Q on data, minimize elsewhere
+    loss = -data_q + alpha * (random_q - data_q)
+    
+    return loss
+```
+
+---
+
+## IQL (Implicit Q-Learning)
+
+```python
+def iql_loss(q_values, target_q, values, actions, expectile=0.7):
+    """
+    IQL uses expectile regression for offline RL
+    Only updates on high-return transitions
+    """
+    # Advantage-weighted regression
+    advantages = target_q - values.detach()
+    
+    # Expectile regression (asymmetric MSE)
+    weight = (advantages > 0).float() * expectile
+    weight += (advantages <= 0).float() * (1 - expectile)
+    
+    loss = weight * (q_values - target_q.detach()) ** 2
+    return loss.mean()
+```
+
+---
+
+## BCQ, BEAR, BRAC, IQL Comparison
+
+| Method | Approach | Key Idea |
+|--------|----------|----------|
+| **BCQ** | Constrained policy | Clone policy, perturb if Q confident |
+| **BEAR** | Support constraint | Policy stays in data support |
+| **BRAC** | Behavioral cloning | KL against behavior policy |
+| **CQL** | Conservative Q | Maximize data Q, minimize OOD Q |
+| **IQL** | Expectile regression | Only update on good transitions |

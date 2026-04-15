@@ -1,0 +1,83 @@
+---
+title: MDP and Bellman Equation
+description: 'Markov decision processes foundations'
+---
+
+# MDP and Bellman Equation
+
+MDPs formalize sequential decision making under uncertainty.
+
+---
+
+## Markov Decision Process
+
+```python
+class MDP:
+    def __init__(self, states, actions, transition, reward, gamma=0.99):
+        self.S = states          # State space
+        self.A = actions          # Action space  
+        self.P = transition       # P(s'|s,a) - transition dynamics
+        self.R = reward          # R(s,a) or R(s,a,s')
+        self.gamma = gamma       # Discount factor
+```
+
+---
+
+## Bellman Equations
+
+```python
+def bellman_equation(V, s, mdp):
+    """
+    V: value function
+    s: current state
+    """
+    best_value = 0
+    for a in mdp.A:
+        # Expected value of taking action a
+        q_value = 0
+        for s_next in mdp.S:
+            p = mdp.P(s_next | s, a)
+            r = mdp.R(s, a, s_next)
+            q_value += p * (r + mdp.gamma * V[s_next])
+        
+        best_value = max(best_value, q_value)
+    
+    return best_value
+```
+
+---
+
+## Value Iteration
+
+```python
+def value_iteration(mdp, theta=1e-6, max_iters=1000):
+    V = {s: 0 for s in mdp.S}
+    
+    for _ in range(max_iters):
+        delta = 0
+        V_new = {}
+        
+        for s in mdp.S:
+            v_old = V[s]
+            V_new[s] = bellman_equation(V, s, mdp)
+            delta = max(delta, abs(V_new[s] - v_old))
+        
+        V = V_new
+        
+        if delta < theta:
+            break
+    
+    return V
+```
+
+---
+
+## Key Concepts
+
+| Concept | Definition |
+|---------|------------|
+| **State value V(s)** | Expected return from state s |
+| **Q-value Q(s,a)** | Expected return from taking a in s |
+| **Policy π(a\|s)** | Probability of taking a in s |
+| **Optimal V*** | Maximum V achievable |
+| **Optimal Q*** | Maximum Q achievable |

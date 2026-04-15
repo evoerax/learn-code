@@ -1,0 +1,71 @@
+---
+title: AWQ 量化
+description: 'Activation-Aware Weight Quantization'
+---
+
+# AWQ 量化
+
+AWQ 发现权重对量化误差的敏感性不同。
+
+---
+
+## 核心发现
+
+并非所有权重都需要同等精度：
+
+```python
+# 计算权重敏感性（基于激活）
+def compute_sensitivity(model, calibration_data):
+    hooks = []
+    sensitivities = []
+    
+    def hook_fn(module, input, output):
+        # 激活量级作为敏感性指标
+        act = input[0].abs().mean()
+        sensitivities.append(act)
+    
+    # 注册 hooks
+    for name, module in model.named_modules():
+        if isinstance(module, nn.Linear):
+            hooks.append(module.register_forward_hook(hook_fn))
+    
+    # 运行校准数据
+    for batch in calibration_data:
+        model(batch)
+    
+    return sensitivities
+```
+
+---
+
+## 保护重要权重
+
+```python
+def awq_quantize(W, bits=4, alpha=1.0):
+    # 计算缩放因子
+    scales = (W.abs() ** alpha).mean(dim=1, keepdim=True) ** (1/alpha)
+    
+    # 量化时保护重要权重
+    W_scaled = W / scales
+    W_quant = (W_scaled).round().clamp(-2**(bits-1), 2**(bits-1))
+    W_quant = W_quant * scales
+    
+    return W_quant
+```
+
+---
+
+## vs GPTQ
+
+| 特性 | GPTQ | AWQ |
+|------|------|-----|
+| 关注点 | 权重误差 | 激活敏感性 |
+| 精度 | 良好 | 更好 |
+| 速度 | 较快 | 相当 |
+| 适用 | 通用 | LLM 最佳 |
+
+---
+
+## 效果
+
+AWQ 在 LLaMA、Mistral 等模型上效果优于 GPTQ。

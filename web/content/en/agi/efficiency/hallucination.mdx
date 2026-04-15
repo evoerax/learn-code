@@ -1,0 +1,102 @@
+---
+title: Hallucination Mitigation
+description: 'Reducing factual errors in LLM outputs'
+---
+
+# Hallucination Mitigation
+
+Hallucination is a major challenge for LLM deployment. Multiple techniques can reduce it.
+
+---
+
+## Types of Hallucination
+
+| Type | Example |
+|------|--------|
+| **Factual** | "Einstein born 1879" → "Einstein born 1850" |
+| **Contextual** | User: "X" → Model: "According to Y..." |
+| **Contradictory** | "A is true" in one sentence, "A is false" later |
+
+---
+
+## Mitigation Techniques
+
+### 1. Retrieval Augmentation
+
+```python
+def rag_generate(query, model, retriever):
+    docs = retriever.search(query)
+    context = format_docs(docs)
+    
+    prompt = f"""Answer ONLY based on the provided context.
+    If the answer isn't in the context, say "I don't know."
+
+Context: {context}
+
+Question: {query}"""
+    
+    return model.generate(prompt)
+```
+
+### 2. Self-Consistency
+
+```python
+def self_consistency(model, query, n=5):
+    responses = [model.generate(query) for _ in range(n)]
+    
+    # Pick most common answer
+    from collections import Counter
+    most_common = Counter(responses).most_common(1)[0][0]
+    
+    return most_common
+```
+
+### 3. Chain-of-Verification
+
+```python
+def verify_generate(model, query):
+    # Generate initial response
+    response = model.generate(query)
+    
+    # Verification steps
+    verification_prompt = f"""Given this response:
+    {response}
+    
+    Verify each factual claim. List any issues."""
+    
+    issues = model.generate(verification_prompt)
+    
+    # Regenerate fixing issues
+    fixed = model.generate(f"Original: {response}\nIssues: {issues}")
+    
+    return fixed
+```
+
+### 4. Uncertainty Quantification
+
+```python
+def uncertain_generate(model, query):
+    # Get token probabilities
+    output = model.generate(query, output_scores=True)
+    
+    # Find low-confidence tokens
+    probs = F.softmax(output.scores[0], dim=-1)
+    max_prob = probs.max().item()
+    
+    if max_prob < 0.7:
+        return f"{output} [Low confidence: {max_prob:.2f}]"
+    
+    return output
+```
+
+---
+
+## Best Practices
+
+| Technique | Effectiveness | Cost |
+|-----------|--------------|------|
+| **RAG** | High | Medium |
+| **Self-consistency** | High | High (n samples) |
+| **CoVe** | High | Very High |
+| **Uncertainty** | Medium | Low |
+| **Fine-tuning on factual** | High | High |

@@ -1,0 +1,77 @@
+---
+title: Linear Algebra
+description: 'Vector spaces, matrices, and transformations'
+---
+
+# Linear Algebra
+
+Foundations for understanding neural networks.
+
+---
+
+## Core Concepts
+
+| Concept | Definition |
+|---------|------------|
+| **Vector** | Ordered list of numbers |
+| **Matrix** | 2D array of numbers |
+| **Eigenvalue** | λ where Av = λv |
+| **SVD** | A = UΣV^T decomposition |
+
+---
+
+## Matrix Operations
+
+```python
+# Matrix multiplication
+C = A @ B
+
+# Transpose
+B_T = B.T
+
+# Inverse (if exists)
+A_inv = torch.inverse(A)
+
+# Determinant
+det = torch.det(A)
+
+# Trace
+tr = torch.trace(A)
+```
+
+---
+
+## Eigenvalue Decomposition
+
+```python
+# For square matrices
+eigenvalues, eigenvectors = torch.linalg.eig(A)
+
+# For symmetric matrices (used in PCA)
+eigenvalues, eigenvectors = torch.linalg.eigh(A)  # 'h' for hermitian
+```
+
+---
+
+## SVD (Singular Value Decomposition)
+
+```python
+# A = U @ S @ V^T
+U, S, Vh = torch.linalg.svd(A)
+
+# Truncated SVD for dimensionality reduction
+U_k, S_k, Vh_k = torch.linalg.svd(A, full_matrices=False)
+# Keep top k components
+A_k = U_k @ torch.diag(S_k) @ Vh_k
+```
+
+---
+
+## Applications in ML
+
+| Application | Linear Algebra Tool |
+|-------------|-------------------|
+| **PCA** | Eigenvalue decomposition |
+| **Autoencoder** | Bottleneck forces compression |
+| **Attention** | Matrix multiplications |
+| **Convolution** | Toeplitz matrices |

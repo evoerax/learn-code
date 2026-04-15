@@ -1,0 +1,50 @@
+---
+title: 智能合约语言
+description: '编写运行在区块链上的程序 — Solidity、Rust、Move'
+---
+
+import { Cards } from 'nextra/components'
+
+# 智能合约语言
+
+智能合约是部署在区块链上的程序，在条件满足时自动执行。编写它们需要专门的编程语言：
+
+- **确定性** — 相同输入总是产生相同输出
+- **Gas 优化** — 每次计算都消耗费用
+- **安全性** — 漏洞可能导致资金永久损失
+- **形式化验证** — 数学证明正确性
+
+---
+
+## 语言
+
+<Cards>
+  <Cards.Card title="Solidity" href="/zh/web3/languages/solidity" arrow>
+    Ethereum 主要语言，受 JavaScript 和 Python 影响
+  </Cards.Card>
+  <Cards.Card title="Rust" href="/zh/web3/languages/rust" arrow>
+    用于 Solana、Near、Polygon 的高性能语言
+  </Cards.Card>
+  <Cards.Card title="Move" href="/zh/web3/languages/move" arrow>
+    Meta 为 Diem/Libra、Aptos/Sui 开发的语言
+  </Cards.Card>
+</Cards>
+
+---
+
+## 语言对比
+
+| 语言 | 链 | 范式 | 风格 |
+|------|-----|------|------|
+| **Solidity** | Ethereum + EVM | 面向对象 | JavaScript 类 |
+| **Vyper** | Ethereum + EVM | Python 类 | Python |
+| **Rust** | Solana, Near, Polkadot | 系统 | C 类 |
+| **Move** | Aptos, Sui | 资源导向 | Rust 类 |
+| **Cairo** | StarkNet | ZK 优化 | Rust 类 |
+
+---
+
+## 阅读下一步
+
+- [DeFi 协议](/zh/web3/defi) — 了解这些语言的实际应用
+- [DAO 治理](/zh/web3/dao) — 投票和国库管理合约

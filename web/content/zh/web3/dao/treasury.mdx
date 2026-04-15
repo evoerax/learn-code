@@ -1,0 +1,72 @@
+---
+title: DAO 国库管理
+description: '多签钱包、消费限制和链上资产管理'
+---
+
+# DAO 国库管理
+
+国库管理对 DAO 可持续性至关重要——控制资金如何存储、访问和部署。
+
+---
+
+## 多签钱包
+
+多签需要多个签名者批准交易：
+
+| 钱包 | 签名者 | 用例 |
+|------|--------|------|
+| **Gnosis Safe** | 1-of-n 到 n-of-n | 大多数 DAO |
+| **Argent** | 3-of-5 典型 | Layer 2 / 智能钱包 |
+| **Zodiac** | 模块化角色 | 协议集成 |
+
+---
+
+## Gnosis Safe 合约
+
+```solidity
+contract GnosisSafe {
+    uint256 public threshold;
+    mapping(address => address) public owners;
+    
+    function execTransaction(
+        address to,
+        uint256 value,
+        bytes memory data,
+        Enum.Operation operation,
+        bytes memory signatures
+    ) external payable returns (bool success) {
+        bytes32 txHash = encodeTransactionData(to, value, data, operation);
+        checkSignatures(txHash, signatures);
+        
+        if (operation == Enum.Operation.Call) {
+            success = execute(to, value, data);
+        }
+    }
+}
+```
+
+---
+
+## 投资策略
+
+DAO 越来越多地部署国库资产：
+
+| 策略 | 描述 |
+|------|------|
+| **质押** | ETH 权益证明，赚取约 4-5% |
+| **DeFi 借贷** | 供应到 Aave，赚取利息 |
+| **LP 头寸** | 做市，费用收入 |
+| **协议投资** | 早期代币购买 |
+| **RWA** | 链上现实世界资产 |
+
+---
+
+## 安全最佳实践
+
+| 实践 | 描述 |
+|------|------|
+| **时间锁** | 延迟大额提款 |
+| **阈值** | 需要多个签名者 |
+| **消费上限** | 每日/每月限制 |
+| **紧急暂停** | 冻结功能 |
+| **硬件钱包** | 物理密钥安全 |

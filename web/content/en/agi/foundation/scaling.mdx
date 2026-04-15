@@ -1,0 +1,76 @@
+---
+title: Scaling Laws
+description: 'Predicting LLM performance from compute, data, and parameters'
+---
+
+# Scaling Laws
+
+Scaling laws (Kaplan et al., 2020; Hoffmann et al., 2022) describe how model performance improves with scale.
+
+---
+
+## Original Kaplan Scaling Laws
+
+Power law relationship between loss and:
+
+```
+L(N) ∝ N^(-0.076)    # Parameters
+L(D) ∝ D^(-0.095)    # Training tokens  
+L(C) ∝ C^(-0.050)    # Compute
+```
+
+Key insight: **Sample efficiency improves with model size**.
+
+---
+
+## Chinchilla Scaling Laws
+
+Hoffmann et al. (2022) found optimal scaling:
+
+```
+For compute budget C:
+    N* ∝ C^0.49
+    D* ∝ C^0.51
+```
+
+**Rule of thumb: 20 tokens per parameter**.
+
+| Model | Params | Tokens | Optimal? |
+|-------|--------|--------|----------|
+| Chinchilla | 70B | 1.4T | Yes |
+| Gopher | 280B | 300B | No (undertrained) |
+| Llama 2 | 70B | 2T | Overtrained |
+
+---
+
+## Beyond Loss: Emerging Capabilities
+
+```
+Ability threshold:
+┌─────────────────────────────────────────┐
+│                                         │
+│  Emergent abilities (BigBench)         │
+│                    ┌───────────────┐    │
+│                    │               │    │
+│  3B params ┬───────┘               │    │
+│            │                       │    │
+│  7B params ┼───────────────────────┘    │
+│            │                               │
+│  13B params┼───────────────────────────  │
+│            │                               │
+└─────────────────────────────────────────┘
+         6.8e23    1.0e24    1.5e24    FLOPs
+```
+
+Some abilities only emerge above certain scale thresholds.
+
+---
+
+## Practical Implications
+
+| Decision | Guidance |
+|----------|----------|
+| **Model size** | Larger is better for same compute |
+| **Training tokens** | ~20x params for optimal |
+| **Batch size** | Scale with model: BS ∝ √C |
+| **Learning rate** | Decrease as model grows: LR ∝ N^(-0.5) |

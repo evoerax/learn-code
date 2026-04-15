@@ -1,0 +1,79 @@
+---
+title: DPO Direct Preference Optimization
+description: 'Aligning models without reinforcement learning'
+---
+
+# DPO Direct Preference Optimization
+
+DPO (Rafailov et al., 2023) simplifies alignment by reformulating it as a classification problem.
+
+---
+
+## DPO vs RLHF
+
+```
+RLHF:
+1. Train reward model on human preferences
+2. Fine-tune with PPO using reward + KL penalty
+
+DPO:
+1. Train reward model on human preferences  
+2. Derive optimal policy directly in closed form
+```
+
+---
+
+## The DPO Loss
+
+```python
+def dpo_loss(model, ref_model, chosen, rejected, beta=0.1):
+    """
+    chosen: preferred response tokens
+    rejected: dispreferred response tokens
+    beta: temperature controlling KL penalty strength
+    """
+    # Policy probabilities
+    pi_chosen = model(chosen).log_prob()
+    pi_rejected = model(rejected).log_prob()
+    
+    # Reference probabilities
+    ref_chosen = ref_model(chosen).log_prob()
+    ref_rejected = ref_model(rejected).log_prob()
+    
+    # Log ratios
+    log_ratio_chosen = (pi_chosen - ref_chosen).sum(-1)
+    log_ratio_rejected = (pi_rejected - ref_rejected).sum(-1)
+    
+    # DPO loss
+    logits = log_ratio_chosen - log_ratio_rejected
+    loss = -F.logsigmoid(logits / beta).mean()
+    
+    return loss
+```
+
+---
+
+## Why DPO Works
+
+The DPO objective implicitly maximizes a reward while staying close to the reference:
+
+```python
+# Equivalent to:
+reward = (log_ratio_chosen - log_ratio_rejected) / beta
+
+# But DPO is more stable than directly optimizing reward
+# because it doesn't require a separate reward model phase
+```
+
+---
+
+## Comparison
+
+| Aspect | RLHF | DPO |
+|--------|------|-----|
+| **Complexity** | 3 stages | 2 stages |
+| **Training time** | Days | Hours |
+| **Memory** | Large (4 models) | Moderate (2 models) |
+| **Stability** | Sensitive | More stable |
+| **Sample efficiency** | Lower | Higher |
+| **Best for** | Complex tasks | General alignment |

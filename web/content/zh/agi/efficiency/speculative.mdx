@@ -1,0 +1,70 @@
+---
+title: 投机解码
+description: 'Speculative Decoding'
+---
+
+# 投机解码
+
+加速 LLM 推理的解码方法。
+
+---
+
+## 核心思想
+
+使用小模型快速生成候选，大模型验证。
+
+```python
+def speculative_decoding(model, draft_model, prompt, gamma=4):
+    # 小模型快速生成
+    draft_tokens = draft_model.generate(prompt, max_new_tokens=gamma)
+    
+    # 大模型并行验证
+    full_tokens = prompt + draft_tokens
+    logits = model(full_tokens)
+    
+    # 验证每个 token
+    accepted = []
+    for i, draft_tok in enumerate(draft_tokens):
+        # 如果概率低于阈值，接受
+        if logits[i+len(prompt)].argmax() == draft_tok:
+            accepted.append(draft_tok)
+        else:
+            # 拒绝，重新采样
+            break
+    
+    return accepted
+```
+
+---
+
+## 加速比
+
+| 场景 | 加速比 |
+|------|--------|
+| 简单任务 | 2-3x |
+| 复杂推理 | 1.2-1.5x |
+| 长序列 | 更高 |
+
+---
+
+## 条件
+
+- Draft model 与大模型分布接近
+- 硬件支持并行计算
+- gamma 选择平衡延迟和接受率
+
+---
+
+## 实现
+
+```python
+# Medusa 风格：多个 draft heads
+class MedusaModel(nn.Module):
+    def __init__(self, base_model, num_heads=3):
+        self.base = base_model
+        self.draft_heads = nn.ModuleList([
+            nn.Linear(hidden, vocab_size) for _ in range(num_heads)
+        ])
+```
+
+Medusa 可以达到 2-3x 加速。

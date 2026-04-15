@@ -1,0 +1,84 @@
+---
+title: vLLM
+description: 'High-throughput inference engine with PagedAttention'
+---
+
+# vLLM
+
+vLLM is an open-source inference engine achieving 2-24x throughput improvement over HuggingFace.
+
+---
+
+## Key Features
+
+| Feature | Benefit |
+|---------|---------|
+| **PagedAttention** | Reduces memory fragmentation |
+| **Continuous batching** | Maximizes GPU utilization |
+| **Async preemption** | Handles OOM gracefully |
+| **Quantization** | INT8/FP16/BF16 support |
+| **Tensor parallelism** | Multi-GPU inference |
+| **Streaming** | Token-by-token output |
+
+---
+
+## Usage
+
+```python
+from vllm import LLM, SamplingParams
+
+# Initialize
+llm = LLM(
+    model="meta-llama/Llama-2-70b-chat",
+    tensor_parallel_size=4,      # 4 GPUs
+    gpu_memory_utilization=0.9,  # Use 90% GPU memory
+    max_model_len=4096,          # Context length
+    quantization="awq",         # Quantization
+)
+
+# Generate
+sampling_params = SamplingParams(
+    temperature=0.8,
+    top_p=0.95,
+    max_tokens=256,
+)
+
+outputs = llm.generate(["Explain quantum mechanics"], sampling_params)
+print(outputs[0].outputs[0].text)
+```
+
+---
+
+## Architecture
+
+```python
+# vLLM internal components:
+
+class LLMEp:
+    def __init__(self):
+        self.scheduler = Scheduler()      # Continuous batching
+        self.model_runner = ModelRunner()   # PagedAttention
+        self.kv_cache = KVCacheManager()    # Virtual memory
+    
+    def forward(self, seq_group):
+        # 1. Schedule sequences
+        scheduled = self.scheduler.schedule(seq_group)
+        
+        # 2. Execute model with PagedAttention
+        output = self.model_runner(scheduled)
+        
+        # 3. Update KV cache
+        self.kv_cache.update(scheduled)
+        
+        return output
+```
+
+---
+
+## Performance
+
+| Engine | Throughput | Latency |
+|--------|-----------|---------|
+| **HuggingFace** | 1x | 1x |
+| **TGI** | 3-5x | 0.5x |
+| **vLLM** | 10-24x | 0.1-0.2x |

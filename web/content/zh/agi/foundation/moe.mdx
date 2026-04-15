@@ -1,0 +1,60 @@
+---
+title: MoE 混合专家
+description: 'Mixture of Experts 稀疏激活'
+---
+
+# MoE 混合专家
+
+稀疏激活的专家网络。
+
+---
+
+## 核心思想
+
+- 多个"专家"网络
+- 每个 token 只激活部分专家
+- 保持模型容量，降低计算量
+
+```python
+class MoE(nn.Module):
+    def __init__(self, d_model, d_ffn, num_experts, top_k=2):
+        super().__init__()
+        self.num_experts = num_experts
+        self.top_k = top_k
+        
+        self.gate = nn.Linear(d_model, num_experts)
+        self.experts = nn.ModuleList([
+            nn.Sequential(
+                nn.Linear(d_model, d_ffn),
+                nn.GELU(),
+                nn.Linear(d_ffn, d_model)
+            ) for _ in range(num_experts)
+        ])
+    
+    def forward(self, x):
+        # Gate 计算每个专家的权重
+        gate_scores = self.gate(x)  # (batch, num_experts)
+        topk_scores, topk_indices = torch.topk(gate_scores, self.top_k, dim=-1)
+        
+        # 软归一化
+        weights = F.softmax(topk_scores, dim=-1)
+        
+        # 只激活 top-k 专家
+        output = torch.zeros_like(x)
+        for i, expert_idx in enumerate(topk_indices.unbind(-1)):
+            output += weights[..., i:i+1] * self.experts[expert_idx](x)
+        
+        return output
+```
+
+---
+
+## Mixtral 8x7B
+
+| 指标 | 密集模型 | Mixtral 8x7B |
+|------|----------|--------------|
+| 活跃参数 | 46B | 12B |
+| 总参数 | 46B | 46B |
+| 计算量 | 46B | 12B |
+
+相当于 12B 计算量的 46B 模型。

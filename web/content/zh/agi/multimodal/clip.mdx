@@ -1,0 +1,60 @@
+---
+title: CLIP
+description: '对比语言图像预训练'
+---
+
+# CLIP
+
+对比学习连接文本与图像。
+
+---
+
+## 双塔架构
+
+```python
+class CLIP(nn.Module):
+    def __init__(self, image_encoder, text_encoder):
+        self.image_encoder = image_encoder
+        self.text_encoder = text_encoder
+        self.temperature = nn.Parameter(torch.ones([]) * 0.07)
+    
+    def forward(self, images, texts):
+        image_embeds = self.image_encoder(images)
+        text_embeds = self.text_encoder(texts)
+        # 对比损失
+        logits = (image_embeds @ text_embeds.t()) / self.temperature
+        return logits
+```
+
+---
+
+## 损失函数
+
+```python
+def clip_loss(image_logits, text_logits):
+    # 对称交叉熵
+    loss_i = cross_entropy(image_logits, torch.arange(len(images)))
+    loss_t = cross_entropy(text_logits, torch.arange(len(texts)))
+    return (loss_i + loss_t) / 2
+```
+
+---
+
+## 零样本分类
+
+```python
+# CLIP 可以做零样本分类
+classnames = ["cat", "dog", "bird"]
+texts = [f"a photo of a {c}" for c in classnames]
+text_embeds = clip.encode_text(texts)
+
+# 图像分类
+image_embed = clip.encode_image(image)
+similarity = (image_embed @ text_embeds.t()).softmax(dim=-1)
+```
+
+---
+
+## 训练数据
+
+4 亿图文对，来自互联网。

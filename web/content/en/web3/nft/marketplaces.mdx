@@ -1,0 +1,156 @@
+---
+title: NFT Marketplaces
+description: 'OpenSea, Blur, Magic Eden, and the aggregator wars'
+---
+
+# NFT Marketplaces
+
+NFT marketplaces are the storefronts where NFTs are listed, discovered, and traded. The market has evolved from single-collection platforms to competitive ecosystems with trading tools, aggregators, and evolving royalty models.
+
+---
+
+## Major marketplaces
+
+| Marketplace | Chain | Volume (2024) | Fee |
+|-------------|-------|---------------|-----|
+| **Blur** | Ethereum | ~$15B | 0% (2% royalty optional) |
+| **OpenSea** | Multi-chain | ~$10B | 2.5% |
+| **Magic Eden | Solana + Ethereum | ~$3B | 2% |
+| **OKX NFT** | Multi-chain | ~$1B | 2% |
+| **LooksRare** | Ethereum | ~$500M | 2% |
+
+---
+
+## How marketplaces work
+
+### Listing and trading
+
+```solidity
+// Simplified Seaport (OpenSea) order structure
+struct OrderComponents {
+    address offerer;
+    OrderType orderType;
+    address zone;
+    OfferItem[] consideration;
+    uint256 startTime;
+    uint256 endTime;
+    bytes32 zoneHash;
+    uint256 salt;
+    bytes32 conduitKey;
+    uint256 counter;
+}
+```
+
+### Matching engine
+
+Marketplaces match makers (sellers) and takers (buyers):
+
+1. Seller creates order with price, signature
+2. Buyer accepts order or places matching bid
+3. Contract transfers tokens and payment
+4. Protocol takes fee, royalty goes to creator
+
+---
+
+## Blur's market disruption
+
+Blur launched in 2022 with a aggressive strategy:
+
+| Feature | Blur | OpenSea |
+|---------|------|---------|
+| Trading fee | 0% | 2.5% |
+| Royalty enforcement | Optional (0% possible) | Mandatory |
+| Token incentives | $BLUR airdrops | None |
+| UI/UX | Trader-focused | Collector-focused |
+
+**Impact:**
+- Blur captured majority ETH NFT volume in 2023
+- Creator royalties became controversial
+- Floor protocols emerged to protect creators
+
+---
+
+## Aggregators
+
+NFT aggregators search multiple marketplaces to find best prices:
+
+| Aggregator | Volume Leader | Features |
+|------------|--------------|----------|
+| **Blur** | Yes | Built-in aggregator, portfolio tool |
+| **Gem** | Acquired by OpenSea | Cross-marketplace, floor protection |
+| **Genie** | Acquired by Uniswap | Historical aggregator |
+
+```solidity
+// Simplified aggregator swap
+function swapNFTsForETH(
+    ERC721[] calldata nftContracts,
+    uint256[][] calldata tokenIds,
+    uint256 minExpectedETH,
+    address recipient
+) external {
+    uint256 totalValue;
+    
+    // Execute across multiple marketplaces
+    for (uint i = 0; i < nftContracts.length; i++) {
+        for (uint j = 0; j < tokenIds[i].length; j++) {
+            uint256 offer = _getBestOffer(nftContracts[i], tokenIds[i][j]);
+            totalValue += _executeSwap(nftContracts[i], tokenIds[i][j], offer);
+        }
+    }
+    
+    require(totalValue >= minExpectedETH, "slippage");
+    payable(recipient).transfer(totalValue);
+}
+```
+
+---
+
+## Royalty models
+
+The royalty debate reshaped the market:
+
+| Model | Description | Pros | Cons |
+|-------|-------------|------|------|
+| **Enforced** | On-chain royalty, blocks 0% trades | Creators get paid | Less competitive |
+| **Optional** | Suggested, but can bypass | Traders prefer | Creators lose revenue |
+| **Floor protection** | Min price protection | Compromise | Complex |
+
+---
+
+## Marketplace contracts
+
+### Seaport (OpenSea)
+
+OpenSea's Seaport protocol is the most widely used:
+
+```solidity
+// Advanced order matching
+function fulfillAdvancedOrders(
+    AdvancedOrder[] memory orders,
+    CriteriaResolver[] memory criteriaResolvers,
+    bytes32 fulfillerConduitKey,
+    address recipient
+) external payable;
+```
+
+### X2Y2
+
+Different fee model, on-chain matching:
+
+```solidity
+function matchAskWithTakerBid(
+    uint256 orderNonce,
+    address takerBidMaker,
+    uint256 marketFeePercentage
+) external;
+```
+
+---
+
+## Cross-chain marketplace
+
+| Platform | Approach |
+|----------|----------|
+| **OpenSea** | Multi-chain: Ethereum, Polygon, Solana (via Bridge) |
+| **Magic Eden** | Native multi-chain: Ethereum, Solana, Bitcoin |
+| **OKX** | Multi-chain with unified wallet |

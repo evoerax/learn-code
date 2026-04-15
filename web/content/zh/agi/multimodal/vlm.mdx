@@ -1,0 +1,70 @@
+---
+title: VLM 视觉语言模型
+description: '视觉语言多模态模型'
+---
+
+# VLM 视觉语言模型
+
+连接视觉编码器与语言模型。
+
+---
+
+## 架构
+
+```python
+class VLM(nn.Module):
+    def __init__(self, vision_encoder, llm, projector):
+        self.vision_encoder = vision_encoder
+        self.projector = projector  # 线性层或 MLP
+        self.llm = llm
+    
+    def forward(self, images, text):
+        # 视觉编码
+        vision_embeds = self.vision_encoder(images)
+        vision_embeds = self.projector(vision_embeds)
+        
+        # 文本嵌入
+        text_embeds = self.llm.get_input_embeddings()(text)
+        
+        # 拼接
+        combined = torch.cat([vision_embeds, text_embeds], dim=1)
+        
+        # LLM 生成
+        return self.llm(inputs_embeds=combined)
+```
+
+---
+
+## 训练方式
+
+| 阶段 | 目标 | 数据 |
+|------|------|------|
+| 预训练 | 视觉-语言对齐 | 图文对 |
+| 微调 | 指令跟随 | SFT 数据 |
+| RLHF | 人类偏好 | 偏好数据 |
+
+---
+
+## 训练策略
+
+```python
+# 两种训练模式
+# 1. 冻结视觉编码器
+for param in vision_encoder.parameters():
+    param.requires_grad = False
+
+# 2. 联合训练
+for param in model.parameters():
+    param.requires_grad = True
+```
+
+---
+
+## 主流模型
+
+| 模型 | 视觉编码器 | LLM |
+|------|------------|-----|
+| LLaVA | CLIP | Vicuna |
+| InstructBLIP | BLIP-2 | Flan-T5 |
+| Qwen-VL | Qwen | Qwen |
+| Gemini | 专用 | 专用 |

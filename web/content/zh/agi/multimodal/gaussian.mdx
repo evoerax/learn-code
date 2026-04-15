@@ -1,0 +1,73 @@
+---
+title: 3D 高斯溅射
+description: '3D Gaussian Splatting'
+---
+
+# 3D 高斯溅射
+
+用高斯分布表示场景。
+
+---
+
+## 表示
+
+```python
+class Gaussian:
+    def __init__(self, mean, cov, color):
+        self.mean = mean      # 3D 位置
+        self.cov = cov        # 3x3 协方差矩阵
+        self.color = color    # RGB + alpha
+    
+    def splat(self, camera):
+        # 投影到 2D
+        return self.project(camera)
+```
+
+---
+
+## 渲染
+
+```python
+def render(gaussians, camera):
+    # 按深度排序
+    sorted_gaussians = sort_by_depth(gaussians, camera)
+    
+    # Alpha 合成
+    color = torch.zeros(3)
+    for g in sorted_gaussians:
+        screen_g = g.project(camera)
+        alpha = g.compute_alpha()
+        color = color + (1 - alpha) * g.color
+    
+    return color
+```
+
+---
+
+## 优化
+
+```python
+def train(gaussians, images, cameras):
+    for _ in range(30000):
+        # 渲染
+        pred = render(gaussians, cameras)
+        
+        # 损失
+        loss = F.mse_loss(pred, target)
+        loss.backward()
+        
+        # 更新高斯参数
+        # 密集化 + 修剪
+        densify_and_prune(gaussians)
+```
+
+---
+
+## vs NeRF
+
+| 特性 | NeRF | 3DGS |
+|------|------|------|
+| 表示 | 神经网络 | 高斯分布 |
+| 渲染 | 体素积分 | 光栅化 |
+| 速度 | 慢 | 实时 |
+| 质量 | 高 | 高 |

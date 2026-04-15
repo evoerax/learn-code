@@ -1,0 +1,79 @@
+---
+title: Rectified Flow
+description: 'Linear trajectories for straight-line flows'
+---
+
+# Rectified Flow
+
+Rectified Flow (Liu et al., 2022) optimizes flows to follow straight-line trajectories.
+
+---
+
+## Problem with Curved Paths
+
+```
+Standard flow: noise → data via curved path
+                curve: complex, hard to sample
+
+Rectified Flow: project to straight line
+                line: direct, fast
+```
+
+---
+
+## Rectification Algorithm
+
+```python
+def rectify_flow(flow, data_loader, num_steps=1000):
+    """
+    Iteratively refine flow to be straight
+    """
+    for iteration in range(num_iterations):
+        # Sample pairs
+        x_0 ~ noise, x_1 ~ data
+        
+        # Current trajectory
+        t = torch.rand(1)
+        x_t = flow.interpolate(x_0, x_1, t)
+        v_t = flow.velocity(x_t, t)
+        
+        # Fit residual to straighten
+        target_v = x_1 - x_0  # Straight line velocity
+        
+        loss = mse(v_t, target_v)
+        loss.backward()
+        optimizer.step()
+    
+    return flow
+```
+
+---
+
+## Straight-Line Sampling
+
+```python
+def rectified_sample(model, x_T, num_steps=1):
+    """
+    Single step for perfectly straight flows
+    """
+    t = 1.0
+    dt = 1.0 / num_steps
+    
+    x = x_T
+    for step in range(num_steps):
+        t_current = step * dt
+        v = model(x, t_current)
+        x = x - v * dt  # Euler integration along straight line
+    
+    return x
+```
+
+---
+
+## Performance
+
+| Model | FID (50 steps) | FID (1 step) |
+|-------|----------------|--------------|
+| **ADM** | 2.07 | N/A |
+| **Rectified Flow** | 2.11 | 7.47 |
+| **InstaFlow** | 2.12 | 4.21 |

@@ -1,0 +1,71 @@
+---
+title: Continuous Batching
+description: 'Dynamic batch scheduling for maximum GPU utilization'
+---
+
+# Continuous Batching
+
+Continuous batching (dynamically batched inference) maximizes GPU utilization by dynamically adding/removing sequences.
+
+---
+
+## Static Batching Problem
+
+```python
+# Traditional (static) batching:
+Batch 1: [Seq A, Seq B, Seq C] ──────▶ [Done, Done, Done]  (variable lengths)
+                                      ─────────────────▶ 70% GPU idle
+
+Batch 2: [Seq D, Seq E, Seq F] ──────▶ [Done, Done, Done]
+                                      ─────────────────▶ 70% GPU idle
+```
+
+Sequences have different lengths → GPU waits for longest sequence.
+
+---
+
+## Continuous (Dynamic) Batching
+
+```python
+def continuous_batch():
+    running = []  # Currently processing
+    new_seqs = []  # Waiting to add
+    
+    while True:
+        # Remove finished sequences
+        for seq in running[:]:
+            if seq.is_done():
+                output.append(seq.result())
+                running.remove(seq)
+        
+        # Add new sequences if space available
+        while len(running) < max_batch_size and new_seqs:
+            running.append(new_seqs.pop(0))
+        
+        # Process batch
+        if running:
+            logits = model.forward([s.input_ids for s in running])
+            for seq, logit in zip(running, logits):
+                seq.add_token(logit)
+        
+        if not running and not new_seqs:
+            break
+```
+
+---
+
+## Timeline Comparison
+
+```
+Static batching:
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+  Batch 1 (waiting...) Batch 2 (waiting...)
+    ████████████░░░░░   ████████████░░░░░
+    
+Continuous batching:
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+  (no wasted GPU time)
+
+Throughput improvement: 10-23x over naive batching
+```

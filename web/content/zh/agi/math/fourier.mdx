@@ -1,0 +1,73 @@
+---
+title: 傅里叶级数与 FFT
+description: 'Fourier Series and Fast Fourier Transform'
+---
+
+# 傅里叶级数与 FFT
+
+信号处理基础工具。
+
+---
+
+## 傅里叶级数
+
+```python
+# 周期函数展开
+def fourier_series(f, n_terms=10):
+    # f(x) = a_0/2 + sum(a_n cos(nx) + b_n sin(nx))
+    coeffs = []
+    for n in range(n_terms):
+        a_n = (1/pi) * integrate(lambda x: f(x) * torch.cos(n*x), -pi, pi)
+        b_n = (1/pi) * integrate(lambda x: f(x) * torch.sin(n*x), -pi, pi)
+        coeffs.append((a_n, b_n))
+    return coeffs
+```
+
+---
+
+## FFT 算法
+
+```python
+def fft(x):
+    N = len(x)
+    if N <= 1:
+        return x
+    
+    # 分治
+    even = fft(x[0::2])
+    odd = fft(x[1::2])
+    
+    # 合并
+    T = [torch.exp(-2j * torch.pi / N * k) * odd[k] for k in range(N//2)]
+    return [even[k] + T[k] for k in range(N//2)] + \
+           [even[k] - T[k] for k in range(N//2)]
+```
+
+---
+
+## 频域注意力
+
+```python
+# 线性注意力可以用 FFT 加速
+def linear_attention_fft(Q, K, V):
+    # Q, K, V: (B, T, d)
+    Q_fft = torch.fft.rfft(Q, dim=1)
+    K_fft = torch.fft.rfft(K, dim=1)
+    
+    # 逐元素乘积
+    S = Q_fft * K_fft
+    S_inv = torch.fft.irfft(S, dim=1)
+    
+    return S_inv @ V
+```
+
+---
+
+## 应用
+
+| 领域 | 用途 |
+|------|------|
+| 信号处理 | 频谱分析 |
+| 图像处理 | 卷积加速 |
+| 音频 | 频域特征 |
+| 微分方程 | 求解 |

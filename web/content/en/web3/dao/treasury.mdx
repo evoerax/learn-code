@@ -1,0 +1,211 @@
+---
+title: DAO Treasury Management
+description: 'Multi-sig wallets, spending limits, and on-chain asset management'
+---
+
+# DAO Treasury Management
+
+Treasury management is critical for DAO sustainability — controlling how funds are stored, accessed, and deployed. Poor treasury management has led to rug pulls, hacks, and governance attacks.
+
+---
+
+## Multi-signature wallets
+
+Multi-sig requires multiple signers to approve transactions:
+
+| Wallet | Signers | Use case |
+|--------|---------|----------|
+| **Gnosis Safe** | 1-of-n to n-of-n | Most DAOs |
+| **Argent** | 3-of-5 typical | Layer 2 / smart wallet |
+| **Zodiac** | Modular roles | Protocol integrations |
+
+### Gnosis Safe contract
+
+```solidity
+contract GnosisSafe {
+    uint256 public threshold;
+    mapping(address => address) public owners;
+    
+    function execTransaction(
+        address to,
+        uint256 value,
+        bytes memory data,
+        Enum.Operation operation,
+        uint256 safeTxGas,
+        uint256 baseGas,
+        uint256 gasPrice,
+        address gasToken,
+        address refundReceiver,
+        bytes memory signatures
+    ) external payable returns (bool success) {
+        bytes32 txHash = encodeTransactionData(to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce);
+        
+        checkSignatures(txHash, signatures);
+        
+        // Increase nonce
+        nonce++;
+        
+        // Execute
+        if (operation == Enum.Operation.Call) {
+            success = execute(to, value, data, gasPrice, refundReceiver);
+        } else if (operation == Enum.Operation.DelegateCall) {
+            success = executeDelegate(to, data);
+        }
+        
+        require(success, "tx failed");
+    }
+}
+```
+
+---
+
+## Treasury diversification
+
+### Asset allocation strategies
+
+| Strategy | Description | Risk |
+|---------|-------------|------|
+| **Multi-asset** | Spread across ETH, stablecoins, tokens | Diversification |
+| **Stablecoin heavy** | Protect runway | Inflation risk |
+| **Governance tokens** | Protocol ownership, votes | Volatility |
+
+### Token swap governance
+
+Treasuries often receive governance tokens for contributions:
+
+```solidity
+// Governance token vesting
+contract TeamVesting {
+    uint256 public constant VESTING_DURATION = 365 days * 4; // 4 years
+    
+    struct Grant {
+        uint256 totalAmount;
+        uint256 startTime;
+        uint256 claimed;
+    }
+    
+    mapping(address => Grant) public grants;
+    
+    function claim() external {
+        Grant storage grant = grants[msg.sender];
+        uint256 vested = (block.timestamp - grant.startTime) * grant.totalAmount / VESTING_DURATION;
+        uint256 claimable = vested - grant.claimed;
+        grant.claimed = vested;
+        
+        governanceToken.transfer(msg.sender, claimable);
+    }
+}
+```
+
+---
+
+## Spending limits and budgets
+
+### Linear release
+
+```solidity
+contract ContinuousGrant {
+    uint256 public constant DURATION = 90 days;
+    uint256 public constant AMOUNT = 1000 ether;
+    uint256 public startTime;
+    address public beneficiary;
+    
+    constructor(address _beneficiary) {
+        beneficiary = _beneficiary;
+        startTime = block.timestamp;
+    }
+    
+    function claim() external {
+        require(msg.sender == beneficiary, "not beneficiary");
+        uint256 elapsed = block.timestamp - startTime;
+        uint256 claimable = elapsed >= DURATION 
+            ? AMOUNT 
+            : AMOUNT * elapsed / DURATION;
+        
+        payable(beneficiary).transfer(claimable);
+    }
+}
+```
+
+### Committee-based spending
+
+| Model | Description |
+|-------|-------------|
+| **Finance committee** | Elected members approve large payments |
+| **Multi-tier** | Small < $10K direct, large > committee |
+| **Retroactive** | Fund work that already happened |
+
+---
+
+## Investment strategies
+
+DAOs increasingly deploy treasury assets:
+
+| Strategy | Examples |
+|----------|----------|
+| **Staking** | ETH proof of stake, earning ~4-5% |
+| **DeFi lending** | Supply to Aave, earn interest |
+| **LP positions** | Market making, fee income |
+| **Protocol investment** | Early-stage token purchases |
+| **RWA** | Real-world assets on-chain |
+
+```solidity
+// Simple treasury investment contract
+contract TreasuryManager {
+    address[] public investmentContracts;
+    uint256[] public allocations; // basis points
+    
+    function rebalance() external only governance {
+        for (uint i = 0; i < investmentContracts.length; i++) {
+            uint256 amount = address(this).balance * allocations[i] / 10000;
+            if (amount > 0) {
+                (bool success, ) = investmentContracts[i].call{value: amount}("");
+                require(success, "transfer failed");
+            }
+        }
+    }
+}
+```
+
+---
+
+## Transparency and accountability
+
+### On-chain reporting
+
+```solidity
+contract TreasuryReporter {
+    event Spend(address indexed to, uint256 amount, string description);
+    event Income(address indexed from, uint256 amount, string source);
+    
+    function reportSpend(address to, uint256 amount, string memory desc) external onlySpender {
+        emit Spend(to, amount, desc);
+    }
+    
+    function reportIncome(address from, uint256 amount, string memory source) external {
+        emit Income(from, amount, source);
+    }
+}
+```
+
+### Dashboard tools
+
+| Tool | Purpose |
+|------|---------|
+| **Llama** | Treasury tracking, spending analytics |
+| **Deep Dao** | DAO metrics, governance history |
+| **Nansen** | Wallet labeling, fund flow tracking |
+| **Etherscan** | Manual transaction inspection |
+
+---
+
+## Security best practices
+
+| Practice | Description |
+|----------|-------------|
+| **Time locks** | Delay large withdrawals |
+| **Thresholds** | Require multiple signers |
+| ** Spending caps** | Daily/monthly limits |
+| **Emergency pause** | Freeze functionality |
+| **Hardware wallets** | Physical key security |
+| **Backup signers** | Recovery mechanism |

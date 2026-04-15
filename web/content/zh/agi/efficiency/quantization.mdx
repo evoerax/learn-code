@@ -1,0 +1,61 @@
+---
+title: 量化 INT8/INT4
+description: 'Quantization for LLM'
+---
+
+# 量化 INT8/INT4
+
+减少模型精度以降低内存和加速。
+
+---
+
+## 量化方法
+
+```python
+# INT8 量化
+def quantize_int8(x):
+    scale = x.abs().max() / 127.0
+    x_int = (x / scale).round().clamp(-128, 127)
+    return x_int.to(torch.int8), scale
+
+# INT4 量化
+def quantize_int4(x):
+    scale = x.abs().max() / 7.0
+    x_int = (x / scale).round().clamp(-8, 7)
+    return x_int.to(torch.int4), scale
+```
+
+---
+
+## 量化感知训练
+
+```python
+class QuantizedLinear(nn.Module):
+    def __init__(self, in_features, out_features, bits=4):
+        super().__init__()
+        self.weight = nn.Parameter(torch.randn(out_features, in_features))
+        self.quant = FakeQuant(bits)
+    
+    def forward(self, x):
+        q_weight = self.quant(self.weight)
+        return F.linear(x, q_weight)
+```
+
+---
+
+## 效果
+
+| 精度 | 内存减少 | 速度 | 精度损失 |
+|------|----------|------|----------|
+| FP16 | 1x | 1x | 基准 |
+| INT8 | 2x | 1.5x | ~1% |
+| INT4 | 4x | 2-3x | ~3-5% |
+| INT2 | 8x | 4x | ~10% |
+
+---
+
+## AWQ/GPTQ 适用场景
+
+- 推理部署
+- 边缘设备
+- 大模型推理

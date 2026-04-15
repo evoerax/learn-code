@@ -1,0 +1,71 @@
+---
+title: Policy Gradient and REINFORCE
+description: 'Direct policy optimization'
+---
+
+# Policy Gradient and REINFORCE
+
+Policy gradient methods directly optimize the policy without value functions.
+
+---
+
+## Policy Gradient Theorem
+
+For stochastic policy π(a|s, θ):
+
+```python
+def policy_gradient_loss(log_probs, returns):
+    """
+    REINFORCE: ∇J = E[∇θ log π(a|s) * G_t]
+    """
+    return -(log_probs * returns).mean()
+```
+
+---
+
+## REINFORCE Algorithm
+
+```python
+def reinforce(env, num_episodes=1000, gamma=0.99):
+    policy_net = PolicyNetwork(state_dim, action_dim)
+    optimizer = torch.optim.Adam(policy_net.parameters(), lr=1e-3)
+    
+    for episode in range(num_episodes):
+        states, actions, rewards = [], [], []
+        state = env.reset()
+        done = False
+        
+        # Collect trajectory
+        while not done:
+            probs = policy_net(state)
+            action = torch.multinomial(probs, 1).item()
+            states.append(state)
+            actions.append(action)
+            state, reward, done, _ = env.step(action)
+            rewards.append(reward)
+        
+        # Compute returns
+        returns = compute_returns(rewards, gamma)
+        
+        # Policy gradient update
+        states_t = torch.FloatTensor(states)
+        actions_t = torch.LongTensor(actions)
+        returns_t = torch.FloatTensor(returns)
+        
+        log_probs = torch.log(policy_net(states_t) + 1e-8)
+        loss = -(log_probs.gather(1, actions_t.unsqueeze(1)) * returns_t.unsqueeze(1)).mean()
+        
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+```
+
+---
+
+## Variance Reduction
+
+| Technique | Description |
+|-----------|-------------|
+| **Baseline** | Subtract value function estimate |
+| **GAE** | Generalized Advantage Estimation |
+| **Return normalization** | Standardize returns |

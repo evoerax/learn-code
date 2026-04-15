@@ -1,0 +1,108 @@
+---
+title: PPO in Alignment
+description: 'Proximal Policy Optimization for LLM alignment'
+---
+
+# PPO in Alignment
+
+PPO (Schulman et al., 2017) is the RL algorithm used in InstructGPT and many alignment pipelines.
+
+---
+
+## PPO Objective
+
+```python
+def ppo_loss(
+    old_log_probs,   # From old policy (collected data)
+    new_log_probs,   # From current policy
+    advantages,       # Estimated advantage
+    clip_eps=0.2      # Clipping range
+):
+    """
+    PPO-clip surrogate objective
+    """
+    ratio = torch.exp(new_log_probs - old_log_probs)
+    
+    # Clipped objective
+    clipped = torch.clamp(ratio, 1 - clip_eps, 1 + clip_eps)
+    
+    # Take minimum to prevent large policy changes
+    loss = -torch.min(
+        ratio * advantages,
+        clipped * advantages
+    )
+    
+    return loss.mean()
+```
+
+---
+
+## Value Function Baseline
+
+```python
+class ValueHead(nn.Module):
+    def __init__(self, hidden_size):
+        super().__init__()
+        self.fc1 = nn.Linear(hidden_size, hidden_size // 2)
+        self.fc2 = nn.Linear(hidden_size // 2, 1)
+    
+    def forward(self, hidden_states):
+        x = F.relu(self.fc1(hidden_states))
+        return self.fc2(x)
+
+# Value loss
+def value_loss(values, old_values, returns, clip_eps=0.2):
+    # Clipped value function to prevent large updates
+    clipped = old_values + torch.clamp(
+        values - old_values, 
+        -clip_eps, 
+        clip_eps
+    )
+    
+    loss1 = (values - returns) ** 2
+    loss2 = (clipped - returns) ** 2
+    
+    return torch.mean(torch.max(loss1, loss2))
+```
+
+---
+
+## Complete Alignment Training Loop
+
+```python
+def ppo_train(sft_model, reward_model, prompts, config):
+    ref_model = copy.deepcopy(sft_model)
+    optimizer = torch.optim.AdamW(sft_model.parameters(), lr=config.lr)
+    
+    for step in range(config.num_steps):
+        # Generate responses
+        responses = sft_model.generate(prompts)
+        
+        # Compute rewards
+        rewards = reward_model(prompts, responses)
+        
+        # Compute advantages (reward - baseline)
+        values = value_head(sft_model(prompts, responses))
+        advantages = rewards - values
+        
+        # PPO update (multiple epochs on same batch)
+        for _ in range(config.ppo_epochs):
+            log_probs = sft_model.get_log_probs(prompts, responses)
+            
+            # Policy loss + Value loss + Entropy bonus + KL penalty
+            policy_loss = ppo_loss(old_log_probs, log_probs, advantages)
+            value_loss = value_loss_fn(values, advantages)
+            entropy_loss = -entropy(sft_model, responses)
+            kl_loss = kl_divergence(sft_model, ref_model, responses)
+            
+            loss = (
+                policy_loss + 
+                config.vf_coef * value_loss + 
+                config.ent_coef * entropy_loss - 
+                config.kl_coef * kl_loss
+            )
+            
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+```

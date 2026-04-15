@@ -1,0 +1,66 @@
+---
+title: Instant-NGP
+description: '快速 NeRF 实现'
+---
+
+# Instant-NGP
+
+多分辨率哈希编码加速 NeRF。
+
+---
+
+## 核心创新
+
+```python
+class InstantNGP(nn.Module):
+    def __init__(self):
+        self.hash_grid = HashGrid(num_levels=16, max_params=2**19)
+        self.mlp = SirenNet()
+    
+    def forward(self, x):
+        # 多分辨率哈希查询
+        features = self.hash_grid(x)
+        return self.mlp(features)
+```
+
+---
+
+## 哈希编码
+
+```python
+class HashGrid:
+    def __init__(self, num_levels=16, T=2**19):
+        self.embeddings = nn.ParameterList([
+            nn.Parameter(torch.randn(T, F)) for _ in range(num_levels)
+        ])
+        self.resolutions = [16, 32, 64, ..., 512]
+    
+    def query(self, x):
+        features = []
+        for i, res in enumerate(self.resolutions):
+            # 计算哈希索引
+            idx = hash(x * res) % T
+            features.append(self.embeddings[i][idx])
+        return torch.cat(features, dim=-1)
+```
+
+---
+
+## 性能
+
+| 指标 | NeRF | Instant-NGP |
+|------|------|--------------|
+| 训练时间 | 小时 | 秒 |
+| 网格查询 | 慢 | 快 |
+| 质量 | 高 | 相当 |
+| 泛化 | 差 | 差 |
+
+---
+
+## 可微渲染器
+
+Instant-NGP 支持：
+- NeRF
+- 符号距离函数 (SDF)
+- 图像
+- 体积

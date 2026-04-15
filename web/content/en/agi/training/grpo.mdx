@@ -1,0 +1,73 @@
+---
+title: GRPO Group Relative Policy Optimization
+description: 'DeepSeek AI approach to preference optimization'
+---
+
+# GRPO
+
+GRPO (DeepSeek, 2024) is a variant of PPO that uses group relative ranking for advantage estimation.
+
+---
+
+## Key Innovation
+
+Instead of a learned value function, GRPO generates multiple responses and compares them:
+
+```python
+def grpo_update(model, prompt, responses, beta=0.1):
+    """
+    responses: list of generated responses for the same prompt
+    """
+    # Compute log probs for each response
+    log_probs = [model(prompt + r).log_prob(r) for r in responses]
+    
+    # Group-relative advantage
+    mean_lp = torch.stack(log_probs).mean()
+    std_lp = torch.stack(log_probs).std() + 1e-8
+    
+    # Normalized advantage within group
+    advantages = [(lp - mean_lp) / std_lp for lp in log_probs]
+    
+    # Weighted loss
+    loss = 0
+    for r, adv, lp in zip(responses, advantages, log_probs):
+        # PPO-style clipped loss
+        loss += -min(adv * lp, adv * clip(lp, 0.9, 1.1))
+    
+    return loss / len(responses)
+```
+
+---
+
+## GRPO vs PPO
+
+| Aspect | PPO | GRPO |
+|--------|-----|------|
+| **Value function** | Separate network | Not needed |
+| **Memory** | High | Lower |
+| **Sample efficiency** | Uses all historical data | Group-based |
+| **Complexity** | Higher | Lower |
+
+---
+
+## DeepSeek Implementation
+
+Used in DeepSeek-V2 and DeepSeek-Math:
+
+```python
+# DeepSeek's GRPO withkl penalty
+def deepseek_grpo_loss(model, ref_model, prompt, responses, beta=0.04):
+    # Compute rewards (from reward model or rule-based)
+    rewards = [reward_model(prompt, r) for r in responses]
+    
+    # Normalized advantages
+    std = torch.tensor(rewards).std() + 1e-8
+    advantages = [(r - mean(rewards)) / std for r in rewards]
+    
+    # Policy gradient with KL from reference
+    for r, adv in zip(responses, advantages):
+        log_ratio = (model.log_prob(r) - ref_model.log_prob(r))
+        loss = -adv * log_ratio - beta * log_ratio
+        
+    return loss
+```

@@ -1,0 +1,103 @@
+---
+title: Zero-Knowledge Proofs
+description: 'zkSNARKs, zkSTARKs, and the cryptography behind privacy and scaling'
+---
+
+import { Cards } from 'nextra/components'
+
+# Zero-Knowledge Proofs
+
+Zero-knowledge proofs (ZKPs) allow one party to prove to another that a statement is true without revealing any information beyond the validity of the statement itself. This cryptographic primitive is fundamental to blockchain privacy and scaling.
+
+---
+
+## Topics
+
+<Cards>
+  <Cards.Card title="ZK-SNARKs" href="/en/web3/basics/zk-snark" arrow>
+    Succinct Non-interactive ARguments of Knowledge
+  </Cards.Card>
+  <Cards.Card title="ZK-STARKs" href="/en/web3/basics/zk-stark" arrow>
+    Scalable Transparent Arguments of Knowledge
+  </Cards.Card>
+</Cards>
+
+---
+
+## What makes a ZK proof work
+
+For a zero-knowledge proof to be valid, it must satisfy three properties:
+
+| Property | Description |
+|----------|-------------|
+| **Completeness** | If the statement is true, an honest verifier will be convinced by an honest prover |
+| **Soundness** | If the statement is false, no cheating prover can convince an honest verifier |
+| **Zero-knowledge** | The verifier learns nothing beyond the fact that the statement is true |
+
+---
+
+## Interactive vs Non-interactive
+
+### Interactive proofs
+
+```
+Prover                    Verifier
+   |                          |
+   |--- Challenge ---------->|
+   |<-- Response ------------|
+   |                          |
+   |--- Challenge ---------->|
+   |<-- Response ------------|
+   ... (multiple rounds)
+```
+
+Requires multiple communication rounds.
+
+### Non-interactive proofs (NIZKs)
+
+```
+Prover                    Verifier
+   |                          |
+   |--- Proof (single) ------>|
+   |                          |
+```
+
+Single message. Used in blockchains.
+
+---
+
+## zkSNARK vs zkSTARK
+
+| Feature | zkSNARK | zkSTARK |
+|---------|---------|---------|
+| **Proof size** | Very small (~200 bytes) | Large (~100KB) |
+| **Verification time** | Fast | Slow |
+| **Trusted setup** | Required (ceremony) | No |
+| **Quantum resistance** | No | Yes |
+| **Transparency** | Private (setup needed) | Public (无需信任) |
+
+---
+
+## Applications in blockchain
+
+| Application | How ZK is used |
+|-------------|----------------|
+| **Privacy coins** | Zcash shields transaction amounts and parties |
+| **Scaling** | ZK-rollups prove validity off-chain, on-chain |
+| **Bridge security** | Prove state transitions without trusting relayers |
+| **Identity** | Prove citizenship without revealing ID number |
+| **Authentication** | Prove you know a secret without revealing it |
+
+---
+
+## The future: zkEVMs
+
+Ethereum's major L2 rollups are building ZK-proofs for EVM compatibility:
+
+| Rollup | zkEVM type | Status |
+|--------|-------------|--------|
+| **ZKsync Era** | Type 3/4 | Live |
+| **StarkNet** | Custom | Live |
+| **Polygon zkEVM** | Type 2 | Live |
+| **Scroll** | Type 2 | Live |
+| **Taiko** | Type 1 | Live |

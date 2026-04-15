@@ -1,0 +1,61 @@
+---
+title: DPO 直接偏好优化
+description: 'Direct Preference Optimization'
+---
+
+# DPO 直接偏好优化
+
+绕过 RLHF 的 PPO 阶段。
+
+---
+
+## DPO Loss
+
+```python
+def dpo_loss(model, ref_model, chosen, rejected, beta=0.1):
+    # 策略概率
+    pi_chosen = model(chosen).log_prob()
+    pi_rejected = model(rejected).log_prob()
+    
+    # 参考模型概率
+    ref_chosen = ref_model(chosen).log_prob()
+    ref_rejected = ref_model(rejected).log_prob()
+    
+    # log 比率
+    log_ratio_chosen = (pi_chosen - ref_chosen).sum(-1)
+    log_ratio_rejected = (pi_rejected - ref_rejected).sum(-1)
+    
+    # DPO loss
+    logits = log_ratio_chosen - log_ratio_rejected
+    loss = -F.logsigmoid(logits / beta).mean()
+    
+    return loss
+```
+
+---
+
+## vs RLHF
+
+| 阶段 | RLHF | DPO |
+|------|------|-----|
+| 阶段数 | 3 | 2 |
+| 模型数 | 4 | 2 |
+| 训练时间 | 天 | 小时 |
+| 稳定性 | 敏感 | 稳定 |
+
+---
+
+## 优势
+
+- 无需 PPO 强化学习
+- 不需要单独 reward model
+- 训练更简单
+- 效果与 RLHF 相当
+
+---
+
+## 适用场景
+
+- 一般对齐任务
+- 资源有限
+- 需要快速迭代

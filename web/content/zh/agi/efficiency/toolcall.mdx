@@ -1,0 +1,77 @@
+---
+title: Tool Calling 与 MCP
+description: '工具调用与 Model Context Protocol'
+---
+
+# Tool Calling 与 MCP
+
+扩展 LLM 能力的机制。
+
+---
+
+## Tool Calling
+
+```python
+functions = [
+    {
+        "name": "get_weather",
+        "description": "获取城市天气",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "city": {"type": "string"}
+            }
+        }
+    }
+]
+
+# 模型输出工具调用
+response = model.generate(
+    prompt,
+    tools=functions,
+    tool_choice="auto"
+)
+
+# 解析工具调用
+if response.tool_calls:
+    for call in response.tool_calls:
+        result = execute_tool(call.function.name, call.function.arguments)
+```
+
+---
+
+## MCP 协议
+
+Model Context Protocol 提供标准化工具接口：
+
+```python
+# MCP Server
+from mcp.server import MCPServer
+
+server = MCPServer()
+server.add_resource("filesystem", read_file, write_file)
+server.add_resource("database", query_sql)
+
+# MCP Client
+client = MCPClient(server)
+result = await client.call_tool("filesystem", "read", {"path": "..."})
+```
+
+---
+
+## 工具调用类型
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| 函数 | 确定性计算 | 计算器, SQL |
+| API | 外部服务 | 天气, 搜索 |
+| 知识库 | 检索 | RAG |
+
+---
+
+## 最佳实践
+
+- 工具描述清晰具体
+- 参数 schema 完整
+- 错误处理健壮
+- 限制工具调用次数

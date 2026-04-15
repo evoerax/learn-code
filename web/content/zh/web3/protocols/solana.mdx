@@ -1,0 +1,64 @@
+---
+title: Solana
+description: '使用历史证明的高性能区块链'
+---
+
+# Solana
+
+Solana 是高性能 Layer 1 区块链，由 Anatoly Yakovenko 于 2017 年创建。使用历史证明 (PoH) 和权益证明的独特组合实现远超其他通用区块链的吞吐量。
+
+---
+
+## 关键创新：历史证明
+
+历史证明 (PoH) 是一种加密时钟，允许网络并行处理交易同时保持排序：
+
+```rust
+impl ProofOfHistory {
+    fn tick(&mut self) -> Hash {
+        self.sequence += 1;
+        self.timestamp = clock::timestamp();
+        self.hash = sha256::hash(&[
+            self.previous_hash.as_bytes(),
+            &self.sequence.to_le_bytes(),
+        ]);
+        self.previous_hash = self.hash;
+        self.hash
+    }
+}
+```
+
+---
+
+## 技术规格
+
+| 指标 | Solana | Ethereum (L1) |
+|------|--------|----------------|
+| **TPS** | ~65,000 | ~15-30 |
+| **最终性** | ~0.4 秒 | ~12 分钟 |
+| **平均交易费** | $0.00025 | ~$1-5 |
+
+---
+
+## 账户模型
+
+与 Ethereum 不同，Solana 使用基于账户的模型：
+
+```rust
+pub struct Account {
+    pub lamports: u64,
+    pub data: Vec<u8>,
+    pub owner: Pubkey,
+    pub executable: bool,
+}
+```
+
+---
+
+## 争议与挑战
+
+| 问题 | 描述 |
+|------|------|
+| **宕机** | 2022 年网络中断 |
+| **中心化担忧** | 硬件要求高 |
+| **黑客事件** | 2022-2023 多次漏洞利用 |

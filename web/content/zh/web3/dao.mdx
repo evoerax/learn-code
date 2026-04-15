@@ -1,0 +1,55 @@
+---
+title: DAO — 去中心化自治组织
+description: '链上治理、投票机制和国库管理'
+---
+
+import { Cards } from 'nextra/components'
+
+# DAO — 去中心化自治组织
+
+DAO 是由代码和集体决策治理的互联网原生组织。它们用透明规则、链上投票和社区控制的国库取代传统公司结构。
+
+---
+
+## 主题
+
+<Cards>
+  <Cards.Card title="治理机制" href="/zh/web3/dao/governance" arrow>
+    链上投票、二次投票、委托
+  </Cards.Card>
+  <Cards.Card title="国库管理" href="/zh/web3/dao/treasury" arrow>
+    多签钱包、消费限制、资产管理
+  </Cards.Card>
+</Cards>
+
+---
+
+## DAO 类型
+
+| 类型 | 代表 | 治理 |
+|------|------|------|
+| **协议 DAO** | Uniswap, Compound, Aave | 代币持有者治理协议 |
+| **社交 DAO** | Friends with Benefits | 代币门控访问 |
+| **投资 DAO** | BitDAO, The LAO | 池资本，投资项目 |
+| **媒体 DAO** | Bankless, Decrypt | 去中心化内容 |
+| **资助 DAO** | Gitcoin | 资助公共产品 |
+
+---
+
+## 治理代币经济学
+
+```solidity
+contract GovernanceToken is ERC20 {
+    function delegate(address delegatee) external {
+        _moveDelegation(delegates[msg.sender], delegatee, balanceOf(msg.sender));
+        delegates[msg.sender] = delegatee;
+    }
+}
+```
+
+---
+
+## 阅读下一步
+
+- [DeFi 协议](/zh/web3/defi) — 许多由 DAO 治理
+- [Web3 协议](/zh/web3/protocols) — Layer 1 和 Layer 2 治理

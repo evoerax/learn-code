@@ -1,0 +1,50 @@
+---
+title: RoPE 旋转位置编码
+description: 'Rotary Position Embedding'
+---
+
+# RoPE 旋转位置编码
+
+RoPE 通过旋转矩阵编码位置信息。
+
+---
+
+## 核心思想
+
+将位置信息编码为旋转角度，而不是加到 embeddings 上。
+
+```python
+def rotate_half(x):
+    x1 = x[..., :x.shape[-1] // 2]
+    x2 = x[..., x.shape[-1] // 2:]
+    return torch.cat([-x2, x1], dim=-1)
+
+def apply_rotary_pos_emb(q, k, cos, sin):
+    q_embed = (q * cos) + (rotate_half(q) * sin)
+    k_embed = (k * cos) + (rotate_half(k) * sin)
+    return q_embed, k_embed
+```
+
+---
+
+## 旋转矩阵
+
+位置 p 的旋转矩阵：
+
+```
+R(p) = 
+[ cos(pθ)  -sin(pθ) ]
+[ sin(pθ)   cos(pθ) ]
+```
+
+---
+
+## 优势
+
+| 特性 | 相对位置编码 | RoPE |
+|------|-------------|------|
+| 外推性 | 需微调 | 线性外推 |
+| 长文本 | 受限 | 自然支持 |
+| 实现 | 复杂 | 简单 |
+
+LLaMA, GLM, Qwen 等主流模型采用。

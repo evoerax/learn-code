@@ -1,0 +1,55 @@
+---
+title: Transformer Architecture
+description: 'The Transformer architecture: attention is all you need'
+---
+
+# Transformer Architecture
+
+The Transformer architecture, introduced in "Attention Is All You Need" (Vaswani et al., 2017), revolutionized natural language processing and became the foundation for modern LLMs.
+
+---
+
+## Architecture Overview
+
+```mermaid
+graph TB
+    subgraph "Encoder"
+        IN1[Input Embeddings] --> ADD1[Positional Encoding]
+        ADD1 --> ATT1[Multi-Head Self-Attention]
+        ATT1 --> FF1[Feed Forward]
+        FF1 --> OUT1[Encoder Output]
+    end
+    
+    subgraph "Decoder"
+        IN2[Output Embeddings] --> ADD2[Positional Encoding]
+        ADD2 --> MASK1[Masked Self-Attention]
+        MASK1 --> CROSS[Cross Attention]
+        CROSS --> FF2[Feed Forward]
+        FF2 --> OUT2[Decoder Output]
+    end
+    
+    OUT1 --> CROSS
+    OUT2 --> LINEAR[Linear + Softmax]
+```
+
+---
+
+## Key Components
+
+| Component | Purpose |
+|----------|---------|
+| **Positional Encoding** | Inject sequence position information |
+| **Self-Attention** | Model dependencies between all positions |
+| **Feed Forward** | Non-linear transformation per position |
+| **Layer Norm** | Stabilize training |
+| **Residual Connections** | Enable deep networks |
+
+---
+
+## Complexity
+
+| Aspect | Complexity |
+|--------|-----------|
+| **Self-attention** | O(n²d) time, O(n²) memory |
+| **Feed forward** | O(nd²) time and space |
+| **Sequential operations** | O(n) (parallelizable) |

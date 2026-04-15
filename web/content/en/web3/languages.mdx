@@ -1,0 +1,93 @@
+---
+title: Smart Contract Languages
+description: 'Write programs that run on blockchains — Solidity, Rust, and Move'
+---
+
+import { Cards } from 'nextra/components'
+
+# Smart Contract Languages
+
+Smart contracts are programs deployed on blockchains that execute automatically when conditions are met. Writing them requires specialized languages designed for:
+
+- **Determinism** — same input always produces same output
+- **Gas optimization** — every computation costs fees
+- **Security** — bugs can result in permanent fund loss
+- **Formal verification** — mathematical proof of correctness
+
+---
+
+## Languages
+
+<Cards>
+  <Cards.Card title="Solidity" href="/en/web3/languages/solidity" arrow>
+    Ethereum's primary language, influenced by JavaScript and Python
+  </Cards.Card>
+  <Cards.Card title="Rust" href="/en/web3/languages/rust" arrow>
+    High-performance language for Solana, Near, and Polygon
+  </Cards.Card>
+  <Cards.Card title="Move" href="/en/web3/languages/move" arrow>
+    Meta's language for Diem/Libra and Aptos/Sui
+  </Cards.Card>
+</Cards>
+
+---
+
+## Language comparison
+
+| Language | Chain | Paradigm | Style |
+|----------|-------|----------|-------|
+| **Solidity** | Ethereum + EVM | Object-oriented | JavaScript-like |
+| **Vyper** | Ethereum + EVM | Python-like | Python |
+| **Rust** | Solana, Near, Polkadot | Systems | C-like |
+| **Move** | Aptos, Sui | Resource-oriented | Rust-like |
+| **Cairo** | StarkNet | ZK-optimized | Rust-like |
+
+---
+
+## Evolution of smart contract languages
+
+### 2013-2015: Birth
+- Solidity created by Gavin Wood for Ethereum
+- Serpent (Python-like) and Mutan (Go-like) also existed
+- Many security vulnerabilities discovered
+
+### 2016-2019: Maturation
+- Solidity became dominant
+- Vyper emerged for formally verifiable contracts
+- Best practices and security patterns established
+
+### 2020-present: Specialization
+- Rust for performance-critical applications
+- Move for resource-heavy ecosystems
+- ZK languages (Cairo, Circom) for privacy scaling
+
+---
+
+## Gas optimization fundamentals
+
+Smart contract execution costs gas. Optimization matters:
+
+```solidity
+// Unoptimized — reads storage twice
+function getBalance(address user) public view returns (uint) {
+    return balances[user]; // COLD read
+}
+
+// Called again
+function getTotal() public view returns (uint) {
+    return balances[msg.sender] + balances[other]; // COLD reads
+}
+
+// Optimized — cache in memory
+function getBalance(address user) public view returns (uint) {
+    uint balance = balances[user]; // COLD read, now in memory
+    return balance;
+}
+```
+
+---
+
+## Read next
+
+- [DeFi protocols](/en/web3/defi) — see these languages in action
+- [DAO governance](/en/web3/dao) — voting and treasury management contracts

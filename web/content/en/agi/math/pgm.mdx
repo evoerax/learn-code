@@ -1,0 +1,44 @@
+---
+title: Probabilistic Graphical Models
+description: 'Factor graphs and Bayes nets'
+---
+
+# Probabilistic Graphical Models
+
+---
+
+## Types
+
+| Type | Edges | Directed |
+|------|-------|----------|
+| **Bayesian Network** | Conditional dependencies | Yes |
+| **Markov Random Field** | Undirected | No |
+| **Factor Graph** | Factors to variables | No |
+
+---
+
+## Bayes Net Example
+
+```python
+# P(rain, sprinkler, wet) = P(rain) · P(sprinkler) · P(wet|rain,sprinkler)
+
+# In code:
+def prob_wet(rain, sprinkler):
+    return P_wet_given[rain, sprinkler]
+
+def joint_prob(rain=True, sprinkler=True):
+    return P(rain) * P(sprinkler) * prob_wet(rain, sprinkler)
+```
+
+---
+
+## Factor Graphs
+
+```python
+# Factor nodes connect to variable nodes
+# Message passing for inference
+
+def message_f_to_x(factor, x, other_messages):
+    # Sum-product algorithm
+    return factor.marginalize(x) * other_messages
+```

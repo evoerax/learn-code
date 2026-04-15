@@ -1,0 +1,74 @@
+---
+title: Reward Model
+description: 'Learning reward functions from human preferences'
+---
+
+# Reward Model
+
+Reward models learn to predict human preferences, enabling scalable AI feedback.
+
+---
+
+## Training Data
+
+```json
+{
+  "prompt": "Explain quantum entanglement to a 5 year old",
+  "chosen": "Imagine you and your friend have two magical dice...",
+  "rejected": "Quantum entanglement is a phenomenon in quantum mechanics..."
+}
+```
+
+---
+
+## Bradley-Terry Model
+
+The probability of preferring A over B:
+
+```python
+def bradley_terry_loss(reward_chosen, reward_rejected):
+    """
+    reward_chosen: scalar reward for preferred response
+    reward_rejected: scalar reward for dispreferred response
+    """
+    # P(prefer chosen) = sigmoid(reward_chosen - reward_rejected)
+    return -F.logsigmoid(reward_chosen - reward_rejected).mean()
+```
+
+---
+
+## Reward Model Architecture
+
+```python
+class RewardModel(nn.Module):
+    def __init__(self, model_name):
+        super().__init__()
+        self.model = AutoModel.from_pretrained(model_name)
+        self.model.config.pad_token_id = self.model.config.eos_token_id
+        
+        # Replace LM head with reward head
+        self.reward_head = nn.Linear(
+            self.model.config.hidden_size, 
+            1, 
+            bias=False
+        )
+    
+    def forward(self, input_ids, attention_mask):
+        outputs = self.model(input_ids, attention_mask=attention_mask)
+        
+        # Use last non-padding token
+        hidden = outputs.last_hidden_state
+        reward = self.reward_head(hidden[:, -1, :]).squeeze(-1)
+        return reward
+```
+
+---
+
+## Practical Considerations
+
+| Aspect | Recommendation |
+|--------|----------------|
+| **Data quality** | Use preference data from diverse raters |
+| **Reward hacking** | Add KL penalty, ensemble rewards |
+| **Distribution shift** | Regularize, use iterative RL |
+| **Sycophancy** | Include diverse evaluation criteria |

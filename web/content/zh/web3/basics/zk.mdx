@@ -1,0 +1,44 @@
+---
+title: 零知识证明
+description: 'zkSNARKs、zkSTARKs、隐私和扩容背后的密码学'
+---
+
+import { Cards } from 'nextra/components'
+
+# 零知识证明
+
+零知识证明（ZKP）允许一方证明给另一方某个陈述是真实的，而不透露除陈述有效性之外的任何信息。这种密码学原语是区块链隐私和扩容的基础。
+
+---
+
+## 主题
+
+<Cards>
+  <Cards.Card title="ZK-SNARKs" href="/zh/web3/basics/zk-snark" arrow>
+    简洁非交互式知识论证
+  </Cards.Card>
+  <Cards.Card title="ZK-STARKs" href="/zh/web3/basics/zk-stark" arrow>
+    可扩展透明知识论证
+  </Cards.Card>
+</Cards>
+
+---
+
+## ZK 证明的三个属性
+
+| 属性 | 描述 |
+|------|------|
+| **完备性** | 如果陈述为真，诚实验证者会被诚实证明者说服 |
+| **可靠性** | 如果陈述为假，欺骗证明者无法说服诚实验证者 |
+| **零知识** | 验证者除了知道陈述为真外，什么都不知道 |
+
+---
+
+## 在区块链中的应用
+
+| 应用 | ZK 如何使用 |
+|------|-------------|
+| **隐私币** | Zcash 屏蔽交易金额和参与方 |
+| **扩容** | ZK-Rollups 链下证明有效性，链上验证 |
+| **桥接安全** | 证明状态转换而不信任中继 |
+| **身份** | 证明公民身份而不透露身份证号 |

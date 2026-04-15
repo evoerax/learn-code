@@ -1,0 +1,68 @@
+---
+title: SFT Supervised Fine-tuning
+description: 'Fine-tuning pretrained models on supervised data'
+---
+
+# SFT Supervised Fine-tuning
+
+SFT adapts pretrained language models to target tasks using supervised learning.
+
+---
+
+## Process
+
+```python
+def sft_train(model, train_data, val_data, config):
+    optimizer = torch.optim.AdamW(model.parameters(), lr=config.lr)
+    
+    for epoch in range(config.num_epochs):
+        for batch in dataloader(train_data):
+            # Compute loss on response tokens only
+            outputs = model(**batch)
+            loss = outputs.loss
+            
+            # Ignore loss on prompt tokens (labels = -100)
+            loss = loss[batch['labels'] != -100].mean()
+            
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+```
+
+---
+
+## Data Format
+
+```json
+{
+  "messages": [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What is 2+2?"},
+    {"role": "assistant", "content": "2+2 equals 4."}
+  ]
+}
+```
+
+SFT learns to predict the **assistant response** given the full context.
+
+---
+
+## Key Hyperparameters
+
+| Hyperparameter | Typical Value | Notes |
+|---------------|---------------|-------|
+| **Learning rate** | 1e-5 to 2e-5 | Lower than pretrain |
+| **Batch size** | 4-32 | Scales with model size |
+| **Epochs** | 1-5 | Overfitting risk |
+| **LR schedule** | Cosine with warmup | Standard |
+| **Weight decay** | 0.1 | AdamW |
+
+---
+
+## Tips
+
+| Issue | Solution |
+|-------|----------|
+| **Catastrophic forgetting** | Mix with pretrain data |
+| **Overfitting** | Early stopping, more data |
+| **Mode collapse** | Higher learning rate, dropout |

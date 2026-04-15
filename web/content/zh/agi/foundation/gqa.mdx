@@ -1,0 +1,50 @@
+---
+title: 分组查询注意力
+description: 'Grouped Query Attention GQA'
+---
+
+# 分组查询注意力
+
+GQA 将查询分成多组，每组共享一个键值对。
+
+---
+
+## 概念
+
+标准 Multi-Head Attention：每个头独立的 Q, K, V
+
+GQA：h 个查询头，g 个键值头（g < h），每组 h/g 个查询头共享一个 K, V
+
+```python
+class GQA(nn.Module):
+    def __init__(self, d_model, num_heads, num_kv_heads):
+        super().__init__()
+        self.h = num_heads      # 查询头数
+        self.kv_h = num_kv_heads  # 键值头数
+        self.group_size = num_heads // num_kv_heads
+        
+        # 键值头数更少
+        self.W_k = nn.Linear(d_model, num_kv_heads * d_k)
+        self.W_v = nn.Linear(d_model, num_kv_heads * d_k)
+        
+        # 查询头数更多
+        self.W_q = nn.Linear(d_model, num_heads * d_k)
+```
+
+---
+
+## vs MHA vs MQA
+
+| 类型 | Q 头数 | K,V 头数 | 内存 |
+|------|--------|----------|------|
+| MHA | 12 | 12 | 高 |
+| MQA | 12 | 1 | 低 |
+| GQA | 12 | 4 | 中 |
+
+---
+
+## 效果
+
+- 推理时 KV Cache 大幅减少
+- 保持接近 MHA 的质量
+- LLaMA 2+ 采用此方案

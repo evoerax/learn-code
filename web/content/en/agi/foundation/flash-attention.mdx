@@ -1,0 +1,79 @@
+---
+title: FlashAttention
+description: 'IO-aware attention with tiling for 2-4x speedup'
+---
+
+# FlashAttention
+
+FlashAttention (Dao et al., 2022) computes attention exactly while being 2-4x faster through IO-awareness and tiling.
+
+---
+
+## The IO Problem
+
+Standard attention materializes the N×N attention matrix (O(n²) memory), which is slow due to memory bandwidth.
+
+FlashAttention processes in **tiles** that fit in SRAM, reducing memory reads/writes.
+
+---
+
+## Algorithm
+
+```python
+def flash_attention(Q, K, V, BlockSize=128):
+    """
+    Q, K, V: (seq_len, d_k)
+    Processes in blocks to reduce memory.
+    """
+    seq_len = Q.shape[0]
+    output = zeros(seq_len, d_v)
+    row_sum = zeros(seq_len)
+    row_max = zeros(seq_len)
+    
+    # Outer loop over blocks of Q
+    for i in range(0, seq_len, BlockSize):
+        Qi = Q[i:i+BlockSize]
+        Oi = zeros(BlockSize, d_v)
+        Li = zeros(BlockSize)
+        mi = full(BlockSize, -inf)
+        
+        # Inner loop over blocks of K, V
+        for j in range(0, seq_len, BlockSize):
+            Kj = K[j:j+BlockSize]
+            Vj = V[j:j+BlockSize]
+            
+            # Compute attention block
+            Sij = Qi @ Kj.T / sqrt(d_k)  # (BlockSize, BlockSize)
+            mij = Sij.max(dim=-1).values
+            Pij = exp(Sij - mij[:, None])
+            
+            # Safe normalization
+            Pij_rowsum = Pij.sum(dim=-1)
+            
+            # Online softmax trick
+            ...
+        
+        Oi = Oi / Li[:, None]
+        output[i:i+BlockSize] = Oi
+    
+    return output
+```
+
+---
+
+## Benefits
+
+| Aspect | Standard | FlashAttention |
+|--------|----------|----------------|
+| **Memory** | O(n²) | O(n) |
+| **Speed** | 1x | 2-4x |
+| **Accuracy** | Exact | Exact |
+| **Training** | Memory bottleneck | Feasible for long seq |
+
+---
+
+## FlashAttention-2
+
+- Better parallelism (split across sequence length)
+- Better work partitioning
+- ~1.5-2x faster than FA1

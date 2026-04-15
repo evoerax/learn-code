@@ -1,0 +1,85 @@
+---
+title: MuZero
+description: 'Model-based RL with learned dynamics'
+---
+
+# MuZero
+
+MuZero (Schrittwieser et al., 2020) learns a world model and uses MCTS for planning.
+
+---
+
+## Key Innovation
+
+MuZero learns:
+1. **Representation** - encode observations to latent state
+2. **Dynamics** - predict next latent state and reward
+3. **Policy** - predict action selection (via MCTS)
+
+```python
+class MuZeroNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # Representation: obs → s
+        self.representation = dynamics_network()
+        
+        # Dynamics: (s, a) → (s', r)
+        self.dynamics = nn.Sequential(...)
+        
+        # Prediction: s → (π, v)
+        self.prediction = nn.Sequential(...)
+    
+    def initial_inference(self, obs):
+        state = self.representation(obs)
+        policy, value = self.prediction(state)
+        return policy, value, state
+    
+    def recurrent_inference(self, state, action):
+        next_state, reward = self.dynamics(state, action)
+        policy, value = self.prediction(next_state)
+        return policy, value, reward, next_state
+```
+
+---
+
+## MCTS Planning
+
+```python
+def muzero_mcts(root, network, num_simulations=50):
+    for _ in range(num_simulations):
+        node = root
+        search_path = [root]
+        
+        while not node.is_leaf():
+            # Select action with UCB
+            action = node.select_child()
+            node = node.children[action]
+            search_path.append(node)
+        
+        # Expand with network
+        if node.is_expanded():
+            policy, value, reward, next_state = network.recurrent_inference(
+                node.state, node.action_to_get_here
+            )
+            node.expand(policy, next_state)
+        else:
+            policy, value, _ = network.initial_inference(node.obs)
+            node.expand(policy)
+        
+        # Backpropagate
+        value = value.item()
+        for node in reversed(search_path):
+            node.visit_count += 1
+            node.value_sum += value
+            value = reward.item() + gamma * value
+```
+
+---
+
+## Results
+
+| Game | AlphaZero | MuZero | Notes |
+|------|-----------|--------|-------|
+| **Chess** | ✓ | ✓ | AlphaZero uses perfect model |
+| **Atari** | ✗ | ✓ | MuZero handles partial observability |
+| **Go** | ✓ | ✓ | |

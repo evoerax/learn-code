@@ -1,0 +1,139 @@
+---
+title: Decentralized Exchanges (DEX)
+description: 'AMMs, order books, and liquidity provision on-chain'
+---
+
+# Decentralized Exchanges (DEX)
+
+DEXs replace centralized exchanges with smart contracts, enabling direct token swaps without intermediaries. They come in two main flavors: **AMMs** (automated market makers) and **order book** models.
+
+---
+
+## Automated Market Makers (AMMs)
+
+AMMs replace the traditional order book with **liquidity pools** — smart contracts holding reserves of two or more tokens. Trading happens against these reserves using a mathematical formula.
+
+### Constant Product (x × y = k)
+
+The most common formula, pioneered by Uniswap:
+
+```
+x * y = k
+```
+
+Where:
+- x = reserve of token 0
+- y = reserve of token 1
+- k = constant (product must not decrease)
+
+**Price impact:** The larger the trade relative to pool size, the more the price moves against you.
+
+```solidity
+function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) 
+    internal pure returns (uint amountOut) 
+{
+    uint amountInWithFee = amountIn * 997; // 0.3% fee
+    uint numerator = amountInWithFee * reserveOut;
+    uint denominator = reserveIn * 1000 + amountInWithFee;
+    amountOut = numerator / denominator;
+}
+```
+
+---
+
+## Liquidity Provision
+
+Liquidity providers (LPs) deposit token pairs into pools, earning fees from trades.
+
+### LP Token mechanics
+
+When you deposit, you receive **LP tokens** proportional to your share:
+
+```solidity
+function mint(address to) external returns (uint liquidity) {
+    (uint112 _reserve0, uint112 _reserve1,) = getReserves();
+    uint balance0 = IERC20(token0).balanceOf(address(this));
+    uint balance1 = IERC20(token1).balanceOf(address(this));
+    uint amount0 = balance0 - _reserve0;
+    uint amount1 = balance1 - _reserve1;
+    
+    if (_totalSupply == 0) {
+        liquidity = sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY;
+    } else {
+        liquidity = min(
+            amount0 * _totalSupply / _reserve0,
+            amount1 * _totalSupply / _reserve1
+        );
+    }
+    _mint(to, liquidity);
+}
+```
+
+### Impermanent Loss
+
+When one token in the pool appreciates significantly, LPs end up with less of the appreciated token than if they had simply held. This is "impermanent" only if prices return to original levels.
+
+| Price change | Hold value | LP value | Loss |
+|-------------|------------|----------|------|
+| +50% | $150 | $141.4 | -5.7% |
+| +100% | $200 | $170.7 | -14.6% |
+| -50% | $50 | $70.7 | +41.4% |
+
+---
+
+## DEX landscape
+
+| Protocol | Chain | Model | TVL (2024) |
+|----------|-------|-------|-----------|
+| **Uniswap** | Ethereum, L2s | AMM | ~$5B |
+| **Curve** | Ethereum | Stablecoin AMM | ~$3B |
+| **PancakeSwap** | BSC, Ethereum | AMM | ~$2B |
+| **dYdX** | Cosmos (own L1) | Order book | ~$500M |
+| **Raydium** | Solana | AMM | ~$200M |
+
+---
+
+## Order Book DEXs
+
+Unlike AMMs, order book DEXs match bids and asks like traditional exchanges:
+
+| Feature | AMM | Order Book |
+|---------|-----|------------|
+| Capital efficiency | Low (passive liquidity) | High (concentrated) |
+| Liquidity provider | Anyone (passive) | Market makers (active) |
+| Price impact | Constant formula | Maker fee, taker fee |
+| MEV | Significant | Less exposure |
+
+**Examples:** dYdX, Loopring, ZKEX (ZK order book)
+
+---
+
+## Advanced AMM concepts
+
+### Concentrated liquidity (Uniswap v3)
+
+LPs can specify price ranges, concentrating capital:
+
+```solidity
+// Provide liquidity only in 0.1% fee tier around current price
+struct Position {
+    int24 tickLower;
+    int24 tickUpper;
+    uint128 liquidity;
+}
+```
+
+### TWAMM (Time-Weighted AMM)
+
+For large orders over time, TWAMM amortizes price impact:
+
+- Large order split into infinite tiny orders
+- Orders execute continuously over time
+- Avoids front-running and reduces impact
+
+### Automated risk management
+
+Modern DEXs incorporate:
+- Dynamic fees based on volatility
+- Virtual reserves for MEV protection
+- Anti-gaming features (commit-reveal schemes)

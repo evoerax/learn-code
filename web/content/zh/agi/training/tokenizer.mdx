@@ -1,0 +1,73 @@
+---
+title: Tokenizer 与 BPE
+description: '分词器与 Byte Pair Encoding'
+---
+
+# Tokenizer 与 BPE
+
+LLM 使用 BPE 分词处理文本。
+
+---
+
+## BPE 算法
+
+```python
+import re
+from collections import Counter
+
+def get_stats(vocab):
+    pairs = Counter()
+    for word, freq in vocab.items():
+        symbols = word.split()
+        for i in range(len(symbols) - 1):
+            pairs[(symbols[i], symbols[i+1])] += freq
+    return pairs
+
+def merge_vocab(pair, vocab):
+    new_vocab = {}
+    bigram = re.escape(pair)
+    for word in vocab:
+        word_out = re.sub(bigram, ''.join(pair), word)
+        new_vocab[word_out] = vocab[word]
+    return new_vocab
+
+# 迭代合并
+vocab = {"l o w </w>": 5, "l o w e r </w>": 2, ...}
+for _ in range(10000):
+    pairs = get_stats(vocab)
+    best_pair = max(pairs, key=pairs.get)
+    vocab = merge_vocab(best_pair, vocab)
+```
+
+---
+
+## 分词流程
+
+```
+原始文本: "LLM is amazing"
+        ↓
+Unicode: ['L', 'L', 'M', ' ', 'i', 's', ...]
+        ↓
+BPE 合并: ['LLM', 'Ġis', 'Ġam', 'az', 'ing']
+```
+
+---
+
+## 常用分词器
+
+| 分词器 | 模型 | 词表大小 |
+|--------|------|----------|
+| GPT-2 | BPE | 50k |
+| LLaMA | BPE | 32k |
+| ChatGPT | BPE | 100k |
+
+---
+
+## tiktoken 示例
+
+```python
+import tiktoken
+enc = tiktoken.get_encoding("cl100k_base")
+tokens = enc.encode("Hello, world!")
+# [15496, 11, 1917, 0]
+```

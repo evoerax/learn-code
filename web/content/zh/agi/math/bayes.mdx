@@ -1,0 +1,77 @@
+---
+title: 贝叶斯推断
+description: 'Bayesian Inference 概率推断'
+---
+
+# 贝叶斯推断
+
+基于贝叶斯定理的概率推断。
+
+---
+
+## 贝叶斯定理
+
+```python
+# P(θ|D) = P(D|θ) * P(θ) / P(D)
+
+# 后验 = 似然 * 先验 / 边际似然
+
+def bayesian_inference(prior, likelihood, data):
+    # 边际似然
+    marginal = sum(likelihood(theta) * prior(theta) for theta in support)
+    
+    # 后验
+    posterior = {θ: likelihood(θ) * prior(θ) / marginal for θ in support}
+    return posterior
+```
+
+---
+
+## 共轭先验
+
+```python
+# Beta-Binomial 共轭
+def beta_binomial_posterior(prior_alpha, prior_beta, successes, trials):
+    # 先验: Beta(α, β)
+    # 后验: Beta(α + successes, β + failures)
+    post_alpha = prior_alpha + successes
+    post_beta = prior_beta + (trials - successes)
+    return post_alpha, post_beta
+```
+
+---
+
+## 变分推断
+
+```python
+class VariationalInference:
+    def __init__(self, model, guide):
+        self.model = model
+        self.guide = guide
+    
+    def fit(self, data, iterations=1000):
+        for _ in range(iterations):
+            # E 步: 采样隐变量
+            samples = self.guide.sample(data)
+            
+            # M 步: 最大化 ELBO
+            elbo = self.compute_elbo(data, samples)
+            elbo.backward()
+            self.guide.optimizer.step()
+    
+    def compute_elbo(self, data, samples):
+        # ELBO = E[log p(data|θ)] - KL(q(θ)||p(θ))
+        return self.model.log_likelihood(data, samples) - \
+               kl_divergence(self.guide, self.model.prior)
+```
+
+---
+
+## 应用
+
+| 场景 | 使用 |
+|------|------|
+| 超参数调优 | 贝叶斯优化 |
+| 模型选择 | BIC/AIC |
+| 不确定性 | 预测方差 |
+| 正则化 | 贝叶斯 NN |

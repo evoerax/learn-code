@@ -1,0 +1,153 @@
+---
+title: Rust for Smart Contracts
+description: 'High-performance smart contracts for Solana, Near, and Polygon'
+---
+
+# Rust for Smart Contracts
+
+Rust has emerged as the preferred language for high-performance blockchain smart contracts. Its memory safety guarantees and zero-cost abstractions make it ideal for systems where gas efficiency and security are critical.
+
+---
+
+## Why Rust for blockchain?
+
+| Feature | Benefit |
+|---------|---------|
+| **Memory safety** | No segfaults, no data races |
+| **Ownership model** | Compile-time verification of resource access |
+| **No garbage collection** | Deterministic execution, no pauses |
+| **Algebraic types** | Expressive, verifiable state machines |
+
+---
+
+## Solana with Rust
+
+Solana uses Rust for on-chain programs (smart contracts).
+
+### Program structure
+
+```rust
+use solana_program::{
+    account_info::{AccountInfo, Context},
+    entrypoint::ProgramResult,
+    msg,
+    program_error::ProgramError,
+    pubkey::Pubkey,
+};
+
+entrypoint!(process_instruction);
+
+pub fn process_instruction(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
+) -> ProgramResult {
+    msg!("Hello, Solana!");
+    
+    match instruction_data[0] {
+        0 => Ok(()), // Initialize
+        1 => {
+            msg!("Instruction 1 executed");
+            Ok(())
+        }
+        _ => Err(ProgramError::InvalidInstructionData)
+    }
+}
+```
+
+### Account model
+
+Solana uses an account model where all state is stored in separate accounts:
+
+```rust
+pub struct UserAccount {
+    pub authority: Pubkey,
+    pub data: Vec<u8>,
+    pub bump: u8,
+}
+
+impl Sealed for UserAccount {}
+
+impl Serialize for UserAccount {
+    fn serialize(&self, writer: &mut Writer) -> Result<(), ProgramError> {
+        writer.write_all(&self.authority.as_ref())?;
+        writer.write_all(&self.data)?;
+        writer.write_all(&[self.bump])?;
+        Ok(())
+    }
+}
+```
+
+---
+
+## Near with Rust
+
+Near uses Rust for its runtime via the near-sdk.
+
+### Contract structure
+
+```rust
+use near_sdk::{
+    borsh::{BorshDeserialize, BorshSerialize},
+    near_bindgen,
+    collections::UnorderedMap,
+};
+
+#[near_bindgen]
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct Contract {
+    pub tokens: UnorderedMap<String, AccountId>,
+}
+
+#[near_bindgen]
+impl Contract {
+    pub fn mint(&mut self, token_id: String, account_id: AccountId) {
+        self.tokens.insert(&token_id, &account_id);
+    }
+    
+    pub fn get_owner(&self, token_id: String) -> Option<AccountId> {
+        self.tokens.get(&token_id)
+    }
+}
+```
+
+---
+
+## Polygon zkEVM
+
+Polygon uses Rust for its zkEVM prover:
+
+```rust
+// Example: Simple storage contract in Cairo (Polygon)
+fn storage_impl(hash: &mut Hash, _input: &[Felt]) -> Result<(), Error> {
+    // Access contract storage
+    let key = Fp::from_bytes_be_slice(&_input[..32])?;
+    let value = hash.get(&key).cloned().unwrap_or_default();
+    
+    // Return value via VM outputs
+    hash.insert(Felt::ZERO, value);
+    Ok(())
+}
+```
+
+---
+
+## Comparison
+
+| Aspect | Solana | Near | Polygon |
+|--------|--------|------|---------|
+| Language | Rust | Rust | Cairo (Rust-like) |
+| State model | Account-based | Key-value | Contract storage |
+| Execution | Parallel | Sequential | ZK-verified |
+| Gas model | Resource fees | Gas per compute | Polygon PoS + ZK |
+
+---
+
+## Tooling
+
+| Tool | Purpose |
+|------|---------|
+| **Anchor** | Solana framework, IDL generation |
+| **near-sdk-rs** | Near smart contract library |
+| **Rust Analyzer** | IDE support |
+| **Solang** | Solidity to Rust compiler for Solana |

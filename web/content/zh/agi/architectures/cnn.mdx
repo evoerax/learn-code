@@ -1,0 +1,57 @@
+---
+title: CNN 架构
+description: '卷积神经网络基础'
+---
+
+# CNN 架构
+
+卷积神经网络处理图像。
+
+---
+
+## 基本结构
+
+```python
+class ConvBlock(nn.Module):
+    def __init__(self, in_ch, out_ch, kernel_size=3):
+        super().__init__()
+        self.conv = nn.Conv2d(in_ch, out_ch, kernel_size, padding=kernel_size//2)
+        self.bn = nn.BatchNorm2d(out_ch)
+        self.relu = nn.ReLU()
+    
+    def forward(self, x):
+        return self.relu(self.bn(self.conv(x)))
+```
+
+---
+
+## 卷积操作
+
+```python
+# 输入 (B, C, H, W)
+# 卷积核 (out_ch, in_ch, k, k)
+# 输出 (B, out_ch, H', W')
+```
+
+---
+
+## 经典架构
+
+| 架构 | 特点 |
+|------|------|
+| LeNet | 早期, 5 层 |
+| AlexNet | ReLU, Dropout |
+| VGG | 深, 3x3 卷积 |
+| GoogLeNet | Inception |
+| MobileNet | 深度可分离卷积 |
+
+---
+
+## 关键组件
+
+| 组件 | 作用 |
+|------|------|
+| 3x3 卷积 | 捕捉空间模式 |
+| BatchNorm | 稳定训练 |
+| Dropout | 防止过拟合 |
+| 池化 | 降维, 抗噪 |

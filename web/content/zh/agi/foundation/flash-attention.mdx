@@ -1,0 +1,64 @@
+---
+title: FlashAttention
+description: '高效注意力机制'
+---
+
+# FlashAttention
+
+通过 IO-Aware 注意力算法加速训练。
+
+---
+
+## 标准注意力的痛点
+
+- O(N^2) 内存占用
+- GPU HBM 访问慢
+
+---
+
+## FlashAttention 算法
+
+```python
+def flash_attention(Q, K, V, block_size=128):
+    # 分块计算，避免存储完整注意力矩阵
+    Tr = Q.shape[0]  # 行数
+    Tc = K.shape[0]  # 列数
+    
+    # 按块处理
+    for i in range(0, Tr, block_size):
+        Qi = Q[i:i+block_size]
+        Oi = torch.zeros_like(Qi)
+        
+        ri = torch.zeros(Qi.shape[0], 1)
+        lij = torch.zeros(Qi.shape[0], 1)
+        
+        for j in range(0, Tc, block_size):
+            Kj = K[j:j+block_size]
+            Vj = V[j:j+block_size]
+            
+            # 在线 softmax 更新
+            Sij = Qi @ Kj.T / sqrt(d)
+            mi_j = Sij.max(dim=-1, keepdim=True)
+            Pi_j = torch.exp(Sij - mi_j)
+            aj = Pi_j.sum(dim=-1, keepdim=True)
+            
+            lij = lij * torch.exp(mi_j - mi_ij) + aj
+            Oi = Oi * torch.exp(mi_j - mi_ij) + Pi_j @ Vj
+```
+
+---
+
+## 效果
+
+| 指标 | 标准 Attention | FlashAttention |
+|------|----------------|----------------|
+| 内存 | O(N^2) | O(N) |
+| 速度 | 1x | 2-4x |
+| 精度 | 基准 | 无损 |
+
+---
+
+## 变体
+
+- FlashAttention-2: 进一步优化
+- FlashAttention-3: FP8 支持

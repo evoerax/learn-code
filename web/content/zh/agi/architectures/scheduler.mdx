@@ -1,0 +1,71 @@
+---
+title: 学习率调度器
+description: 'Learning Rate Schedulers'
+---
+
+# 学习率调度器
+
+动态调整学习率。
+
+---
+
+## 常用调度
+
+```python
+# Step Decay
+lr = lr0 * gamma ** (epoch / step_size)
+
+# Cosine Annealing
+lr = lr0 * (1 + cos(pi * epoch / max_epochs)) / 2
+
+# Warmup + Cosine
+if epoch < warmup_epochs:
+    lr = lr0 * epoch / warmup_epochs
+else:
+    lr = lr0 * (1 + cos(pi * (epoch - warmup) / (max_epochs - warmup))) / 2
+```
+
+---
+
+## PyTorch 实现
+
+```python
+scheduler = {
+    # 余弦退火
+    'cosine': torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=num_epochs
+    ),
+    
+    # Warmup + 余弦
+    'cosine_warmup': torch.optim.lr_scheduler.SequentialLR(
+        optimizer,
+        schedulers=[
+            LinearLR(optimizer, start_factor=1/100, total_iters=warmup),
+            CosineAnnealingLR(optimizer, T_max=num_epochs - warmup)
+        ],
+        milestones=[warmup]
+    ),
+    
+    # 线性 warmup + 余弦
+    'cosine_warmup': WarmupCosineScheduler(optimizer, ...)
+}
+```
+
+---
+
+## 效果对比
+
+| 调度 | 收敛速度 | 最终性能 |
+|------|----------|----------|
+| Step | 快 | 中 |
+| Cosine | 中 | 高 |
+| Warmup+Cosine | 稳定 | 最高 |
+| 线性 warmup | 最稳定 | 最高 |
+
+---
+
+## LLaMA 3 配置
+
+```python
+# 2000 步 warmup, 余弦到 0.1 * lr
+```

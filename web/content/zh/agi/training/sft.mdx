@@ -1,0 +1,73 @@
+---
+title: SFT 监督微调
+description: 'Supervised Fine-Tuning'
+---
+
+# SFT 监督微调
+
+在预训练模型基础上进行有监督的微调。
+
+---
+
+## 流程
+
+```
+预训练模型 + 高质量数据 -> SFT -> 微调模型
+```
+
+---
+
+## 数据格式
+
+```python
+{
+    "messages": [
+        {"role": "user", "content": "什么是大语言模型？"},
+        {"role": "assistant", "content": "大语言模型是..."}
+    ]
+}
+```
+
+---
+
+## 训练配置
+
+```python
+training_config = {
+    "learning_rate": 1e-5,
+    "batch_size": 8,
+    "epochs": 3,
+    "warmup_ratio": 0.1,
+    "lr_scheduler": "cosine",
+    "gradient_accumulation_steps": 4,
+}
+```
+
+---
+
+## Loss 计算
+
+```python
+def sft_loss(model, batch):
+    # 只计算 assistant 回复的 loss
+    outputs = model(
+        input_ids=batch["input_ids"],
+        attention_mask=batch["attention_mask"],
+        labels=batch["labels"]
+    )
+    
+    # 移位：labels 是下一个 token
+    # loss 只在 assistant 位置计算
+    return outputs.loss
+```
+
+---
+
+## 注意事项
+
+| 要点 | 说明 |
+|------|------|
+| 数据质量 | 质量 > 数量 |
+| 学习率 | 比预训练低 10-100x |
+| Epochs | 2-5，防止过拟合 |
+| 格式 | 一致的指令模板 |

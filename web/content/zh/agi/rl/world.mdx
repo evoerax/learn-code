@@ -1,0 +1,91 @@
+---
+title: World Models 世界模型
+description: '学习环境的压缩表示'
+---
+
+# World Models
+
+压缩环境表示用于规划和想象。
+
+---
+
+## 架构
+
+```
+感知 → 编码 → 隐藏状态 h
+              ↓
+         世界模型 (MDN-RNN)
+              ↓
+         控制器 C → 动作
+```
+
+---
+
+## VAE + MDN-RNN
+
+```python
+class WorldModel(nn.Module):
+    def __init__(self):
+        self.encoder = VAE()  # 压缩图像
+        self.rnn = MDNGRU()  # 预测下一状态
+    
+    def forward(self, z, a, hidden):
+        # 隐状态 + 动作 → 下一隐状态
+        h_next = self.rnn(z, a, hidden)
+        return h_next
+```
+
+---
+
+## 训练
+
+```python
+def train_world_model(videos):
+    for video in videos:
+        # VAE 学习重建
+        z = vae.encode(video)
+        
+        # MDN-RNN 学习转移
+        for t in range(len(video) - 1):
+            h_next = rnn(z[t], action[t], h[t])
+            h[t+1] = h_next
+```
+
+---
+
+## 控制器
+
+```python
+class Controller(nn.Module):
+    def __init__(self, z_dim, h_dim, action_dim):
+        self.net = nn.Sequential(
+            nn.Linear(z_dim + h_dim, 64),
+            nn.ReLU(),
+            nn.Linear(64, action_dim)
+        )
+    
+    def forward(self, z, h):
+        return self.net(torch.cat([z, h], dim=-1))
+```
+
+---
+
+## 进化策略优化
+
+```python
+def cem_controller(controller, env, n_iter=10):
+    # 交叉熵方法
+    for _ in range(n_iter):
+        # 从分布采样
+        params = controller.state_dict()
+        # 评估
+        fitness = evaluate(params, env)
+        # 更新分布
+        params = update_distribution(params, fitness)
+```
+
+---
+
+## 应用
+
+Dream to Control: 在想象中学习控制。

@@ -1,0 +1,56 @@
+---
+title: SentencePiece
+description: '无监督分词器'
+---
+
+# SentencePiece
+
+Google 的无监督分词库，支持 BPE 和 Unigram。
+
+---
+
+## vs BPE
+
+| 特性 | BPE | SentencePiece |
+|------|-----|---------------|
+| 输入 | 预分词文本 | 原始文本 |
+| 空格处理 | 需特殊符号 | 自动处理 |
+| 语言无关 | 否 | 是 |
+| 使用场景 | 特定语言 | 多语言 |
+
+---
+
+## Unigram 模型
+
+```python
+class SentencePiece:
+    def __init__(self, model_type='unigram', vocab_size=32000):
+        self.model_type = model_type
+        self.vocab_size = vocab_size
+    
+    def train(self, sentences):
+        # 初始化词表（基于 Unicode 字符）
+        vocab = self._init_vocab(sentences)
+        
+        # 迭代优化
+        for _ in range(self.max_iterations):
+            # E-step: 计算句子概率
+            # M-step: 更新词表
+            
+            # 删除低频 token
+            vocab = self._prune_vocab(vocab)
+        
+        self.vocab = vocab
+    
+    def encode(self, text):
+        # Viterbi 解码
+        return self._viterbi_decode(text)
+```
+
+---
+
+## LLaMA 使用 SentencePiece
+
+- 词表大小: 32,000
+- 支持中文、代码
+- BPE + Unigram 混合

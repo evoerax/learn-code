@@ -1,0 +1,79 @@
+---
+title: Dyna 与 MBPO
+description: '基于模型的 RL'
+---
+
+# Dyna 与 MBPO
+
+结合模型学习与规划。
+
+---
+
+## Dyna 架构
+
+```
+环境 → 交互收集经验
+         ↓
+    学习世界模型
+         ↓
+    基于模型规划
+         ↓
+    更新策略
+```
+
+---
+
+## Dyna 算法
+
+```python
+def dyna(env, model, policy, n_steps=100):
+    # 1. 与环境交互
+    real_experience = collect_experience(env, policy)
+    
+    # 2. 学习模型
+    model.fit(real_experience)
+    
+    # 3. 基于模型模拟
+    for _ in range(n模拟):
+        sim_experience = model.sample()
+        policy.update(sim_experience)
+    
+    # 4. 更新策略
+    policy.update(real_experience)
+```
+
+---
+
+## MBPO
+
+```python
+class MBPO:
+    def __init__(self, env, model, policy):
+        self.model = model  # Bootstrap ensemble
+        self.policy = policy
+    
+    def update(self, real_buffer):
+        # 学习模型
+        self.model.fit(real_buffer)
+        
+        # 模型 rollout
+        for _ in range(num_rollouts):
+            s = real_buffer.sample_state()
+            for _ in range(rollout_length):
+                a = self.policy(s)
+                s_next = self.model.predict(s, a)
+                fake_buffer.push(s, a, r, s_next, done)
+        
+        # 策略更新
+        self.policy.update(fake_buffer + real_buffer)
+```
+
+---
+
+## vs 无模型
+
+| 特性 | 无模型 | Dyna/MBPO |
+|------|--------|-----------|
+| 样本效率 | 低 | 高 |
+| 模型误差 | 无 | 有 |
+| 泛化 | 差 | 较好 |

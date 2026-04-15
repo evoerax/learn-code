@@ -1,0 +1,70 @@
+---
+title: Q-Learning 与 SARSA
+description: '时序差分学习方法'
+---
+
+# Q-Learning 与 SARSA
+
+无模型强化学习算法。
+
+---
+
+## Q-Learning (Off-policy)
+
+```python
+def q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, episodes=1000):
+    Q = torch.zeros(env.num_states, env.num_actions)
+    
+    for _ in range(episodes):
+        s = env.reset()
+        done = False
+        
+        while not done:
+            # Epsilon-greedy
+            if random() < epsilon:
+                a = random_action()
+            else:
+                a = Q[s].argmax()
+            
+            s_next, r, done = env.step(a)
+            
+            # Q 学习更新 (off-policy)
+            Q[s, a] += alpha * (r + gamma * Q[s_next].max() - Q[s, a])
+            s = s_next
+    
+    return Q
+```
+
+---
+
+## SARSA (On-policy)
+
+```python
+def sarsa(env, alpha=0.1, gamma=0.99, epsilon=0.1, episodes=1000):
+    Q = torch.zeros(env.num_states, env.num_actions)
+    
+    for _ in range(episodes):
+        s = env.reset()
+        a = epsilon_greedy(Q[s], epsilon)
+        done = False
+        
+        while not done:
+            s_next, r, done = env.step(a)
+            a_next = epsilon_greedy(Q[s_next], epsilon)
+            
+            # SARSA 更新 (on-policy)
+            Q[s, a] += alpha * (r + gamma * Q[s_next, a_next] - Q[s, a])
+            s, a = s_next, a_next
+    
+    return Q
+```
+
+---
+
+## 对比
+
+| 特性 | Q-Learning | SARSA |
+|------|------------|-------|
+| 策略 | Off-policy | On-policy |
+| 收敛 | 更激进 | 更保守 |
+| 探索 | 独立 | 依赖当前策略 |

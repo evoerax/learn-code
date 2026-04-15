@@ -1,0 +1,69 @@
+---
+title: Web3 Basics
+description: 'Blockchain fundamentals, consensus mechanisms, cryptography, and wallets'
+---
+
+import { Cards } from 'nextra/components'
+
+# Web3 Basics
+
+Before diving into DeFi, NFTs, and DAOs, it is essential to understand the foundational concepts that make blockchain technology work: how transactions are validated, how consensus is reached without a central authority, and how users interact with these systems through wallets.
+
+---
+
+## Topics
+
+<Cards>
+  <Cards.Card title="Consensus Mechanisms" href="/en/web3/basics/consensus" arrow>
+    Proof of Work, Proof of Stake, and the tradeoffs between them
+  </Cards.Card>
+  <Cards.Card title="Cryptography" href="/en/web3/basics/cryptography" arrow>
+    Hash functions, digital signatures, and zero-knowledge proofs
+  </Cards.Card>
+  <Cards.Card title="Wallets & Identity" href="/en/web3/basics/wallets" arrow>
+    Private keys, seed phrases, EOAs, and smart contract wallets
+  </Cards.Card>
+</Cards>
+
+---
+
+## The problem blockchain solves
+
+Before Bitcoin, digital transactions required trusted third parties (banks, payment processors) to prevent double-spending. Blockchain eliminates this need through:
+
+1. **Distributed ledger** — copies exist across thousands of nodes
+2. **Consensus rules** — participants agree on the single source of truth
+3. **Cryptographic verification** — anyone can verify transaction validity
+4. **Immutability** — once confirmed, transactions cannot be reversed
+
+---
+
+## Key concepts
+
+| Concept | Description |
+|---------|-------------|
+| **Block** | A container of verified transactions, linked to the previous block |
+| **Chain** | Sequential chain of blocks, forming the blockchain |
+| **Node** | A computer running blockchain software, storing and validating the ledger |
+| **Miner/Validator** | Participants who bundle transactions into blocks and secure the network |
+| **Gas** | The fee paid to execute transactions or smart contracts |
+| **Nonce** | A counter used to ensure transaction uniqueness |
+
+---
+
+## Blockchain properties
+
+| Property | Description |
+|----------|-------------|
+| **Decentralization** | No single point of control or failure |
+| **Transparency** | All transactions are publicly viewable |
+| **Immutability** | Confirmed transactions cannot be altered |
+| **Censorship resistance** | No authority can block or reverse transactions |
+| **Programmability** | Smart contracts enable custom logic on-chain |
+
+---
+
+## Read next
+
+- [Smart Contract Languages](/en/web3/languages) — write programs that run on blockchain
+- [DeFi](/en/web3/defi) — build financial applications on open protocols

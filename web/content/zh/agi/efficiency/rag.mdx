@@ -1,0 +1,77 @@
+---
+title: RAG 检索增强生成
+description: 'Retrieval-Augmented Generation'
+---
+
+# RAG 检索增强生成
+
+结合检索与生成的架构。
+
+---
+
+## 架构
+
+```
+用户查询 → 检索 → 相关文档 → 拼接 → LLM 生成
+```
+
+---
+
+## 实现
+
+```python
+class RAG:
+    def __init__(self, retriever, generator):
+        self.retriever = retriever  # e.g., vector DB
+        self.generator = generator
+    
+    def retrieve(self, query, top_k=5):
+        return self.retriever.search(query, k=top_k)
+    
+    def generate(self, query, context):
+        prompt = f"""
+Query: {query}
+
+Context:
+{context}
+
+Answer:
+"""
+        return self.generator.generate(prompt)
+    
+    def forward(self, query):
+        docs = self.retrieve(query)
+        context = "\n".join([doc.text for doc in docs])
+        return self.generate(query, context)
+```
+
+---
+
+## 向量检索
+
+```python
+from sentence_transformers import SentenceTransformer
+import faiss
+
+# 建立索引
+model = SentenceTransformer('all-MiniLM-L6-v2')
+embeddings = model.encode(documents)
+index = faiss.IndexFlatIP(embeddings.shape[1])
+index.add(embeddings)
+
+# 检索
+query_emb = model.encode([query])
+D, I = index.search(query_emb, k=5)
+```
+
+---
+
+## 效果
+
+| 方法 | 事实准确性 | 幻觉减少 |
+|------|------------|----------|
+| 纯生成 | 中 | 低 |
+| RAG | 高 | 高 |
+| 微调+RAG | 最高 | 高 |
+
+Perplexity 在 NaturalQuestions 上从 3.0 降到 1.5。

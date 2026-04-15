@@ -1,0 +1,56 @@
+---
+title: Ethereum
+description: "领先智能合约平台 — 从 PoW 到 PoS，以 Rollup 为中心的路线图"
+---
+
+# Ethereum
+
+Ethereum 是智能合约、DeFi 和 NFT 的基础平台。由 Vitalik Buterin 于 2013 年创建，首创可编程区块链。
+
+---
+
+## 演进
+
+| 年份 | 里程碑 | 意义 |
+|------|--------|------|
+| **2015** | 主网上线 | 首个通用智能合约平台 |
+| **2020** | EIP-1559 | 费用燃烧，基础费用机制 |
+| **2022** | 合并 | PoS 过渡，减少 99.95% 能源 |
+| **2023** | EIP-4844 (proto-danksharding) | 更便宜的 L2 数据 blobs |
+| **2024+** | 完全 danksharding | 完全数据可用性采样 |
+
+---
+
+## Merge 后的架构
+
+| 组件 | 前身 | 当前 |
+|------|------|------|
+| **共识** | PoW 矿工 | PoS 验证者 |
+| **执行** | ETH1 节点 | EL 客户端 |
+| **区块生产** | 挖矿 | 提议 |
+
+---
+
+## Gas 和费用 (EIP-1559)
+
+```solidity
+// 优先费用（给验证者的小费）
+PriorityFee = min(transaction.maxPriorityFee, transaction.maxFee - BlockBaseFee)
+
+// 有效 gas 价格
+EffectiveGasPrice = min(transaction.maxFee, BlockBaseFee + PriorityFee)
+
+// 总费用
+TotalFee = GasUsed * EffectiveGasPrice
+```
+
+---
+
+## Ethereum 上的关键协议
+
+| 类别 | 代表 |
+|------|------|
+| **DeFi** | Uniswap, Aave, Maker, Compound |
+| **NFT** | OpenSea, Blur, LooksRare |
+| **L2** | Arbitrum, Optimism, Base, ZKsync |
+| **DAO** | Nouns, Bitscapes, Compound |

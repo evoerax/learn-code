@@ -1,0 +1,57 @@
+---
+title: YOLO
+description: 'You Only Look Once 实时检测'
+---
+
+# YOLO
+
+单阶段实时目标检测。
+
+---
+
+## 核心思想
+
+```python
+# 将检测视为回归问题
+# 输入图像划分为 S×S 网格
+# 每个网格预测 B 个边界框 + C 类概率
+
+class YOLO(nn.Module):
+    def __init__(self, num_classes=80):
+        super().__init__()
+        self.backbone = Darknet53()
+        self.head = nn.Sequential(
+            nn.Conv2d(1024, 1024, 3, padding=1),
+            nn.LeakyReLU(0.1),
+            nn.Conv2d(1024, 255, 1)  # (B*5+C) for each scale
+        )
+    
+    def forward(self, x):
+        # 多尺度预测
+        small, medium, large = self.head(self.backbone(x))
+        return small, medium, large
+```
+
+---
+
+## 输出格式
+
+```python
+# 每个预测 (S, S, B*(5+C))
+# 5: x, y, w, h, confidence
+# C: class probabilities
+```
+
+---
+
+## 演进
+
+| 版本 | 特点 |
+|------|------|
+| YOLOv1 | 端到端, 快速 |
+| YOLOv2 | Anchor boxes, 多尺度 |
+| YOLOv3 | FPN, 3 尺度 |
+| YOLOv4 | CSP, SAT, Mish |
+| YOLOv5 | 工程优化 |
+| YOLOv8 | Anchor-free |
+| YOLOv10 | NMS-free |

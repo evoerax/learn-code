@@ -1,0 +1,54 @@
+---
+title: GPT Series
+description: 'GPT-1 through GPT-4 evolution'
+---
+
+# GPT Series
+
+OpenAI's Generative Pre-trained Transformer series.
+
+---
+
+## Evolution
+
+| Model | Year | Params | Key Innovation |
+|-------|------|--------|----------------|
+| **GPT-1** | 2018 | 117M | Decoder-only, pretrain + fine-tune |
+| **GPT-2** | 2019 | 1.5B | Zero-shot transfer |
+| **GPT-3** | 2020 | 175B | In-context learning |
+| **GPT-3.5** | 2022 | ? | RLHF, ChatGPT |
+| **GPT-4** | 2023 | ? | Multimodal, instruction following |
+| **GPT-4o** | 2024 | ? | Native multimodality |
+| **o1** | 2024 | ? | Reasoning, chain of thought |
+
+---
+
+## Architecture Trends
+
+```python
+# GPT-1 (2018): 12 layers, 768 hidden, 12 heads
+# GPT-2 (2019): 48 layers, 1600 hidden, 25 heads
+# GPT-3 (2020): 96 layers, 12288 hidden, 96 heads
+#             + Sparse Attention
+# GPT-4 (2023): Proprietary, rumored ~1.8T params
+```
+
+---
+
+## In-Context Learning
+
+GPT-3's key insight: large models learn tasks from prompts without gradient updates.
+
+```
+Task: Translate English to French
+
+Prompt:
+English: hello
+French: bonjour
+English: goodbye
+French: 
+
+Model: au revoir
+```
+
+No fine-tuning needed - just show examples in context!

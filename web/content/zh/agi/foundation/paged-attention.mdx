@@ -1,0 +1,58 @@
+---
+title: PagedAttention
+description: 'vLLM 使用的分页注意力'
+---
+
+# PagedAttention
+
+通过分页管理 KV Cache 提升吞吐量。
+
+---
+
+## 问题
+
+传统 KV Cache 连续分配，内存碎片化严重。
+
+```
+请求 1: token 1-256
+请求 2: token 1-512 (需要等待)
+请求 3: token 1-128
+```
+
+---
+
+## PagedAttention 方案
+
+将 KV Cache 分成固定大小的 blocks：
+
+```python
+# 逻辑块 -> 物理块映射
+class PagedAttention:
+    def __init__(self, block_size=16):
+        self.block_size = block_size
+        self.num_slots = 0
+        
+    def alloc(self, num_tokens):
+        # 分配物理块
+        num_blocks = ceil(num_tokens / self.block_size)
+        for _ in range(num_blocks):
+            block = self.get_free_block()
+            self.block_manager.append(block)
+        return self.block_manager[-num_blocks:]
+    
+    def forward(self, query, key_cache, value_cache):
+        # 跨块查询
+        block_indices = query.unbind(-2)
+        # ... 分块注意力计算
+```
+
+---
+
+## 效果
+
+| 指标 | HuggingFace | vLLM |
+|------|-------------|------|
+| 吞吐 | 1x | 10-23x |
+| 内存利用 | ~30% | ~90% |
+
+vLLM 核心机制。

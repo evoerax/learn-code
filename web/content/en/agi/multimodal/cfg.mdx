@@ -1,0 +1,75 @@
+---
+title: Classifier-Free Guidance
+description: 'Unconditional generation for conditional models'
+---
+
+# Classifier-Free Guidance
+
+CFG (Ho & Salimans, 2022) enables conditional generation without a classifier.
+
+---
+
+## Idea
+
+Train the model to do both conditional AND unconditional generation:
+
+```python
+def cfg_training():
+    # Randomly mask conditioning (dropout)
+    if random.random() < 0.5:
+        context = None  # Unconditional
+    else:
+        context = conditional_embed(text)
+    
+    noise_pred = model(x_t, t, context)
+    
+    # Loss: MSE to true noise (same regardless of context)
+    return mse(noise_pred, true_noise)
+```
+
+---
+
+## Inference with CFG
+
+```python
+def cfg_generate(model, x_t, t, context, cfg_scale=7.5):
+    # Predict with context
+    pred_cond = model(x_t, t, context_embed(context))
+    
+    # Predict without context (unconditional)
+    pred_uncond = model(x_t, t, None)
+    
+    # Interpolate: push toward conditional, away from unconditional
+    # This "guidance" amplifies classifier-like behavior without classifier
+    noise_pred = pred_uncond + cfg_scale * (pred_cond - pred_uncond)
+    
+    return noise_pred
+```
+
+---
+
+## Why It Works
+
+```
+Without CFG:
+  noise = f(x_t, t | y) ≈ ε(y) + small_correction
+
+With CFG (high scale):
+  noise = ε(no_y) + 7.5 * (ε(y) - ε(no_y))
+        = ε(no_y) + 7.5*ε(y) - 7.5*ε(no_y)
+        = -6.5*ε(no_y) + 7.5*ε(y)
+        
+The model is "forced" to produce more conditional outputs.
+```
+
+---
+
+## Typical Scales
+
+| cfg_scale | Effect |
+|-----------|--------|
+| 1.0 | No guidance, blurry |
+| 3.0 | Mild guidance |
+| 7.5 | Standard for Stable Diffusion |
+| 10-15 | Strong guidance, sometimes oversaturated |
+| 20+ | Extreme, cartoonish |

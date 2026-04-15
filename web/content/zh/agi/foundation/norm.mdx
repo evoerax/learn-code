@@ -1,0 +1,55 @@
+---
+title: RMSNorm 与 LayerNorm
+description: '归一化层对比'
+---
+
+# RMSNorm 与 LayerNorm
+
+两种主要的归一化技术。
+
+---
+
+## LayerNorm
+
+```python
+def layer_norm(x, eps=1e-5):
+    mean = x.mean(dim=-1, keepdim=True)
+    std = x.std(dim=-1, keepdim=True)
+    return (x - mean) / (std + eps)
+```
+
+---
+
+## RMSNorm
+
+仅计算 RMS，忽略均值：
+
+```python
+def rms_norm(x, eps=1e-5):
+    rms = torch.sqrt(x.pow(2).mean(dim=-1, keepdim=True) + eps)
+    return x / rms
+```
+
+---
+
+## 对比
+
+| 特性 | LayerNorm | RMSNorm |
+|------|-----------|---------|
+| 计算量 | 较高 | 较低 |
+| 移位不变性 | 有 | 无 |
+| 效果 | 相当 | 相当 |
+| 使用场景 | 早期 BERT | LLaMA, LLM |
+
+---
+
+## LLM 中的归一化
+
+通常采用 Pre-Norm 策略：
+
+```
+x = LayerNorm(x + attention(x))
+x = LayerNorm(x + ffn(x))
+```
+
+LLaMA 使用 RMSNorm，效率更高。

@@ -1,0 +1,160 @@
+---
+title: Move
+description: "Meta's resource-oriented language for Aptos, Sui, and the Diem/Libra blockchain"
+---
+
+# Move
+
+Move is a Rust-inspired smart contract language originally developed by Meta for the Diem (formerly Libra) blockchain. It emphasizes **resource safety** — digital assets cannot be copied or accidentally destroyed, making it ideal for financial applications.
+
+---
+
+## Key innovation: Resource types
+
+Move's defining feature is its **resource type** — a first-class asset that:
+
+- Can only be moved between storage locations
+- Cannot be copied
+- Cannot be implicitly discarded (must explicitly destroy)
+- Is verified by the type system
+
+```move
+module 0x1::Coin {
+    // Define a resource type — these coins can ONLY be moved
+    struct Coin has store {
+        value: u64
+    }
+    
+    // This function is SAFE — you cannot lose coins
+    public fun merge(coin1: Coin, coin2: Coin): Coin {
+        Coin { 
+            value: coin1.value + coin2.value 
+        }
+    }
+    
+    // This function is SAFE — you must explicitly destroy the coin
+    public fun split(coin: Coin, amount: u64): (Coin, Coin) {
+        assert!(coin.value >= amount, 0);
+        (Coin { value: amount }, Coin { value: coin.value - amount })
+    }
+}
+```
+
+---
+
+## Module structure
+
+```move
+// Address corresponds to an account
+module 0x42::Token {
+    // Structs define types — resources have 'key' or 'store'
+    struct Token has key, store {
+        id: u64,
+        owner: address,
+        metadata: vector<u8>
+    }
+    
+    // Functions are the only way to interact with resources
+    public fun mint(to: &signer, id: u64, metadata: vector<u8>) {
+        move_to(to, Token { id, owner: signer::address_of(to), metadata });
+    }
+    
+    public fun transfer(token: Token, to: address) {
+        let Token { id, owner: _, metadata } = token;
+        // Resource is moved, never copied
+    }
+}
+```
+
+---
+
+## Comparison with Solidity
+
+| Aspect | Solidity | Move |
+|--------|----------|------|
+| Asset handling | ERC-20 pattern (balance mapping) | Native resource type |
+| Type safety | Compiler warnings, runtime checks | Linear type system |
+| Storage | Key-value mapping | Global storage with addresses |
+| Bytecode verification | On-chain | Before deployment |
+| Parallel execution | Sequential | Safer parallelization |
+
+---
+
+## Aptos vs Sui
+
+Move was adapted by two different teams:
+
+### Aptos
+- Inherited original Diem Move
+- Global storage model
+- Block-based execution
+- Focus on Layer 1 performance
+
+```move
+// Aptos style
+module hello_world::Message {
+    use std::signer;
+    
+    struct Message has key { msg: vector<u8> }
+    
+    public entry fun set_message(account: &signer, msg: vector<u8>) {
+        let addr = signer::address_of(account);
+        if (exists<Message>(addr)) {
+            let msg_ref = borrow_global_mut<Message>(addr);
+            *msg_ref = Message { msg };
+        } else {
+            move_to(account, Message { msg });
+        }
+    }
+}
+```
+
+### Sui
+- Modified Move with object-centric model
+- Each object has unique ID
+- Transactions specify objects directly
+- Highly parallel execution
+
+```move
+// Sui style
+module example::NFT {
+    use sui::transfer;
+    use sui::tx_context::TxContext;
+    
+    struct NFT has key, store {
+        id: sui::object::UID,
+        name: vector<u8>,
+    }
+    
+    public entry fun mint(name: vector<u8>, ctx: &mut TxContext) {
+        let nft = NFT {
+            id: object::new(ctx),
+            name,
+        };
+        transfer::transfer(nft, tx_context::sender(ctx));
+    }
+}
+```
+
+---
+
+## Security properties
+
+| Property | How Move enforces it |
+|----------|----------------------|
+| No double-spend | Resource types cannot be duplicated |
+| No implicit drop | Resources must be explicitly consumed |
+| Access control | Functions explicitly move resources |
+| Formal verification | Move Prover can prove correctness mathematically |
+
+---
+
+## Tooling
+
+| Tool | Purpose |
+|------|---------|
+| **Move CLI** | Package management, testing |
+| **Move Prover** | Formal verification |
+| **aptos-cli** | Aptos development |
+| **sui-cli** | Sui development |
+| **Pontem** | Move tooling for EVM chains |

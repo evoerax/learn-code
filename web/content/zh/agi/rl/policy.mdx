@@ -1,0 +1,71 @@
+---
+title: 策略梯度与 REINFORCE
+description: 'Policy Gradient Methods'
+---
+
+# 策略梯度与 REINFORCE
+
+直接优化策略函数。
+
+---
+
+## 策略梯度
+
+```python
+class Policy(nn.Module):
+    def __init__(self, state_dim, action_dim):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, action_dim),
+            nn.Softmax()
+        )
+    
+    def forward(self, x):
+        return self.net(x)
+```
+
+---
+
+## REINFORCE 算法
+
+```python
+def reinforce(env, policy, optimizer, episodes=1000):
+    for _ in range(episodes):
+        trajectory = []
+        s = env.reset()
+        done = False
+        
+        # 采样轨迹
+        while not done:
+            probs = policy(s)
+            a = torch.multinomial(probs, 1).item()
+            s_next, r, done = env.step(a)
+            trajectory.append((s, a, r))
+            s = s_next
+        
+        # 计算回报
+        G = 0
+        losses = []
+        for s, a, r in reversed(trajectory):
+            G = r + gamma * G
+            log_prob = torch.log(policy(s)[a])
+            losses.append(-log_prob * G)
+        
+        # 更新策略
+        loss = torch.stack(losses).sum()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+```
+
+---
+
+## 方差问题
+
+| 方法 | 方差 | 偏差 |
+|------|------|------|
+| REINFORCE | 高 | 低 |
+| 基线 | 降低 | 不变 |
+| Actor-Critic | 低 | 低 |

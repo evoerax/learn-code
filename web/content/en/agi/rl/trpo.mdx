@@ -1,0 +1,44 @@
+---
+title: TRPO
+description: 'Trust region policy optimization'
+---
+
+# TRPO
+
+TRPO (Schulman et al., 2015) uses trust regions to constrain policy updates.
+
+---
+
+## KL Constraint
+
+```python
+def trpo_loss(old_policy, new_policy, advantages, kl_limit=1e-2):
+    """
+    TRPO maximizes expected advantage subject to KL constraint
+    """
+    ratio = torch.exp(new_policy.log_prob() - old_policy.log_prob())
+    
+    # Surrogate loss
+    loss = -torch.min(
+        ratio * advantages,
+        torch.clamp(ratio, 1 - kl_limit, 1 + kl_limit) * advantages
+    )
+    
+    # KL penalty (instead of constraint)
+    kl = old_policy.kl_divergence(new_policy)
+    loss = loss + kl * 0.5
+    
+    return loss.mean()
+```
+
+---
+
+## Conjugate Gradient
+
+```python
+# Fisher-Vector Product for efficient computation
+def fisher_vector_product(observations, v):
+    # F @ v without computing full F matrix
+    # Used in natural gradient calculation
+    return F @ v
+```

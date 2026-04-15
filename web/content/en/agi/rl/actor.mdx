@@ -1,0 +1,79 @@
+---
+title: Actor-Critic and A2C A3C
+description: 'Combining policy gradient with value function approximation'
+---
+
+# Actor-Critic and A2C/A3C
+
+Actor-critic combines policy gradient with value function approximation.
+
+---
+
+## Actor-Critic Architecture
+
+```python
+class ActorCritic(nn.Module):
+    def __init__(self, state_dim, action_dim):
+        super().__init__()
+        # Shared feature extractor
+        self.features = nn.Sequential(
+            nn.Linear(state_dim, 128),
+            nn.ReLU()
+        )
+        
+        # Actor head (policy)
+        self.actor = nn.Linear(128, action_dim)
+        
+        # Critic head (value)
+        self.critic = nn.Linear(128, 1)
+    
+    def forward(self, state):
+        features = self.features(state)
+        policy = F.softmax(self.actor(features), dim=-1)
+        value = self.critic(features)
+        return policy, value
+```
+
+---
+
+## A2C (Advantage Actor-Critic)
+
+```python
+def a2c_loss(policy, value, actions, rewards, next_value, gamma=0.99, lambda_=0.95):
+    # Advantage estimation
+    returns = rewards + gamma * next_value
+    advantages = returns - value.detach()
+    
+    # Policy loss (actor)
+    log_probs = torch.log(policy + 1e-8)
+    actor_loss = -(log_probs.gather(1, actions.unsqueeze(1)) * advantages).mean()
+    
+    # Value loss (critic)
+    critic_loss = F.mse_loss(value, returns.detach())
+    
+    # Entropy bonus for exploration
+    entropy = -(policy * torch.log(policy + 1e-8)).sum(dim=-1).mean()
+    
+    return actor_loss + 0.5 * critic_loss - 0.01 * entropy
+```
+
+---
+
+## A3C (Asynchronous)
+
+```python
+# Run multiple workers in parallel, aggregate gradients
+# Each worker has its own environment copy
+# Async gradient updates to shared network
+```
+
+---
+
+## A2C vs A3C
+
+| Aspect | A2C | A3C |
+|--------|------|-----|
+| **Updates** | Synchronous | Asynchronous |
+| **Workers** | Same as number of envs | Multiple async workers |
+| **Memory** | Less | More (worker state) |
+| **Speed** | GPU-friendly | CPU-friendly |

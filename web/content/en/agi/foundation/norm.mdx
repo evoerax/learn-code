@@ -1,0 +1,65 @@
+---
+title: RMSNorm and LayerNorm
+description: 'Normalization techniques for stable transformer training'
+---
+
+# RMSNorm and LayerNorm
+
+Normalization is critical for training deep transformers. Two key variants: LayerNorm (original) and RMSNorm (more efficient).
+
+---
+
+## LayerNorm
+
+```python
+def layer_norm(x, eps=1e-6):
+    mean = x.mean(dim=-1, keepdim=True)
+    std = x.std(dim=-1, keepdim=True)
+    return (x - mean) / (std + eps)
+```
+
+Computes mean and variance over **all features** per token.
+
+---
+
+## RMSNorm
+
+```python
+def rms_norm(x, eps=1e-6):
+    rms = (x.pow(2).mean(dim=-1, keepdim=True) + eps).rsqrt()
+    return x * rms
+```
+
+Computes **only RMS (root mean square)**, no mean centering.
+
+---
+
+## Comparison
+
+| Aspect | LayerNorm | RMSNorm |
+|--------|-----------|---------|
+| **Mean centering** | Yes | No |
+| **Parameters** | 2 (γ, β) | 2 (γ, β) |
+| **Computation** | Mean + Var + normalize | RMS only |
+| **Speed** | Slower | ~10-40% faster |
+| **Performance** | Baseline | Comparable |
+
+---
+
+## In Transformers
+
+```python
+class TransformerBlock(nn.Module):
+    def __init__(self, d_model, eps=1e-6):
+        super().__init__()
+        self.norm1 = RMSNorm(d_model, eps)  # Pre-LN variant
+        self.norm2 = RMSNorm(d_model, eps)
+        # ...
+    
+    def forward(self, x):
+        x = x + self.attn(self.norm1(x))   # Pre-normalization
+        x = x + self.ffn(self.norm2(x))
+        return x
+```
+
+Pre-normalization (before attention/FFN) is now standard.

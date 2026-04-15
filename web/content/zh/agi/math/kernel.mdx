@@ -1,0 +1,82 @@
+---
+title: 核方法与 SVM
+description: 'Kernel Methods and SVM'
+---
+
+# 核方法与 SVM
+
+核函数将线性分类器扩展到非线性。
+
+---
+
+## 核函数
+
+```python
+def linear_kernel(x, y):
+    return x @ y.T
+
+def polynomial_kernel(x, y, d=3):
+    return (x @ y.T + 1) ** d
+
+def rbf_kernel(x, y, sigma=1.0):
+    # 高斯核
+    dist = torch.cdist(x, y)
+    return torch.exp(-dist ** 2 / (2 * sigma ** 2))
+```
+
+---
+
+## 核技巧
+
+```python
+# 不显式计算高维映射，直接在核空间计算
+# K(x, y) = φ(x) · φ(y)
+
+# SVM 对偶问题只依赖内积
+# 可以用核函数替代
+```
+
+---
+
+## SVM
+
+```python
+class SVM:
+    def __init__(self, kernel='rbf'):
+        self.kernel = kernel
+    
+    def fit(self, X, y):
+        # 求解对偶问题
+        # min 0.5 * α^T Q α - sum(α)
+        # s.t. y^T α = 0, 0 <= α <= C
+        
+        n = X.shape[0]
+        K = self.kernel_matrix(X)
+        Q = torch.outer(y, y) * K
+        
+        # SMO 算法求解
+        alphas = solve_smo(Q, y)
+        
+        # 支持向量
+        sv = alphas > 1e-5
+        self.sv_x = X[sv]
+        self.sv_y = y[sv]
+        self.alphas = alphas[sv]
+```
+
+---
+
+## 应用
+
+| 场景 | 核方法 |
+|------|--------|
+| 分类 | SVM |
+| 回归 | SVR |
+| 降维 | KPCA |
+| 度量学习 | LMNN |
+
+---
+
+## 在深度学习时代
+
+核方法在特征非线性可分时仍有用，但深度网络替代了复杂核设计。

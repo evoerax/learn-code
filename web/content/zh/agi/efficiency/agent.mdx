@@ -1,0 +1,79 @@
+---
+title: Agent 框架
+description: 'LLM Agent 系统设计'
+---
+
+# Agent 框架
+
+构建自主执行任务的 LLM 系统。
+
+---
+
+## Agent 循环
+
+```
+观察 → 思考 → 行动 → 观察 → ...
+```
+
+```python
+class Agent:
+    def __init__(self, llm, tools, memory):
+        self.llm = llm
+        self.tools = tools
+        self.memory = memory
+    
+    def step(self, observation):
+        # 思考：决定行动
+        plan = self.llm.think(
+            prompt=f"Observation: {observation}\nHistory: {self.memory}",
+            tools=self.tools
+        )
+        
+        # 执行
+        if plan.action == "tool":
+            result = self.execute_tool(plan.tool, plan.args)
+            self.memory.add(observation, plan, result)
+            return result
+        else:
+            return plan.response
+```
+
+---
+
+## ReAct 模式
+
+```python
+def react(query):
+    thought = "我需要先搜索相关信息"
+    action = "search(query)"
+    observation = search_result
+    thought = "找到了，现在可以回答"
+    response = "final answer"
+```
+
+---
+
+## 主流框架
+
+| 框架 | 特点 |
+|------|------|
+| LangChain | 全功能 |
+| LlamaIndex | 知识为中心 |
+| AutoGPT | 自主任务分解 |
+| BabyAGI | 任务队列 |
+| CrewAI | 多 Agent 协作 |
+
+---
+
+## 记忆系统
+
+```python
+# 短期记忆
+short_term = ConversationBufferMemory()
+
+# 长期记忆
+long_term = VectorStoreRetrieverMemory()
+
+# 总结记忆
+summary = SummarizingMemory()
+```

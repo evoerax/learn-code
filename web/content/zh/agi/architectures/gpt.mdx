@@ -1,0 +1,68 @@
+---
+title: GPT 系列
+description: 'Generative Pre-trained Transformer'
+---
+
+# GPT 系列
+
+OpenAI 生成式预训练模型。
+
+---
+
+## GPT-1 (2018)
+
+- 首个 Transformer 解码器
+-  BooksCorpus 训练
+- 12 层, 117M 参数
+
+---
+
+## GPT-2 (2019)
+
+- 15 亿参数
+- WebText 数据集
+- 展示零样本能力
+
+---
+
+## GPT-3 (2020)
+
+```python
+# 1750 亿参数
+# 上下文学习
+response = model.generate(
+    prompt,  # 包含任务描述和示例
+    max_tokens=100
+)
+```
+
+---
+
+## GPT-4 (2023)
+
+- 多模态 (视觉+文本)
+- 长上下文 (128k)
+- 指令微调 + RLHF
+- 代码能力显著提升
+
+---
+
+## 演进
+
+| 版本 | 参数 | 上下文 | 关键能力 |
+|------|------|--------|----------|
+| GPT-1 | 117M | 512 | 生成 |
+| GPT-2 | 1.5B | 1024 | 零样本 |
+| GPT-3 | 175B | 2048 | 上下文学习 |
+| GPT-4 | 未公开 | 128k | 多模态 |
+
+---
+
+## 技术特点
+
+```python
+# Transformer 解码器-only
+# 下一个 token 预测
+# 大量无标注文本预训练
+# 指令微调 + RLHF 对齐
+```

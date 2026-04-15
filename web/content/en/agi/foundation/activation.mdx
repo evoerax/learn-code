@@ -1,0 +1,60 @@
+---
+title: SwiGLU Activation Function
+description: 'Gated linear unit with Swish activation for better performance'
+---
+
+# SwiGLU Activation Function
+
+SwiGLU, used in LLaMA, Mistral, and many modern LLMs, combines Swish activation with a gating mechanism.
+
+---
+
+## Formula
+
+```
+SwiGLU(x) = Swish(x) ⊗ Gate(x)
+           = x · σ(x) ⊗ Wᵍ
+```
+
+Where:
+- Swish(x) = x · σ(x) = x / (1 + e⁻ˣ)
+- Gate(x) = linear projection
+
+---
+
+## Comparison with ReLU
+
+| Activation | Formula | Gradient |
+|------------|---------|----------|
+| **ReLU** | max(0, x) | 1 if x > 0 |
+| **Swish** | x · σ(x) | σ(x)(1 - x(1-σ(x))) |
+| **SwiGLU** | xσ(x)Wᵍ | Gated variant |
+
+---
+
+## Why SwiGLU?
+
+| Advantage | Explanation |
+|-----------|-------------|
+| **Smooth gradients** | Non-zero everywhere, no dying neurons |
+| **Gating** | Learn which inputs to pass through |
+| **Better performance** | Consistently outperforms ReLU on LLMs |
+| **Standard now** | Used in LLaMA 2/3, Mistral, etc. |
+
+---
+
+## Implementation
+
+```python
+class SwiGLU(nn.Module):
+    def __init__(self, d_model, d_ffn):
+        super().__init__()
+        self.w1 = nn.Linear(d_model, d_ffn, bias=False)
+        self.w2 = nn.Linear(d_ffn, d_model, bias=False)
+        self.w3 = nn.Linear(d_model, d_ffn, bias=False)
+    
+    def forward(self, x):
+        return F.silu(self.w1(x)) * self.w3(x)
+```
+
+In FFN: `FFN(x) = SwiGLU(x)W₂ + bias`

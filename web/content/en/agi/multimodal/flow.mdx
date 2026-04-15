@@ -1,0 +1,76 @@
+---
+title: Flow Matching
+description: 'Continuous normalizing flows for generation'
+---
+
+# Flow Matching
+
+Flow Matching provides a framework for training flow-based models without ODE solving.
+
+---
+
+## Continuous Normalizing Flows
+
+```python
+# Flow: x(t) = f_θ(x(t-1), t)
+# Net trains to be velocity field
+
+# Vector field: u_t(x) = dx/dt
+# Flows follow: dx = u_t(x)dt
+```
+
+---
+
+## Flow Matching Loss
+
+```python
+def flow_matching_loss(model, x_0, x_1):
+    """
+    x_0: source distribution (e.g., noise)
+    x_1: target distribution (e.g., data)
+    """
+    t = torch.rand(1)
+    
+    # Interpolate
+    x_t = (1 - t) * x_0 + t * x_1
+    
+    # Target velocity (straight line)
+    v_target = x_1 - x_0
+    
+    # Predicted velocity
+    v_pred = model(x_t, t)
+    
+    return mse(v_pred, v_target)
+```
+
+---
+
+## Conditional Flow Matching
+
+```python
+def conditional_flow_matching(model, x_0, x_1):
+    t = torch.rand(1)
+    
+    # Any interpolation path works
+    # Example: optimal transport (straight line)
+    x_t = (1 - t) * x_0 + t * x_1
+    v_target = x_1 - x_0
+    
+    # Example: consistent curvature
+    # x_t = (1-t)**2 * x_0 + 2*t*(1-t) * x_mid + t**2 * x_1
+    # v_target = 2*(1-t) * (x_mid - x_0) + 2*t * (x_1 - x_mid)
+    
+    v_pred = model(x_t, t)
+    return mse(v_pred, v_target)
+```
+
+---
+
+## Connection to Diffusion
+
+| Aspect | Diffusion | Flow Matching |
+|--------|-----------|--------------|
+| **Objective** | Noise prediction | Velocity prediction |
+| **Trajectory** | Can be any path | Optimal transport |
+| **Sampling** | SDE or ODE | Single ODE solve |
+| **Examples** | DDPM, ADM | MDM, IF |

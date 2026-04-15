@@ -1,0 +1,162 @@
+---
+title: Solidity
+description: "Ethereum's primary smart contract language — JavaScript-inspired, EVM-targeted"
+---
+
+# Solidity
+
+Solidity is the dominant language for Ethereum Virtual Machine (EVM) chains. Created by Gavin Wood in 2014, it combines JavaScript-like syntax with blockchain-specific features like gas accounting and contract storage.
+
+---
+
+## Hello World
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract HelloWorld {
+    string public greeting;
+    
+    constructor(string memory _greeting) {
+        greeting = _greeting;
+    }
+    
+    function greet() public view returns (string memory) {
+        return greeting;
+    }
+    
+    function setGreeting(string memory _new) public {
+        greeting = _new;
+    }
+}
+```
+
+---
+
+## Key concepts
+
+### Data locations
+
+Solidity manages memory across three locations:
+
+| Location | Purpose | Persistence | Gas |
+|----------|---------|-------------|-----|
+| **storage** | Contract state | Permanent | Highest |
+| **memory** | Temporary variables | Transaction only | Medium |
+| **calldata** | Function arguments | Transaction only | Cheap (read-only) |
+
+### Types
+
+```solidity
+// Value types
+bool public flag = true;
+uint256 public amount = 1_000_000; // Safe math built-in
+int256 public balance = -100;
+address public owner = 0x123...;
+bytes32 public data = keccak256(abi.encodePacked("test"));
+
+// Reference types
+struct User { string name; uint256 id; }
+mapping(address => User) public users;
+User[] public userList;
+```
+
+### Visibility
+
+```solidity
+function foo() external { }     // Only from outside
+function bar() public { }      // Outside + internal
+function baz() internal { }     // Only from this contract
+function qux() private { }      // Only from this contract (not derived)
+```
+
+---
+
+## Common patterns
+
+### Ownable (access control)
+
+```solidity
+abstract contract Ownable {
+    address public owner;
+    
+    modifier onlyOwner() {
+        require(msg.sender == owner, "not owner");
+        _;
+    }
+    
+    constructor() {
+        owner = msg.sender;
+    }
+    
+    function transferOwnership(address newOwner) public onlyOwner {
+        owner = newOwner;
+    }
+}
+```
+
+### Reentrancy guard
+
+```solidity
+abstract contract ReentrancyGuard {
+    uint256 private _status;
+    
+    modifier nonReentrant() {
+        require(_status == 0, "reentrancy");
+        _status = 1;
+        _;
+        _status = 0;
+    }
+}
+
+contract Safe is ReentrancyGuard {
+    function withdraw(uint amount) public nonReentrant {
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "transfer failed");
+    }
+}
+```
+
+### Factory pattern
+
+```solidity
+contract Token {
+    string public name;
+    constructor(string memory _name) { name = _name; }
+}
+
+contract Factory {
+    Token[] public tokens;
+    
+    function createToken(string memory _name) public returns (Token) {
+        Token token = new Token(_name);
+        tokens.push(token);
+        return token;
+    }
+}
+```
+
+---
+
+## Security considerations
+
+| Vulnerability | Prevention |
+|--------------|------------|
+| Reentrancy | Checks-Effects-Interactions pattern, ReentrancyGuard |
+| Integer overflow | Use Solidity 0.8+ with built-in checked math |
+| Front-running | Commit-reveal schemes, batch auctions |
+| Access control | Explicit visibility, Ownable pattern |
+| Timestamp dependence | Don't use block.timestamp for randomness |
+
+---
+
+## Tooling
+
+| Tool | Purpose |
+|------|---------|
+| **Hardhat** | Development environment, testing, deployment |
+| **Foundry** | Fast testing (Forge), debugging (Cast), fuzzing |
+| **OpenZeppelin** | Battle-tested reusable contracts |
+| **Slither** | Static analysis for vulnerabilities |
+| **Remix** | Web-based IDE for quick prototyping |

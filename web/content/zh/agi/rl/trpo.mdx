@@ -1,0 +1,63 @@
+---
+title: TRPO
+description: 'Trust Region Policy Optimization'
+---
+
+# TRPO
+
+信任域策略优化。
+
+---
+
+## 核心思想
+
+限制策略更新幅度：
+
+```python
+def trpo_loss(old_policy, new_policy, states, actions, advantages):
+    # 策略比率
+    ratio = new_policy.log_prob(states, actions) - old_policy.log_prob(states, actions)
+    ratio = torch.exp(ratio)
+    
+    # KL 约束
+    kl = compute_kl(old_policy, new_policy, states)
+    
+    # 约束优化
+    loss = -torch.min(
+        ratio * advantages,
+        torch.clamp(ratio, 1-eps, 1+eps) * advantages
+    )
+    
+    return loss.mean()
+```
+
+---
+
+## 共轭梯度求解
+
+```python
+def conjugate_gradient(H, b, n_iter=10):
+    # 求解 Hx = b
+    x = torch.zeros_like(b)
+    r = b.clone()
+    p = b.clone()
+    
+    for _ in range(n_iter):
+        Ap = H(p)
+        alpha = (r @ r) / (p @ Ap + 1e-8)
+        x = x + alpha * p
+        r_new = r - alpha * Ap
+        if r_new.norm() < 1e-8:
+            break
+        beta = (r_new @ r_new) / (r @ r)
+        p = r_new + beta * p
+        r = r_new
+    
+    return x
+```
+
+---
+
+## 效果
+
+稳定但计算复杂，现在较少使用。

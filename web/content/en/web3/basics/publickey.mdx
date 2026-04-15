@@ -1,0 +1,200 @@
+---
+title: Public Key Cryptography
+description: 'The mathematics of keys, signatures, and ownership in Web3'
+---
+
+# Public Key Cryptography
+
+Public key cryptography is the foundation of blockchain ownership. Every wallet is a keypair: the private key proves ownership, the public key generates addresses, and digital signatures authorize transactions.
+
+---
+
+## Key generation
+
+### From private key to public key
+
+```
+Private Key (256 bits)
+       │
+       ▼
+   [ECDSA / EdDSA]
+       │
+       ▼
+Public Key (512 bits / 64 bytes uncompressed)
+       │
+       ▼
+   [Hash + Encode]
+       │
+       ▼
+   Address (160 bits / 20 bytes)
+```
+
+### Private key properties
+
+```text
+- Random 256-bit number
+- Must be unpredictable
+- Should have high entropy
+- Usually expressed as 64 hex characters
+
+Example:
+0x1a5e...c3f2 (64 hex = 256 bits)
+```
+
+### Public key derivation
+
+```solidity
+// ECDSA secp256k1 (Bitcoin, Ethereum)
+function derivePublicKey(bytes32 privateKey) pure returns (uint256 x, uint256 y) {
+    // Generator point G
+    uint256 Gx = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798;
+    uint256 Gy = 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8;
+    
+    // Q = privateKey * G
+    (x, y) = ecMul(Gx, Gy, privateKey);
+}
+```
+
+---
+
+## Address derivation
+
+### Ethereum address
+
+```solidity
+function deriveAddress(bytes32 privateKey) pure returns (address) {
+    // 1. Get public key (uncompressed, 64 bytes)
+    (uint256 x, uint256 y) = derivePublicKey(privateKey);
+    
+    // 2. Take last 32 bytes of public key
+    bytes32 hash = keccak256(abi.encodePacked(x, y));
+    
+    // 3. Take last 20 bytes
+    return address(uint256(hash));
+}
+```
+
+### Bitcoin address
+
+```text
+1. Public key (uncompressed): 04 + x + y (65 bytes)
+2. SHA256
+3. RIPEMD160
+4. Add version byte (0x00 for P2PKH)
+5. Checksum (first 4 bytes of SHA256(SHA256))
+6. Base58Check encode
+```
+
+---
+
+## Digital signatures
+
+### ECDSA signature (Ethereum, Bitcoin)
+
+```solidity
+struct Signature {
+    uint256 r;
+    uint256 s;
+    uint8 v;  // Recovery id (27 or 28)
+}
+
+function verify(
+    bytes32 messageHash,
+    uint8 v,
+    uint256 r,
+    uint256 s,
+    address signer
+) pure returns (bool) {
+    // Recover public key from signature
+    address recovered = ecrecover(messageHash, v, r, s);
+    return recovered == signer;
+}
+```
+
+### ECDSA recovery (ecrecover)
+
+```text
+Given: message, v, r, s
+       │
+       ▼
+   ecrecover returns:
+       │
+       ▼
+   Public key point Q
+       │
+       ▼
+   Address = last 20 bytes of keccak256(Q)
+```
+
+### EdDSA signature (Solana)
+
+```rust
+// EdDSA uses Edwards curves (Curve25519)
+fn verify_signature(
+    message: &[u8],
+    public_key: &PublicKey,
+    signature: &Signature
+) -> bool {
+    // Uses curve25519_ed25519
+    ed25519_verify(signature, message, public_key)
+}
+```
+
+---
+
+## Key security principles
+
+| Principle | Description |
+|-----------|-------------|
+| **Never reveal private key** | Not to anyone, not even "support" |
+| **Store securely** | Hardware wallet, paper, metal |
+| **Multiple backups** | Redundancy against loss |
+| **Test small amounts first** | Verify key before large transfers |
+
+---
+
+## Key formats
+
+### Private key formats
+
+| Format | Example |
+|--------|---------|
+| **Hex** | `0x1a5e...c3f2` |
+| **WIF** (Bitcoin) | `KxFC...` |
+| **Mnemonic** | 12/24 word phrase |
+
+### Public key formats
+
+| Format | Description |
+|--------|-------------|
+| **Uncompressed** | `04` + x (32 bytes) + y (32 bytes) = 65 bytes |
+| **Compressed** | `02`/`03` + x (32 bytes) = 33 bytes |
+
+---
+
+## Hierarchical Deterministic (HD) wallets
+
+BIP-32 defines hierarchical deterministic key derivation:
+
+```text
+Master seed (128/256 bits)
+       │
+       ▼
+   HMAC-SHA512
+       │
+       ▼
+   Master key (256 bits) │ Master chain code (256 bits)
+       │
+       ▼
+   Derive child keys:
+   
+   Child key = HMAC-SHA512(chain_code, index || parent_public_key)
+```
+
+### Derivation paths
+
+| Path | Purpose |
+|------|---------|
+| `m/44'/60'/0'/0/0` | Ethereum first account |
+| `m/44'/0'/0'/0/0` | Bitcoin first account |
+| `m/84'/0'/0'/0/0` | Bitcoin native SegWit |

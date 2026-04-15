@@ -1,0 +1,62 @@
+---
+title: MAE Masked Autoencoder
+description: 'Self-supervised pretraining by masking patches'
+---
+
+# MAE
+
+MAE (He et al., 2021) pretrains ViT by reconstructing randomly masked patches.
+
+---
+
+## Training
+
+```python
+def mae_loss(model, images, mask_ratio=0.75):
+    B, C, H, W = images.shape
+    
+    # Patchify
+    patches = patchify(images)  # (B, N, patch_dim)
+    
+    # Random masking
+    num_masked = int(N * mask_ratio)
+    noise = torch.rand(B, N)
+    ids_shuffle = torch.argsort(noise, dim=-1)
+    ids_restore = torch.argsort(ids_shuffle, dim=-1)
+    ids_keep = ids_shuffle[:, :N - num_masked]
+    
+    # Keep visible patches
+    patches_keep = patches.gather(1, ids_keep.unsqueeze(-1).expand_as(patches))
+    
+    # Encode only visible patches
+    visible_emb = model.encoder(patches_keep)
+    
+    # Decoder reconstructs all patches (with mask tokens)
+    pred = model.decoder(visible_emb, ids_restore)  # (B, N, patch_dim)
+    
+    # Loss on masked patches only
+    loss = F.mse_loss(pred[:, N - num_masked:], patches[:, N - num_masked:])
+    
+    return loss
+```
+
+---
+
+## Why Masking Works
+
+| Design Choice | Rationale |
+|--------------|-----------|
+| **High mask ratio (75%)** | Forces global understanding |
+| **Decoder reconstructs pixels** | Low-level features, not semantic |
+| **No masking during fine-tune** | Standard supervised training |
+| **ViT-Large works well** | More capacity helps |
+
+---
+
+## Results
+
+| Model | ImageNet | COCO | ADE20K |
+|-------|----------|------|--------|
+| **MAE ViT-B** | 83.6% | 46.3 mAP | 47.4 mIoU |
+| **MAE ViT-L** | 85.9% | 49.3 mAP | 51.2 mIoU |
+| **Supervised ViT-L** | 84.3% | 45.8 mAP | 48.4 mIoU |

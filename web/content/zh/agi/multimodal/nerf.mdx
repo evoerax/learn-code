@@ -1,0 +1,77 @@
+---
+title: NeRF 神经辐射场
+description: 'Neural Radiance Fields'
+---
+
+# NeRF 神经辐射场
+
+通过神经网络表示3D场景。
+
+---
+
+## 核心思想
+
+```python
+class NeRF(nn.Module):
+    def __init__(self):
+        self.pos_embed = PosEmbedding(3)  # 位置编码
+        self.dir_embed = PosEmbedding(3)
+        self.mlp = nn.Sequential(
+            nn.Linear(60, 256), nn.ReLU(),
+            nn.Linear(256, 256), nn.ReLU(),
+            nn.Linear(256, 4)  # RGB + density
+        )
+    
+    def forward(self, x, d):
+        # x: 3D 位置, d: 视角方向
+        x = self.pos_embed(x)
+        d = self.dir_embed(d)
+        h = self.mlp(x)
+        rgb, sigma = h[..., :3], h[..., 3]
+        return rgb, sigma
+```
+
+---
+
+## 体素渲染
+
+```python
+def render(rgb, sigma, depths):
+    # 体素渲染
+    deltas = depths[1:] - depths[:-1]
+    alphas = 1 - torch.exp(-sigma * deltas)
+    
+    # 累积
+    transmittance = torch.cumprod(1 - alphas, dim=-1)
+    weights = transmittance * alphas
+    
+    rgb_final = (weights.unsqueeze(-1) * rgb).sum(dim=1)
+    return rgb_final
+```
+
+---
+
+## 训练
+
+```python
+def train(nerf, images, poses, K):
+    for _ in range(100000):
+        # 随机射线
+        rays_o, rays_d = get_rays(poses, K)
+        
+        # 体素渲染
+        rgb_pred = render_ray(nerf, rays_o, rays_d)
+        
+        # 计算损失
+        loss = F.mse_loss(rgb_pred, rgb_gt)
+```
+
+---
+
+## 局限性
+
+| 问题 | 说明 |
+|------|------|
+| 慢 | 每场景需数小时训练 |
+| 泛化 | 不能跨场景 |
+| 渲染 | 实时困难 |

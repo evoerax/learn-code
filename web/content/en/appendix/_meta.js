@@ -8,4 +8,5 @@ export default {
   'multi-lang-balanced-tree': { title: 'AVL tree & token counts' },
   'cs-resources': { title: 'CS resources' },
   'ai-resources': { title: 'AI resources' },
+  'memory-leaks-go-python': { title: 'Memory leaks (Go & Python)' },
 }

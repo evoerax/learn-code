@@ -1,0 +1,71 @@
+---
+title: Multi-Head Attention
+description: 'Parallel attention subspaces for rich representations'
+---
+
+# Multi-Head Attention
+
+Multi-Head Attention allows the model to jointly attend to information from different representation subspaces at different positions.
+
+---
+
+## Formula
+
+```
+MultiHead(Q, K, V) = Concat(head₁, ..., headₕ)Wᴼ
+
+where headᵢ = Attention(QWᵢᵠ, KWᵢᵏ, VWᵢᵛ)
+         = softmax(QKᵀ/√dₖ)V
+```
+
+## Single Head Attention
+
+```python
+def attention(Q, K, V, d_k):
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+    weights = F.softmax(scores, dim=-1)
+    return torch.matmul(weights, V)
+```
+
+## Multi-Head Implementation
+
+```python
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, num_heads):
+        super().__init__()
+        self.num_heads = num_heads
+        self.d_k = d_model // num_heads
+        
+        self.W_q = nn.Linear(d_model, d_model)
+        self.W_k = nn.Linear(d_model, d_model)
+        self.W_v = nn.Linear(d_model, d_model)
+        self.W_o = nn.Linear(d_model, d_model)
+    
+    def split_heads(self, x):
+        # x: (batch, seq, d_model) -> (batch, heads, seq, d_k)
+        return x.view(x.size(0), -1, self.num_heads, self.d_k).transpose(1, 2)
+    
+    def forward(self, Q, K, V, mask=None):
+        Q = self.split_heads(self.W_q(Q))
+        K = self.split_heads(self.W_k(K))
+        V = self.split_heads(self.W_v(V))
+        
+        scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.d_k)
+        if mask is not None:
+            scores = scores.masked_fill(mask == 0, -1e9)
+        weights = F.softmax(scores, dim=-1)
+        
+        out = torch.matmul(weights, V)
+        out = out.transpose(1, 2).contiguous().view(out.size(0), -1, self.num_heads * self.d_k)
+        return self.W_o(out)
+```
+
+---
+
+## Why Multi-Head?
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Multiple subspaces** | Each head can attend to different aspects |
+| **Robustness** | Redundant representations |
+| **Interpretability** | Different heads specialize |

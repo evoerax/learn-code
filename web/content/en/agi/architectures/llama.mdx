@@ -1,0 +1,56 @@
+---
+title: LLaMA Series
+description: "Meta's open-source LLM family"
+---
+
+# LLaMA Series
+
+Meta's open-source LLaMA models have democratized LLMs.
+
+---
+
+## LLaMA Evolution
+
+| Model | Params | Context | Training Tokens | Notes |
+|-------|--------|---------|----------------|-------|
+| **LLaMA 1** | 7B-65B | 2K | 1T | Original open LLM |
+| **LLaMA 2** | 7B-70B | 4K | 2T | RLHF, open weights |
+| **LLaMA 3** | 8B-70B | 8K | 15T | Instruct, LlamaGuard |
+| **LLaMA 3.1** | 8B-405B | 128K | 15T+ | 405B first |
+| **LLaMA 3.2** | 1B-90B | 128K | Vision support |
+
+---
+
+## Architecture Changes
+
+```python
+# LLaMA 1: Standard transformer
+config = {
+    "hidden_size": 4096,
+    "num_attention_heads": 32,
+    "num_layers": 32,
+    "intermediate_size": 11008,  # 4x hidden
+}
+
+# LLaMA 2: Same, with RLHF
+
+# LLaMA 3: 
+config = {
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,  # GQA!
+    "hidden_size": 4096,
+}
+```
+
+---
+
+## Key Innovations
+
+| Version | Innovation |
+|---------|------------|
+| **All** | SwiGLU activation |
+| **All** | RMSNorm |
+| **All** | RoPE position encoding |
+| **LLaMA 3** | GQA (8 kv heads for 32 query) |
+| **LLaMA 3.1** | 128K context |
+| **LLaMA 3.2** | Vision encoder |

@@ -1,0 +1,70 @@
+---
+title: Quantization INT8 INT4
+description: 'Low-precision inference for reduced memory and faster computation'
+---
+
+# Quantization INT8/INT4
+
+Quantization reduces model weight precision to save memory and speed up inference.
+
+---
+
+## Quantization Schemes
+
+| Format | Precision | Memory Reduction | Speedup |
+|--------|-----------|-----------------|---------|
+| **FP16** | 16-bit float | 1x baseline | 1x |
+| **BF16** | 16-bit brain float | 1x | ~1x |
+| **INT8** | 8-bit integer | 2x | 2-4x |
+| **INT4** | 4-bit integer | 4x | 4-8x |
+| **INT2** | 2-bit | 8x | experimental |
+
+---
+
+## Quantization Process
+
+```python
+def quantize_to_int8(weights, per_channel=True):
+    if per_channel:
+        # Per-channel: one scale per output channel
+        scales = weights.abs().max(dim=-1).values / 127.0
+        scales = scales.unsqueeze(-1)  # For broadcasting
+    else:
+        # Per-tensor: one scale for all
+        scales = weights.abs().max() / 127.0
+    
+    quantized = torch.round(weights / scales).clamp(-128, 127)
+    return quantized.to(torch.int8), scales
+
+def dequantize(int8_weights, scales):
+    return (int8_weights.float() * scales).to(original_dtype)
+```
+
+---
+
+## Activation Quantization
+
+```python
+class DynamicQuantizer:
+    def __init__(self, num_bits=8):
+        self.num_bits = num_bits
+        self.qmin = -(2**(num_bits-1))
+        self.qmax = 2**(num_bits-1) - 1
+    
+    def quantize(self, x):
+        scales = x.abs().max() / self.qmax
+        return torch.round(x / scales).to(torch.int8), scales
+    
+    def dequantize(self, x_int, scales):
+        return x_int.float() * scales
+```
+
+---
+
+## Issues
+
+| Issue | Description | Mitigation |
+|-------|-------------|------------|
+| **Accuracy loss** | Low precision loses information | Calibration data |
+| **Outliers** | Extreme values affect scaling | Per-token quantization |
+| **No hardware support** | Not all GPUs support INT4 | Use INT8 fallback |

@@ -1,0 +1,87 @@
+---
+title: Actor-Critic 与 A2C/A3C
+description: 'Actor-Critic 方法'
+---
+
+# Actor-Critic 与 A2C/A3C
+
+结合策略梯度和值函数。
+
+---
+
+## Actor-Critic 架构
+
+```python
+class ActorCritic(nn.Module):
+    def __init__(self, state_dim, action_dim):
+        self.actor = nn.Sequential(
+            nn.Linear(state_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, action_dim),
+            nn.Softmax()
+        )
+        self.critic = nn.Sequential(
+            nn.Linear(state_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, 1)  # V(s)
+        )
+    
+    def forward(self, x):
+        return self.actor(x), self.critic(x)
+```
+
+---
+
+## A2C (Advantage Actor-Critic)
+
+```python
+def a2c(env, model, optimizer, episodes=1000):
+    for _ in range(episodes):
+        s = env.reset()
+        done = False
+        values = []
+        log_probs = []
+        rewards = []
+        
+        while not done:
+            probs, value = model(s)
+            a = torch.multinomial(probs, 1).item()
+            s_next, r, done = env.step(a)
+            
+            log_probs.append(torch.log(probs[a]))
+            values.append(value)
+            rewards.append(r)
+            s = s_next
+        
+        # 计算优势
+        returns = compute_returns(rewards, values, gamma=0.99)
+        
+        # 更新
+        actor_loss = -sum(log_probs * advantages)
+        critic_loss = F.mse_loss(values, returns)
+        loss = actor_loss + 0.5 * critic_loss
+```
+
+---
+
+## A3C 异步版本
+
+```python
+# 多 worker 并行采集
+def worker():
+    local_model = copy(model)
+    while True:
+        sync from global
+        collect trajectory
+        gradients = compute_gradients(local_model)
+        apply to global
+```
+
+---
+
+## 效果
+
+| 算法 | 并行 | 样本效率 |
+|------|------|----------|
+| A2C | 同步 | 中 |
+| A3C | 异步 | 高 |
